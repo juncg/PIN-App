@@ -8,24 +8,24 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function ExamplePage() {
-    // React has some functions that are called "hooks" (useState, useEffect, useRef, useReducer...). Most importants are useState and useEffect
+    // React has some functions that are called "hooks" (useState, useEffect, useRef, useReducer...). Most important are useState and useEffect
     // useStates declare variables that can be changed during the execution of the code
     const [counter, setCounter] = useState<number>(0);
     const [listItems, setListItems] = useState<string[]>([]);
     const [title, setTitle] = useState<string>("This is a title");
     const [randomNumber, setRandomNumber] = useState<number>(0);
 
-    // This should be in another file, for keeping each file small
+    // This should be in another file, to keep each file small
     function increaseCounter() {
         setCounter(counter + 1);
     }
 
-    // This should be in another file, for keeping each file small
+    // This should be in another file, to keep each file small
     function addNewElementToList(newElement: string) {
         setListItems([...listItems, newElement]);
     }
 
-    // useEffects are used for executing code once the variables in the dependency array (the [] at the end of the function) change
+    // once the variables in the dependency array (the [] at the end of the function) change, useEffects are used for executing code 
     // if the dependency array is empty, it will be executed once, at the start of the execution
     // This changes the state "title" once some ms have passed
     useEffect(() => {
@@ -52,7 +52,7 @@ export default function ExamplePage() {
                 {randomNumber}
             </p>
 
-            {/* Animated button that increases counter by using the function */}
+            {/* Animated button that increases counter by using the increase counter function */}
             <Button
                 onClick={increaseCounter}
                 className="hover:translate-y-2 hover:rotate-5 transition duration-500"
