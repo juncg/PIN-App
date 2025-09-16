@@ -8,7 +8,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function ExamplePage() {
-    // States represent data that can be changed during the execution of the code
+    // React has some functions that are called "hooks" (useState, useEffect, useRef, useReducer...). Most importants are useState and useEffect
+    // useStates declare variables that can be changed during the execution of the code
     const [counter, setCounter] = useState<number>(0);
     const [listItems, setListItems] = useState<string[]>([]);
     const [title, setTitle] = useState<string>("This is a title");
@@ -24,7 +25,8 @@ export default function ExamplePage() {
         setListItems([...listItems, newElement]);
     }
 
-    // UseEffects are used for executing code once the variables in the dependency array (the [] at the end of the function) change
+    // useEffects are used for executing code once the variables in the dependency array (the [] at the end of the function) change
+    // if the dependency array is empty, it will be executed once, at the start of the execution
     // This changes the state "title" once some ms have passed
     useEffect(() => {
         const timeoutTimeMs = 3000;
