@@ -5,7 +5,7 @@ export default function Testlist({ items }: { items: string[] }) {
             {items.map((item: string, index: number) => {
                 return (
                     <li
-                        className="bg-card-foreground text-white p-2 rounded-lg border-2"
+                        className="bg-card-foreground text-white p-2 rounded-lg border-2 animate-pulse"
                         key={index}
                     >
                         {item}

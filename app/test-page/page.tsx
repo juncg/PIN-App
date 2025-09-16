@@ -36,7 +36,7 @@ export default function ExamplePage() {
 
     // This changes the random number once the state "counter" has changed
     useEffect(() => {
-        setRandomNumber(Math.random() * 100);
+        setRandomNumber(Number((Math.random() * 100).toFixed(0)));
     }, [counter]);
 
     return (
