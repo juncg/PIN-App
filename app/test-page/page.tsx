@@ -86,7 +86,7 @@ export default function ExamplePage() {
             </Badge>
 
             {/* Link component */}
-            <Link className="underline" href="http://youtube.com">
+            <Link className="underline" href="https://youtu.be/dQw4w9WgXcQ?si=OyLnQpzWLQz1OTNF">
                 Click me
             </Link>
 
