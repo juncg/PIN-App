@@ -98,6 +98,8 @@ export default function ExamplePage() {
 
             {/* You can navigate through your own page urls like this */}
             <Link href="/">Go home</Link>
+
+            <p></p>
         </div>
     );
 }
