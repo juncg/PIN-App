@@ -1,3 +1,3 @@
-Deal & Buy es una plataforma simple para conectar usuarios y empresas a través de peticiones y ofertas. Cuantos mas usuarios se inscriben a una oferta, menor es el precio que pagan. Las empresas aseguran que su producto se venderá mientras que los usuarios ahorran dinero.
+Deal & Buy is a simple platform designed to connect users and companies through requests and offers.
 
-Este es un proyecto desarrollado grupalmente en la asignatura de PIN (Proyecto Ingenieria de Software) de la Universitat Politecnica de Valencia
+This project was developed collaboratively as part of the PIN (Software Engineering Project) subject at the Polytechnic University of Valencia.
