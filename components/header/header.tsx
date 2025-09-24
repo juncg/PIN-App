@@ -1,8 +1,6 @@
-import { hasEnvVars } from "@/lib/utils";
 import Link from "next/link";
-import { AuthButton } from "../auth-button";
-import { EnvVarWarning } from "../env-var-warning";
-import { ThemeSwitcher } from "../theme-switcher";
+import { AuthButton } from "../auth/auth-buttons";
+import { ThemeSwitcher } from "../ui/theme-switcher";
 
 export function Header() {
 	return (
@@ -13,7 +11,7 @@ export function Header() {
 				</Link>
 
 				<div className="flex gap-4 items-center">
-					{!hasEnvVars ? <EnvVarWarning /> : <AuthButton />}
+					<AuthButton />
 
 					<ThemeSwitcher />
 				</div>
