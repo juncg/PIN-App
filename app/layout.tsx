@@ -1,3 +1,5 @@
+import { Footer } from "@/components/footer/footer";
+import { Header } from "@/components/header/header";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Geist } from "next/font/google";
@@ -24,9 +26,13 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body className={`${geistSans.className} antialiased`}>
+			<body className={`${geistSans.className} antialiased flex flex-col min-h-screen`}>
 				<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-					{children}
+					<Header />
+
+					<main className="flex-grow p-8">{children}</main>
+
+					<Footer />
 				</ThemeProvider>
 			</body>
 		</html>

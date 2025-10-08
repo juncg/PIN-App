@@ -1,14 +1,14 @@
-import { Footer } from "@/components/footer/footer";
-import { Header } from "@/components/header/header";
+import { H1, H2 } from "@/components/ui/typography";
+import Link from "next/link";
 
 export default function Home() {
 	return (
-		<main className="min-h-screen flex flex-col items-center">
-			<div className="flex-1 w-full flex flex-col gap-20 items-center">
-				<Header />
+		<section className="flex flex-col items-center">
+			<H1>Deal&Buy</H1>
 
-				<Footer />
-			</div>
-		</main>
+			<Link href={"/feed"}>
+				<H2>Go to feed</H2>
+			</Link>
+		</section>
 	);
 }
