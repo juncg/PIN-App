@@ -833,24 +833,30 @@ export type Database = {
       User: {
         Row: {
           banner: string | null
+          birth_date: string | null
           id: string
           name: string | null
           profile_picture: string | null
           surnames: string | null
+          username: string
         }
         Insert: {
           banner?: string | null
+          birth_date?: string | null
           id: string
           name?: string | null
           profile_picture?: string | null
           surnames?: string | null
+          username: string
         }
         Update: {
           banner?: string | null
+          birth_date?: string | null
           id?: string
           name?: string | null
           profile_picture?: string | null
           surnames?: string | null
+          username?: string
         }
         Relationships: []
       }

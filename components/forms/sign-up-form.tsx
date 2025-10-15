@@ -9,11 +9,16 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { CreateUser, IsUsernameAlreadyUsed } from "@/lib/services/user";
 
 export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+	const [name, setName] = useState("");
+	const [surnames, setSurnames] = useState("");
+	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [repeatPassword, setRepeatPassword] = useState("");
+	const [birthDate, setBirthDate] = useState("");
 	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
@@ -30,8 +35,15 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 			return;
 		}
 
+		const isUsernameAlreadyUsed = (await IsUsernameAlreadyUsed(username)).exists;
+		if (isUsernameAlreadyUsed) {
+			setError("Username already in use");
+			setIsLoading(false);
+			return;
+		}
+
 		try {
-			const { error } = await supabase.auth.signUp({
+			const { data, error } = await supabase.auth.signUp({
 				email,
 				password,
 				options: {
@@ -39,6 +51,23 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 				},
 			});
 			if (error) throw error;
+
+			const userId = data.user?.id;
+			if (!userId) throw new Error("No se pudo obtener el ID del usuario.");
+
+			const result = await CreateUser({
+				id: userId,
+				name: name,
+				surnames: surnames,
+				birth_date: birthDate.toString(),
+				username: username,
+				banner: null,
+				profile_picture: null,
+			});
+
+            if (!result.success) {
+                throw new Error(result.error || "Error al crear el perfil del usuario.");
+            }
 			router.refresh();
 			router.push("/auth/sign-up-success");
 		} catch (error: unknown) {
@@ -58,6 +87,37 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 				<CardContent>
 					<form onSubmit={handleSignUp}>
 						<div className="flex flex-col gap-6">
+							<div className="grid gap-2">
+								<Label htmlFor="name">Nombre</Label>
+								<Input
+									id="name"
+									type="text"
+									required
+									value={name}
+									onChange={(e) => setName(e.target.value)}
+								/>
+							</div>
+							<div className="grid gap-2">
+								<Label htmlFor="name">Apellidos</Label>
+								<Input
+									id="surnames"
+									type="text"
+									required
+									value={surnames}
+									onChange={(e) => setSurnames(e.target.value)}
+								/>
+							</div>
+						<div className="grid gap-2">
+								
+								<Label htmlFor="name">Username</Label>
+								<Input
+									id="name"
+									type="text"
+									required
+									value={username}
+									onChange={(e) => setUsername(e.target.value)}
+								/>
+							</div>
 							<div className="grid gap-2">
 								<Label htmlFor="email">Email</Label>
 								<Input
@@ -91,6 +151,16 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 									required
 									value={repeatPassword}
 									onChange={(e) => setRepeatPassword(e.target.value)}
+								/>
+							</div>
+														<div className="grid gap-2">
+								<Label htmlFor="birth-date">Fecha de nacimiento</Label>
+								<Input
+									id="birth-date"
+									type="date"
+									required
+									value={birthDate}
+									onChange={(e) => setBirthDate(e.target.value)}
 								/>
 							</div>
 							{error && <p className="text-sm text-red-500">{error}</p>}
