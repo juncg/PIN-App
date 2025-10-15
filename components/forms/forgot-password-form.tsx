@@ -40,23 +40,23 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
 			{success ? (
 				<Card>
 					<CardHeader>
-						<CardTitle className="text-2xl">Check Your Email</CardTitle>
-						<CardDescription>Password reset instructions sent</CardDescription>
+						<CardTitle className="text-2xl">Revisa tu correo</CardTitle>
+						<CardDescription>Las instrucciones para restablecer tu contraseña han sido enviadas</CardDescription>
 					</CardHeader>
 
 					<CardContent>
 						<p className="text-sm text-muted-foreground">
-							If you registered using your email and password, you will receive a password reset email.
+							Si te registraste usando correo y contraseña, recibiras un correo de restablecimiento de contraseña.
 						</p>
 					</CardContent>
 				</Card>
 			) : (
 				<Card>
 					<CardHeader>
-						<CardTitle className="text-2xl">Reset Your Password</CardTitle>
+						<CardTitle className="text-2xl">Reinicia tu contraseña</CardTitle>
 
 						<CardDescription>
-							Type in your email and we&apos;ll send you a link to reset your password
+							Escribe tu correo y te enviaremos un link para restablecer tu contraseña
 						</CardDescription>
 					</CardHeader>
 
@@ -79,14 +79,14 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
 								{error && <p className="text-sm text-red-500">{error}</p>}
 
 								<Button type="submit" className="w-full" disabled={isLoading}>
-									{isLoading ? "Sending..." : "Send reset email"}
+									{isLoading ? "Enviando..." : "Enviar correo"}
 								</Button>
 							</div>
 
 							<div className="mt-4 text-center text-sm">
-								Already have an account?{" "}
+								Ya estas registrado?{" "}
 								<Link href="/auth/login" className="underline underline-offset-4">
-									Login
+									Iniciar sesión
 								</Link>
 							</div>
 						</form>
