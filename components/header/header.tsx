@@ -1,18 +1,21 @@
 import Link from "next/link";
 import { AuthButton } from "../auth/auth-buttons";
+import { SidebarTrigger } from "../ui/sidebar";
 import { ThemeSwitcher } from "../ui/theme-switcher";
 
 export function Header() {
 	return (
-		<header className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-			<div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
-				<Link className="font-semibold" href={"/"}>
-					Deal&Buy
-				</Link>
+		<header className="sticky top-0 z-30 w-full flex border-b border-b-foreground/10 h-16 bg-background">
+			<div className="w-full flex justify-between items-center px-4 md:px-6">
+				<div className="flex items-center gap-2">
+					<SidebarTrigger />
+					<Link className="font-semibold text-lg" href={"/"}>
+						Deal&Buy
+					</Link>
+				</div>
 
-				<div className="flex gap-4 items-center">
+				<div className="flex gap-2 md:gap-4 items-center">
 					<AuthButton />
-
 					<ThemeSwitcher />
 				</div>
 			</div>

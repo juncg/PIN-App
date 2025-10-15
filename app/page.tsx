@@ -6,8 +6,8 @@ export default function Home() {
 		<section className="flex flex-col items-center">
 			<H1>Deal&Buy</H1>
 
-			<Link href={"/feed"}>
-				<H2>Go to feed</H2>
+			<Link href={"/home"}>
+				<H2>Go to home</H2>
 			</Link>
 		</section>
 	);
