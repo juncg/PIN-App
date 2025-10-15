@@ -4,8 +4,8 @@ import { GetFromDatabase } from "@/lib/services/general";
 import { IOffer, IPetition } from "@/lib/services/types";
 
 export default async function Home() {
-	const offers = await GetFromDatabase<IOffer>("Offer", "*");
-	const petitions = await GetFromDatabase<IPetition>("Petition", "*");
+	const offers = await GetFromDatabase<IOffer>({ tableName: "Offer", select: "*" });
+	const petitions = await GetFromDatabase<IPetition>({ tableName: "Petition", select: "*" });
 
 	return (
 		<section className="flex flex-row justify-center gap-8">

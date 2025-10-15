@@ -8,3 +8,15 @@ export interface IGetFromDatabase {
 	tableName: string;
 	select: string;
 }
+
+export interface IPostToDatabase<T = unknown> {
+	tableName: string;
+	contentJson: T[];
+}
+
+export interface IPutToDatabase<T = unknown> {
+	tableName: string;
+	contentJson: Partial<T>;
+	matchColumn: string;
+	matchValue: string | number;
+}

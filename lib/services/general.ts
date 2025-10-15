@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { IGetFromDatabase, IPostToDatabase, IPutToDatabase } from "./types";
 
 export function GetClient() {
 	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "URL no encontrada";
@@ -10,7 +11,7 @@ export function GetClient() {
 
 const { supabase } = GetClient();
 
-export async function GetFromDatabase<T = unknown>(tableName: string, select: string): Promise<T[]> {
+export async function GetFromDatabase<T = unknown>({ tableName, select }: IGetFromDatabase): Promise<T[]> {
 	const { data: entries, error } = await supabase.from(tableName).select(select);
 
 	if (error) {
@@ -20,22 +21,44 @@ export async function GetFromDatabase<T = unknown>(tableName: string, select: st
 	return (entries as T[]) || [];
 }
 
-export async function PostToDatabase<T = unknown>(tableName: string, select: string): Promise<T[]> {
-	const { data: entries, error } = await supabase.from(tableName).select(select);
+export async function PostToDatabase<T = unknown>({ tableName, contentJson }: IPostToDatabase<T>): Promise<T[]> {
+	const { data, error } = await supabase.from(tableName).insert(contentJson).select();
 
 	if (error) {
-		console.error(`Error fetching ${tableName}:`, error);
+		console.error(`Error inserting into ${tableName}:`, error);
+		return [];
 	}
 
-	return (entries as T[]) || [];
+	return (data as T[]) || [];
 }
 
-export async function PutToDatabase<T = unknown>(tableName: string, select: string): Promise<T[]> {
-	const { data: entries, error } = await supabase.from(tableName).select(select);
+export async function PutToDatabase<T = unknown>({
+	tableName,
+	contentJson,
+	matchColumn,
+	matchValue,
+}: IPutToDatabase<T>): Promise<T[]> {
+	const { data, error } = await supabase.from(tableName).update(contentJson).eq(matchColumn, matchValue).select();
 
 	if (error) {
-		console.error(`Error fetching ${tableName}:`, error);
+		console.error(`Error updating ${tableName}:`, error);
+		return [];
 	}
 
-	return (entries as T[]) || [];
+	return (data as T[]) || [];
+}
+
+export async function DeleteFromDatabase<T = unknown>({
+	tableName,
+	matchColumn,
+	matchValue,
+}: IPutToDatabase<T>): Promise<T[]> {
+	const { error } = await supabase.from(tableName).delete().eq(matchColumn, matchValue);
+
+	if (error) {
+		console.error(`Error deleting from ${tableName}:`, error);
+		return [];
+	}
+
+	return [];
 }
