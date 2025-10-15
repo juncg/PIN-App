@@ -37,7 +37,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 
 		const isUsernameAlreadyUsed = (await IsUsernameAlreadyUsed(username)).exists;
 		if (isUsernameAlreadyUsed) {
-			setError("Username already in use");
+			setError("Username ya en uso");
 			setIsLoading(false);
 			return;
 		}
@@ -81,8 +81,8 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 		<div className={cn("flex flex-col gap-6", className)} {...props}>
 			<Card>
 				<CardHeader>
-					<CardTitle className="text-2xl">Sign up</CardTitle>
-					<CardDescription>Create a new account</CardDescription>
+					<CardTitle className="text-2xl">Registrarse</CardTitle>
+					<CardDescription>Crear una cuenta nueva</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<form onSubmit={handleSignUp}>
@@ -131,7 +131,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 							</div>
 							<div className="grid gap-2">
 								<div className="flex items-center">
-									<Label htmlFor="password">Password</Label>
+									<Label htmlFor="password">Contraseña</Label>
 								</div>
 								<Input
 									id="password"
@@ -143,7 +143,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 							</div>
 							<div className="grid gap-2">
 								<div className="flex items-center">
-									<Label htmlFor="repeat-password">Repeat Password</Label>
+									<Label htmlFor="repeat-password">Repetir contraseña</Label>
 								</div>
 								<Input
 									id="repeat-password"
@@ -165,13 +165,13 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 							</div>
 							{error && <p className="text-sm text-red-500">{error}</p>}
 							<Button type="submit" className="w-full" disabled={isLoading}>
-								{isLoading ? "Creating an account..." : "Sign up"}
+								{isLoading ? "Creando tu cuenta" : "Registrarse"}
 							</Button>
 						</div>
 						<div className="mt-4 text-center text-sm">
-							Already have an account?{" "}
+							¿Ya tienes una cuenta?{" "}
 							<Link href="/auth/login" className="underline underline-offset-4">
-								Login
+								Iniciar sesión
 							</Link>
 						</div>
 					</form>
