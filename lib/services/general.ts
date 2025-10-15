@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { IGetFromDatabase, IPostToDatabase, IPutToDatabase } from "./types";
+import { IDeleteToDatabase, IGetFromDatabase, IPostToDatabase, IPutToDatabase } from "./types";
 
 export function GetClient() {
 	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "URL no encontrada";
@@ -52,7 +52,7 @@ export async function DeleteFromDatabase<T = unknown>({
 	tableName,
 	matchColumn,
 	matchValue,
-}: IPutToDatabase<T>): Promise<T[]> {
+}: IDeleteToDatabase): Promise<T[]> {
 	const { error } = await supabase.from(tableName).delete().eq(matchColumn, matchValue);
 
 	if (error) {

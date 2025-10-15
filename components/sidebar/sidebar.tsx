@@ -36,7 +36,7 @@ const items = [
 	},
 	{
 		title: "Empresas",
-		url: "/companies",
+		url: "/businesses",
 		icon: Building,
 	},
 ];

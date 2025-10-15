@@ -1,4 +1,4 @@
-import { Post } from "@/components/post/post";
+import { PostCard } from "@/components/post/postCard";
 import { H1 } from "@/components/ui/typography";
 import { GetFromDatabase } from "@/lib/services/general";
 import { IOffer, IPetition } from "@/lib/services/types";
@@ -13,11 +13,11 @@ export default async function Home() {
 				<H1>Ofertas</H1>
 
 				{offers?.map((offer: IOffer) => (
-					<Post
+					<PostCard
 						key={offer.id}
 						props={{
 							className: "w-full",
-							companyName: offer.title || "N/A",
+							businessName: offer.title || "N/A",
 							productDescription: offer.text || "N/A",
 							productName: offer.title || "N/A",
 							typeOfPost: "Oferta",
@@ -32,11 +32,11 @@ export default async function Home() {
 				<H1>Peticiones</H1>
 
 				{petitions?.map((petition: IPetition) => (
-					<Post
+					<PostCard
 						key={petition.id}
 						props={{
 							className: "w-full",
-							companyName: petition.title || "N/A",
+							businessName: petition.title || "N/A",
 							productDescription: petition.text || "N/A",
 							productName: petition.title || "N/A",
 							typeOfPost: "Petición",
@@ -51,11 +51,11 @@ export default async function Home() {
 				<H1>Productos</H1>
 
 				{offers?.map((offer: IOffer) => (
-					<Post
+					<PostCard
 						key={offer.id}
 						props={{
 							className: "w-full",
-							companyName: offer.title || "N/A",
+							businessName: offer.title || "N/A",
 							productDescription: offer.text || "N/A",
 							productName: offer.title || "N/A",
 							typeOfPost: "Oferta",

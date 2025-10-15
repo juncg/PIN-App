@@ -7,20 +7,20 @@ import { H3, H4, P } from "../ui/typography";
 
 type PostType = "Oferta" | "Petición";
 
-export interface IPost {
+export interface IBusinessCard {
 	className?: string;
 	productName: string;
 	productDescription: string;
-	companyName: string;
+	businessName: string;
 	typeOfPost: PostType;
 	peopleSignedObjective: number;
 	peopleSignedCurrent: number;
 }
 
-export function Post({ props }: { props: IPost }) {
+export function BusinessCard({ props }: { props: IBusinessCard }) {
 	const {
 		className,
-		companyName,
+		businessName,
 		productDescription,
 		productName,
 		typeOfPost,
@@ -35,7 +35,7 @@ export function Post({ props }: { props: IPost }) {
 			<div className="flex justify-between items-center border-b pb-4">
 				<div className="flex flex-col gap-2">
 					<H3>{productName}</H3>
-					<H4>{companyName}</H4>
+					<H4>{businessName}</H4>
 				</div>
 
 				<div className="flex flex-col gap-2">
