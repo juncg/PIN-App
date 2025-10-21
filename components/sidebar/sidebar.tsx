@@ -1,5 +1,8 @@
+"use client";
+
 import { Building, Hand, Home, Settings, ShoppingBag, Tag, User } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
 	Sidebar,
@@ -55,6 +58,8 @@ const settingsItems = [
 ];
 
 export function AppSidebar() {
+	const pathname = usePathname();
+
 	return (
 		<Sidebar className="bg-background">
 			<SidebarContent>
@@ -62,32 +67,50 @@ export function AppSidebar() {
 					<SidebarGroupLabel>Deal&Buy</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>
-							{items.map((item) => (
-								<SidebarMenuItem key={item.title}>
-									<SidebarMenuButton asChild>
-										<Link href={item.url}>
-											<item.icon />
-											<span>{item.title}</span>
-										</Link>
-									</SidebarMenuButton>
-								</SidebarMenuItem>
-							))}
+							{items.map((item) => {
+								const isActive = pathname === item.url;
+								return (
+									<SidebarMenuItem key={item.title}>
+										<SidebarMenuButton asChild isActive={isActive}>
+											<Link
+												href={item.url}
+												className={
+													isActive
+														? "bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
+														: ""
+												}>
+												<item.icon />
+												<span>{item.title}</span>
+											</Link>
+										</SidebarMenuButton>
+									</SidebarMenuItem>
+								);
+							})}
 						</SidebarMenu>
 					</SidebarGroupContent>
 				</SidebarGroup>
 			</SidebarContent>
 			<SidebarFooter>
 				<SidebarMenu>
-					{settingsItems.map((item) => (
-						<SidebarMenuItem key={item.title}>
-							<SidebarMenuButton asChild>
-								<Link href={item.url}>
-									<item.icon />
-									<span>{item.title}</span>
-								</Link>
-							</SidebarMenuButton>
-						</SidebarMenuItem>
-					))}
+					{settingsItems.map((item) => {
+						const isActive = pathname === item.url;
+						return (
+							<SidebarMenuItem key={item.title}>
+								<SidebarMenuButton asChild isActive={isActive}>
+									<Link
+										href={item.url}
+										className={
+											isActive
+												? "bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
+												: ""
+										}>
+										<item.icon />
+										<span>{item.title}</span>
+									</Link>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+						);
+					})}
 				</SidebarMenu>
 			</SidebarFooter>
 		</Sidebar>

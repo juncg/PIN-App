@@ -1,4 +1,4 @@
-import { Tables } from "../types/supabase";
+import { Tables } from "@/database.types";
 
 export type IOffer = Tables<"Offer">;
 export type IPetition = Tables<"Petition">;

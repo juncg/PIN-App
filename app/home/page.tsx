@@ -1,4 +1,4 @@
-import { PostCard } from "@/components/post/postCard";
+import { PostCard } from "@/components/cards/postCard";
 import { H1 } from "@/components/ui/typography";
 import { GetFromDatabase } from "@/lib/services/general";
 import { IOffer, IPetition } from "@/lib/services/types";
