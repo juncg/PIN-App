@@ -5,6 +5,7 @@ export type IPetition = Tables<"Petition">;
 export type IProduct = Tables<"Product">;
 export type IBusiness = Tables<"Business">;
 export type IUser = Tables<"User">;
+export type IForum = Tables<"Forum">;
 
 export interface IGetFromDatabase {
 	tableName: string;
