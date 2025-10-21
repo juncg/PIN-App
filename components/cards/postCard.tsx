@@ -51,20 +51,26 @@ export function PostCard({ props }: { props: IPostCard }) {
 			<div className="flex flex-col gap-8">
 				<div className="flex justify-between">
 					<Button>Información</Button>
-					<Button>Apúntate a la oferta</Button>
+					{typeOfPost === "Oferta" ? (
+						<Button>Apúntate a la oferta</Button>
+					) : (
+						<Button>Apoya a la petición</Button>
+					)}
 				</div>
 
-				<div className="flex flex-col gap-2">
-					<Progress value={offerCompletionPercentage} />
+				{typeOfPost === "Oferta" && (
+					<div className="flex flex-col gap-2">
+						<Progress value={offerCompletionPercentage} />
 
-					<div className="flex justify-between">
-						<H4>
-							{peopleSignedCurrent} / {peopleSignedObjective}
-						</H4>
+						<div className="flex justify-between">
+							<H4>
+								{peopleSignedCurrent} / {peopleSignedObjective}
+							</H4>
 
-						<H4>{offerCompletionPercentage}%</H4>
+							<H4>{offerCompletionPercentage}%</H4>
+						</div>
 					</div>
-				</div>
+				)}
 			</div>
 		</article>
 	);

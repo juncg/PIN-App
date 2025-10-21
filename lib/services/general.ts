@@ -11,8 +11,14 @@ export function GetClient() {
 
 const { supabase } = GetClient();
 
-export async function GetFromDatabase<T = unknown>({ tableName, select }: IGetFromDatabase): Promise<T[]> {
-	const { data: entries, error } = await supabase.from(tableName).select(select);
+export async function GetFromDatabase<T = unknown>({ tableName, select, eq }: IGetFromDatabase): Promise<T[]> {
+	let query = supabase.from(tableName).select(select);
+	
+	if (eq) {
+		query = query.eq(eq[0], eq[1]);
+	}
+	
+	const { data: entries, error } = await query;
 
 	if (error) {
 		console.error(`Error fetching ${tableName}:`, error);

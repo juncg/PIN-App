@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
@@ -15,7 +14,6 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
-	const router = useRouter();
 
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -30,8 +28,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 			});
 			if (error) throw error;
 
-			router.refresh();
-			router.push("/home");
+			window.location.href = "/home";
 		} catch (error: unknown) {
 			setError(error instanceof Error ? error.message : "An error occurred");
 		} finally {

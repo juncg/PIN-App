@@ -4,12 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { CreateUser, IsUsernameAlreadyUsed } from "@/lib/services/user";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { CreateUser, IsUsernameAlreadyUsed } from "@/lib/services/user";
 
 export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
 	const [name, setName] = useState("");
@@ -21,7 +20,6 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 	const [birthDate, setBirthDate] = useState("");
 	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
-	const router = useRouter();
 
 	const handleSignUp = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -65,11 +63,11 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 				profile_picture: null,
 			});
 
-            if (!result.success) {
-                throw new Error(result.error || "Error al crear el perfil del usuario.");
-            }
-			router.refresh();
-			router.push("/auth/sign-up-success");
+			if (!result.success) {
+				throw new Error(result.error || "Error al crear el perfil del usuario.");
+			}
+			// Forzar una recarga completa de la página
+			window.location.href = "/auth/sign-up-success";
 		} catch (error: unknown) {
 			setError(error instanceof Error ? error.message : "An error occurred");
 		} finally {
@@ -107,8 +105,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 									onChange={(e) => setSurnames(e.target.value)}
 								/>
 							</div>
-						<div className="grid gap-2">
-								
+							<div className="grid gap-2">
 								<Label htmlFor="name">Username</Label>
 								<Input
 									id="name"
@@ -153,7 +150,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 									onChange={(e) => setRepeatPassword(e.target.value)}
 								/>
 							</div>
-														<div className="grid gap-2">
+							<div className="grid gap-2">
 								<Label htmlFor="birth-date">Fecha de nacimiento</Label>
 								<Input
 									id="birth-date"

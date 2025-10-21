@@ -4,10 +4,12 @@ export type IOffer = Tables<"Offer">;
 export type IPetition = Tables<"Petition">;
 export type IProduct = Tables<"Product">;
 export type IBusiness = Tables<"Business">;
+export type IUser = Tables<"User">;
 
 export interface IGetFromDatabase {
 	tableName: string;
 	select: string;
+	eq?: [string, string];
 }
 
 export interface IPostToDatabase<T = unknown> {

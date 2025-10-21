@@ -38,9 +38,7 @@ export function UpdatePasswordForm({ className, ...props }: React.ComponentProps
 			<Card>
 				<CardHeader>
 					<CardTitle className="text-2xl">Restablece tu contraseña</CardTitle>
-					<CardDescription>
-						Porfavor introduce tu nueva contraseña a continuación.
-					</CardDescription>
+					<CardDescription>Porfavor introduce tu nueva contraseña a continuación.</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<form onSubmit={handleForgotPassword}>

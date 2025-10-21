@@ -3,6 +3,7 @@
 import { Building, Hand, Home, Settings, ShoppingBag, Tag, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
 import {
 	Sidebar,
@@ -14,6 +15,7 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	useSidebar,
 } from "@/components/ui/sidebar";
 
 const items = [
@@ -59,6 +61,13 @@ const settingsItems = [
 
 export function AppSidebar() {
 	const pathname = usePathname();
+	const { setOpenMobile, isMobile } = useSidebar();
+
+	useEffect(() => {
+		if (isMobile) {
+			setOpenMobile(false);
+		}
+	}, [pathname, setOpenMobile, isMobile]);
 
 	return (
 		<Sidebar className="bg-background">
