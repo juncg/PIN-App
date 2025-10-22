@@ -53,7 +53,7 @@ export default async function Home() {
 			</div>
 
 			<div className="flex flex-col items-baseline gap-8 w-1/3">
-				<Link href={"/offers"}>
+				<Link href={"/products"}>
 					<H1>Productos</H1>
 				</Link>
 
