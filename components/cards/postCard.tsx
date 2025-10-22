@@ -71,6 +71,19 @@ export function PostCard({ props }: { props: IPostCard }) {
 						</div>
 					</div>
 				)}
+				{typeOfPost === "Petición" && (
+					<div className="flex flex-col gap-2">
+						<Progress value={offerCompletionPercentage} />
+
+						<div className="flex justify-between">
+							<H4>
+								{peopleSignedCurrent} / {peopleSignedObjective}
+							</H4>
+
+							<H4>{offerCompletionPercentage}%</H4>
+						</div>
+					</div>
+				)}
 			</div>
 		</article>
 	);
