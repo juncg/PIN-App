@@ -6,7 +6,7 @@ import Image from "next/image";
 export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center gap-8">
-      <div className="relative w-64 h-64">
+      <div className="relative w-64 h-64 animate-spin">
         <Image
           src="/images/jancarlo.jpg"
           alt="Página no encontrada"
