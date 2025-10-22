@@ -1,20 +1,34 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { H1, H2 } from "@/components/ui/typography";
-import { useRouter } from "next/navigation";
+import { GetFromDatabase } from "@/lib/services/general";
+import { IPetition } from "@/lib/services/types";
+import { PostCard } from "@/components/cards/postCard";
+import { PetitionServices } from "./page-services";
+import Link from "next/link";
+import { Plus } from "lucide-react";
+import SearchItems from "@/components/search/search";
 
+export default async function Petitions() {
+  const { petitions } = await PetitionServices();
 
-export default function Petitions() {
-    const router = useRouter();
+  return (
+    <section className="max-w-7xl mx-auto space-y-8">
+      <div className="flex justify-between items-center">
+        <div className="justify-start">
+          <h1>Peticiones</h1>
+          <p className="text-muted-foreground">
+            Aqui puedes ver las peticiones existentes
+          </p>
+        </div>
+        <Link href="/petitions/create">
+          <Button className="flex items-center gap-2">
+            <Plus className="w-5 h-5" />
+            Nueva Peticion
+          </Button>
+        </Link>
+      </div>
 
-    return (
-        <section className="flex flex-row justify-center gap-8">
-            <div className="flex flex-center flex-col gap-8">
-                <H1>Peticiones</H1>
-                <H2>Esto no esta implementado</H2>
-                <Button onClick={() => router.push("/petitions/create")}>Crear una Petición</Button>
-            </div>
-        </section>
-    );
+      <SearchItems items={petitions} postType="Petición" />
+    </section>
+  );
 }
