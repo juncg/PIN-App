@@ -6,6 +6,7 @@ import { GetFromDatabase } from "@/lib/services/general";
 import { IOffer } from "@/lib/services/types";
 import Link from "next/link";
 import { OfferServices } from "./page-services";
+import SearchOffers from "@/components/search/search";
 
 export default async function Offers() {
   const { offers } = await OfferServices();
@@ -25,18 +26,7 @@ export default async function Offers() {
         </Link>
       </div>
 
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <Input
-          placeholder="Buscar ofertas..."
-          value={""}
-          className="pl-10 glass"
-        />
-      </div>
-
-      <div className="">
-
-      </div>
+      <SearchOffers offers={offers} />
     </section>
   );
 }
