@@ -1,20 +1,23 @@
 "use client";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
 interface ConditionalLayoutProps {
 	children: ReactNode;
-	isAuthPage: boolean;
 	header: ReactNode;
 	sidebar: ReactNode;
 }
 
-export function ConditionalLayout({ children, isAuthPage, header, sidebar }: ConditionalLayoutProps) {
+export function ConditionalLayout({ children, header, sidebar }: ConditionalLayoutProps) {
+	const pathname = usePathname();
+	const isAuthPage = pathname.startsWith("/auth");
+
 	if (isAuthPage) {
 		return (
 			<div className="flex flex-col min-h-screen w-full">
-				<main className="flex-1 p-6 md:p-8 overflow-auto w-full">
+				<main className="flex-1 overflow-auto w-full">
 					<div className="max-w-7xl mx-auto">{children}</div>
 				</main>
 			</div>
