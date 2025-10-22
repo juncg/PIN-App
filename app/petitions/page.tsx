@@ -1,6 +1,3 @@
-
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { H1, H2 } from "@/components/ui/typography";
 import { GetFromDatabase } from "@/lib/services/general";
@@ -12,56 +9,26 @@ import { Plus } from "lucide-react";
 import SearchItems from "@/components/search/search";
 
 export default async function Petitions() {
-    const { petitions } = await PetitionServices();
-    import { useEffect, useState } from "react";
+  const { petitions } = await PetitionServices();
 
-    export default function Petitions() {
-        const [petitions, setPetitions] = useState<IPetition[]>([]);
-        const [loading, setLoading] = useState(true);
+  return (
+    <section className="max-w-7xl mx-auto space-y-8">
+      <div className="flex justify-between items-center">
+        <div className="justify-start">
+          <h1>Peticiones</h1>
+          <p className="text-muted-foreground">
+            Aqui puedes ver las peticiones existentes
+          </p>
+        </div>
+        <Link href="/petitions/create">
+          <Button className="flex items-center gap-2">
+            <Plus className="w-5 h-5" />
+            Nueva Peticion
+          </Button>
+        </Link>
+      </div>
 
-        useEffect(() => {
-            const fetchPetitions = async () => {
-                try {
-                    const { petitions: data } = await PetitionServices();
-                    setPetitions(data || []);
-                } catch (error) {
-                    console.error("Error fetching petitions:", error);
-                } finally {
-                    setLoading(false);
-                }
-            };
-
-            fetchPetitions();
-        }, []);
-
-        const handleSupportClick = (petitionId: string | number) => {
-            setPetitions(prev =>
-                prev.map(petition =>
-                    petition.id === petitionId
-                        ? { ...petition, current_progress: (petition.current_progress || 0) + 1 }
-                        : petition
-                )
-            );
-        };
-
-        return (
-            <section className="max-w-7xl mx-auto space-y-8">
-                <div className="flex justify-between items-center">
-                    <div className="justify-start">
-                        <h1>Peticiones</h1>
-                        <p className="text-muted-foreground">
-                            Aqui puedes ver las peticiones existentes
-                        </p>
-                    </div>
-                    <Link href="/petitions/create">
-                        <Button className="flex items-center gap-2">
-                            <Plus className="w-5 h-5" />
-                            Nueva Peticion
-                        </Button>
-                    </Link>
-                </div>
-
-                <SearchItems items={petitions} postType="Petición" />
-            </section>
-        );
-    }
+      <SearchItems items={petitions} postType="Petición" />
+    </section>
+  );
+}

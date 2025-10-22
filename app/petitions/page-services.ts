@@ -7,4 +7,3 @@ export async function PetitionServices() {
 
     return { petitions };
 }
-
