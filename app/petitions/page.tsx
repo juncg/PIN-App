@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
 import { H1, H2 } from "@/components/ui/typography";
 import { GetFromDatabase } from "@/lib/services/general";
