@@ -1,12 +1,12 @@
-import Link from "next/link";
 import { PostCard } from "@/components/cards/postCard";
+import { ProductCard } from "@/components/cards/productCard";
 import { H1 } from "@/components/ui/typography";
 import { IOffer, IPetition, IProduct } from "@/lib/services/types";
-import { ProductCard } from "@/components/cards/productCard";
+import Link from "next/link";
 import { HomeServices } from "./page-services";
 
 export default async function Home() {
-	const { offers, petitions, products } = await HomeServices()
+	const { offers, petitions, products } = await HomeServices();
 
 	return (
 		<section className="flex flex-row justify-center gap-8">
@@ -20,7 +20,7 @@ export default async function Home() {
 						key={petition.id}
 						props={{
 							className: "w-full",
-							businessName: "N/A",
+							businessName: (petition.businesses && petition.businesses[0].business.name) || "N/A",
 							description: petition.text || "N/A",
 							name: petition.title || "N/A",
 							typeOfPost: "Petición",
@@ -41,7 +41,7 @@ export default async function Home() {
 						key={offer.id}
 						props={{
 							className: "w-full",
-							businessName: "N/A",
+							businessName: (offer.businesses && offer.businesses[0].business.name) || "N/A",
 							description: offer.text || "N/A",
 							name: offer.title || "N/A",
 							typeOfPost: "Oferta",
@@ -63,8 +63,8 @@ export default async function Home() {
 						props={{
 							className: "w-full",
 							name: product.name,
-							description: "n/a",
-							businessName: product.business?.[0]?.Business?.name || "N/A",
+							description: product.description,
+							businessName: (product.businesses && product.businesses[0].business.name) || "N/A",
 						}}
 					/>
 				))}

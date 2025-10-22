@@ -1,7 +1,8 @@
+import Link from "next/link";
 import { AuthButton } from "../auth/auth-buttons";
+import { SidebarTrigger } from "../ui/sidebar";
 import { ThemeSwitcher } from "../ui/theme-switcher";
 import { AppNameLink } from "./app-name-link";
-import { SidebarWrapper } from "./sidebar-wrapper";
 
 export function Header() {
 	return (
