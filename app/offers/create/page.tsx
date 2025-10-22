@@ -42,7 +42,7 @@ export default function Page() {
                 setLoading(false);
             }
         };
-        
+
         loadForums();
     }, []);
 
@@ -81,7 +81,7 @@ export default function Page() {
 
             console.log(newOffer);
             const response = await PostToDatabase({ tableName: "Offer", contentJson: [newOffer] });
-            
+
             if (response) {
                 setAlert({ type: 'success', message: '¡Oferta creada exitosamente!' });
                 setTimeout(() => {
@@ -112,7 +112,7 @@ export default function Page() {
                     </AlertDescription>
                 </Alert>
             )}
-            
+
             <Card>
                 <CardHeader>
                     <CardTitle className="text-2xl">Crear una oferta</CardTitle>
