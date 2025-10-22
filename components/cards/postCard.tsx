@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
@@ -15,6 +17,8 @@ export interface IPostCard {
 	typeOfPost: PostType;
 	peopleSignedObjective: number;
 	peopleSignedCurrent: number;
+	id?: string | number;
+	onSupportClick?: (id: string | number) => void;
 }
 
 export function PostCard({ props }: { props: IPostCard }) {
@@ -26,7 +30,11 @@ export function PostCard({ props }: { props: IPostCard }) {
 		typeOfPost,
 		peopleSignedCurrent,
 		peopleSignedObjective,
+		id,
+		onSupportClick,
 	} = props;
+
+
 
 	const offerCompletionPercentage = parseFloat(((peopleSignedCurrent * 100) / peopleSignedObjective).toFixed(2));
 
@@ -52,9 +60,13 @@ export function PostCard({ props }: { props: IPostCard }) {
 				<div className="flex justify-between">
 					<Button>Información</Button>
 					{typeOfPost === "Oferta" ? (
-						<Button>Apúntate a la oferta</Button>
+						<Button onClick={() => id && onSupportClick && onSupportClick(id)}>
+							Apúntate a la oferta
+						</Button>
 					) : (
-						<Button>Apoya a la petición</Button>
+						<Button onClick={() => id && onSupportClick && onSupportClick(id)}>
+							Apoya a la petición
+						</Button>
 					)}
 				</div>
 
@@ -71,6 +83,21 @@ export function PostCard({ props }: { props: IPostCard }) {
 						</div>
 					</div>
 				)}
+
+				{typeOfPost === "Petición" && (
+					<div className="flex flex-col gap-2">
+						<Progress value={offerCompletionPercentage} />
+						<div className="flex justify-between">
+							<H4>
+								{peopleSignedCurrent} / {peopleSignedObjective}
+							</H4>
+
+							<H4>{offerCompletionPercentage}%</H4>
+						</div>
+					</div>
+				)}
+
+
 			</div>
 		</article>
 	);
