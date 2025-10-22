@@ -3,19 +3,23 @@
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useState } from "react";
-import { IOffer } from "@/lib/services/types";
+import { IOffer, IPetition } from "@/lib/services/types";
 import { PostCard } from "../cards/postCard";
 
-interface SearchOffersProps {
-  offers: IOffer[];
+type SearchableItem = IOffer | IPetition;
+type PostType = "Oferta" | "Petición";
+
+interface SearchItemsProps {
+  items: SearchableItem[];
+  postType: PostType;
 }
 
-export default function SearchOffers({ offers }: SearchOffersProps) {
+export default function SearchItems({ items, postType }: SearchItemsProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredOffers = offers.filter(
-    (offer) =>
-      offer.title?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false
+  const filteredItems = items.filter(
+    (item) =>
+      item.title?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false
   );
 
   return (
@@ -31,20 +35,20 @@ export default function SearchOffers({ offers }: SearchOffersProps) {
       </div>
 
       <div className="grid gap-4">
-        {filteredOffers.length === 0 ? (
+        {filteredItems.length === 0 ? (
           <p className="text-muted-foreground">No se encontraron ofertas</p>
         ) : (
-          filteredOffers.map((offer: IOffer) => (
+          filteredItems.map((item: SearchableItem) => (
             <PostCard
-              key={offer.id}
+              key={item.id}
               props={{
                 className: "w-full",
                 businessName: "N/A",
-                productDescription: offer.text || "N/A",
-                productName: offer.title || "N/A",
-                typeOfPost: "Oferta",
-                peopleSignedCurrent: offer.current_progress || 0,
-                peopleSignedObjective: offer.target_progress || 0,
+                productDescription: item.text || "N/A",
+                productName: item.title || "N/A",
+                typeOfPost: postType,
+                peopleSignedCurrent: item.current_progress || 0,
+                peopleSignedObjective: item.target_progress || 0,
               }}
             />
           ))

@@ -7,6 +7,7 @@ import { IOffer } from "@/lib/services/types";
 import Link from "next/link";
 import { OfferServices } from "./page-services";
 import SearchOffers from "@/components/search/search";
+import SearchItems from "@/components/search/search";
 
 export default async function Offers() {
   const { offers } = await OfferServices();
@@ -21,12 +22,14 @@ export default async function Offers() {
           </p>
         </div>
         <Link href="/offers/create">
-          <Plus className="w-5 h-5" />
-          Nueva Oferta
+          <Button className="flex items-center gap-2">
+            <Plus className="w-5 h-5" />
+            Nueva Oferta
+          </Button>
         </Link>
       </div>
 
-      <SearchOffers offers={offers} />
+      <SearchItems items={offers} postType="Oferta" />
     </section>
   );
 }
