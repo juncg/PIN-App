@@ -9,7 +9,7 @@ export function Header() {
 			<div className="w-full flex justify-between items-center px-4 md:px-6">
 				<div className="flex items-center gap-2">
 					<SidebarTrigger />
-					<Link className="font-semibold text-lg" href={"/"}>
+					<Link className="font-semibold text-lg" href={"/home"}>
 						Deal&Buy
 					</Link>
 				</div>
