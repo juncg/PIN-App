@@ -44,11 +44,13 @@ export default function SearchItems({ items, postType }: SearchItemsProps) {
               props={{
                 className: "w-full",
                 businessName: "N/A",
-                productDescription: item.text || "N/A",
-                productName: item.title || "N/A",
+                description: item.text || "N/A",
+                name: item.title || "N/A",
                 typeOfPost: postType,
                 peopleSignedCurrent: item.current_progress || 0,
                 peopleSignedObjective: item.target_progress || 0,
+                likes: item.likes || 0,
+                likedByUser: item.liked || false,
               }}
             />
           ))

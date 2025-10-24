@@ -4,6 +4,8 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
 import { H3, H4, P } from "../ui/typography";
+import {Separator} from "../ui/separator";
+import { Heart } from "lucide-react";
 
 type PostType = "Oferta" | "Petición";
 
@@ -15,6 +17,8 @@ export interface IPostCard {
 	typeOfPost: PostType;
 	peopleSignedObjective: number;
 	peopleSignedCurrent: number;
+	likes: number;
+	likedByUser?: boolean;
 }
 
 export function PostCard({ props }: { props: IPostCard }) {
@@ -26,6 +30,8 @@ export function PostCard({ props }: { props: IPostCard }) {
 		typeOfPost,
 		peopleSignedCurrent,
 		peopleSignedObjective,
+		likes,
+		likedByUser
 	} = props;
 
 	const offerCompletionPercentage = parseFloat(((peopleSignedCurrent * 100) / peopleSignedObjective).toFixed(2));
@@ -85,6 +91,19 @@ export function PostCard({ props }: { props: IPostCard }) {
 					</div>
 				)}
 			</div>
+
+			<div className="flex">
+				<Separator />
+			</div>
+
+            <div className="flex flex-row justify-start">
+                <Button variant="outline" className="mt-4">
+                    <Heart 
+                        className={cn("mr-2", likedByUser && "fill-red-500 text-red-500")} 
+                    /> 
+                    {likes || 0}
+                </Button>
+            </div>
 		</article>
 	);
 }
