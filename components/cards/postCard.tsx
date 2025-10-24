@@ -99,7 +99,7 @@ export  function PostCard({ props }: { props: IPostCard }) {
 			</div>
 
 			<div className="flex flex-row justify-start">
-				<LikeButton props={{ likes, likedByUser, post_id: id }} />
+				<LikeButton props={{ likes, likedByUser, post_id: id, typeOfPost }} />
 			</div>
 		</article>
 	);

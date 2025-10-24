@@ -10,10 +10,11 @@ export interface ILikeButton {
   likes: number;
   likedByUser?: boolean;
   post_id: number;
+  typeOfPost?: "Oferta" | "Petición";
 }
 
 export function LikeButton({ props }: { props: ILikeButton }) {
-  const { likes, likedByUser, post_id } = props;
+  const { likes, likedByUser, post_id, typeOfPost } = props;
   const [numberOfLikes, setLikes] = useState<number>(likes);
   const [liked, setLiked] = useState<boolean>(likedByUser || false);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +28,7 @@ export function LikeButton({ props }: { props: ILikeButton }) {
     setIsLoading(true);
 
     try {
-      const result = await handleLikeAction(post_id, liked);
+      const result = await handleLikeAction(post_id, liked, typeOfPost);
 
       console.log("Resultado de la acción:", result);
 
