@@ -11,20 +11,28 @@ export function GetClient() {
 
 const { supabase } = GetClient();
 
-export async function GetFromDatabase<T = unknown>({ tableName, select, eq }: IGetFromDatabase): Promise<T[]> {
-	let query = supabase.from(tableName).select(select);
-	
-	if (eq) {
-		query = query.eq(eq[0], eq[1]);
-	}
-	
-	const { data: entries, error } = await query;
 
-	if (error) {
-		console.error(`Error fetching ${tableName}:`, error);
-	}
+export async function GetFromDatabase<T = unknown>({ tableName, select, eq, additionalEqs }: IGetFromDatabase): Promise<T[]> {
+    let query = supabase.from(tableName).select(select);
+    
+    if (eq) {
+        query = query.eq(eq[0], eq[1]);
+    }
+    
+    // Aplicar filtros adicionales si existen
+    if (additionalEqs && additionalEqs.length > 0) {
+        additionalEqs.forEach(([column, value]) => {
+            query = query.eq(column, value);
+        });
+    }
+    
+    const { data: entries, error } = await query;
 
-	return (entries as T[]) || [];
+    if (error) {
+        console.error(`Error fetching ${tableName}:`, error);
+    }
+
+    return (entries as T[]) || [];
 }
 
 export async function PostToDatabase<T = unknown>({ tableName, contentJson }: IPostToDatabase<T>): Promise<T[]> {
@@ -39,19 +47,29 @@ export async function PostToDatabase<T = unknown>({ tableName, contentJson }: IP
 }
 
 export async function PutToDatabase<T = unknown>({
-	tableName,
-	contentJson,
-	matchColumn,
-	matchValue,
+    tableName,
+    contentJson,
+    matchColumn,
+    matchValue,
+    additionalMatches,
 }: IPutToDatabase<T>): Promise<T[]> {
-	const { data, error } = await supabase.from(tableName).update(contentJson).eq(matchColumn, matchValue).select();
+    let query = supabase.from(tableName).update(contentJson).eq(matchColumn, matchValue);
+    
+    // Aplicar filtros adicionales si existen
+    if (additionalMatches && additionalMatches.length > 0) {
+        additionalMatches.forEach(([column, value]) => {
+            query = query.eq(column, value);
+        });
+    }
+    
+    const { data, error } = await query.select();
 
-	if (error) {
-		console.error(`Error updating ${tableName}:`, error);
-		return [];
-	}
+    if (error) {
+        console.error(`Error updating ${tableName}:`, error);
+        return [];
+    }
 
-	return (data as T[]) || [];
+    return (data as T[]) || [];
 }
 
 export async function DeleteFromDatabase<T = unknown>({

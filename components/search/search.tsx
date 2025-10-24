@@ -51,6 +51,7 @@ export default function SearchItems({ items, postType }: SearchItemsProps) {
                 peopleSignedObjective: item.target_progress || 0,
                 likes: item.likes || 0,
                 likedByUser: item.liked || false,
+                id: item.id,
               }}
             />
           ))

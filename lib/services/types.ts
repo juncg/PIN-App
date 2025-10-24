@@ -37,9 +37,10 @@ export type IProduct = Tables<"Product"> & {
 };
 
 export interface IGetFromDatabase {
-	tableName: string;
-	select: string;
-	eq?: [string, string];
+    tableName: string;
+    select: string;
+    eq?: [string, string | number];
+    additionalEqs?: [string, string | number][];
 }
 
 export interface IPostToDatabase<T = unknown> {
@@ -48,10 +49,11 @@ export interface IPostToDatabase<T = unknown> {
 }
 
 export interface IPutToDatabase<T = unknown> {
-	tableName: string;
-	contentJson: Partial<T>;
-	matchColumn: string;
-	matchValue: string | number;
+    tableName: string;
+    contentJson: Partial<T>;
+    matchColumn: string;
+    matchValue: string | number;
+    additionalMatches?: [string, string | number][];
 }
 
 export interface IDeleteToDatabase {
