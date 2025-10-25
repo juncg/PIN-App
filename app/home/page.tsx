@@ -26,6 +26,8 @@ export default async function Home() {
 							typeOfPost: "Petición",
 							peopleSignedCurrent: petition.current_progress || 0,
 							peopleSignedObjective: petition.target_progress || 0,
+							likes: petition.likes,
+							id: petition.id,
 						}}
 					/>
 				))}
@@ -47,6 +49,8 @@ export default async function Home() {
 							typeOfPost: "Oferta",
 							peopleSignedCurrent: offer.current_progress || 0,
 							peopleSignedObjective: offer.target_progress || 0,
+							likes: offer.likes,
+							id: offer.id,
 						}}
 					/>
 				))}

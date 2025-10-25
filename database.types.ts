@@ -290,58 +290,52 @@ export type Database = {
       }
       Offer: {
         Row: {
-          comment_locked_state:
-            | Database["public"]["Enums"]["Comment_Locked_State"]
-            | null
+          comment_locked_state: Database["public"]["Enums"]["Comment_Locked_State"]
           created_at: string
-          creator_id: string | null
-          current_progress: number | null
-          fee: number | null
+          creator_id: string
+          current_progress: number
+          fee: number
           forum_id: number | null
           id: number
-          likes: number | null
-          state: Database["public"]["Enums"]["Post_State"] | null
-          superlikes: number | null
-          target_completition_date: string | null
-          target_progress: number | null
-          text: string | null
-          title: string | null
+          likes: number
+          state: Database["public"]["Enums"]["Post_State"]
+          superlikes: number
+          target_completition_date: string
+          target_progress: number
+          text: string
+          title: string
         }
         Insert: {
-          comment_locked_state?:
-            | Database["public"]["Enums"]["Comment_Locked_State"]
-            | null
+          comment_locked_state?: Database["public"]["Enums"]["Comment_Locked_State"]
           created_at?: string
-          creator_id?: string | null
-          current_progress?: number | null
-          fee?: number | null
+          creator_id?: string
+          current_progress?: number
+          fee?: number
           forum_id?: number | null
           id?: number
-          likes?: number | null
-          state?: Database["public"]["Enums"]["Post_State"] | null
-          superlikes?: number | null
-          target_completition_date?: string | null
-          target_progress?: number | null
-          text?: string | null
-          title?: string | null
+          likes?: number
+          state?: Database["public"]["Enums"]["Post_State"]
+          superlikes?: number
+          target_completition_date: string
+          target_progress?: number
+          text?: string
+          title?: string
         }
         Update: {
-          comment_locked_state?:
-            | Database["public"]["Enums"]["Comment_Locked_State"]
-            | null
+          comment_locked_state?: Database["public"]["Enums"]["Comment_Locked_State"]
           created_at?: string
-          creator_id?: string | null
-          current_progress?: number | null
-          fee?: number | null
+          creator_id?: string
+          current_progress?: number
+          fee?: number
           forum_id?: number | null
           id?: number
-          likes?: number | null
-          state?: Database["public"]["Enums"]["Post_State"] | null
-          superlikes?: number | null
-          target_completition_date?: string | null
-          target_progress?: number | null
-          text?: string | null
-          title?: string | null
+          likes?: number
+          state?: Database["public"]["Enums"]["Post_State"]
+          superlikes?: number
+          target_completition_date?: string
+          target_progress?: number
+          text?: string
+          title?: string
         }
         Relationships: [
           {
@@ -422,52 +416,46 @@ export type Database = {
       }
       Petition: {
         Row: {
-          comment_locked_state:
-            | Database["public"]["Enums"]["Comment_Locked_State"]
-            | null
+          comment_locked_state: Database["public"]["Enums"]["Comment_Locked_State"]
           created_at: string
           creator_id: string
-          current_progress: number | null
+          current_progress: number
           forum_id: number | null
           id: number
-          likes: number | null
-          state: Database["public"]["Enums"]["Post_State"] | null
-          superlikes: number | null
+          likes: number
+          state: Database["public"]["Enums"]["Post_State"]
+          superlikes: number
           target_progress: number | null
-          text: string | null
-          title: string | null
+          text: string
+          title: string
         }
         Insert: {
-          comment_locked_state?:
-            | Database["public"]["Enums"]["Comment_Locked_State"]
-            | null
-          created_at?: string
-          creator_id: string
-          current_progress?: number | null
-          forum_id?: number | null
-          id?: number
-          likes?: number | null
-          state?: Database["public"]["Enums"]["Post_State"] | null
-          superlikes?: number | null
-          target_progress?: number | null
-          text?: string | null
-          title?: string | null
-        }
-        Update: {
-          comment_locked_state?:
-            | Database["public"]["Enums"]["Comment_Locked_State"]
-            | null
+          comment_locked_state?: Database["public"]["Enums"]["Comment_Locked_State"]
           created_at?: string
           creator_id?: string
-          current_progress?: number | null
+          current_progress?: number
           forum_id?: number | null
           id?: number
-          likes?: number | null
-          state?: Database["public"]["Enums"]["Post_State"] | null
-          superlikes?: number | null
+          likes?: number
+          state?: Database["public"]["Enums"]["Post_State"]
+          superlikes?: number
           target_progress?: number | null
-          text?: string | null
-          title?: string | null
+          text?: string
+          title?: string
+        }
+        Update: {
+          comment_locked_state?: Database["public"]["Enums"]["Comment_Locked_State"]
+          created_at?: string
+          creator_id?: string
+          current_progress?: number
+          forum_id?: number | null
+          id?: number
+          likes?: number
+          state?: Database["public"]["Enums"]["Post_State"]
+          superlikes?: number
+          target_progress?: number | null
+          text?: string
+          title?: string
         }
         Relationships: [
           {
