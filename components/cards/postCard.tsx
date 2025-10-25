@@ -18,7 +18,7 @@ export interface IPostCard {
 	peopleSignedObjective: number;
 	peopleSignedCurrent: number;
 	likes: number;
-	likedByUser?: boolean;
+	likedByUser: boolean;
 	id: number;
 }
 

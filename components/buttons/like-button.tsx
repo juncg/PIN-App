@@ -8,7 +8,7 @@ import { handleLikeAction } from "./like-button-actions";
 
 export interface ILikeButton {
   likes: number;
-  likedByUser?: boolean;
+  likedByUser: boolean;
   post_id: number;
   typeOfPost?: "Oferta" | "Petición";
 }
@@ -16,7 +16,7 @@ export interface ILikeButton {
 export function LikeButton({ props }: { props: ILikeButton }) {
   const { likes, likedByUser, post_id, typeOfPost } = props;
   const [numberOfLikes, setLikes] = useState<number>(likes);
-  const [liked, setLiked] = useState<boolean>(likedByUser || false);
+  const [liked, setLiked] = useState<boolean>(likedByUser);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLike = async () => {

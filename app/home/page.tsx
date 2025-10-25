@@ -26,6 +26,7 @@ export default async function Home() {
 							typeOfPost: "Petición",
 							peopleSignedCurrent: petition.current_progress || 0,
 							peopleSignedObjective: petition.target_progress || 0,
+							likedByUser: petition.liked || false,
 							likes: petition.likes,
 							id: petition.id,
 						}}
@@ -43,13 +44,14 @@ export default async function Home() {
 						key={offer.id}
 						props={{
 							className: "w-full",
-							businessName: (offer.businesses && offer.businesses[0].business.name) || "N/A",
+							businessName: offer.businesses?.[0]?.business?.name || "N/A",
 							description: offer.text || "N/A",
 							name: offer.title || "N/A",
 							typeOfPost: "Oferta",
 							peopleSignedCurrent: offer.current_progress || 0,
 							peopleSignedObjective: offer.target_progress || 0,
 							likes: offer.likes,
+							likedByUser: offer.liked || false,
 							id: offer.id,
 						}}
 					/>
