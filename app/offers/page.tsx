@@ -1,12 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Edit, Plus, Search } from "lucide-react";
-import { H1, H2 } from "@/components/ui/typography";
-import { Input } from "@/components/ui/input";
-import { GetFromDatabase } from "@/lib/services/general";
-import { IOffer } from "@/lib/services/types";
+import { Plus } from "lucide-react";
 import Link from "next/link";
 import { OfferServices } from "./page-services";
-import SearchOffers from "@/components/search/search";
 import SearchItems from "@/components/search/search";
 
 export default async function Offers() {

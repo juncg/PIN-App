@@ -1,8 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { H1, H2 } from "@/components/ui/typography";
-import { GetFromDatabase } from "@/lib/services/general";
-import { IPetition } from "@/lib/services/types";
-import { PostCard } from "@/components/cards/postCard";
 import { PetitionServices } from "./page-services";
 import Link from "next/link";
 import { Plus } from "lucide-react";
