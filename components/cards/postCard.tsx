@@ -6,7 +6,7 @@ import { Progress } from "../ui/progress";
 import { H3, H4, P } from "../ui/typography";
 import { Separator } from "../ui/separator";
 import { LikeButton } from "../buttons/like-button";
-import { Share2, Show } from "lucide-react";
+import { ShareComponent } from "../share-post/share";
 import Link from "next/link";
 
 type PostType = "Oferta" | "Petición";
@@ -22,6 +22,7 @@ export interface IPostCard {
   likes: number;
   likedByUser: boolean;
   id: number;
+  baseUrl?: string;
 }
 
 export function PostCard({ props }: { props: IPostCard }) {
@@ -36,11 +37,18 @@ export function PostCard({ props }: { props: IPostCard }) {
     likes,
     likedByUser,
     id,
+    baseUrl,
   } = props;
 
   const offerCompletionPercentage = parseFloat(
     ((peopleSignedCurrent * 100) / peopleSignedObjective).toFixed(2)
   );
+
+  const origin =
+    baseUrl || (typeof window !== "undefined" ? window.location.origin : "");
+  const postUrl = `${origin}${
+    typeOfPost === "Petición" ? `/petitions/${id}` : `/offers/${id}`
+  }`;
 
   return (
     <article
@@ -78,7 +86,7 @@ export function PostCard({ props }: { props: IPostCard }) {
               typeOfPost === "Petición" ? `/petitions/${id}` : `/offers/${id}`
             }
           >
-            <Button variant="default" className="mt-4">
+            <Button variant="default">
               Información
             </Button>
           </Link>
@@ -124,10 +132,11 @@ export function PostCard({ props }: { props: IPostCard }) {
       <div className="flex flex-row justify-between">
         <div className="flex flex-row justify-start gap-6">
           <LikeButton props={{ likes, likedByUser, post_id: id, typeOfPost }} />
-          <Button variant="outline" className="mt-4">
-            <Share2 className="w-4 h-4 mr-2" />
-            Compartir
-          </Button>
+          <ShareComponent
+            url={postUrl}
+            title={name}
+            description={description}
+          />
         </div>
       </div>
     </article>
