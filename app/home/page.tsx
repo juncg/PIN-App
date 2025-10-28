@@ -21,7 +21,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
     return (
         <section className="flex flex-row justify-center gap-8">
             <div className="flex flex-col items-baseline gap-8 w-1/3">
-                <Link href={"/offers"}>
+                <Link href={"/petitions"}>
                     <H1>{t('petitions')}</H1>
                 </Link>
 
