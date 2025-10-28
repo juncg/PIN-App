@@ -35,9 +35,8 @@ export function LocaleSwitcher() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
-                    <Globe className="h-4 w-4 mr-2" />
-                    {locales.find(l => l.code === currentLocale)?.label}
+                <Button variant="ghost" size="sm" className="outline-none focus-visible:ring-0">
+                    <Globe className="h-4 w-4" />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
