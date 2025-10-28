@@ -26,16 +26,8 @@ export function LikeButton(props: ILikeButton) {
     setLikes(newLikesCount);
 
 		try {
-			const result = await handleLikeAction(post_id, liked, typeOfPost);
+			await handleLikeAction(post_id, liked, typeOfPost);
 
-			console.log("Resultado de la acción:", result);
-
-      if (!result.success) {
-        // Revertir cambios si falla
-        setLiked(liked);
-        setLikes(numberOfLikes);
-        console.error("Error al actualizar like:", result.error);
-      }
     } catch (error) {
       // Revertir cambios si falla
       setLiked(liked);
