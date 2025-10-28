@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createClient } from "@supabase/supabase-js";
-import { IDeleteToDatabase, IGetFromDatabase, IPostToDatabase, IPutToDatabase } from "./types";
 
 export function GetClient() {
 	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "URL no encontrada";
@@ -11,32 +11,116 @@ export function GetClient() {
 
 const { supabase } = GetClient();
 
+type SupabaseGenericFilter =
+	| {
+			method:
+				| "eq"
+				| "gt"
+				| "lt"
+				| "gte"
+				| "lte"
+				| "like"
+				| "ilike"
+				| "is"
+				| "in"
+				| "neq"
+				| "contains"
+				| "containedBy"
+				| "not"
+				| "or"
+				| "order"
+				| "range"
+				| "single"
+				| "limit"
+				| "rangeFrom"
+				| "rangeTo";
+			column?: string;
+			value?: any;
+			operator?: string;
+			ascending?: boolean;
+			nullsFirst?: boolean;
+			from?: number;
+			to?: number;
+	  }
+	| { method: "or"; value: string };
 
-export async function GetFromDatabase<T = unknown>({ tableName, select, eq, additionalEqs }: IGetFromDatabase): Promise<T[]> {
-    let query = supabase.from(tableName).select(select);
-    
-    if (eq) {
-        query = query.eq(eq[0], eq[1]);
-    }
-    
-    // Aplicar filtros adicionales si existen
-    if (additionalEqs && additionalEqs.length > 0) {
-        additionalEqs.forEach(([column, value]) => {
-            query = query.eq(column, value);
-        });
-    }
-    
-    const { data: entries, error } = await query;
-
-    if (error) {
-        console.error(`Error fetching ${tableName}:`, error);
-    }
-
-    return (entries as T[]) || [];
+function applySupabaseFilter(query: any, filter: SupabaseGenericFilter) {
+	switch (filter.method) {
+		case "eq":
+		case "gt":
+		case "lt":
+		case "gte":
+		case "lte":
+		case "like":
+		case "ilike":
+		case "is":
+		case "in":
+		case "neq":
+			return query[filter.method](filter.column, filter.value);
+		case "contains":
+		case "containedBy":
+			return query[filter.method](filter.column, filter.value);
+		case "not":
+			return query.not(filter.column, filter.operator, filter.value);
+		case "or":
+			return query.or(filter.value);
+		case "order":
+			return query.order(filter.column!, { ascending: filter.ascending ?? true, nullsFirst: filter.nullsFirst });
+		case "range":
+			return query.range(filter.from!, filter.to!);
+		case "rangeFrom":
+			return query.range(filter.from!, undefined);
+		case "rangeTo":
+			return query.range(undefined, filter.to!);
+		case "single":
+			return query.single();
+		case "limit":
+			return query.limit(filter.value);
+		default:
+			return query;
+	}
 }
 
-export async function PostToDatabase<T = unknown>({ tableName, contentJson }: IPostToDatabase<T>): Promise<T[]> {
-	const { data, error } = await supabase.from(tableName).insert(contentJson).select();
+export async function GetFromDatabase<T = unknown>({
+	tableName,
+	select = "*",
+	filters = [],
+}: {
+	tableName: string;
+	select?: string;
+	filters?: SupabaseGenericFilter[];
+}): Promise<T[]> {
+	let query = supabase.from(tableName).select(select);
+
+	filters.forEach((filter) => {
+		query = applySupabaseFilter(query, filter);
+	});
+
+	const { data: entries, error } = await query;
+
+	if (error) {
+		console.error(`Error fetching ${tableName}:`, error);
+	}
+
+	return (entries as T[]) || [];
+}
+
+export async function PostToDatabase<T = unknown>({
+	tableName,
+	contentJson,
+	filters = [],
+}: {
+	tableName: string;
+	contentJson: Partial<T> | Partial<T>[];
+	filters?: SupabaseGenericFilter[];
+}): Promise<T[]> {
+	let query = supabase.from(tableName).insert(contentJson).select();
+
+	filters.forEach((filter) => {
+		query = applySupabaseFilter(query, filter);
+	});
+
+	const { data, error } = await query;
 
 	if (error) {
 		console.error(`Error inserting into ${tableName}:`, error);
@@ -47,37 +131,60 @@ export async function PostToDatabase<T = unknown>({ tableName, contentJson }: IP
 }
 
 export async function PutToDatabase<T = unknown>({
-    tableName,
-    contentJson,
-    matchColumn,
-    matchValue,
-    additionalMatches,
-}: IPutToDatabase<T>): Promise<T[]> {
-    let query = supabase.from(tableName).update(contentJson).eq(matchColumn, matchValue);
-    
-    // Aplicar filtros adicionales si existen
-    if (additionalMatches && additionalMatches.length > 0) {
-        additionalMatches.forEach(([column, value]) => {
-            query = query.eq(column, value);
-        });
-    }
-    
-    const { data, error } = await query.select();
+	tableName,
+	contentJson,
+	matchColumn,
+	matchValue,
+	additionalMatches,
+	filters = [],
+}: {
+	tableName: string;
+	contentJson: Partial<T>;
+	matchColumn: string;
+	matchValue: any;
+	additionalMatches?: [string, any][];
+	filters?: SupabaseGenericFilter[];
+}): Promise<T[]> {
+	let query = supabase.from(tableName).update(contentJson).eq(matchColumn, matchValue);
 
-    if (error) {
-        console.error(`Error updating ${tableName}:`, error);
-        return [];
-    }
+	if (additionalMatches && additionalMatches.length > 0) {
+		additionalMatches.forEach(([column, value]) => {
+			query = query.eq(column, value);
+		});
+	}
 
-    return (data as T[]) || [];
+	filters.forEach((filter) => {
+		query = applySupabaseFilter(query, filter);
+	});
+
+	const { data, error } = await query.select();
+
+	if (error) {
+		console.error(`Error updating ${tableName}:`, error);
+		return [];
+	}
+
+	return (data as T[]) || [];
 }
 
 export async function DeleteFromDatabase<T = unknown>({
 	tableName,
 	matchColumn,
 	matchValue,
-}: IDeleteToDatabase): Promise<T[]> {
-	const { error } = await supabase.from(tableName).delete().eq(matchColumn, matchValue);
+	filters = [],
+}: {
+	tableName: string;
+	matchColumn: string;
+	matchValue: any;
+	filters?: SupabaseGenericFilter[];
+}): Promise<T[]> {
+	let query = supabase.from(tableName).delete().eq(matchColumn, matchValue);
+
+	filters.forEach((filter) => {
+		query = applySupabaseFilter(query, filter);
+	});
+
+	const { error } = await query;
 
 	if (error) {
 		console.error(`Error deleting from ${tableName}:`, error);
