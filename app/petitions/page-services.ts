@@ -3,26 +3,26 @@ import { IPetition } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user.server";
 
 export async function PetitionServices() {
-	const currentUserId = await getUserUuid();
+    const currentUserId = await getUserUuid();
 
-	const petitionsWithRelations = await GetFromDatabase<IPetition & { User_Petition: [{ liked: boolean }] | [] }>({
-		tableName: "Petition",
-		select: `*, User_Petition!left(liked)`,
-		filters: [{ method: "eq", column: "User_Petition.user_id", value: currentUserId }],
-	});
+    const petitionsWithRelations = await GetFromDatabase<IPetition & { User_Petition: { liked: boolean; user_id: string }[] }>({
+        tableName: "Petition",
+        select: `*, User_Petition!left(liked, user_id)`,
+    });
 
-	const petitions: (IPetition & { liked: boolean })[] = petitionsWithRelations.map((petition) => {
-		const isLiked = petition.User_Petition.length > 0 ? petition.User_Petition[0]?.liked : false;
+    console.log("Fetched petitions with relations:", petitionsWithRelations);
 
-		const { ...restOfPetition } = petition;
+    const petitions: (IPetition & { liked: boolean })[] = petitionsWithRelations.map((petition) => {
+        const userPetition = petition.User_Petition?.find(up => up.user_id === currentUserId);
+        const isLiked = userPetition?.liked || false;
 
-		return {
-			...restOfPetition,
-			liked: isLiked,
-		} as IPetition & { liked: boolean };
-	});
+        return {
+            ...petition,
+            liked: isLiked,
+        } as IPetition & { liked: boolean };
+    });
 
-	console.log("Petitions with liked status:", petitions);
+    console.log("Petitions with liked status:", petitions);
 
-	return { petitions };
+    return { petitions };
 }

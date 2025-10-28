@@ -133,25 +133,14 @@ export async function PostToDatabase<T = unknown>({
 export async function PutToDatabase<T = unknown>({
 	tableName,
 	contentJson,
-	matchColumn,
-	matchValue,
-	additionalMatches,
 	filters = [],
 }: {
 	tableName: string;
 	contentJson: Partial<T>;
-	matchColumn: string;
-	matchValue: any;
-	additionalMatches?: [string, any][];
 	filters?: SupabaseGenericFilter[];
 }): Promise<T[]> {
-	let query = supabase.from(tableName).update(contentJson).eq(matchColumn, matchValue);
+	let query = supabase.from(tableName).update(contentJson);
 
-	if (additionalMatches && additionalMatches.length > 0) {
-		additionalMatches.forEach(([column, value]) => {
-			query = query.eq(column, value);
-		});
-	}
 
 	filters.forEach((filter) => {
 		query = applySupabaseFilter(query, filter);
