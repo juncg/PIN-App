@@ -8,6 +8,7 @@ import { Separator } from "../ui/separator";
 import { LikeButton } from "../buttons/like-button";
 import { ShareComponent } from "../share-post/share";
 import Link from "next/link";
+import { SubscriptionButton } from "../buttons/subscribe-button";
 
 type PostType = "Oferta" | "Petición";
 
@@ -23,6 +24,7 @@ export interface IPostCard {
   likedByUser: boolean;
   id: number;
   baseUrl?: string;
+  subscribedByUser: boolean;
 }
 
 export function PostCard({ props }: { props: IPostCard }) {
@@ -38,6 +40,7 @@ export function PostCard({ props }: { props: IPostCard }) {
     likedByUser,
     id,
     baseUrl,
+    subscribedByUser
   } = props;
 
   const offerCompletionPercentage = parseFloat(
@@ -46,9 +49,8 @@ export function PostCard({ props }: { props: IPostCard }) {
 
   const origin =
     baseUrl || (typeof window !== "undefined" ? window.location.origin : "");
-  const postUrl = `${origin}${
-    typeOfPost === "Petición" ? `/petitions/${id}` : `/offers/${id}`
-  }`;
+  const postUrl = `${origin}${typeOfPost === "Petición" ? `/petitions/${id}` : `/offers/${id}`
+    }`;
 
   return (
     <article
@@ -93,7 +95,7 @@ export function PostCard({ props }: { props: IPostCard }) {
           {typeOfPost === "Oferta" ? (
             <Button>Apúntate a la oferta</Button>
           ) : (
-            <Button>Apoya a la petición</Button>
+            <SubscriptionButton props={{ subscriptions: peopleSignedCurrent, subscribedByUser, post_id: id, typeOfPost }} />
           )}
         </div>
 
