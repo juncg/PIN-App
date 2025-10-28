@@ -6,7 +6,13 @@ import Image from "next/image";
 
 export default async function Home() {
 	const uuid = await getUserUuid();
-	const user = uuid ? await GetFromDatabase<IUser>({ tableName: "User", select: "*", eq: ["id", uuid] }) : [];
+	const user = uuid
+		? await GetFromDatabase<IUser>({
+				tableName: "User",
+				select: "*",
+				filters: [{ method: "eq", column: "id", value: uuid }],
+		  })
+		: [];
 
 	return (
 		<section className="flex flex-col justify-center gap-8">
