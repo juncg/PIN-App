@@ -36,10 +36,8 @@ export async function handleLikeAction(post_id: number, currentlyLiked: boolean,
             [postIdColumn]: post_id,
             liked: true,
             subscribed: false,
-            email_notifications: false,
-            email_notification_state: "None",
-            native_notifications: false,
-            native_notification_state: "None",
+            email_notifications: "None",
+            native_notifications: "None",
           }],
         });
       }
