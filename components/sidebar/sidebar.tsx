@@ -44,11 +44,7 @@ const items = [
 		url: "/businesses",
 		icon: Building,
 	},
-	{
-		title: "Suscribirse como empresa",
-		url: "/suscribirse-empresa",
-		icon: Building,
-	},
+	
 ];
 
 const settingsItems = [
