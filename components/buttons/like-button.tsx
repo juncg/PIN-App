@@ -1,42 +1,43 @@
 "use client";
 
-import { Heart } from "lucide-react";
-import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
+import { Heart } from "lucide-react";
 import { useState } from "react";
+import { Button } from "../ui/button";
 import { handleLikeAction } from "./like-button-actions";
 
 export interface ILikeButton {
-  likes: number;
-  likedByUser: boolean;
-  post_id: number;
-  typeOfPost?: "Oferta" | "Petición";
+	likes: number;
+	likedByUser: boolean;
+	post_id: number;
+	typeOfPost?: "Oferta" | "Petición";
 }
 
-export function LikeButton({ props }: { props: ILikeButton }) {
-  const { likes, likedByUser, post_id, typeOfPost } = props;
-  const [numberOfLikes, setLikes] = useState<number>(likes);
-  const [liked, setLiked] = useState<boolean>(likedByUser);
- // const [isLoading, setIsLoading] = useState(false);
+export function LikeButton(props: ILikeButton) {
+	const { likes, likedByUser, post_id, typeOfPost } = props;
+	const [numberOfLikes, setLikes] = useState<number>(likes);
+	const [liked, setLiked] = useState<boolean>(likedByUser);
 
-  const handleLike = async () => {
-    const newLikedState = !liked;
-    const newLikesCount = newLikedState ? numberOfLikes + 1 : numberOfLikes - 1;
+	const handleLike = async () => {
+		const newLikedState = !liked;
+		const newLikesCount = newLikedState ? numberOfLikes + 1 : numberOfLikes - 1;
 
     setLiked(newLikedState);
     setLikes(newLikesCount);
 
-    try {
-      const result = await handleLikeAction(post_id, liked, typeOfPost);
+		try {
+			const result = await handleLikeAction(post_id, liked, typeOfPost);
 
-      console.log("Resultado de la acción:", result);
+			console.log("Resultado de la acción:", result);
 
       if (!result.success) {
+        // Revertir cambios si falla
         setLiked(liked);
         setLikes(numberOfLikes);
         console.error("Error al actualizar like:", result.error);
       }
     } catch (error) {
+      // Revertir cambios si falla
       setLiked(liked);
       setLikes(numberOfLikes);
       console.error("Error al actualizar like:", error);
