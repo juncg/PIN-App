@@ -11,49 +11,75 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import SelectTags from "@/components/select/select-tags";
 import { PostToDatabase } from "@/lib/services/general";
 import { IForum, IPetition } from "@/lib/services/types";
-import { getUserUuid } from "@/lib/services/user";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-interface PetitionFormProps {
+interface CreatePetitionFormProps {
   forums: IForum[];
   userId: string | null;
+  tags: { id: number; name: string }[];
 }
 
-export default function PetitionForm({ forums, userId }: PetitionFormProps) {
+export default function CreatePetitionForm({
+  forums,
+  userId,
+  tags,
+}: CreatePetitionFormProps) {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [targetProgress, setTargetProgress] = useState(0);
   const [allowComments, setAllowComments] = useState(true);
   const [forumId, setForumId] = useState<number | null>(null);
+  const [selectedTags, setSelectedTags] = useState<number[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
   const handlePetitionCreation = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newPetition: Omit<IPetition, "id"> = {
-      title: title,
-      text: text,
-      target_progress: targetProgress,
-      created_at: new Date().toISOString(),
-      creator_id: userId || "",
-      current_progress: 0,
-      comment_locked_state: "Unlocked",
-      forum_id: forumId,
-      likes: 0,
-      superlikes: 0,
-      state: "Posted",
-    };
+    setIsSubmitting(true);
 
-    console.log(newPetition);
+    try {
+      const newPetition: Omit<IPetition, "id"> = {
+        title: title,
+        text: text,
+        target_progress: targetProgress,
+        created_at: new Date().toISOString(),
+        creator_id: userId || "",
+        current_progress: 0,
+        comment_locked_state: "Unlocked",
+        forum_id: forumId,
+        likes: 0,
+        superlikes: 0,
+        state: "Posted",
+      };
 
-    const response = PostToDatabase({
-      tableName: "Petition",
-      contentJson: [newPetition],
-    });
+      const response = await PostToDatabase<Omit<IPetition, "id">>({
+        tableName: "Petition",
+        contentJson: [newPetition],
+      });
 
-    router.push("/petitions");
+      if (response && response[0]?.id && selectedTags.length > 0) {
+        const petitionId = response[0].id;
+        const tagRelations = selectedTags.map((tagId) => ({
+          petition_id: petitionId,
+          tag_id: tagId,
+        }));
+
+        await PostToDatabase({
+          tableName: "Petition_Tag",
+          contentJson: tagRelations,
+        });
+      }
+
+      router.push("/petitions");
+    } catch (error) {
+      console.error("Error creating petition:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -67,6 +93,7 @@ export default function PetitionForm({ forums, userId }: PetitionFormProps) {
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            disabled={isSubmitting}
           />
         </div>
         <div className="grid gap-2">
@@ -77,6 +104,7 @@ export default function PetitionForm({ forums, userId }: PetitionFormProps) {
             required
             value={text}
             onChange={(e) => setText(e.target.value)}
+            disabled={isSubmitting}
           />
         </div>
         <div className="grid gap-2">
@@ -87,6 +115,7 @@ export default function PetitionForm({ forums, userId }: PetitionFormProps) {
             required
             value={targetProgress}
             onChange={(e) => setTargetProgress(Number(e.target.value))}
+            disabled={isSubmitting}
           />
         </div>
         <div className="grid gap-2">
@@ -95,6 +124,7 @@ export default function PetitionForm({ forums, userId }: PetitionFormProps) {
             id="allowComments"
             checked={allowComments}
             onCheckedChange={setAllowComments}
+            disabled={isSubmitting}
           />
         </div>
         <div className="grid gap-2">
@@ -102,6 +132,7 @@ export default function PetitionForm({ forums, userId }: PetitionFormProps) {
           <Select
             value={forumId?.toString() || ""}
             onValueChange={(value) => setForumId(Number(value))}
+            disabled={isSubmitting}
           >
             <SelectTrigger>
               <SelectValue placeholder={"Selecciona un foro"} />
@@ -115,8 +146,21 @@ export default function PetitionForm({ forums, userId }: PetitionFormProps) {
             </SelectContent>
           </Select>
         </div>
+        <div className="grid gap-2">
+          <SelectTags
+            availableTags={tags}
+            selectedTags={selectedTags}
+            onTagsChange={setSelectedTags}
+            label="Tags"
+            placeholder="Selecciona tags para la petición"
+            disabled={isSubmitting}
+          />
+        </div>
+
         <div className="justify-end">
-          <Button type="submit">Crear Petición</Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Creando..." : "Crear Petición"}
+          </Button>
         </div>
       </div>
     </form>

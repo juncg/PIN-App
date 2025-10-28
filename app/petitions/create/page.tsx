@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,24 +5,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { GetFromDatabase } from "@/lib/services/general";
 import { IForum } from "@/lib/services/types";
-import PetitionForm from "@/components/forms/petition-form";
+import CreatePetitionForm from "@/components/forms/create-petition-form";
 import { getUserUuid } from "@/lib/services/user.server";
 
 export default async function Page() {
   const forums = await GetFromDatabase<IForum>({
     tableName: "Forum",
+    select: "*",
+  });
+
+  const tags = await GetFromDatabase<{ id: number; name: string }>({
+    tableName: "Tag",
     select: "*",
   });
 
@@ -39,7 +33,7 @@ export default async function Page() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <PetitionForm forums={forums} userId={userId} />
+          <CreatePetitionForm forums={forums} userId={userId} tags={tags} />
         </CardContent>
       </Card>
     </div>
