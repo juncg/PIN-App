@@ -40,6 +40,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
                             likes: petition.likes,
                             id: petition.id,
                             baseUrl: baseUrl,
+                            tags: petition.tags,
                         }}
                     />
                 ))}
@@ -65,6 +66,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
                             likedByUser: offer.liked || false,
                             id: offer.id,
                             baseUrl: baseUrl,
+                            tags: offer.tags,
                         }}
                     />
                 ))}

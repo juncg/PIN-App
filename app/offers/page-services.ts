@@ -3,26 +3,43 @@ import { IOffer } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user.server";
 
 export async function OfferServices() {
-	const currentUserId = await getUserUuid();
+  const currentUserId = await getUserUuid();
 
-	const offersWithRelations = await GetFromDatabase<IOffer & { User_Offer: [{ liked: boolean }] | [] }>({
-		tableName: "Offer",
-		select: `*, User_Offer!left(liked)`,
-		filters: [{ method: "eq", column: "User_Offer.user_id", value: currentUserId }],
-	});
+  const offersWithRelations = await GetFromDatabase<
+    IOffer & {
+      User_Offer: [{ liked: boolean }] | [];
+      tags: { Tag: { name: string | null } }[];
+    }
+  >({
+    tableName: "Offer",
+    select: `*, User_Offer!left(liked, user_id), tags:Offer_Tag(Tag(name))`,
+  });
 
-	const offers: (IOffer & { liked: boolean })[] = offersWithRelations.map((offer) => {
-		const isLiked = offer.User_Offer.length > 0 ? offer.User_Offer[0]?.liked : false;
+  const offers: (IOffer & { liked: boolean; tags: string[] })[] =
+    offersWithRelations.map((offer) => {
+      const userOffer = offer.User_Offer?.find(
+        (up) => up.user_id === currentUserId
+      );
 
-		const { ...restOfOffer } = offer;
+      const isLiked = userOffer?.liked || false;
 
-		return {
-			...restOfOffer,
-			liked: isLiked,
-		} as IOffer & { liked: boolean };
-	});
+      const tagNames = offer.tags
+        ? offer.tags
+            .map((tagRel) => tagRel.Tag.name)
+            .filter(
+              (name): name is string =>
+                typeof name === "string" && name.trim() !== ""
+            )
+        : [];
 
-	console.log("Offers with liked status:", offers);
+      return {
+        ...offer,
+        liked: isLiked,
+        tags: tagNames,
+      } as IOffer & { liked: boolean; tags: string[] };
+    });
 
-	return { offers };
+  console.log("Offers with liked status:", offers);
+
+  return { offers };
 }

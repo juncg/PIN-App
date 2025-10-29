@@ -3,41 +3,54 @@ import { IOffer, IPetition, IProduct } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user.server";
 
 export async function HomeServices() {
-	const currentUserId = await getUserUuid();
-	const productSelect = "*, businesses:Product_Business!inner(business:Business(*))";
-	const offerSelect = "*, User_Offer!left(*)";
-	const petitionSelect = "*, User_Petition!left(*)";
+    const currentUserId = await getUserUuid();
+    const productSelect = "*, businesses:Product_Business!inner(business:Business(*))";
 
-	const products = await GetFromDatabase<IProduct>({ tableName: "Product", select: productSelect });
+    const products = await GetFromDatabase<IProduct>({ tableName: "Product", select: productSelect });
 
-	const offersWithRelations = await GetFromDatabase<IOffer>({
-		tableName: "Offer",
-		select: offerSelect,
-		filters: [{ method: "eq", column: "User_Offer.user_id", value: currentUserId || "" }],
-	});
+    const offersWithRelations = await GetFromDatabase<
+        IOffer & {
+            User_Offer: { liked: boolean; user_id: string }[];
+            tags: { Tag: { name: string | null } }[];
+        }
+    >({ tableName: "Offer", select: `*, User_Offer!left(liked, user_id), tags:Offer_Tag(Tag(name))`});
 
-	const offers: (IOffer & { liked: boolean })[] = offersWithRelations.map((offer) => {
-		const isLiked = offer.User_Offer && offer.User_Offer.length > 0 ? offer.User_Offer[0]?.liked : false;
-		return {
-			...offer,
-			liked: isLiked || false,
-		};
-	});
+    const offers: (IOffer & { liked: boolean; tags: string[] })[] = offersWithRelations.map((offer) => {
+        const userOffer = offer.User_Offer?.find((uo) => uo.user_id === currentUserId);
+        const isLiked = userOffer?.liked || false;
 
-	const petitionsWithRelations = await GetFromDatabase<IPetition>({
-		tableName: "Petition",
-		select: petitionSelect,
-		filters: [{ method: "eq", column: "User_Petition.user_id", value: currentUserId || "" }],
-	});
+        const tagNames = offer.tags
+            ?.map((tagRel) => tagRel.Tag.name)
+            .filter((name): name is string => typeof name === "string" && name.trim() !== "") || [];
 
-	const petitions: (IPetition & { liked: boolean })[] = petitionsWithRelations.map((petition) => {
-		const isLiked =
-			petition.User_Petition && petition.User_Petition.length > 0 ? petition.User_Petition[0]?.liked : false;
-		return {
-			...petition,
-			liked: isLiked || false,
-		};
-	});
+        return {
+            ...offer,
+            liked: isLiked,
+            tags: tagNames,
+        };
+    });
 
-	return { offers, petitions, products };
+    const petitionsWithRelations = await GetFromDatabase<
+        IPetition & {
+            User_Petition: { liked: boolean; user_id: string }[];
+            tags: { Tag: { name: string | null } }[];
+        }
+    >({ tableName: "Petition",select: `*, User_Petition!left(liked, user_id), tags:Petition_Tag(Tag(name))` });
+
+    const petitions: (IPetition & { liked: boolean; tags: string[] })[] = petitionsWithRelations.map((petition) => {
+        const userPetition = petition.User_Petition?.find((up) => up.user_id === currentUserId);
+        const isLiked = userPetition?.liked || false;
+
+        const tagNames = petition.tags
+            ?.map((tagRel) => tagRel.Tag.name)
+            .filter((name): name is string => typeof name === "string" && name.trim() !== "") || [];
+
+        return {
+            ...petition,
+            liked: isLiked,
+            tags: tagNames,
+        };
+    });
+
+    return { offers, petitions, products };
 }
