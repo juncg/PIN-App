@@ -8,6 +8,13 @@ import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
 import { Separator } from "../ui/separator";
 import { H3, H4, P } from "../ui/typography";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "../ui/carousel";
 
 type PostType = "Oferta" | "Petición";
 
@@ -24,6 +31,15 @@ export interface IPostCard {
   id: number;
   baseUrl?: string;
   tags?: string[];
+  images?: string[];
+}
+
+// ni pajolera idea de porque lo hace como lo hace, pero consigue lo que queria
+function generateRandomPlaceholders(postId: number): string[] {
+  const seed = postId;
+  const count = (((seed * 9301 + 49297) % 233280) % 3) + 1;
+
+  return Array.from({ length: count }, () => "/placeholder.png");
 }
 
 export function PostCard({ props }: { props: IPostCard }) {
@@ -40,7 +56,11 @@ export function PostCard({ props }: { props: IPostCard }) {
     id,
     baseUrl,
     tags = [],
+    images,
   } = props;
+
+  const displayImages =
+    images && images.length > 0 ? images : generateRandomPlaceholders(id);
 
   const offerCompletionPercentage = parseFloat(
     ((peopleSignedCurrent * 100) / peopleSignedObjective).toFixed(2)
@@ -72,13 +92,29 @@ export function PostCard({ props }: { props: IPostCard }) {
 
       <div className="flex flex-col mb-10 gap-4">
         <P>{description}</P>
-        <Image
-          className="mx-auto"
-          src={"/placeholder.png"}
-          alt=""
-          width={300}
-          height={600}
-        />
+
+        <Carousel className="w-full mx-auto max-w-md">
+          <CarouselContent>
+            {displayImages.map((image, index) => (
+              <CarouselItem key={index}>
+                <div className="relative aspect-video w-full overflow-hidden rounded-md">
+                  <Image
+                    src={image}
+                    alt={`${name} - imagen ${index + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          {displayImages.length > 1 && (
+            <>
+              <CarouselPrevious className="left-2" />
+              <CarouselNext className="right-2" />
+            </>
+          )}
+        </Carousel>
       </div>
 
       <div className="flex flex-col gap-8">
