@@ -3,7 +3,9 @@ import { ConditionalLayout } from "@/components/layout/layout-content";
 import { AppSidebar } from "@/components/sidebar/sidebar";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Geist } from "next/font/google";
+import Error from "./error";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
@@ -28,11 +30,13 @@ export default async function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={`${geistSans.className} antialiased`}>
-				<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-					<ConditionalLayout header={<Header />} sidebar={<AppSidebar />}>
-						{children}
-					</ConditionalLayout>
-				</ThemeProvider>
+				<ErrorBoundary errorComponent={Error}>
+					<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+						<ConditionalLayout header={<Header />} sidebar={<AppSidebar />}>
+							{children}
+						</ConditionalLayout>
+					</ThemeProvider>
+				</ErrorBoundary>
 			</body>
 		</html>
 	);

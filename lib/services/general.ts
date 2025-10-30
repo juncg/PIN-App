@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createClient } from "@supabase/supabase-js";
+import { createClient, PostgrestError } from "@supabase/supabase-js";
 
 export function GetClient() {
 	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "URL no encontrada";
@@ -81,6 +81,11 @@ function applySupabaseFilter(query: any, filter: SupabaseGenericFilter) {
 	}
 }
 
+export type SupabaseApiResult<T = unknown> = {
+	data: T[] | null;
+	error: PostgrestError | null;
+};
+
 export async function GetFromDatabase<T = unknown>({
 	tableName,
 	select = "*",
@@ -89,7 +94,7 @@ export async function GetFromDatabase<T = unknown>({
 	tableName: string;
 	select?: string;
 	filters?: SupabaseGenericFilter[];
-}): Promise<T[]> {
+}): Promise<SupabaseApiResult<T>> {
 	let query = supabase.from(tableName).select(select);
 
 	filters.forEach((filter) => {
@@ -98,11 +103,7 @@ export async function GetFromDatabase<T = unknown>({
 
 	const { data: entries, error } = await query;
 
-	if (error) {
-		console.error(`Error fetching ${tableName}:`, error);
-	}
-
-	return (entries as T[]) || [];
+	return { data: (entries as T[]) || null, error: error ?? null };
 }
 
 export async function PostToDatabase<T = unknown>({
@@ -113,7 +114,7 @@ export async function PostToDatabase<T = unknown>({
 	tableName: string;
 	contentJson: Partial<T> | Partial<T>[];
 	filters?: SupabaseGenericFilter[];
-}): Promise<T[]> {
+}): Promise<SupabaseApiResult<T>> {
 	let query = supabase.from(tableName).insert(contentJson).select();
 
 	filters.forEach((filter) => {
@@ -122,12 +123,7 @@ export async function PostToDatabase<T = unknown>({
 
 	const { data, error } = await query;
 
-	if (error) {
-		console.error(`Error inserting into ${tableName}:`, error);
-		return [];
-	}
-
-	return (data as T[]) || [];
+	return { data: (data as T[]) || null, error: error ?? null };
 }
 
 export async function PutToDatabase<T = unknown>({
@@ -138,9 +134,8 @@ export async function PutToDatabase<T = unknown>({
 	tableName: string;
 	contentJson: Partial<T>;
 	filters?: SupabaseGenericFilter[];
-}): Promise<T[]> {
+}): Promise<SupabaseApiResult<T>> {
 	let query = supabase.from(tableName).update(contentJson);
-
 
 	filters.forEach((filter) => {
 		query = applySupabaseFilter(query, filter);
@@ -148,12 +143,7 @@ export async function PutToDatabase<T = unknown>({
 
 	const { data, error } = await query.select();
 
-	if (error) {
-		console.error(`Error updating ${tableName}:`, error);
-		return [];
-	}
-
-	return (data as T[]) || [];
+	return { data: (data as T[]) || null, error: error ?? null };
 }
 
 export async function DeleteFromDatabase<T = unknown>({
@@ -166,19 +156,14 @@ export async function DeleteFromDatabase<T = unknown>({
 	matchColumn: string;
 	matchValue: any;
 	filters?: SupabaseGenericFilter[];
-}): Promise<T[]> {
+}): Promise<SupabaseApiResult<T>> {
 	let query = supabase.from(tableName).delete().eq(matchColumn, matchValue);
 
 	filters.forEach((filter) => {
 		query = applySupabaseFilter(query, filter);
 	});
 
-	const { error } = await query;
+	const { data, error } = await query;
 
-	if (error) {
-		console.error(`Error deleting from ${tableName}:`, error);
-		return [];
-	}
-
-	return [];
+	return { data: (data as unknown as T[]) || null, error: error ?? null };
 }
