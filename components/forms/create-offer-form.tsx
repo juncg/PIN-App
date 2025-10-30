@@ -78,7 +78,7 @@ export default function OfferForm({ forums, userId, tags }: OfferFormProps) {
 
 			if (response.error) {
 				setIsSubmitting(false);
-				setApiError(response.error); // <-- guardar error en estado para renderizar dialog
+				setApiError(response.error);
 				return;
 			}
 
@@ -97,7 +97,7 @@ export default function OfferForm({ forums, userId, tags }: OfferFormProps) {
 
 				if (tagResp.error) {
 					setIsSubmitting(false);
-					setApiError(tagResp.error); // <-- guardar error en estado
+					setApiError(tagResp.error);
 					return;
 				}
 			}
