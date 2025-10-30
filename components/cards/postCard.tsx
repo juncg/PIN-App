@@ -39,7 +39,7 @@ function generateRandomPlaceholders(postId: number): string[] {
   const seed = postId;
   const count = (((seed * 9301 + 49297) % 233280) % 3) + 1;
 
-  return Array.from({ length: count }, () => "/placeholder.png");
+  return Array.from({ length: count }, () => "/images/jancarlo.");
 }
 
 export function PostCard({ props }: { props: IPostCard }) {
@@ -93,28 +93,31 @@ export function PostCard({ props }: { props: IPostCard }) {
       <div className="flex flex-col mb-10 gap-4">
         <P>{description}</P>
 
-        <Carousel className="w-full mx-auto max-w-md">
-          <CarouselContent>
-            {displayImages.map((image, index) => (
-              <CarouselItem key={index}>
-                <div className="relative aspect-video w-full overflow-hidden rounded-md">
-                  <Image
-                    src={image}
-                    alt={`${name} - imagen ${index + 1}`}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          {displayImages.length > 1 && (
-            <>
-              <CarouselPrevious className="left-2" />
-              <CarouselNext className="right-2" />
-            </>
-          )}
-        </Carousel>
+        {displayImages.length > 0 && (
+          <Carousel className="w-full mx-auto max-w-md">
+            <CarouselContent>
+              {displayImages.map((image, index) => (
+                <CarouselItem key={index}>
+                  <div className="relative aspect-video w-full overflow-hidden rounded-md">
+                    <Image
+                      src={image}
+                      alt={`${name} - imagen ${index + 1}`}
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            {displayImages.length > 1 && (
+              <>
+                <CarouselPrevious className="left-2" />
+                <CarouselNext className="right-2" />
+              </>
+            )}
+          </Carousel>
+        )}
       </div>
 
       <div className="flex flex-col gap-8">
