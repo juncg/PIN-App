@@ -39,7 +39,7 @@ function generateRandomPlaceholders(postId: number): string[] {
   const seed = postId;
   const count = (((seed * 9301 + 49297) % 233280) % 3) + 1;
 
-  return Array.from({ length: count }, () => "/images/jancarlo.");
+  return Array.from({ length: count }, () => "/images/jancarlo.jpg");
 }
 
 export function PostCard({ props }: { props: IPostCard }) {
