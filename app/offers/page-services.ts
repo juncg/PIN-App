@@ -7,18 +7,19 @@ export async function OfferServices() {
 
 	const offersWithRelations = await GetFromDatabase<
 		IOffer & {
-			User_Offer: [{ liked: boolean }] | [];
+			User_Offer: [{ liked: boolean, subscribed: boolean }] | [];
 			tags: { Tag: { name: string | null } }[];
 		}
 	>({
 		tableName: "Offer",
-		select: `*, User_Offer!left(liked, user_id), tags:Offer_Tag(Tag(name))`,
+		select: `*, User_Offer!left(liked, subscribed, user_id), tags:Offer_Tag(Tag(name))`,
 	});
 
-	const offers: (IOffer & { liked: boolean; tags: string[] })[] = (offersWithRelations.data ?? []).map((offer) => {
+	const offers: (IOffer & { liked: boolean; subscribed: boolean; tags: string[] })[] = (offersWithRelations.data ?? []).map((offer) => {
 		const userOffer = offer.User_Offer?.find((up) => up.user_id === currentUserId);
 
 		const isLiked = userOffer?.liked || false;
+		const isSubscribed = userOffer?.subscribed || false;
 
 		const tagNames = offer.tags
 			? offer.tags
@@ -29,8 +30,9 @@ export async function OfferServices() {
 		return {
 			...offer,
 			liked: isLiked,
+			subscribed: isSubscribed,
 			tags: tagNames,
-		} as IOffer & { liked: boolean; tags: string[] };
+		} as IOffer & { liked: boolean; subscribed: boolean; tags: string[] };
 	});
 
 	console.log("Offers with liked status:", offers);

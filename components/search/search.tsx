@@ -53,6 +53,7 @@ export default function SearchItems({ items, postType }: SearchItemsProps) {
                 likedByUser: item.liked || false,
                 id: item.id,
                 tags: item.tags || [],
+                subscribedByUser: item.subscribed || false,
               }}
             />
           ))

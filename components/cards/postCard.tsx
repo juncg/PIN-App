@@ -1,7 +1,10 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { LikeButton } from "../buttons/like-button";
+import { SubscribeButton } from "../buttons/subscribe-button";
 import { ShareComponent } from "../share-post/share";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -15,6 +18,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../ui/carousel";
+import { useSubscribe } from "@/hooks/use-subscribe";
 
 type PostType = "Oferta" | "Petición";
 
@@ -32,6 +36,7 @@ export interface IPostCard {
   baseUrl?: string;
   tags?: string[];
   images?: string[];
+  subscribedByUser: boolean;
 }
 
 // ni pajolera idea de porque lo hace como lo hace, pero consigue lo que queria
@@ -57,13 +62,19 @@ export function PostCard({ props }: { props: IPostCard }) {
     baseUrl,
     tags = [],
     images,
+    subscribedByUser,
   } = props;
+
+  const { subscribers, isSubscribed, toggleSubscribe } = useSubscribe({
+    initialSubscribers: peopleSignedCurrent,
+    initialSubscribed: subscribedByUser,
+  });
 
   const displayImages =
     images && images.length > 0 ? images : generateRandomPlaceholders(id);
 
   const offerCompletionPercentage = parseFloat(
-    ((peopleSignedCurrent * 100) / peopleSignedObjective).toFixed(2)
+    ((subscribers * 100) / peopleSignedObjective).toFixed(2)
   );
 
   const origin =
@@ -129,11 +140,13 @@ export function PostCard({ props }: { props: IPostCard }) {
           >
             <Button variant="default">Información</Button>
           </Link>
-          {typeOfPost === "Oferta" ? (
-            <Button>Apúntate a la oferta</Button>
-          ) : (
-            <Button>Apoya a la petición</Button>
-          )}
+          <SubscribeButton
+            post_id={id}
+            typeOfPost={typeOfPost}
+            subscribers={subscribers}
+            subscribedByUser={isSubscribed}
+            onSubscribeToggle={toggleSubscribe}
+          />
         </div>
 
         {typeOfPost === "Oferta" && (
@@ -142,7 +155,7 @@ export function PostCard({ props }: { props: IPostCard }) {
 
             <div className="flex justify-between">
               <H4>
-                {peopleSignedCurrent} / {peopleSignedObjective}
+                {subscribers} / {peopleSignedObjective}
               </H4>
 
               <H4>{offerCompletionPercentage}%</H4>
@@ -155,7 +168,7 @@ export function PostCard({ props }: { props: IPostCard }) {
 
             <div className="flex justify-between">
               <H4>
-                {peopleSignedCurrent} / {peopleSignedObjective}
+                {subscribers} / {peopleSignedObjective}
               </H4>
 
               <H4>{offerCompletionPercentage}%</H4>
