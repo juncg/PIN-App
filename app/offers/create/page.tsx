@@ -17,11 +17,6 @@ export default async function Page() {
 
 	const userId = await getUserUuid();
 
-	console.log(userId);
-
-	const forums = Array.isArray(forumsResult) ? forumsResult : [];
-	const tags = Array.isArray(tagsResult) ? tagsResult : [];
-
 	return (
 		<div className="flex flex-center flex-col gap-8">
 			<Card>
@@ -30,7 +25,7 @@ export default async function Page() {
 					<CardDescription>Introduce todos los datos para crear una nueva oferta</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<CreateOfferForm forums={forums} userId={userId} tags={tags} />
+					<CreateOfferForm forums={forumsResult.data || []} userId={userId} tags={tagsResult.data || []} />
 				</CardContent>
 			</Card>
 		</div>

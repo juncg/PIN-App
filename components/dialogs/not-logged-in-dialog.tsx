@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 
 export function NotLoggedInDialog() {
 	return (
-		<Dialog open>
+		<Dialog defaultOpen>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
 					<DialogTitle>Accede a tu cuenta</DialogTitle>

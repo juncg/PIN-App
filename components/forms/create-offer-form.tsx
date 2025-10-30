@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { PostToDatabase } from "@/lib/services/general";
 import { IForum, IOffer } from "@/lib/services/types";
+import type { PostgrestError } from "@supabase/supabase-js";
 import { AlertCircle, CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -34,6 +35,7 @@ export default function OfferForm({ forums, userId, tags }: OfferFormProps) {
 		message: string;
 	} | null>(null);
 	const [selectedTags, setSelectedTags] = useState<number[]>([]);
+	const [apiError, setApiError] = useState<PostgrestError | null>(null);
 
 	const router = useRouter();
 
@@ -50,6 +52,7 @@ export default function OfferForm({ forums, userId, tags }: OfferFormProps) {
 		e.preventDefault();
 		setIsSubmitting(true);
 		setAlert(null);
+		setApiError(null);
 
 		try {
 			const newOffer: Omit<IOffer, "id"> = {
@@ -74,8 +77,8 @@ export default function OfferForm({ forums, userId, tags }: OfferFormProps) {
 			});
 
 			if (response.error) {
-				APIErrorHandler(response.error);
 				setIsSubmitting(false);
+				setApiError(response.error); // <-- guardar error en estado para renderizar dialog
 				return;
 			}
 
@@ -93,8 +96,8 @@ export default function OfferForm({ forums, userId, tags }: OfferFormProps) {
 				});
 
 				if (tagResp.error) {
-					APIErrorHandler(tagResp.error);
 					setIsSubmitting(false);
+					setApiError(tagResp.error); // <-- guardar error en estado
 					return;
 				}
 			}
@@ -128,6 +131,9 @@ export default function OfferForm({ forums, userId, tags }: OfferFormProps) {
 					</AlertDescription>
 				</Alert>
 			)}
+
+			{/* renderizar el manejador de errores dentro del árbol */}
+			<APIErrorHandler error={apiError} />
 
 			<form onSubmit={handleOfferCreation}>
 				<div className="flex flex-col gap-6">
