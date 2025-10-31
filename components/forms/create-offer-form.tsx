@@ -44,6 +44,7 @@ export default function OfferForm({ forums, userId, tags }: OfferFormProps) {
 			const timer = setTimeout(() => {
 				setAlert(null);
 			}, 5000);
+
 			return () => clearTimeout(timer);
 		}
 	}, [alert]);
@@ -132,7 +133,6 @@ export default function OfferForm({ forums, userId, tags }: OfferFormProps) {
 				</Alert>
 			)}
 
-			{/* renderizar el manejador de errores dentro del árbol */}
 			<APIErrorHandler error={apiError} />
 
 			<form onSubmit={handleOfferCreation}>
