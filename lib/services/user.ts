@@ -42,15 +42,3 @@ export async function IsUsernameAlreadyUsed(username: string): Promise<{ exists:
 		};
 	}
 }
-
-export async function getUserUuid(): Promise<string | null> {
-	const { data, error } = await supabase.auth.getUser();
-
-	if (error) {
-		console.error("Error getting user:", error);
-		return null;
-	}
-
-	const user = data?.user;
-	return user?.id || null;
-}

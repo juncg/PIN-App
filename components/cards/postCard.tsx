@@ -1,6 +1,8 @@
 "use client";
 
 import { useSubscribe } from "@/hooks/use-subscribe";
+import { BASE_DOMAIN } from "@/lib/constants";
+import { IOffer, IPetition } from "@/lib/services/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,20 +20,13 @@ type PostType = "Oferta" | "Petición";
 
 export interface IPostCard {
 	className?: string;
-	userUuid: string;
-	name: string;
-	description: string;
-	businessName: string;
+	post: IOffer | IPetition;
 	typeOfPost: PostType;
-	peopleSignedObjective: number;
-	peopleSignedCurrent: number;
-	likes: number;
+	userUuid: string;
 	likedByUser: boolean;
-	id: number;
-	baseUrl?: string;
+	subscribedByUser: boolean;
 	tags?: string[];
 	images?: string[];
-	subscribedByUser: boolean;
 }
 
 // ni pajolera idea de porque lo hace como lo hace, pero consigue lo que queria
@@ -43,42 +38,23 @@ function generateRandomPlaceholders(postId: number): string[] {
 }
 
 export function PostCard({ props }: { props: IPostCard }) {
-	const {
-		className,
-		userUuid,
-		businessName,
-		description,
-		name,
-		typeOfPost,
-		peopleSignedCurrent,
-		peopleSignedObjective,
-		likes,
-		likedByUser,
-		id,
-		baseUrl,
-		tags = [],
-		images,
-		subscribedByUser,
-	} = props;
+	const { post, className, userUuid, typeOfPost, likedByUser, subscribedByUser, tags, images } = props;
 
 	const { subscribers, isSubscribed, toggleSubscribe } = useSubscribe({
-		initialSubscribers: peopleSignedCurrent,
+		initialSubscribers: post.current_progress,
 		initialSubscribed: subscribedByUser,
 	});
 
-	const displayImages = images && images.length > 0 ? images : generateRandomPlaceholders(id);
-
-	const offerCompletionPercentage = parseFloat(((subscribers * 100) / peopleSignedObjective).toFixed(2));
-
-	const origin = baseUrl || (typeof window !== "undefined" ? window.location.origin : "");
-	const postUrl = `${origin}${typeOfPost === "Petición" ? `/petitions/${id}` : `/offers/${id}`}`;
+	const displayImages = images && images.length > 0 ? images : generateRandomPlaceholders(post.id);
+	const offerCompletionPercentage = parseFloat(((subscribers * 100) / (post?.target_progress ?? 1)).toFixed(2));
+	const postUrl = `${BASE_DOMAIN}${typeOfPost === "Petición" ? `/petitions/${post.id}` : `/offers/${post.id}`}`;
 
 	return (
 		<article className={cn("flex flex-col border border-spacing-2 rounded-lg p-4 gap-4", className)}>
 			<div className="flex justify-between items-center border-b pb-4">
 				<div className="flex flex-col gap-2">
-					<H3>{name}</H3>
-					<H4>{businessName}</H4>
+					<H3>{post.title}</H3>
+					{/*<H4>{post.business.name}</H4>*/}
 				</div>
 
 				<div className="flex flex-col gap-2">
@@ -87,7 +63,7 @@ export function PostCard({ props }: { props: IPostCard }) {
 			</div>
 
 			<div className="flex flex-col mb-10 gap-4">
-				<P>{description}</P>
+				<P>{post.text}</P>
 
 				{displayImages.length > 0 && (
 					<Carousel className="w-full mx-auto max-w-md">
@@ -97,7 +73,7 @@ export function PostCard({ props }: { props: IPostCard }) {
 									<div className="relative aspect-video w-full overflow-hidden rounded-md">
 										<Image
 											src={image}
-											alt={`${name} - imagen ${index + 1}`}
+											alt={`${post.title} - imagen ${index + 1}`}
 											fill
 											className="object-cover"
 											unoptimized
@@ -118,13 +94,13 @@ export function PostCard({ props }: { props: IPostCard }) {
 
 			<div className="flex flex-col gap-8">
 				<div className="flex justify-between">
-					<Link href={typeOfPost === "Petición" ? `/petitions/${id}` : `/offers/${id}`}>
+					<Link href={typeOfPost === "Petición" ? `/petitions/${post.id}` : `/offers/${post.id}`}>
 						<Button variant="default">Información</Button>
 					</Link>
 
 					{userUuid ? (
 						<SubscribeButton
-							post_id={id}
+							post_id={post.id}
 							typeOfPost={typeOfPost}
 							subscribedByUser={isSubscribed}
 							onSubscribeToggle={toggleSubscribe}
@@ -142,7 +118,7 @@ export function PostCard({ props }: { props: IPostCard }) {
 
 						<div className="flex justify-between">
 							<H4>
-								{subscribers} / {peopleSignedObjective}
+								{subscribers} / {post.target_progress}
 							</H4>
 
 							<H4>{offerCompletionPercentage}%</H4>
@@ -155,7 +131,7 @@ export function PostCard({ props }: { props: IPostCard }) {
 
 						<div className="flex justify-between">
 							<H4>
-								{subscribers} / {peopleSignedObjective}
+								{subscribers} / {post.target_progress}
 							</H4>
 
 							<H4>{offerCompletionPercentage}%</H4>
@@ -164,7 +140,7 @@ export function PostCard({ props }: { props: IPostCard }) {
 				)}
 			</div>
 
-			{tags.length > 0 && (
+			{tags && tags.length > 0 && (
 				<div className="flex flex-wrap gap-2 py-2">
 					{tags.map((tag, index) => (
 						<Badge key={index} variant="secondary">
@@ -180,8 +156,13 @@ export function PostCard({ props }: { props: IPostCard }) {
 
 			<div className="flex flex-row justify-between">
 				<div className="flex flex-row justify-start gap-6">
-					<LikeButton likes={likes} likedByUser={likedByUser} post_id={id} typeOfPost={typeOfPost} />
-					<ShareComponent url={postUrl} title={name} description={description} />
+					<LikeButton
+						likes={post.likes}
+						likedByUser={likedByUser}
+						post_id={post.id}
+						typeOfPost={typeOfPost}
+					/>
+					<ShareComponent url={postUrl} title={post.title} description={post.text} />
 				</div>
 			</div>
 		</article>

@@ -5,3 +5,6 @@ export const PROTECTED_ROUTES = ["/offers/create", "/petitions/create", "/profil
 export const LOCALE_COOKIE_NAME = "NEXT_LOCALE";
 export const DEFAULT_LOCALE = "en";
 export const SUPPORTED_LOCALES = ["en", "es"];
+
+// Environment variables
+export const { BASE_DOMAIN } = process.env;
