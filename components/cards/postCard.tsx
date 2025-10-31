@@ -11,13 +11,7 @@ import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
 import { Separator } from "../ui/separator";
 import { H3, H4, P } from "../ui/typography";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "../ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel";
 import { useSubscribe } from "@/hooks/use-subscribe";
 
 type PostType = "Oferta" | "Petición";
@@ -48,48 +42,22 @@ function generateRandomPlaceholders(postId: number): string[] {
 }
 
 export function PostCard({ props }: { props: IPostCard }) {
-  const {
-    className,
-    businessName,
-    description,
-    name,
-    typeOfPost,
-    peopleSignedCurrent,
-    peopleSignedObjective,
-    likes,
-    likedByUser,
-    id,
-    baseUrl,
-    tags = [],
-    images,
-    subscribedByUser,
-  } = props;
+  const { className, businessName, description, name, typeOfPost, peopleSignedCurrent, peopleSignedObjective, likes, likedByUser, id, baseUrl, tags = [], images, subscribedByUser } = props;
 
   const { subscribers, isSubscribed, toggleSubscribe } = useSubscribe({
     initialSubscribers: peopleSignedCurrent,
     initialSubscribed: subscribedByUser,
   });
 
-  const displayImages =
-    images && images.length > 0 ? images : generateRandomPlaceholders(id);
+  const displayImages = images && images.length > 0 ? images : generateRandomPlaceholders(id);
 
-  const offerCompletionPercentage = parseFloat(
-    ((subscribers * 100) / peopleSignedObjective).toFixed(2)
-  );
+  const offerCompletionPercentage = parseFloat(((subscribers * 100) / peopleSignedObjective).toFixed(2));
 
-  const origin =
-    baseUrl || (typeof window !== "undefined" ? window.location.origin : "");
-  const postUrl = `${origin}${
-    typeOfPost === "Petición" ? `/petitions/${id}` : `/offers/${id}`
-  }`;
+  const origin = baseUrl || (typeof window !== "undefined" ? window.location.origin : "");
+  const postUrl = `${origin}${typeOfPost === "Petición" ? `/petitions/${id}` : `/offers/${id}`}`;
 
   return (
-    <article
-      className={cn(
-        "flex flex-col border border-spacing-2 rounded-lg p-4 gap-4",
-        className
-      )}
-    >
+    <article className={cn("flex flex-col border border-spacing-2 rounded-lg p-4 gap-4", className)}>
       <div className="flex justify-between items-center border-b pb-4">
         <div className="flex flex-col gap-2">
           <H3>{name}</H3>
@@ -110,13 +78,7 @@ export function PostCard({ props }: { props: IPostCard }) {
               {displayImages.map((image, index) => (
                 <CarouselItem key={index}>
                   <div className="relative aspect-video w-full overflow-hidden rounded-md">
-                    <Image
-                      src={image}
-                      alt={`${name} - imagen ${index + 1}`}
-                      fill
-                      className="object-cover"
-                      unoptimized
-                    />
+                    <Image src={image} alt={`${name} - imagen ${index + 1}`} fill className="object-cover" unoptimized />
                   </div>
                 </CarouselItem>
               ))}
@@ -133,20 +95,10 @@ export function PostCard({ props }: { props: IPostCard }) {
 
       <div className="flex flex-col gap-8">
         <div className="flex justify-between">
-          <Link
-            href={
-              typeOfPost === "Petición" ? `/petitions/${id}` : `/offers/${id}`
-            }
-          >
+          <Link href={typeOfPost === "Petición" ? `/petitions/${id}` : `/offers/${id}`}>
             <Button variant="default">Información</Button>
           </Link>
-          <SubscribeButton
-            post_id={id}
-            typeOfPost={typeOfPost}
-            subscribers={subscribers}
-            subscribedByUser={isSubscribed}
-            onSubscribeToggle={toggleSubscribe}
-          />
+          <SubscribeButton post_id={id} typeOfPost={typeOfPost} subscribedByUser={isSubscribed} onSubscribeToggle={toggleSubscribe} />
         </div>
 
         {typeOfPost === "Oferta" && (
@@ -193,17 +145,8 @@ export function PostCard({ props }: { props: IPostCard }) {
 
       <div className="flex flex-row justify-between">
         <div className="flex flex-row justify-start gap-6">
-          <LikeButton
-            likes={likes}
-            likedByUser={likedByUser}
-            post_id={id}
-            typeOfPost={typeOfPost}
-          />
-          <ShareComponent
-            url={postUrl}
-            title={name}
-            description={description}
-          />
+          <LikeButton likes={likes} likedByUser={likedByUser} post_id={id} typeOfPost={typeOfPost} />
+          <ShareComponent url={postUrl} title={name} description={description} />
         </div>
       </div>
     </article>

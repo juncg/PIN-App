@@ -1,18 +1,9 @@
 "use server";
 
-import {
-  GetFromDatabase,
-  PostToDatabase,
-  PutToDatabase,
-} from "@/lib/services/general";
+import { GetFromDatabase, PostToDatabase, PutToDatabase } from "@/lib/services/general";
 import { getUserUuid } from "@/lib/services/user.server";
 
-export async function handleLikeAction(
-  post_id: number,
-  currentlyLiked: boolean,
-  typeOfPost?: "Oferta" | "Petición"
-) {
-
+export async function handleLikeAction(post_id: number, currentlyLiked: boolean, typeOfPost?: "Oferta" | "Petición") {
   try {
     const user_id = await getUserUuid();
 
@@ -21,8 +12,7 @@ export async function handleLikeAction(
     }
 
     const tableName = typeOfPost === "Petición" ? "Petition" : "Offer";
-    const userTableName =
-      typeOfPost === "Petición" ? "User_Petition" : "User_Offer";
+    const userTableName = typeOfPost === "Petición" ? "User_Petition" : "User_Offer";
     const postIdColumn = typeOfPost === "Petición" ? "petition_id" : "offer_id";
 
     const postLikes = await GetFromDatabase<{ likes: number }>({
@@ -34,7 +24,6 @@ export async function handleLikeAction(
     const currentLikes = postLikes.data && postLikes.data.length > 0 ? postLikes.data[0].likes : 0;
 
     if (!currentlyLiked) {
-
       const existingRelations = await GetFromDatabase({
         tableName: userTableName,
         select: "*",
@@ -43,7 +32,6 @@ export async function handleLikeAction(
           { method: "eq", column: postIdColumn, value: post_id },
         ],
       });
-
 
       if (existingRelations.data && existingRelations.data.length > 0) {
         await PutToDatabase({
@@ -74,7 +62,6 @@ export async function handleLikeAction(
         filters: [{ method: "eq", column: "id", value: post_id }],
       });
     } else {
-
       await PutToDatabase({
         tableName: userTableName,
         contentJson: { liked: false },
