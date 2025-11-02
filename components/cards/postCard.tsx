@@ -5,6 +5,7 @@ import { IOffer, IPetition } from "@/lib/services/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { LikeButton } from "../buttons/like-button";
 import { SubscribeButton } from "../buttons/subscribe-button";
 import { ShareComponent } from "../share-post/share";
@@ -14,7 +15,6 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Progress } from "../ui/progress";
 import { Separator } from "../ui/separator";
 import { H3, H4, P } from "../ui/typography";
-import { useState } from "react";
 
 type PostType = "Oferta" | "Petición";
 
@@ -29,20 +29,15 @@ export interface IPostCard {
 	images?: string[];
 }
 
-// ni pajolera idea de porque lo hace como lo hace, pero consigue lo que queria
-function generateRandomPlaceholders(postId: number): string[] {
-	const seed = postId;
-	const count = (((seed * 9301 + 49297) % 233280) % 3) + 1;
-
-	return Array.from({ length: count }, () => "/images/jancarlo.jpg");
-}
-
 export function PostCard({ props }: { props: IPostCard }) {
 	const { post, className, userUuid, typeOfPost, likedByUser, tags, images } = props;
 	const [subscribers, setSubscribers] = useState(post.current_progress);
 	const [subscribedByUser, setIsSubscribed] = useState(props.subscribedByUser);
 
-	const displayImages = images && images.length > 0 ? images : generateRandomPlaceholders(post.id);
+	const displayImages =
+		images && images.length > 0
+			? images
+			: Array.from({ length: parseInt(((Math.random() + 1) * 5).toFixed(0)) }, () => "/images/jancarlo.jpg");
 	const offerCompletionPercentage = parseFloat(((subscribers * 100) / (post?.target_progress ?? 1)).toFixed(2));
 	const postUrl = `${BASE_DOMAIN}${typeOfPost === "Petición" ? `/petitions/${post.id}` : `/offers/${post.id}`}`;
 

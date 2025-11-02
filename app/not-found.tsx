@@ -29,17 +29,15 @@ export default function NotFound() {
 			)}
 
 			<div className="flex flex-col text-center">
-				<H1>404 | Not Found</H1>
-				<P>Could not find requested resource</P>
+				<H1>404 | Ups, ha habido un error</H1>
+				<P>No hemos podido encontrar el recurso que estás buscando</P>
 				{showSpecialImage && (
-					<P className="text-sm text-muted-foreground mt-2">
-						¡Felicidades! Encontraste la imagen secreta (1/100) 🎉
-					</P>
+					<P className="text-sm text-muted-foreground mt-2">¡Felicidades! Encontraste la imagen secreta 🎉</P>
 				)}
 			</div>
 
 			<Button>
-				<Link href="/">Return Home</Link>
+				<Link href="/">Volver a inicio</Link>
 			</Button>
 		</div>
 	);

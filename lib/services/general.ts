@@ -1,61 +1,62 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createClient, PostgrestError } from "@supabase/supabase-js";
+import { createClient as createServerClient } from "@/lib/supabase/server";
+import { PostgrestError, createClient } from "@supabase/supabase-js";
 
-export function GetClient() {
-	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "URL not found";
-	const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "Key not found";
-	const supabase = createClient(supabaseUrl, supabaseKey);
-
+// This function should be used for authenticated operations
+// It uses the SSR client that has access to user sessions
+export async function GetClient() {
+	const supabase = await createServerClient();
 	return { supabase };
 }
 
-export function GetServiceClient() {
-	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "URL not found";
-	const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "Service key not found";
+// Service client for admin operations that bypass RLS
+// IMPORTANT: This should only be used for operations that need to bypass RLS
+// For example: counting subscribers, administrative tasks, etc.
+export async function GetServiceClient() {
+	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+	const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
-	const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+	const supabase = createClient(supabaseUrl, serviceRoleKey, {
 		auth: {
 			autoRefreshToken: false,
-			persistSession: false
-		}
+			persistSession: false,
+		},
 	});
 
 	return { supabase };
 }
 
-const { supabase } = GetClient();
-
 type SupabaseGenericFilter =
 	| {
-		method:
-		| "eq"
-		| "gt"
-		| "lt"
-		| "gte"
-		| "lte"
-		| "like"
-		| "ilike"
-		| "is"
-		| "in"
-		| "neq"
-		| "contains"
-		| "containedBy"
-		| "not"
-		| "or"
-		| "order"
-		| "range"
-		| "single"
-		| "limit"
-		| "rangeFrom"
-		| "rangeTo";
-		column?: string;
-		value?: any;
-		operator?: string;
-		ascending?: boolean;
-		nullsFirst?: boolean;
-		from?: number;
-		to?: number;
-	}
+			method:
+				| "eq"
+				| "gt"
+				| "lt"
+				| "gte"
+				| "lte"
+				| "like"
+				| "ilike"
+				| "is"
+				| "in"
+				| "neq"
+				| "contains"
+				| "containedBy"
+				| "not"
+				| "or"
+				| "order"
+				| "range"
+				| "single"
+				| "limit"
+				| "rangeFrom"
+				| "rangeTo";
+			column?: string;
+			value?: any;
+			operator?: string;
+			ascending?: boolean;
+			nullsFirst?: boolean;
+			from?: number;
+			to?: number;
+	  }
 	| { method: "or"; value: string };
 
 function applySupabaseFilter(query: any, filter: SupabaseGenericFilter) {
@@ -109,6 +110,7 @@ export async function GetFromDatabase<T = unknown>({
 	select?: string;
 	filters?: SupabaseGenericFilter[];
 }): Promise<SupabaseApiResult<T>> {
+	const { supabase } = await GetClient();
 	let query = supabase.from(tableName).select(select);
 
 	filters.forEach((filter) => {
@@ -129,6 +131,7 @@ export async function PostToDatabase<T = unknown>({
 	contentJson: Partial<T> | Partial<T>[];
 	filters?: SupabaseGenericFilter[];
 }): Promise<SupabaseApiResult<T>> {
+	const { supabase } = await GetClient();
 	let query = supabase.from(tableName).insert(contentJson).select();
 
 	filters.forEach((filter) => {
@@ -149,6 +152,7 @@ export async function PutToDatabase<T = unknown>({
 	contentJson: Partial<T>;
 	filters?: SupabaseGenericFilter[];
 }): Promise<SupabaseApiResult<T>> {
+	const { supabase } = await GetClient();
 	let query = supabase.from(tableName).update(contentJson);
 
 	filters.forEach((filter) => {
@@ -171,6 +175,7 @@ export async function DeleteFromDatabase<T = unknown>({
 	matchValue: any;
 	filters?: SupabaseGenericFilter[];
 }): Promise<SupabaseApiResult<T>> {
+	const { supabase } = await GetClient();
 	let query = supabase.from(tableName).delete().eq(matchColumn, matchValue);
 
 	filters.forEach((filter) => {
@@ -189,7 +194,7 @@ export async function ExecuteRpcFunction<T = unknown>({
 	functionName: string;
 	params?: Record<string, any>;
 }): Promise<SupabaseApiResult<T>> {
-	const { supabase: serviceSupabase } = GetServiceClient();
+	const { supabase: serviceSupabase } = await GetClient();
 	const { data, error } = await serviceSupabase.rpc(functionName, params);
 	return { data: (data as T[]) || null, error: error ?? null };
 }

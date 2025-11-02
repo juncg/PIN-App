@@ -39,7 +39,5 @@ export async function OfferServices() {
 		};
 	});
 
-	console.log("Offers with liked status:", offers);
-
 	return { offers };
 }

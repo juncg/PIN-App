@@ -28,8 +28,6 @@ export async function HomeServices() {
 		return { products, offers: [], petitions: [] };
 	}
 
-	console.log(offersWithRelations);
-
 	const offers: (IOffer & { liked: boolean; subscribed: boolean; tags: string[] })[] = (
 		offersWithRelations ?? []
 	).map((offer) => {

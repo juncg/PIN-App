@@ -1,12 +1,11 @@
 import { Tables } from "@/database.types";
 import { GetClient } from "./general";
 
-const { supabase } = GetClient();
-
 export type UserType = Tables<"User">;
 
 export async function CreateUser(userData: UserType): Promise<{ success: boolean; error?: string }> {
 	try {
+		const { supabase } = await GetClient();
 		const { error } = await supabase.from("User").insert([userData]);
 
 		if (error) {
@@ -26,6 +25,7 @@ export async function CreateUser(userData: UserType): Promise<{ success: boolean
 
 export async function IsUsernameAlreadyUsed(username: string): Promise<{ exists: boolean; error?: string }> {
 	try {
+		const { supabase } = await GetClient();
 		const { data, error } = await supabase.from("User").select("username").eq("username", username);
 
 		if (error) {

@@ -29,17 +29,15 @@ export default function Error() {
 			)}
 
 			<div className="flex flex-col text-center">
-				<H1>Something went wrong</H1>
-				<P>Try again later</P>
+				<H1>Algo ha ido mal</H1>
+				<P>Inténtalo de nuevo más tarde</P>
 				{showSpecialImage && (
-					<P className="text-sm text-muted-foreground mt-2">
-						¡Felicidades! Encontraste la imagen secreta (1/100) 🎉
-					</P>
+					<P className="text-sm text-muted-foreground mt-2">¡Felicidades! Encontraste la imagen secreta 🎉</P>
 				)}
 			</div>
 
 			<Button>
-				<Link href="/">Return Home</Link>
+				<Link href="/">Volver a inicio</Link>
 			</Button>
 		</div>
 	);
