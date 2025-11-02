@@ -1,10 +1,10 @@
 import { BusinessCard } from "@/components/cards/businessCard";
 import { H1 } from "@/components/ui/typography";
-import { GetFromDatabase } from "@/lib/services/general";
 import { IBusiness } from "@/lib/services/types";
+import { BusinessesServices } from "./page-services";
 
 export default async function Businesses() {
-	const businesses = await GetFromDatabase<IBusiness>({ tableName: "Business", select: "*" });
+	const { businesses } = await BusinessesServices();
 
 	return (
 		<section className="flex flex-row justify-center gap-8">

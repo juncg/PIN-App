@@ -11,12 +11,7 @@ export interface IProductCard {
 }
 
 export function ProductCard({ props }: { props: IProductCard }) {
-	const {
-		className,
-		name,
-		description,
-		businessName,
-	} = props;
+	const { className, name, description, businessName } = props;
 
 	return (
 		<article className={cn("flex flex-col border border-spacing-2 rounded-lg p-4 gap-4", className)}>
@@ -25,13 +20,11 @@ export function ProductCard({ props }: { props: IProductCard }) {
 					<H3>{name}</H3>
 				</div>
 			</div>
-
 			<div className="flex flex-col mb-10 gap-4">
 				<P>{description}</P>
-				<Image className="mx-auto" src={"/placeholder.png"} alt="" width={300} height={600} />
+				<Image className="mx-auto" src={"/placeholder.png"} alt="" width={300} height={600} unoptimized />
 				<P>{businessName}</P>
-			</div>
-
+			</div>{" "}
 			<div className="flex flex-col gap-8">
 				<Button>Entra al producto</Button>
 			</div>

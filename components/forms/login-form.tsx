@@ -62,7 +62,8 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 									<Label htmlFor="password">Contraseña</Label>
 									<Link
 										href="/auth/forgot-password"
-										className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+										className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+									>
 										¿Has olvidado tu contraseña?
 									</Link>
 								</div>

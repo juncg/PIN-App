@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@/hooks/use-user";
 import { BASE_DOMAIN } from "@/lib/constants";
 import { IOffer, IPetition } from "@/lib/services/types";
 import { cn } from "@/lib/utils";
@@ -22,7 +23,6 @@ export interface IPostCard {
 	className?: string;
 	post: IOffer | IPetition;
 	typeOfPost: PostType;
-	userUuid: string;
 	likedByUser: boolean;
 	subscribedByUser: boolean;
 	tags?: string[];
@@ -30,14 +30,13 @@ export interface IPostCard {
 }
 
 export function PostCard({ props }: { props: IPostCard }) {
-	const { post, className, userUuid, typeOfPost, likedByUser, tags, images } = props;
+	const { post, className, typeOfPost, likedByUser, tags, images } = props;
+	const { userUuid } = useUser();
 	const [subscribers, setSubscribers] = useState(post.current_progress);
 	const [subscribedByUser, setIsSubscribed] = useState(props.subscribedByUser);
 
 	const displayImages =
-		images && images.length > 0
-			? images
-			: Array.from({ length: parseInt(((Math.random() + 1) * 5).toFixed(0)) }, () => "/images/jancarlo.jpg");
+		images && images.length > 0 ? images : ["/images/jancarlo.jpg", "/images/jancarlo.jpg", "/images/jancarlo.jpg"];
 	const offerCompletionPercentage = parseFloat(((subscribers * 100) / (post?.target_progress ?? 1)).toFixed(2));
 	const postUrl = `${BASE_DOMAIN}${typeOfPost === "Petición" ? `/petitions/${post.id}` : `/offers/${post.id}`}`;
 

@@ -1,5 +1,6 @@
 import SearchItems from "@/components/search/search";
 import { Button } from "@/components/ui/button";
+import { H1, P } from "@/components/ui/typography";
 import { getUserUuid } from "@/lib/services/user.server";
 import { Plus } from "lucide-react";
 import Link from "next/link";
@@ -13,8 +14,8 @@ export default async function Offers() {
 		<section className="max-w-7xl mx-auto space-y-8">
 			<div className="flex justify-between items-center">
 				<div className="justify-start">
-					<h1>Ofertas</h1>
-					<p className="text-muted-foreground">Aqui puedes ver las ofertas existentes</p>
+					<H1>Ofertas</H1>
+					<P className="text-muted-foreground">Aqui puedes ver las ofertas existentes</P>
 				</div>
 
 				<Link href={userUuid ? "/offers/create" : "/auth/login"}>
@@ -25,7 +26,7 @@ export default async function Offers() {
 				</Link>
 			</div>
 
-			<SearchItems items={offers} postType="Oferta" userUuid={userUuid || ""} />
+			<SearchItems items={offers} postType="Oferta" />
 		</section>
 	);
 }

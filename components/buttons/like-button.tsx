@@ -22,28 +22,22 @@ export function LikeButton(props: ILikeButton) {
 		const newLikedState = !liked;
 		const newLikesCount = newLikedState ? numberOfLikes + 1 : numberOfLikes - 1;
 
-    setLiked(newLikedState);
-    setLikes(newLikesCount);
+		setLiked(newLikedState);
+		setLikes(newLikesCount);
 
 		try {
 			await handleLikeAction(post_id, liked, typeOfPost);
+		} catch (error) {
+			setLiked(liked);
+			setLikes(numberOfLikes);
+			console.error("Error al actualizar like:", error);
+		}
+	};
 
-    } catch (error) {
-      // Revertir cambios si falla
-      setLiked(liked);
-      setLikes(numberOfLikes);
-      console.error("Error al actualizar like:", error);
-    }
-  };
-
-  return (
-    <Button
-      variant="outline"
-      className="mt-4"
-      onClick={handleLike}
-    >
-      <Heart className={cn("mr-2", liked && "fill-red-500 text-red-500")} />
-      {numberOfLikes || 0}
-    </Button>
-  );
+	return (
+		<Button variant="outline" className="mt-4" onClick={handleLike}>
+			<Heart className={cn("mr-2", liked && "fill-red-500 text-red-500")} />
+			{numberOfLikes || 0}
+		</Button>
+	);
 }

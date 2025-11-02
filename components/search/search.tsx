@@ -12,10 +12,9 @@ type PostType = "Oferta" | "Petición";
 interface SearchItemsProps {
 	items: SearchableItem[];
 	postType: PostType;
-	userUuid: string;
 }
 
-export default function SearchItems({ items, postType, userUuid }: SearchItemsProps) {
+export default function SearchItems({ items, postType }: SearchItemsProps) {
 	const [searchQuery, setSearchQuery] = useState("");
 
 	const filteredItems = items.filter(
@@ -46,7 +45,6 @@ export default function SearchItems({ items, postType, userUuid }: SearchItemsPr
 								typeOfPost: postType,
 								likedByUser: item.liked || false,
 								post: item,
-								userUuid: userUuid,
 								tags: item.tags || [],
 								subscribedByUser: item.subscribed || false,
 							}}

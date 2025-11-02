@@ -8,9 +8,7 @@ interface ITypography {
 
 export function H1({ children, className }: ITypography) {
 	return (
-		<h1 className={cn("scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance", className)}>
-			{children}
-		</h1>
+		<h1 className={cn("scroll-m-20 text-4xl font-extrabold tracking-tight text-balance", className)}>{children}</h1>
 	);
 }
 
@@ -48,7 +46,8 @@ export function InlineCode({ children, className }: ITypography) {
 			className={cn(
 				"bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
 				className
-			)}>
+			)}
+		>
 			{children}
 		</code>
 	);

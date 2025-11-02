@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { useUser } from "@/hooks/use-user";
 import { PostToDatabase } from "@/lib/services/general";
 import { IForum, IOffer } from "@/lib/services/types";
 import type { PostgrestError } from "@supabase/supabase-js";
@@ -17,11 +18,10 @@ import { APIErrorHandler } from "../error-handlers/api-error-handler";
 
 interface OfferFormProps {
 	forums: IForum[];
-	userId: string | null;
 	tags: { id: number; name: string }[];
 }
 
-export default function OfferForm({ forums, userId, tags }: OfferFormProps) {
+export default function OfferForm({ forums, tags }: OfferFormProps) {
 	const [title, setTitle] = useState("");
 	const [text, setText] = useState("");
 	const [targetProgress, setTargetProgress] = useState(0);
@@ -36,6 +36,7 @@ export default function OfferForm({ forums, userId, tags }: OfferFormProps) {
 	} | null>(null);
 	const [selectedTags, setSelectedTags] = useState<number[]>([]);
 	const [apiError, setApiError] = useState<PostgrestError | null>(null);
+	const { userUuid } = useUser();
 
 	const router = useRouter();
 
@@ -62,7 +63,7 @@ export default function OfferForm({ forums, userId, tags }: OfferFormProps) {
 				target_progress: targetProgress,
 				target_completition_date: new Date(targetCompletitionDate).toISOString(),
 				created_at: new Date().toISOString(),
-				creator_id: userId,
+				creator_id: userUuid,
 				current_progress: 0,
 				comment_locked_state: allowComments ? "Unlocked" : "Locked",
 				fee: fee,
@@ -121,7 +122,8 @@ export default function OfferForm({ forums, userId, tags }: OfferFormProps) {
 				<Alert
 					className={`mb-4 ${
 						alert.type === "success" ? "border-green-500 bg-green-50" : "border-red-500 bg-red-50"
-					}`}>
+					}`}
+				>
 					{alert.type === "success" ? (
 						<CheckCircle className="h-4 w-4 text-green-600" />
 					) : (
@@ -206,7 +208,8 @@ export default function OfferForm({ forums, userId, tags }: OfferFormProps) {
 						<Select
 							value={forumId?.toString() || ""}
 							onValueChange={(value) => setForumId(Number(value))}
-							disabled={isSubmitting}>
+							disabled={isSubmitting}
+						>
 							<SelectTrigger>
 								<SelectValue placeholder="Selecciona un foro" />
 							</SelectTrigger>

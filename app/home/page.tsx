@@ -14,7 +14,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
 	const translator = await getTranslations({ locale, namespace: "home" });
 	const userUuid = await getUserUuid();
 
-	const { offers, petitions, products } = await HomeServices();
+	const { offers, petitions, products } = await HomeServices(userUuid);
 
 	return (
 		<section className="flex flex-row justify-center gap-8">
@@ -32,7 +32,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
 							likedByUser: petition?.liked || false,
 							post: petition,
 							subscribedByUser: petition?.subscribed || false,
-							userUuid: userUuid || "",
 						}}
 					/>
 				))}
@@ -52,7 +51,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
 							likedByUser: offer?.liked || false,
 							post: offer,
 							subscribedByUser: offer?.subscribed || false,
-							userUuid: userUuid || "",
 						}}
 					/>
 				))}

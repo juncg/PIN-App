@@ -1,9 +1,7 @@
 import { GetFromDatabase } from "@/lib/services/general";
 import { IOffer, IPetition, IProduct } from "@/lib/services/types";
-import { getUserUuid } from "@/lib/services/user.server";
 
-export async function HomeServices() {
-	const currentUserId = await getUserUuid();
+export async function HomeServices(userUuid: string | null) {
 	const productSelect = "*, businesses:Product_Business!inner(business:Business(*))";
 
 	const { data: products, error: productsError } = await GetFromDatabase<IProduct>({
@@ -31,7 +29,7 @@ export async function HomeServices() {
 	const offers: (IOffer & { liked: boolean; subscribed: boolean; tags: string[] })[] = (
 		offersWithRelations ?? []
 	).map((offer) => {
-		const userOffer = offer.User_Offer?.find((uo) => uo.user_id === currentUserId);
+		const userOffer = offer.User_Offer?.find((uo) => uo.user_id === userUuid);
 		const isLiked = userOffer?.liked || false;
 		const isSubscribed = userOffer?.subscribed || false;
 
@@ -66,7 +64,7 @@ export async function HomeServices() {
 	const petitions: (IPetition & { liked: boolean; subscribed: boolean; tags: string[] })[] = (
 		petitionsWithRelations ?? []
 	).map((petition) => {
-		const userPetition = petition.User_Petition?.find((up) => up.user_id === currentUserId);
+		const userPetition = petition.User_Petition?.find((up) => up.user_id === userUuid);
 		const isLiked = userPetition?.liked || false;
 		const isSubscribed = userPetition?.subscribed || false;
 

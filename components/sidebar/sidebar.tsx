@@ -44,7 +44,6 @@ const items = [
 		url: "/businesses",
 		icon: Building,
 	},
-	
 ];
 
 const settingsItems = [
@@ -88,7 +87,8 @@ export function AppSidebar() {
 													isActive
 														? "bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
 														: ""
-												}>
+												}
+											>
 												<item.icon />
 												<span>{item.title}</span>
 											</Link>
@@ -113,7 +113,8 @@ export function AppSidebar() {
 											isActive
 												? "bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
 												: ""
-										}>
+										}
+									>
 										<item.icon />
 										<span>{item.title}</span>
 									</Link>

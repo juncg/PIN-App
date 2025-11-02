@@ -1,19 +1,18 @@
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * Gets the UUID of the currently authenticated user.
- * This function can only be used in Server Components or Server Actions.
- * @returns The user's UUID or null if not authenticated
+ * Get the UUID of the currently authenticated user from the server
+ * This should only be used in Server Components and Server Actions
  */
 export async function getUserUuid(): Promise<string | null> {
-	const supabase = await createClient();
-	const { data, error } = await supabase.auth.getUser();
-
-	if (error) {
-		console.error("Error getting user:", error);
+	try {
+		const supabase = await createClient();
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+		return user?.id ?? null;
+	} catch (error) {
+		console.error("Error getting user UUID:", error);
 		return null;
 	}
-	
-	const user = data?.user;
-	return user?.id || null;
 }

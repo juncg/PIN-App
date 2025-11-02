@@ -24,13 +24,16 @@ export default function Error() {
 						fill
 						className="object-contain"
 						priority
+						unoptimized
 					/>
 				</div>
 			)}
 
 			<div className="flex flex-col text-center">
 				<H1>Algo ha ido mal</H1>
+
 				<P>Inténtalo de nuevo más tarde</P>
+
 				{showSpecialImage && (
 					<P className="text-sm text-muted-foreground mt-2">¡Felicidades! Encontraste la imagen secreta 🎉</P>
 				)}

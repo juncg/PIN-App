@@ -1,21 +1,9 @@
 import CreateOfferForm from "@/components/forms/create-offer-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { GetFromDatabase } from "@/lib/services/general";
-import { IForum } from "@/lib/services/types";
-import { getUserUuid } from "@/lib/services/user.server";
+import { CreateOfferServices } from "./page-services";
 
 export default async function Page() {
-	const forumsResult = await GetFromDatabase<IForum>({
-		tableName: "Forum",
-		select: "*",
-	});
-
-	const tagsResult = await GetFromDatabase<{ id: number; name: string }>({
-		tableName: "Tag",
-		select: "*",
-	});
-
-	const userId = await getUserUuid();
+	const { forums, tags } = await CreateOfferServices();
 
 	return (
 		<div className="flex flex-center flex-col gap-8">
@@ -24,8 +12,9 @@ export default async function Page() {
 					<CardTitle className="text-2xl">Crear una oferta</CardTitle>
 					<CardDescription>Introduce todos los datos para crear una nueva oferta</CardDescription>
 				</CardHeader>
+
 				<CardContent>
-					<CreateOfferForm forums={forumsResult.data || []} userId={userId} tags={tagsResult.data || []} />
+					<CreateOfferForm forums={forums.data || []} tags={tags.data || []} />
 				</CardContent>
 			</Card>
 		</div>

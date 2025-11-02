@@ -19,12 +19,10 @@ export function BusinessCard({ props }: { props: IBusinessCard }) {
 					<H3>{businessName}</H3>
 				</div>
 			</div>
-
 			<div className="flex flex-col mb-10 gap-4">
 				<P>{businessDescription}</P>
-				<Image className="mx-auto" src={"/placeholder.png"} alt="" width={300} height={600} />
-			</div>
-
+				<Image className="mx-auto" src={"/placeholder.png"} alt="" width={300} height={600} unoptimized />
+			</div>{" "}
 			<div className="flex flex-col gap-8">
 				<Button>Entra al foro</Button>
 			</div>

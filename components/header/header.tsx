@@ -1,8 +1,8 @@
+import { LocaleSwitcher } from "@/components/ui/locale-switcher";
 import Link from "next/link";
 import { AuthButton } from "../auth/auth-buttons";
 import { SidebarTrigger } from "../ui/sidebar";
 import { ThemeSwitcher } from "../ui/theme-switcher";
-import { LocaleSwitcher } from "@/components/ui/locale-switcher";
 
 export function Header() {
 	return (

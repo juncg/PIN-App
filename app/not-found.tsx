@@ -24,13 +24,16 @@ export default function NotFound() {
 						fill
 						className="object-contain"
 						priority
+						unoptimized
 					/>
 				</div>
 			)}
 
 			<div className="flex flex-col text-center">
 				<H1>404 | Ups, ha habido un error</H1>
+
 				<P>No hemos podido encontrar el recurso que estás buscando</P>
+
 				{showSpecialImage && (
 					<P className="text-sm text-muted-foreground mt-2">¡Felicidades! Encontraste la imagen secreta 🎉</P>
 				)}
