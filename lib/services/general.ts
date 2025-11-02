@@ -2,16 +2,16 @@
 import { createClient, PostgrestError } from "@supabase/supabase-js";
 
 export function GetClient() {
-	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "URL no encontrada";
-	const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "Key no encontrada";
+	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "URL not found";
+	const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "Key not found";
 	const supabase = createClient(supabaseUrl, supabaseKey);
 
 	return { supabase };
 }
 
 export function GetServiceClient() {
-	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "URL no encontrada";
-	const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "Service key no encontrada";
+	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "URL not found";
+	const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "Service key not found";
 
 	const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 		auth: {
