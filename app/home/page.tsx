@@ -31,7 +31,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
 							typeOfPost: "Petición",
 							likedByUser: petition?.liked || false,
 							post: petition,
-							subscribedByUser: petition?.liked || false,
+							subscribedByUser: petition?.subscribed || false,
 							userUuid: userUuid || "",
 						}}
 					/>
@@ -51,7 +51,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
 							typeOfPost: "Oferta",
 							likedByUser: offer?.liked || false,
 							post: offer,
-							subscribedByUser: offer?.liked || false,
+							subscribedByUser: offer?.subscribed || false,
 							userUuid: userUuid || "",
 						}}
 					/>
