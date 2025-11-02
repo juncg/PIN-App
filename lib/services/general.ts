@@ -9,39 +9,53 @@ export function GetClient() {
 	return { supabase };
 }
 
+export function GetServiceClient() {
+	const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "URL no encontrada";
+	const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "Service key no encontrada";
+
+	const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+		auth: {
+			autoRefreshToken: false,
+			persistSession: false
+		}
+	});
+
+	return { supabase };
+}
+
 const { supabase } = GetClient();
 
 type SupabaseGenericFilter =
 	| {
-			method:
-				| "eq"
-				| "gt"
-				| "lt"
-				| "gte"
-				| "lte"
-				| "like"
-				| "ilike"
-				| "is"
-				| "in"
-				| "neq"
-				| "contains"
-				| "containedBy"
-				| "not"
-				| "or"
-				| "order"
-				| "range"
-				| "single"
-				| "limit"
-				| "rangeFrom"
-				| "rangeTo";
-			column?: string;
-			value?: any;
-			operator?: string;
-			ascending?: boolean;
-			nullsFirst?: boolean;
-			from?: number;
-			to?: number;
-	  }
+		method:
+		| "eq"
+		| "gt"
+		| "lt"
+		| "gte"
+		| "lte"
+		| "like"
+		| "ilike"
+		| "is"
+		| "in"
+		| "neq"
+		| "contains"
+		| "containedBy"
+		| "not"
+		| "or"
+		| "order"
+		| "range"
+		| "single"
+		| "limit"
+		| "rangeFrom"
+		| "rangeTo";
+		column?: string;
+		value?: any;
+		operator?: string;
+		ascending?: boolean;
+		nullsFirst?: boolean;
+		from?: number;
+		to?: number;
+	}
 	| { method: "or"; value: string };
 
 function applySupabaseFilter(query: any, filter: SupabaseGenericFilter) {
@@ -166,4 +180,16 @@ export async function DeleteFromDatabase<T = unknown>({
 	const { data, error } = await query;
 
 	return { data: (data as unknown as T[]) || null, error: error ?? null };
+}
+
+export async function ExecuteRpcFunction<T = unknown>({
+	functionName,
+	params = {},
+}: {
+	functionName: string;
+	params?: Record<string, any>;
+}): Promise<SupabaseApiResult<T>> {
+	const { supabase: serviceSupabase } = GetServiceClient();
+	const { data, error } = await serviceSupabase.rpc(functionName, params);
+	return { data: (data as T[]) || null, error: error ?? null };
 }

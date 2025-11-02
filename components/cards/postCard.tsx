@@ -1,6 +1,5 @@
 "use client";
 
-import { useSubscribe } from "@/hooks/use-subscribe";
 import { BASE_DOMAIN } from "@/lib/constants";
 import { IOffer, IPetition } from "@/lib/services/types";
 import { cn } from "@/lib/utils";
@@ -15,6 +14,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Progress } from "../ui/progress";
 import { Separator } from "../ui/separator";
 import { H3, H4, P } from "../ui/typography";
+import { useState } from "react";
 
 type PostType = "Oferta" | "Petición";
 
@@ -38,12 +38,9 @@ function generateRandomPlaceholders(postId: number): string[] {
 }
 
 export function PostCard({ props }: { props: IPostCard }) {
-	const { post, className, userUuid, typeOfPost, likedByUser, subscribedByUser, tags, images } = props;
-
-	const { subscribers, isSubscribed, toggleSubscribe } = useSubscribe({
-		initialSubscribers: post.current_progress,
-		initialSubscribed: subscribedByUser,
-	});
+	const { post, className, userUuid, typeOfPost, likedByUser, tags, images } = props;
+	const [subscribers, setSubscribers] = useState(post.current_progress);
+	const [subscribedByUser, setIsSubscribed] = useState(props.subscribedByUser);
 
 	const displayImages = images && images.length > 0 ? images : generateRandomPlaceholders(post.id);
 	const offerCompletionPercentage = parseFloat(((subscribers * 100) / (post?.target_progress ?? 1)).toFixed(2));
@@ -102,8 +99,10 @@ export function PostCard({ props }: { props: IPostCard }) {
 						<SubscribeButton
 							post_id={post.id}
 							typeOfPost={typeOfPost}
-							subscribedByUser={isSubscribed}
-							onSubscribeToggle={toggleSubscribe}
+							subscribers={subscribers}
+							subscribedByUser={subscribedByUser}
+							setSubscribers={(value) => setSubscribers(value)}
+							setIsSubscribed={(value) => setIsSubscribed(value)}
 						/>
 					) : (
 						<Link href={"/auth/login"}>

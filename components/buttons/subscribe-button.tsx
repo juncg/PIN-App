@@ -10,12 +10,22 @@ export interface ISubscribeButton {
 	post_id: number;
 	typeOfPost: "Oferta" | "Petición";
 	subscribedByUser: boolean;
-	onSubscribeToggle?: () => void;
+	subscribers: number;
+	setSubscribers: (value: number | ((prev: number) => number)) => void;
+	setIsSubscribed: (value: boolean | ((prev: boolean) => boolean)) => void;
 }
 
 export function SubscribeButton(props: ISubscribeButton) {
-	const { post_id, typeOfPost, subscribedByUser, onSubscribeToggle } = props;
+	const { post_id, typeOfPost, subscribers, subscribedByUser, setSubscribers, setIsSubscribed } = props;
 	const [showDialog, setShowDialog] = useState(false);
+
+	const toggleSubscribe = () => {
+		const newSubscribedState = !subscribedByUser;
+		const newSubscribersCount = newSubscribedState ? subscribers + 1 : subscribers - 1;
+
+		setIsSubscribed(newSubscribedState);
+		setSubscribers(newSubscribersCount);
+	};
 
 	const handleSubscribe = async () => {
 		if (typeOfPost === "Oferta" && !subscribedByUser) {
@@ -23,24 +33,24 @@ export function SubscribeButton(props: ISubscribeButton) {
 			return;
 		}
 
-		onSubscribeToggle?.();
+		toggleSubscribe();
 
 		try {
 			await handleSubscribeAction(post_id, subscribedByUser, typeOfPost);
 		} catch (error) {
-			onSubscribeToggle?.();
+			toggleSubscribe();
 			console.error("Error al actualizar suscripción:", error);
 		}
 	};
 
 	const handleConfirmSubscribe = async () => {
 		setShowDialog(false);
-		onSubscribeToggle?.();
+		toggleSubscribe();
 
 		try {
 			await handleSubscribeAction(post_id, subscribedByUser, typeOfPost);
 		} catch (error) {
-			onSubscribeToggle?.();
+			toggleSubscribe();
 			console.error("Error al actualizar suscripción:", error);
 		}
 	};
