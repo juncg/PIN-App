@@ -3,7 +3,6 @@ import { ProductCard } from "@/components/cards/productCard";
 import { H1 } from "@/components/ui/typography";
 import { DEFAULT_LOCALE } from "@/lib/constants";
 import { IOffer, IPetition, IProduct } from "@/lib/services/types";
-import { getUserUuid } from "@/lib/services/user.server";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { HomeServices } from "./page-services";
@@ -12,9 +11,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
 	const params = await searchParams;
 	const locale = params.locale || DEFAULT_LOCALE;
 	const translator = await getTranslations({ locale, namespace: "home" });
-	const userUuid = await getUserUuid();
 
-	const { offers, petitions, products } = await HomeServices(userUuid);
+	const { offers, petitions, products } = await HomeServices();
 
 	return (
 		<section className="flex flex-row justify-center gap-8">
@@ -29,9 +27,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
 						props={{
 							className: "w-full",
 							typeOfPost: "Petición",
-							likedByUser: petition?.liked || false,
+							likedByUser: petition?.User_Petition?.[0]?.liked || false,
 							post: petition,
-							subscribedByUser: petition?.subscribed || false,
+							subscribedByUser: petition?.User_Petition?.[0]?.subscribed || false,
 						}}
 					/>
 				))}
@@ -48,9 +46,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
 						props={{
 							className: "w-full",
 							typeOfPost: "Oferta",
-							likedByUser: offer?.liked || false,
+							likedByUser: offer?.User_Offer?.[0]?.liked || false,
 							post: offer,
-							subscribedByUser: offer?.subscribed || false,
+							subscribedByUser: offer?.User_Offer?.[0]?.subscribed || false,
 						}}
 					/>
 				))}
@@ -68,7 +66,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
 							className: "w-full",
 							name: product.name,
 							description: product.description,
-							businessName: (product.businesses && product.businesses[0].business.name) || "N/A",
+							businessName: (product.businesses && product.businesses[0]?.business?.name) || "N/A",
 						}}
 					/>
 				))}

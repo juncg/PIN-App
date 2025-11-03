@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CreateUser, IsUsernameAlreadyUsed } from "@/lib/services/user";
+import { GetFromDatabase, PostToDatabase } from "@/lib/services/general";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -33,8 +33,13 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 			return;
 		}
 
-		const isUsernameAlreadyUsed = (await IsUsernameAlreadyUsed(username)).exists;
-		if (isUsernameAlreadyUsed) {
+		const isUsernameAlreadyUsed = await GetFromDatabase({
+			tableName: "User",
+			select: "username",
+			filters: [{ method: "eq", column: "username", value: username }],
+		});
+
+		if (isUsernameAlreadyUsed.data && isUsernameAlreadyUsed.data.length > 0) {
 			setError("Username ya en uso");
 			setIsLoading(false);
 			return;
@@ -53,20 +58,23 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 			const userId = data.user?.id;
 			if (!userId) throw new Error("No se pudo obtener el ID del usuario.");
 
-			const result = await CreateUser({
-				id: userId,
-				name: name,
-				surnames: surnames,
-				birth_date: birthDate.toString(),
-				username: username,
-				banner: null,
-				profile_picture: null,
+			const result = await PostToDatabase({
+				tableName: "User",
+				contentJson: {
+					id: userId,
+					name: name,
+					surnames: surnames,
+					birth_date: birthDate.toString(),
+					username: username,
+					banner: null,
+					profile_picture: null,
+				},
 			});
 
-			if (!result.success) {
+			if (!result.error) {
 				throw new Error(result.error || "Error al crear el perfil del usuario.");
 			}
-			// Forzar una recarga completa de la página
+
 			window.location.href = "/auth/sign-up-success";
 		} catch (error: unknown) {
 			setError(error instanceof Error ? error.message : "An error occurred");

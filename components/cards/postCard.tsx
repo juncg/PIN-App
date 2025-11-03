@@ -45,7 +45,7 @@ export function PostCard({ props }: { props: IPostCard }) {
 			<div className="flex justify-between items-center border-b pb-4">
 				<div className="flex flex-col gap-2">
 					<H3>{post.title}</H3>
-					{/*<H4>{post.business.name}</H4>*/}
+					<H4>{post?.businesses?.[0]?.business.name}</H4>
 				</div>
 
 				<div className="flex flex-col gap-2">
