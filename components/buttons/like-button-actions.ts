@@ -1,9 +1,13 @@
 "use server";
 
-import { GetFromDatabase, PostToDatabase, PutToDatabase } from "@/lib/services/general";
+import { ExecuteRpcFunction, GetFromDatabase, PostToDatabase, PutToDatabase } from "@/lib/services/general";
 import { getUserUuid } from "@/lib/services/user.server";
 
-export async function handleLikeAction(post_id: number, currentlyLiked: boolean, typeOfPost?: "Oferta" | "Petición") {
+export async function handleLikeAction(
+	post_id: number,
+	currentlyLiked: boolean,
+	typeOfPost?: "Oferta" | "Petición"
+) {
 	try {
 		const user_id = await getUserUuid();
 
@@ -14,14 +18,6 @@ export async function handleLikeAction(post_id: number, currentlyLiked: boolean,
 		const tableName = typeOfPost === "Petición" ? "Petition" : "Offer";
 		const userTableName = typeOfPost === "Petición" ? "User_Petition" : "User_Offer";
 		const postIdColumn = typeOfPost === "Petición" ? "petition_id" : "offer_id";
-
-		const postLikes = await GetFromDatabase<{ likes: number }>({
-			tableName,
-			select: "likes",
-			filters: [{ method: "eq", column: "id", value: post_id }],
-		});
-
-		const currentLikes = postLikes.data && postLikes.data.length > 0 ? postLikes.data[0].likes : 0;
 
 		if (!currentlyLiked) {
 			const existingRelations = await GetFromDatabase({
@@ -56,11 +52,17 @@ export async function handleLikeAction(post_id: number, currentlyLiked: boolean,
 				});
 			}
 
-			await PutToDatabase({
-				tableName,
-				contentJson: { likes: currentLikes + 1 },
-				filters: [{ method: "eq", column: "id", value: post_id }],
+			const { data, error } = await ExecuteRpcFunction<number>({
+				functionName: "delta_likes",
+				params: { post_id, target_table: tableName, given_user_id: user_id },
 			});
+
+			if (error) {
+				console.error("RPC failed:", error.message);
+			} else {
+				console.log("New like count:", data);
+			}
+
 		} else {
 			await PutToDatabase({
 				tableName: userTableName,
@@ -71,11 +73,16 @@ export async function handleLikeAction(post_id: number, currentlyLiked: boolean,
 				],
 			});
 
-			await PutToDatabase({
-				tableName,
-				contentJson: { likes: Math.max(0, currentLikes - 1) },
-				filters: [{ method: "eq", column: "id", value: post_id }],
+			const { data, error } = await ExecuteRpcFunction<number>({
+				functionName: "delta_likes",
+				params: { post_id, target_table: tableName, given_user_id: user_id },
 			});
+
+			if (error) {
+				console.error("RPC failed:", error.message);
+			} else {
+				console.log("New like count:", data);
+			}
 		}
 
 		return { success: true };

@@ -13,6 +13,7 @@ export interface ISubscribeButton {
 	subscribers: number;
 	setSubscribers: (value: number | ((prev: number) => number)) => void;
 	setIsSubscribed: (value: boolean | ((prev: boolean) => boolean)) => void;
+	disabled: boolean;
 }
 
 export function SubscribeButton(props: ISubscribeButton) {
@@ -28,6 +29,8 @@ export function SubscribeButton(props: ISubscribeButton) {
 	};
 
 	const handleSubscribe = async () => {
+		if (props.disabled) return;
+
 		if (typeOfPost === "Oferta" && !subscribedByUser) {
 			setShowDialog(true);
 			return;

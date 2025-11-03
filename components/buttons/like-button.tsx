@@ -11,6 +11,7 @@ export interface ILikeButton {
 	likedByUser: boolean;
 	post_id: number;
 	typeOfPost?: "Oferta" | "Petición";
+	disabled: boolean;
 }
 
 export function LikeButton(props: ILikeButton) {
@@ -19,6 +20,8 @@ export function LikeButton(props: ILikeButton) {
 	const [liked, setLiked] = useState<boolean>(likedByUser);
 
 	const handleLike = async () => {
+		if (props.disabled) return;
+
 		const newLikedState = !liked;
 		const newLikesCount = newLikedState ? numberOfLikes + 1 : numberOfLikes - 1;
 

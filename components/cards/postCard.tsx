@@ -97,10 +97,19 @@ export function PostCard({ props }: { props: IPostCard }) {
 							subscribedByUser={subscribedByUser}
 							setSubscribers={(value) => setSubscribers(value)}
 							setIsSubscribed={(value) => setIsSubscribed(value)}
+							disabled={!userUuid}
 						/>
 					) : (
 						<Link href={"/auth/login"}>
-							<Button>Suscribirme</Button>
+							<SubscribeButton
+								post_id={post.id}
+								typeOfPost={typeOfPost}
+								subscribers={subscribers}
+								subscribedByUser={subscribedByUser}
+								setSubscribers={(value) => setSubscribers(value)}
+								setIsSubscribed={(value) => setIsSubscribed(value)}
+								disabled={!userUuid}
+							/>
 						</Link>
 					)}
 				</div>
@@ -149,12 +158,25 @@ export function PostCard({ props }: { props: IPostCard }) {
 
 			<div className="flex flex-row justify-between">
 				<div className="flex flex-row justify-start gap-6">
-					<LikeButton
-						likes={post.likes}
-						likedByUser={likedByUser}
-						post_id={post.id}
-						typeOfPost={typeOfPost}
-					/>
+					{userUuid ? (
+						<LikeButton
+							likes={post.likes}
+							likedByUser={likedByUser}
+							post_id={post.id}
+							typeOfPost={typeOfPost}
+							disabled={!userUuid}
+						/>
+					) : (
+						<Link href={"/auth/login"}>
+							<LikeButton
+								likes={post.likes}
+								likedByUser={likedByUser}
+								post_id={post.id}
+								typeOfPost={typeOfPost}
+								disabled={!userUuid}
+							/>
+						</Link>
+					)}
 					<ShareComponent url={postUrl} title={post.title} description={post.text} />
 				</div>
 			</div>

@@ -53,8 +53,8 @@ export async function handleSubscribeAction(
 			}
 
 			const { data, error } = await ExecuteRpcFunction<number>({
-				functionName: "count_subscribers",
-				params: { post_id, target_table: tableName },
+				functionName: "delta_subscribers",
+				params: { post_id, target_table: tableName, given_user_id: user_id },
 			});
 
 			if (error) {
@@ -62,6 +62,7 @@ export async function handleSubscribeAction(
 			} else {
 				console.log("New subscriber count:", data);
 			}
+
 		} else {
 			await PutToDatabase({
 				tableName: userTableName,
@@ -73,8 +74,8 @@ export async function handleSubscribeAction(
 			});
 
 			const { data, error } = await ExecuteRpcFunction<number>({
-				functionName: "count_subscribers",
-				params: { post_id, target_table: tableName },
+				functionName: "delta_subscribers",
+				params: { post_id, target_table: tableName, given_user_id: user_id },
 			});
 
 			if (error) {

@@ -1,3 +1,5 @@
+"use server";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { PostgrestError, createClient } from "@supabase/supabase-js";
@@ -194,7 +196,7 @@ export async function ExecuteRpcFunction<T = unknown>({
 	functionName: string;
 	params?: Record<string, any>;
 }): Promise<SupabaseApiResult<T>> {
-	const { supabase: serviceSupabase } = await GetClient();
-	const { data, error } = await serviceSupabase.rpc(functionName, params);
+	const { supabase } = await GetClient();
+	const { data, error } = await supabase.rpc(functionName, params);
 	return { data: (data as T[]) || null, error: error ?? null };
 }
