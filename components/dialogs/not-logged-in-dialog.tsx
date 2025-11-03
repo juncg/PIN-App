@@ -1,24 +1,38 @@
 "use client";
+
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 
-export function NotLoggedInDialog() {
-	return (
-		<Dialog defaultOpen>
-			<DialogContent className="sm:max-w-[425px]">
-				<DialogHeader>
-					<DialogTitle>Accede a tu cuenta</DialogTitle>
-				</DialogHeader>
-				<DialogFooter>
-					<Link href="/auth/login">
-						<Button>Iniciar sesión</Button>
-					</Link>
+interface NotLoggedInDialogProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    title?: string;
+    description?: string;
+}
+
+export function NotLoggedInDialog({
+    open,
+    onOpenChange,
+    title = "Accede a tu cuenta",
+    description = "Debes iniciar sesión para interactuar con las publicaciones.",
+}: NotLoggedInDialogProps) {
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>{title}</DialogTitle>
+                    {description && <DialogDescription>{description}</DialogDescription>}
+                </DialogHeader>
+                <DialogFooter>
 					<Link href="/auth/sign-up">
-						<Button>Registrarse</Button>
+						<Button onClick={() => onOpenChange(false)}>Registrarse</Button>
 					</Link>
-				</DialogFooter>
-			</DialogContent>
-		</Dialog>
-	);
+                    <Link href="/auth/login">
+                        <Button onClick={() => onOpenChange(false)}>Iniciar sesión</Button>
+                    </Link>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
 }

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { handleSubscribeAction } from "./subscribe-button-actions";
+import { NotLoggedInDialog } from "../dialogs/not-logged-in-dialog";
 
 export interface ISubscribeButton {
 	post_id: number;
@@ -13,12 +14,13 @@ export interface ISubscribeButton {
 	subscribers: number;
 	setSubscribers: (value: number | ((prev: number) => number)) => void;
 	setIsSubscribed: (value: boolean | ((prev: boolean) => boolean)) => void;
-	disabled: boolean;
+	user_id: string | null;
 }
 
 export function SubscribeButton(props: ISubscribeButton) {
-	const { post_id, typeOfPost, subscribers, subscribedByUser, setSubscribers, setIsSubscribed } = props;
+	const { post_id, typeOfPost, subscribers, subscribedByUser, setSubscribers, setIsSubscribed, user_id } = props;
 	const [showDialog, setShowDialog] = useState(false);
+	const [showLoginDialog, setShowLoginDialog] = useState(false);
 
 	const toggleSubscribe = () => {
 		const newSubscribedState = !subscribedByUser;
@@ -29,7 +31,10 @@ export function SubscribeButton(props: ISubscribeButton) {
 	};
 
 	const handleSubscribe = async () => {
-		if (props.disabled) return;
+		if (!user_id) {
+            setShowLoginDialog(true);
+            return;
+        }
 
 		if (typeOfPost === "Oferta" && !subscribedByUser) {
 			setShowDialog(true);
@@ -92,6 +97,12 @@ export function SubscribeButton(props: ISubscribeButton) {
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
+
+			<NotLoggedInDialog
+                open={showLoginDialog}
+                onOpenChange={setShowLoginDialog}
+                description="Debes iniciar sesión para suscribirte a esta publicación."
+            />
 		</>
 	);
 }

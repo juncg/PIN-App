@@ -89,29 +89,15 @@ export function PostCard({ props }: { props: IPostCard }) {
 						<Button variant="default">Información</Button>
 					</Link>
 
-					{userUuid ? (
-						<SubscribeButton
-							post_id={post.id}
-							typeOfPost={typeOfPost}
-							subscribers={subscribers}
-							subscribedByUser={subscribedByUser}
-							setSubscribers={(value) => setSubscribers(value)}
-							setIsSubscribed={(value) => setIsSubscribed(value)}
-							disabled={!userUuid}
-						/>
-					) : (
-						<Link href={"/auth/login"}>
-							<SubscribeButton
-								post_id={post.id}
-								typeOfPost={typeOfPost}
-								subscribers={subscribers}
-								subscribedByUser={subscribedByUser}
-								setSubscribers={(value) => setSubscribers(value)}
-								setIsSubscribed={(value) => setIsSubscribed(value)}
-								disabled={!userUuid}
-							/>
-						</Link>
-					)}
+					<SubscribeButton
+						post_id={post.id}
+						typeOfPost={typeOfPost}
+						subscribers={subscribers}
+						subscribedByUser={subscribedByUser}
+						setSubscribers={(value) => setSubscribers(value)}
+						setIsSubscribed={(value) => setIsSubscribed(value)}
+						user_id={userUuid}
+					/>
 				</div>
 
 				{typeOfPost === "Oferta" && (
@@ -158,25 +144,13 @@ export function PostCard({ props }: { props: IPostCard }) {
 
 			<div className="flex flex-row justify-between">
 				<div className="flex flex-row justify-start gap-6">
-					{userUuid ? (
-						<LikeButton
-							likes={post.likes}
-							likedByUser={likedByUser}
-							post_id={post.id}
-							typeOfPost={typeOfPost}
-							disabled={!userUuid}
-						/>
-					) : (
-						<Link href={"/auth/login"}>
-							<LikeButton
-								likes={post.likes}
-								likedByUser={likedByUser}
-								post_id={post.id}
-								typeOfPost={typeOfPost}
-								disabled={!userUuid}
-							/>
-						</Link>
-					)}
+					<LikeButton
+						likes={post.likes}
+						likedByUser={likedByUser}
+						post_id={post.id}
+						typeOfPost={typeOfPost}
+						user_id={userUuid}
+					/>
 					<ShareComponent url={postUrl} title={post.title} description={post.text} />
 				</div>
 			</div>
