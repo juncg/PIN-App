@@ -9,3 +9,9 @@ export const SUPPORTED_LOCALES = ["en", "es"];
 // Environment variables
 export const { BASE_DOMAIN } = process.env;
 export const DEBUG = process.env.NEXT_PUBLIC_DEBUG === "true" || false;
+
+// Pagination
+export const OFFERS_PAGE_SIZE = 5;
+export const OFFERS_MAX_POSTS = 50;
+export const PETITIONS_PAGE_SIZE = 5;
+export const PETITIONS_MAX_POSTS = 50;

@@ -15,7 +15,9 @@
 		"offers": "Offers"
 	},
 
-	"petitions": {},
+	"petitions": {
+		"petitions": "Petitions"
+	},
 
 	"products": {
 		"products": "Products",
