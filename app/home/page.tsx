@@ -1,18 +1,13 @@
 import { PostCard } from "@/components/cards/postCard";
 import { ProductCard } from "@/components/cards/productCard";
 import { H1 } from "@/components/ui/typography";
-import { DEFAULT_LOCALE } from "@/lib/constants";
 import { IOffer, IPetition, IProduct } from "@/lib/services/types";
-import { getTranslations } from "next-intl/server";
 import Link from "next/link";
+import { SearchParams } from "../types";
 import { HomeServices } from "./page-services";
 
-export default async function Home({ searchParams }: { searchParams: Promise<{ locale?: string }> }) {
-	const params = await searchParams;
-	const locale = params.locale || DEFAULT_LOCALE;
-	const translator = await getTranslations({ locale, namespace: "home" });
-
-	const { offers, petitions, products } = await HomeServices();
+export default async function Home({ searchParams }: { searchParams: Promise<SearchParams> }) {
+	const { translator, offers, petitions, products } = await HomeServices(searchParams);
 
 	return (
 		<section className="flex flex-row justify-center gap-8">
