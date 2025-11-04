@@ -1,32 +1,39 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { H3, P } from "../ui/typography";
+import { Star } from "lucide-react";
 
 export interface IProductCard {
 	className?: string;
 	name: string;
-	description: string;
+	description?: string;
 	businessName: string;
+	price?: number;
+	rating?: number;
 }
 
 export function ProductCard({ props }: { props: IProductCard }) {
-	const { className, name, description, businessName } = props;
+	const { className, name, businessName, price = 0, rating = 0 } = props;
 
 	return (
-		<article className={cn("flex flex-col border border-spacing-2 rounded-lg p-4 gap-4", className)}>
-			<div className="flex justify-between items-center border-b pb-4">
-				<div className="flex flex-col gap-2">
-					<H3>{name}</H3>
-				</div>
+		<article className={cn("flex flex-col border border-spacing-2 rounded-lg p-4 h-full", className)}>
+			<div className="relative w-full aspect-square mb-3">
+				<Image className="rounded-md object-cover" src={"/placeholder.png"} alt={name} fill unoptimized />
 			</div>
-			<div className="flex flex-col mb-10 gap-4">
-				<P>{description}</P>
-				<Image className="mx-auto" src={"/placeholder.png"} alt="" width={300} height={600} unoptimized />
-				<P>{businessName}</P>
-			</div>{" "}
-			<div className="flex flex-col gap-8">
-				<Button>Entra al producto</Button>
+
+			<div className="flex flex-col gap-0.5 mb-2">
+				<h4 className="font-semibold text-base line-clamp-2">{name}</h4>
+				<p className="text-xs text-muted-foreground">{businessName}</p>
+			</div>
+
+			<div className="flex items-center gap-1 mb-3">
+				<Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+				<span className="text-sm font-medium">{rating.toFixed(1)}</span>
+			</div>
+
+			<div className="mt-auto">
+				<p className="text-2xl font-bold mb-3">${price.toFixed(2)}</p>
+				<Button className="w-full">Ver producto</Button>
 			</div>
 		</article>
 	);
