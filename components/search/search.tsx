@@ -3,30 +3,42 @@
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function SearchInput() {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const [searchQuery, setSearchQuery] = useState<string>(searchParams.get("postName") ?? "");
-
-	useEffect(() => {
-		setSearchQuery(searchParams.get("postName") ?? "");
-	}, [searchParams]);
+	const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const value = e.target.value;
 		setSearchQuery(value);
-		const params = new URLSearchParams(Array.from(searchParams.entries()));
 
-		if (value) {
-			params.set("postName", value);
-		} else {
-			params.delete("postName");
+		if (debounceTimerRef.current) {
+			clearTimeout(debounceTimerRef.current);
 		}
 
-		router.replace(`?${params.toString()}`);
+		debounceTimerRef.current = setTimeout(() => {
+			const params = new URLSearchParams(Array.from(searchParams.entries()));
+
+			if (value) {
+				params.set("postName", value);
+			} else {
+				params.delete("postName");
+			}
+
+			router.replace(`?${params.toString()}`);
+		}, 500);
 	}
+
+	useEffect(() => {
+		return () => {
+			if (debounceTimerRef.current) {
+				clearTimeout(debounceTimerRef.current);
+			}
+		};
+	}, []);
 
 	return (
 		<div className="space-y-6">

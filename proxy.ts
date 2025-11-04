@@ -24,7 +24,7 @@ function getLocaleFromAcceptLanguage(acceptLanguage: string | null): string {
 	return DEFAULT_LOCALE;
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
 	const { searchParams, pathname } = request.nextUrl;
 
 	let locale = searchParams.get("locale");

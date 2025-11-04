@@ -10,11 +10,14 @@ import { Switch } from "@/components/ui/switch";
 import { useUser } from "@/hooks/use-user";
 import { PostToDatabase } from "@/lib/services/general";
 import { IForum, IOffer } from "@/lib/services/types";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { PostgrestError } from "@supabase/supabase-js";
 import { AlertCircle, CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { APIErrorHandler } from "../error-handlers/api-error-handler";
+import { CreateOfferSchema, type TCreateOfferSchema } from "./schemas/offer";
 
 interface OfferFormProps {
 	forums: IForum[];
@@ -22,13 +25,6 @@ interface OfferFormProps {
 }
 
 export default function OfferForm({ forums, tags }: OfferFormProps) {
-	const [title, setTitle] = useState("");
-	const [text, setText] = useState("");
-	const [targetProgress, setTargetProgress] = useState(0);
-	const [targetCompletitionDate, setTargetCompletitionDate] = useState("");
-	const [allowComments, setAllowComments] = useState(true);
-	const [fee, setFee] = useState(0);
-	const [forumId, setForumId] = useState<number | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [alert, setAlert] = useState<{
 		type: "success" | "error";
@@ -40,6 +36,31 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 
 	const router = useRouter();
 
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		setValue,
+		watch,
+	} = useForm<TCreateOfferSchema>({
+		resolver: zodResolver(CreateOfferSchema),
+		mode: "onBlur",
+		reValidateMode: "onChange",
+		defaultValues: {
+			title: "",
+			text: "",
+			target_progress: 0,
+			target_completition_date: "",
+			comment_locked_state: "Unlocked",
+			fee: 0,
+			forum_id: null,
+			state: "Posted",
+		},
+	});
+
+	const forumId = watch("forum_id");
+	const allowComments = watch("comment_locked_state") === "Unlocked";
+
 	useEffect(() => {
 		if (alert) {
 			const timer = setTimeout(() => {
@@ -50,30 +71,38 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 		}
 	}, [alert]);
 
-	const handleOfferCreation = async (e: React.FormEvent) => {
-		e.preventDefault();
+	const handleOfferCreation = async (data: TCreateOfferSchema) => {
 		setIsSubmitting(true);
 		setAlert(null);
 		setApiError(null);
 
+		if (!userUuid) {
+			setAlert({
+				type: "error",
+				message: "Debes iniciar sesión para crear una oferta.",
+			});
+			setIsSubmitting(false);
+			return;
+		}
+
 		try {
-			const newOffer: Omit<IOffer, "id"> = {
-				title: title,
-				text: text,
-				target_progress: targetProgress,
-				target_completition_date: new Date(targetCompletitionDate).toISOString(),
+			const newOffer = {
+				title: data.title,
+				text: data.text,
+				target_progress: data.target_progress,
+				target_completition_date: new Date(data.target_completition_date).toISOString(),
 				created_at: new Date().toISOString(),
 				creator_id: userUuid,
 				current_progress: 0,
-				comment_locked_state: allowComments ? "Unlocked" : "Locked",
-				fee: fee,
-				forum_id: forumId,
+				comment_locked_state: data.comment_locked_state ?? "Unlocked",
+				fee: data.fee,
+				forum_id: data.forum_id ?? null,
 				likes: 0,
 				superlikes: 0,
-				state: "Posted",
-			} as Omit<IOffer, "id">;
+				state: data.state ?? "Posted",
+			};
 
-			const response = await PostToDatabase<Omit<IOffer, "id">>({
+			const response = await PostToDatabase<IOffer>({
 				tableName: "Offer",
 				contentJson: [newOffer],
 			});
@@ -137,58 +166,50 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 
 			<APIErrorHandler error={apiError} />
 
-			<form onSubmit={handleOfferCreation}>
+			<form onSubmit={handleSubmit(handleOfferCreation)}>
 				<div className="flex flex-col gap-6">
 					<div className="grid gap-2">
 						<Label htmlFor="title">Titulo</Label>
-						<Input
-							id="title"
-							type="text"
-							required
-							value={title}
-							onChange={(e) => setTitle(e.target.value)}
-							disabled={isSubmitting}
-						/>
+						<Input id="title" type="text" {...register("title")} disabled={isSubmitting} />
+						{errors.title && <p className="text-sm text-red-600">{errors.title.message}</p>}
 					</div>
 					<div className="grid gap-2">
 						<Label htmlFor="text">Descripción</Label>
-						<Input
-							id="text"
-							type="text"
-							required
-							value={text}
-							onChange={(e) => setText(e.target.value)}
-							disabled={isSubmitting}
-						/>
+						<Input id="text" type="text" {...register("text")} disabled={isSubmitting} />
+						{errors.text && <p className="text-sm text-red-600">{errors.text.message}</p>}
 					</div>
 					<div className="grid gap-2">
-						<Label htmlFor="targetProgress">Objetivo numérico</Label>
+						<Label htmlFor="target_progress">Objetivo numérico</Label>
 						<Input
-							id="targetProgress"
+							id="target_progress"
 							type="number"
-							required
-							value={targetProgress}
-							onChange={(e) => setTargetProgress(Number(e.target.value))}
+							{...register("target_progress", { valueAsNumber: true })}
 							disabled={isSubmitting}
 						/>
+						{errors.target_progress && (
+							<p className="text-sm text-red-600">{errors.target_progress.message}</p>
+						)}
 					</div>
 					<div className="grid gap-2">
-						<Label htmlFor="targetCompletitionDate">Fecha limite del objetivo</Label>
+						<Label htmlFor="target_completition_date">Fecha limite del objetivo</Label>
 						<Input
-							id="targetCompletitionDate"
+							id="target_completition_date"
 							type="date"
-							required
-							value={targetCompletitionDate}
-							onChange={(e) => setTargetCompletitionDate(e.target.value)}
+							{...register("target_completition_date")}
 							disabled={isSubmitting}
 						/>
+						{errors.target_completition_date && (
+							<p className="text-sm text-red-600">{errors.target_completition_date.message}</p>
+						)}
 					</div>
 					<div className="grid gap-2">
 						<Label htmlFor="allowComments">Permitir comentarios</Label>
 						<Switch
 							id="allowComments"
 							checked={allowComments}
-							onCheckedChange={setAllowComments}
+							onCheckedChange={(checked) =>
+								setValue("comment_locked_state", checked ? "Unlocked" : "Locked")
+							}
 							disabled={isSubmitting}
 						/>
 					</div>
@@ -197,17 +218,16 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 						<Input
 							id="fee"
 							type="number"
-							required
-							value={fee}
-							onChange={(e) => setFee(Number(e.target.value))}
+							{...register("fee", { valueAsNumber: true })}
 							disabled={isSubmitting}
 						/>
+						{errors.fee && <p className="text-sm text-red-600">{errors.fee.message}</p>}
 					</div>
 					<div className="grid gap-2">
 						<Label htmlFor="forumId">Foro</Label>
 						<Select
 							value={forumId?.toString() || ""}
-							onValueChange={(value) => setForumId(Number(value))}
+							onValueChange={(value) => setValue("forum_id", Number(value))}
 							disabled={isSubmitting}
 						>
 							<SelectTrigger>
@@ -221,6 +241,7 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 								))}
 							</SelectContent>
 						</Select>
+						{errors.forum_id && <p className="text-sm text-red-600">{errors.forum_id.message}</p>}
 					</div>
 					<div className="grid gap-2">
 						<SelectTags
