@@ -3,10 +3,10 @@ import { ProductCard } from "@/components/cards/productCard";
 import { H1 } from "@/components/ui/typography";
 import { IOffer, IPetition, IProduct } from "@/lib/services/types";
 import Link from "next/link";
-import { SearchParams } from "../types";
+import { ISearchParams } from "../../types";
 import { HomeServices } from "./page-services";
 
-export default async function Home({ searchParams }: { searchParams: Promise<SearchParams> }) {
+export default async function Home({ searchParams }: { searchParams: Promise<ISearchParams> }) {
 	const { translator, offers, petitions, products } = await HomeServices(searchParams);
 
 	return (

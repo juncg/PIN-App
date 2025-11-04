@@ -3,11 +3,7 @@
 import { ExecuteRpcFunction, GetFromDatabase, PostToDatabase, PutToDatabase } from "@/lib/services/general";
 import { getUserUuid } from "@/lib/services/user.server";
 
-export async function handleLikeAction(
-	post_id: number,
-	currentlyLiked: boolean,
-	typeOfPost?: "Oferta" | "Petición"
-) {
+export async function handleLikeAction(post_id: number, currentlyLiked: boolean, typeOfPost?: "Oferta" | "Petición") {
 	try {
 		const user_id = await getUserUuid();
 
@@ -62,7 +58,6 @@ export async function handleLikeAction(
 			} else {
 				console.log("New like count:", data);
 			}
-
 		} else {
 			await PutToDatabase({
 				tableName: userTableName,

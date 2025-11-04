@@ -9,5 +9,11 @@
 
 	"businesses": {
 		"businesses": "Empresas"
-	}
+	},
+
+	"offers": {
+		"offers": "Ofertas"
+	},
+
+	"petitions": {}
 }

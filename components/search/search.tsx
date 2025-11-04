@@ -1,56 +1,44 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { IOffer, IPetition } from "@/lib/services/types";
 import { Search } from "lucide-react";
-import { useState } from "react";
-import { PostCard } from "../cards/postCard";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-type SearchableItem = IOffer | IPetition;
-type PostType = "Oferta" | "Petición";
+export function SearchInput() {
+	const searchParams = useSearchParams();
+	const router = useRouter();
+	const [searchQuery, setSearchQuery] = useState<string>(searchParams.get("postName") ?? "");
 
-interface SearchItemsProps {
-	items: SearchableItem[];
-	postType: PostType;
-}
+	useEffect(() => {
+		setSearchQuery(searchParams.get("postName") ?? "");
+	}, [searchParams]);
 
-export default function SearchItems({ items, postType }: SearchItemsProps) {
-	const [searchQuery, setSearchQuery] = useState("");
+	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+		const value = e.target.value;
+		setSearchQuery(value);
+		const params = new URLSearchParams(Array.from(searchParams.entries()));
 
-	const filteredItems = items.filter(
-		(item) => item.title?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false
-	);
+		if (value) {
+			params.set("postName", value);
+		} else {
+			params.delete("postName");
+		}
+
+		router.replace(`?${params.toString()}`);
+	}
 
 	return (
 		<div className="space-y-6">
 			<div className="relative max-w-md">
 				<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+
 				<Input
-					placeholder={`Buscar ${postType === "Oferta" ? "ofertas" : "peticiones"}...`}
+					placeholder={`Búsqueda por nombre...`}
 					value={searchQuery}
-					onChange={(e) => setSearchQuery(e.target.value)}
+					onChange={handleChange}
 					className="pl-10 glass"
 				/>
-			</div>
-
-			<div className="grid gap-4">
-				{filteredItems.length === 0 ? (
-					<p className="text-muted-foreground">No se encontraron ofertas</p>
-				) : (
-					filteredItems.map((item: SearchableItem) => (
-						<PostCard
-							key={item.id}
-							props={{
-								className: "w-full",
-								typeOfPost: postType,
-								likedByUser: item.liked || false,
-								post: item,
-								tags: item.tags || [],
-								subscribedByUser: item.subscribed || false,
-							}}
-						/>
-					))
-				)}
 			</div>
 		</div>
 	);

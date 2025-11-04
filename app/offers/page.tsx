@@ -1,20 +1,22 @@
-import SearchItems from "@/components/search/search";
+import { PostList } from "@/components/posts/post-list";
+import { SearchInput } from "@/components/search/search";
 import { Button } from "@/components/ui/button";
 import { H1, P } from "@/components/ui/typography";
 import { getUserUuid } from "@/lib/services/user.server";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { ISearchParams } from "../../types";
 import { OfferServices } from "./page-services";
 
-export default async function Offers() {
-	const { offers } = await OfferServices();
+export default async function Offers({ searchParams }: { searchParams: Promise<ISearchParams> }) {
+	const { translator, offers } = await OfferServices(searchParams);
 	const userUuid = await getUserUuid();
 
 	return (
 		<section className="max-w-7xl mx-auto space-y-8">
 			<div className="flex justify-between items-center">
 				<div className="justify-start">
-					<H1>Ofertas</H1>
+					<H1>{translator("offers")}</H1>
 					<P className="text-muted-foreground">Aqui puedes ver las ofertas existentes</P>
 				</div>
 
@@ -26,7 +28,9 @@ export default async function Offers() {
 				</Link>
 			</div>
 
-			<SearchItems items={offers} postType="Oferta" />
+			<SearchInput />
+
+			<PostList items={offers ?? []} />
 		</section>
 	);
 }

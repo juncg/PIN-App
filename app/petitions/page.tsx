@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { PetitionServices } from "./page-services";
 
-export default async function Petitions() {
+export default async function Petitions({ searchParams }: { searchParams: Promise<ISearchParams> }) {
 	const { petitions } = await PetitionServices();
 
 	return (

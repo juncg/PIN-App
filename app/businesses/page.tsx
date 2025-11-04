@@ -1,10 +1,10 @@
 import { BusinessCard } from "@/components/cards/businessCard";
 import { H1 } from "@/components/ui/typography";
 import { IBusiness } from "@/lib/services/types";
-import { SearchParams } from "../types";
+import { ISearchParams } from "../../types";
 import { BusinessesServices } from "./page-services";
 
-export default async function Businesses({ searchParams }: { searchParams: Promise<SearchParams> }) {
+export default async function Businesses({ searchParams }: { searchParams: Promise<ISearchParams> }) {
 	const { translator, businesses } = await BusinessesServices(searchParams);
 
 	return (

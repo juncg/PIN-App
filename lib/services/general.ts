@@ -4,7 +4,7 @@
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { PostgrestError, createClient } from "@supabase/supabase-js";
 import { DEBUG } from "../constants";
-import { SupabaseGenericFilter } from "./types";
+import { ISupabaseGenericFilter } from "./types";
 
 // This function should be used for authenticated operations
 // It uses the SSR client that has access to user sessions
@@ -30,7 +30,7 @@ export async function GetServiceClient() {
 	return { supabase };
 }
 
-function applySupabaseFilter(query: any, filter: SupabaseGenericFilter) {
+function applySupabaseFilter(query: any, filter: ISupabaseGenericFilter) {
 	switch (filter.method) {
 		case "eq":
 		case "gt":
@@ -79,7 +79,7 @@ export async function GetFromDatabase<T = unknown>({
 }: {
 	tableName: string;
 	select?: string;
-	filters?: SupabaseGenericFilter[];
+	filters?: ISupabaseGenericFilter[];
 }): Promise<SupabaseApiResult<T>> {
 	const { supabase } = await GetClient();
 	let query = supabase.from(tableName).select(select);
@@ -106,7 +106,7 @@ export async function PostToDatabase<T = unknown>({
 }: {
 	tableName: string;
 	contentJson: Partial<T> | Partial<T>[];
-	filters?: SupabaseGenericFilter[];
+	filters?: ISupabaseGenericFilter[];
 }): Promise<SupabaseApiResult<T>> {
 	const { supabase } = await GetClient();
 	let query = supabase.from(tableName).insert(contentJson).select();
@@ -133,7 +133,7 @@ export async function PutToDatabase<T = unknown>({
 }: {
 	tableName: string;
 	contentJson: Partial<T>;
-	filters?: SupabaseGenericFilter[];
+	filters?: ISupabaseGenericFilter[];
 }): Promise<SupabaseApiResult<T>> {
 	const { supabase } = await GetClient();
 	let query = supabase.from(tableName).update(contentJson);
@@ -162,7 +162,7 @@ export async function DeleteFromDatabase<T = unknown>({
 	tableName: string;
 	matchColumn: string;
 	matchValue: any;
-	filters?: SupabaseGenericFilter[];
+	filters?: ISupabaseGenericFilter[];
 }): Promise<SupabaseApiResult<T>> {
 	const { supabase } = await GetClient();
 	let query = supabase.from(tableName).delete().eq(matchColumn, matchValue);

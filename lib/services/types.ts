@@ -1,16 +1,20 @@
 import { Tables } from "@/database.types";
 
 export type IOffer = Tables<"Offer"> & {
+	type: "Offer";
 	businesses?: {
 		business: Tables<"Business">;
 	}[];
+	tags?: Tables<"Tag">[];
 	User_Offer?: Tables<"User_Offer">[];
 };
 
 export type IPetition = Tables<"Petition"> & {
+	type: "Petition";
 	businesses?: {
 		business: Tables<"Business">;
 	}[];
+	tags?: Tables<"Tag">[];
 	User_Petition?: Tables<"User_Petition">[];
 };
 
@@ -64,7 +68,7 @@ export interface IDeleteToDatabase {
 	matchValue: string | number;
 }
 
-export type SupabaseGenericFilter =
+export type ISupabaseGenericFilter =
 	| {
 			method:
 				| "eq"

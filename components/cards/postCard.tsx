@@ -17,28 +17,34 @@ import { Progress } from "../ui/progress";
 import { Separator } from "../ui/separator";
 import { H3, H4, P } from "../ui/typography";
 
-type PostType = "Oferta" | "Petición";
-
 export interface IPostCard {
 	className?: string;
 	post: IOffer | IPetition;
-	typeOfPost: PostType;
-	likedByUser: boolean;
-	subscribedByUser: boolean;
-	tags?: string[];
 	images?: string[];
 }
 
 export function PostCard({ props }: { props: IPostCard }) {
-	const { post, className, typeOfPost, likedByUser, tags, images } = props;
+	const { post, className, images } = props;
 	const { userUuid } = useUser();
 	const [subscribers, setSubscribers] = useState(post.current_progress);
-	const [subscribedByUser, setIsSubscribed] = useState(props.subscribedByUser);
+
+	const initialSubscribed =
+		post.type === "Offer"
+			? !!(post as IOffer).User_Offer?.some((u) => u.user_id === userUuid && u.subscribed)
+			: !!(post as IPetition).User_Petition?.some((u) => u.user_id === userUuid && u.subscribed);
+	const [subscribedByUser, setIsSubscribed] = useState<boolean>(initialSubscribed);
+
+	const likedByUser =
+		post.type === "Offer"
+			? !!(post as IOffer).User_Offer?.some((u) => u.user_id === userUuid && u.liked)
+			: !!(post as IPetition).User_Petition?.some((u) => u.user_id === userUuid && u.liked);
+
+	const tags = (post as IOffer | IPetition).tags?.map((t) => t.name).filter(Boolean) as string[] | undefined;
 
 	const displayImages =
 		images && images.length > 0 ? images : ["/images/jancarlo.jpg", "/images/jancarlo.jpg", "/images/jancarlo.jpg"];
 	const offerCompletionPercentage = parseFloat(((subscribers * 100) / (post?.target_progress ?? 1)).toFixed(2));
-	const postUrl = `${BASE_DOMAIN}${typeOfPost === "Petición" ? `/petitions/${post.id}` : `/offers/${post.id}`}`;
+	const postUrl = `${BASE_DOMAIN}${post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}`;
 
 	return (
 		<article className={cn("flex flex-col border border-spacing-2 rounded-lg p-4 gap-4", className)}>
@@ -49,7 +55,7 @@ export function PostCard({ props }: { props: IPostCard }) {
 				</div>
 
 				<div className="flex flex-col gap-2">
-					<Badge>{typeOfPost}</Badge>
+					<Badge>{post.type === "Petition" ? "Petición" : "Oferta"}</Badge>
 				</div>
 			</div>
 
@@ -85,13 +91,13 @@ export function PostCard({ props }: { props: IPostCard }) {
 
 			<div className="flex flex-col gap-8">
 				<div className="flex justify-between">
-					<Link href={typeOfPost === "Petición" ? `/petitions/${post.id}` : `/offers/${post.id}`}>
+					<Link href={post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}>
 						<Button variant="default">Información</Button>
 					</Link>
 
 					<SubscribeButton
 						post_id={post.id}
-						typeOfPost={typeOfPost}
+						typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
 						subscribers={subscribers}
 						subscribedByUser={subscribedByUser}
 						setSubscribers={(value) => setSubscribers(value)}
@@ -100,7 +106,7 @@ export function PostCard({ props }: { props: IPostCard }) {
 					/>
 				</div>
 
-				{typeOfPost === "Oferta" && (
+				{post.type === "Offer" && (
 					<div className="flex flex-col gap-2">
 						<Progress value={offerCompletionPercentage} />
 
@@ -113,7 +119,7 @@ export function PostCard({ props }: { props: IPostCard }) {
 						</div>
 					</div>
 				)}
-				{typeOfPost === "Petición" && (
+				{post.type === "Petition" && (
 					<div className="flex flex-col gap-2">
 						<Progress value={offerCompletionPercentage} />
 
@@ -148,7 +154,7 @@ export function PostCard({ props }: { props: IPostCard }) {
 						likes={post.likes}
 						likedByUser={likedByUser}
 						post_id={post.id}
-						typeOfPost={typeOfPost}
+						typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
 						user_id={userUuid}
 					/>
 					<ShareComponent url={postUrl} title={post.title} description={post.text} />
