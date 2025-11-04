@@ -1,7 +1,7 @@
 "use server";
 
 import { ExecuteRpcFunction, GetFromDatabase, PostToDatabase, PutToDatabase } from "@/lib/services/general";
-import { getUserUuid } from "@/lib/services/user.server";
+import { getUserUuid } from "@/lib/services/user";
 
 export async function handleLikeAction(post_id: number, currentlyLiked: boolean, typeOfPost?: "Oferta" | "Petición") {
 	try {

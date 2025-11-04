@@ -1,21 +1,17 @@
-import { GetClient } from "./general";
+import { createClient } from "@/lib/supabase/server";
 
-export async function IsUsernameAlreadyUsed(username: string): Promise<{ exists: boolean; error?: string }> {
+/**
+ * Get the UUID of the currently authenticated user from the server
+ */
+export async function getUserUuid(): Promise<string | null> {
 	try {
-		const { supabase } = await GetClient();
-		const { data, error } = await supabase.from("User").select("username").eq("username", username);
-
-		if (error) {
-			console.error("Error fetching user:", error);
-			return { exists: false, error: error.message };
-		}
-
-		return { exists: data.length > 0 };
+		const supabase = await createClient();
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+		return user?.id ?? null;
 	} catch (error) {
-		console.error("Unexpected error:", error);
-		return {
-			exists: false,
-			error: error instanceof Error ? error.message : "Error inesperado",
-		};
+		console.error("Error getting user UUID:", error);
+		return null;
 	}
 }

@@ -2,7 +2,7 @@ import { PostList } from "@/components/posts/post-list";
 import { SearchInput } from "@/components/search/search";
 import { Button } from "@/components/ui/button";
 import { H1, P } from "@/components/ui/typography";
-import { getUserUuid } from "@/lib/services/user.server";
+import { getUserUuid } from "@/lib/services/user";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { ISearchParams } from "../../types";

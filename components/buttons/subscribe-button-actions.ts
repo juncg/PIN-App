@@ -1,7 +1,7 @@
 "use server";
 
 import { ExecuteRpcFunction, GetFromDatabase, PostToDatabase, PutToDatabase } from "@/lib/services/general";
-import { getUserUuid } from "@/lib/services/user.server";
+import { getUserUuid } from "@/lib/services/user";
 
 export async function handleSubscribeAction(
 	post_id: number,
@@ -62,7 +62,6 @@ export async function handleSubscribeAction(
 			} else {
 				console.log("New subscriber count:", data);
 			}
-
 		} else {
 			await PutToDatabase({
 				tableName: userTableName,

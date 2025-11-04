@@ -1,6 +1,6 @@
 import { GetFromDatabase } from "@/lib/services/general";
 import { IPetition } from "@/lib/services/types";
-import { getUserUuid } from "@/lib/services/user.server";
+import { getUserUuid } from "@/lib/services/user";
 
 export async function PetitionServices() {
 	const currentUserId = await getUserUuid();
