@@ -1,44 +1,43 @@
+import { DEFAULT_LOCALE, PETITIONS_PAGE_SIZE } from "@/lib/constants";
 import { GetFromDatabase } from "@/lib/services/general";
 import { IPetition } from "@/lib/services/types";
-import { getUserUuid } from "@/lib/services/user";
+import { getTranslations } from "next-intl/server";
+import { ISearchParams } from "../../types";
 
-export async function PetitionServices() {
-	const currentUserId = await getUserUuid();
+async function fetchPetitions(page: number = 0, pageSize: number = PETITIONS_PAGE_SIZE, postName: string = "") {
+	const from = page * pageSize;
+	const to = from + pageSize - 1;
 
-	const { data: petitionsWithRelations, error: petitionsError } = await GetFromDatabase<
-		IPetition & {
-			User_Petition: { liked: boolean; subscribed: boolean; user_id: string }[];
-			tags: { Tag: { name: string | null } }[];
-		}
-	>({
+	const { data: petitions } = await GetFromDatabase<IPetition>({
 		tableName: "Petition",
 		select: `*, User_Petition!left(liked, subscribed, user_id), tags:Petition_Tag(Tag(name))`,
+		filters: [
+			{
+				method: "range",
+				from: from,
+				to: to,
+			},
+			{
+				method: "ilike",
+				column: "title",
+				value: `%${postName}%`,
+			},
+		],
 	});
 
-	if (petitionsError) {
-		console.error("Error fetching petitions:", petitionsError);
-		return { petitions: [] };
-	}
+	return petitions || [];
+}
 
-	const petitions: (IPetition & { liked: boolean; subscribed: boolean; tags: string[] })[] = (
-		petitionsWithRelations ?? []
-	).map((petition) => {
-		const userPetition = petition.User_Petition?.find((up) => up.user_id === currentUserId);
-		const isLiked = userPetition?.liked || false;
-		const isSubscribed = userPetition?.subscribed || false;
+export async function PetitionServices(searchParams: Promise<ISearchParams>) {
+	const params = await searchParams;
+	const translator = await getTranslations({ locale: params.locale || DEFAULT_LOCALE, namespace: "petitions" });
 
-		const tagNames =
-			petition.tags
-				?.map((tagRel) => tagRel.Tag.name)
-				.filter((name): name is string => typeof name === "string" && name.trim() !== "") || [];
+	const petitions = await fetchPetitions(0, PETITIONS_PAGE_SIZE, params.postName || "");
 
-		return {
-			...petition,
-			liked: isLiked,
-			subscribed: isSubscribed,
-			tags: tagNames,
-		};
-	});
+	return { translator, petitions };
+}
 
-	return { petitions };
+export async function LoadMorePetitions(page: number, pageSize: number, postName: string = "") {
+	"use server";
+	return await fetchPetitions(page, pageSize, postName);
 }

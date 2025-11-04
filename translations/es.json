@@ -15,5 +15,7 @@
 		"offers": "Ofertas"
 	},
 
-	"petitions": {}
+	"petitions": {
+		"petitions": "Peticiones"
+	}
 }

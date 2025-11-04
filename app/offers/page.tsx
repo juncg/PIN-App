@@ -1,16 +1,18 @@
-import { PostList } from "@/components/posts/post-list";
+import { InfinitePostList } from "@/components/posts/infinite-post-list";
 import { SearchInput } from "@/components/search/search";
 import { Button } from "@/components/ui/button";
 import { H1, P } from "@/components/ui/typography";
+import { OFFERS_MAX_POSTS, OFFERS_PAGE_SIZE } from "@/lib/constants";
 import { getUserUuid } from "@/lib/services/user";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { ISearchParams } from "../../types";
-import { OfferServices } from "./page-services";
+import { LoadMoreOffers, OfferServices } from "./page-services";
 
 export default async function Offers({ searchParams }: { searchParams: Promise<ISearchParams> }) {
 	const { translator, offers } = await OfferServices(searchParams);
 	const userUuid = await getUserUuid();
+	const params = await searchParams;
 
 	return (
 		<section className="max-w-7xl mx-auto space-y-8">
@@ -30,7 +32,13 @@ export default async function Offers({ searchParams }: { searchParams: Promise<I
 
 			<SearchInput />
 
-			<PostList items={offers ?? []} />
+			<InfinitePostList
+				initialPosts={offers ?? []}
+				loadMoreAction={LoadMoreOffers}
+				searchParams={params}
+				pageSize={OFFERS_PAGE_SIZE}
+				maxPosts={OFFERS_MAX_POSTS}
+			/>
 		</section>
 	);
 }
