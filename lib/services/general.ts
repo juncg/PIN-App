@@ -3,6 +3,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { PostgrestError, createClient } from "@supabase/supabase-js";
+import { DEBUG } from "../constants";
+import { SupabaseGenericFilter } from "./types";
 
 // This function should be used for authenticated operations
 // It uses the SSR client that has access to user sessions
@@ -27,39 +29,6 @@ export async function GetServiceClient() {
 
 	return { supabase };
 }
-
-type SupabaseGenericFilter =
-	| {
-			method:
-				| "eq"
-				| "gt"
-				| "lt"
-				| "gte"
-				| "lte"
-				| "like"
-				| "ilike"
-				| "is"
-				| "in"
-				| "neq"
-				| "contains"
-				| "containedBy"
-				| "not"
-				| "or"
-				| "order"
-				| "range"
-				| "single"
-				| "limit"
-				| "rangeFrom"
-				| "rangeTo";
-			column?: string;
-			value?: any;
-			operator?: string;
-			ascending?: boolean;
-			nullsFirst?: boolean;
-			from?: number;
-			to?: number;
-	  }
-	| { method: "or"; value: string };
 
 function applySupabaseFilter(query: any, filter: SupabaseGenericFilter) {
 	switch (filter.method) {
@@ -121,6 +90,12 @@ export async function GetFromDatabase<T = unknown>({
 
 	const { data: entries, error } = await query;
 
+	if (DEBUG && error) {
+		console.error(
+			`GET request failed: ${error}\n Request made to ${tableName} with select = ${select} and filters = ${filters}`
+		);
+	}
+
 	return { data: (entries as T[]) || null, error: error ?? null };
 }
 
@@ -142,6 +117,12 @@ export async function PostToDatabase<T = unknown>({
 
 	const { data, error } = await query;
 
+	if (DEBUG && error) {
+		console.error(
+			`POST request failed: ${error}\n Request made to ${tableName} with contentJson = ${contentJson} and filters = ${filters}`
+		);
+	}
+
 	return { data: (data as T[]) || null, error: error ?? null };
 }
 
@@ -162,6 +143,12 @@ export async function PutToDatabase<T = unknown>({
 	});
 
 	const { data, error } = await query.select();
+
+	if (DEBUG && error) {
+		console.error(
+			`PUT request failed: ${error}\n Request made to ${tableName} with contentJson = ${contentJson} and filters = ${filters}`
+		);
+	}
 
 	return { data: (data as T[]) || null, error: error ?? null };
 }
@@ -186,6 +173,12 @@ export async function DeleteFromDatabase<T = unknown>({
 
 	const { data, error } = await query;
 
+	if (DEBUG && error) {
+		console.error(
+			`DELETE request failed: ${error}\n Request made to ${tableName} with matchColumn = ${matchColumn}, matchValue = ${matchValue} and filters = ${filters}`
+		);
+	}
+
 	return { data: (data as unknown as T[]) || null, error: error ?? null };
 }
 
@@ -198,5 +191,10 @@ export async function ExecuteRpcFunction<T = unknown>({
 }): Promise<SupabaseApiResult<T>> {
 	const { supabase } = await GetClient();
 	const { data, error } = await supabase.rpc(functionName, params);
+
+	if (DEBUG && error) {
+		console.error(`RPC function failed: ${error}\n Function name = ${functionName} with params = ${params}`);
+	}
+
 	return { data: (data as T[]) || null, error: error ?? null };
 }

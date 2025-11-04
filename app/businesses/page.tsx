@@ -11,7 +11,7 @@ export default async function Businesses() {
 			<div className="flex flex-col items-baseline gap-8 w-1/3">
 				<H1>Empresas</H1>
 
-				{businesses.data?.map((business: IBusiness) => (
+				{businesses?.map((business: IBusiness) => (
 					<BusinessCard
 						key={business.id}
 						props={{

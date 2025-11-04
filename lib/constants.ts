@@ -8,3 +8,4 @@ export const SUPPORTED_LOCALES = ["en", "es"];
 
 // Environment variables
 export const { BASE_DOMAIN } = process.env;
+export const DEBUG = process.env.NEXT_PUBLIC_DEBUG === "true" || false;
