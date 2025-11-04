@@ -15,5 +15,12 @@
 		"offers": "Offers"
 	},
 
-	"petitions": {}
+	"petitions": {},
+
+	"products": {
+		"products": "Products",
+		"showing_x_products": "Showing {count} products",
+		"filters": "Filters",
+		"view_product": "View Product"
+	}
 }

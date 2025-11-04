@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { Star } from "lucide-react";
+import Link from "next/link";
 
 export interface IProductCard {
 	className?: string;
@@ -10,10 +11,12 @@ export interface IProductCard {
 	businessName: string;
 	price?: number;
 	rating?: number;
+	translator?: any;
+	id: number;
 }
 
 export function ProductCard({ props }: { props: IProductCard }) {
-	const { className, name, businessName, price = 0, rating = 0 } = props;
+	const { className, name, businessName, price = 0, rating = 0, translator, id } = props;
 
 	return (
 		<article className={cn("flex flex-col border border-spacing-2 rounded-lg p-4 h-full", className)}>
@@ -32,8 +35,10 @@ export function ProductCard({ props }: { props: IProductCard }) {
 			</div>
 
 			<div className="mt-auto">
-				<p className="text-2xl font-bold mb-3">${price.toFixed(2)}</p>
-				<Button className="w-full">Ver producto</Button>
+				<p className="text-2xl font-bold mb-3">{price.toFixed(2)}€</p>
+				<Link href={`/products/${id}`}>
+					<Button className="w-full">{translator("view_product")}</Button>
+				</Link>
 			</div>
 		</article>
 	);

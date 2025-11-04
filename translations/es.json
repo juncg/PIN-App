@@ -15,5 +15,12 @@
 		"offers": "Ofertas"
 	},
 
-	"petitions": {}
+	"petitions": {},
+
+	"products": {
+		"products": "Productos",
+		"showing_x_products": "Mostrando {count} productos",
+		"filters": "Filtros",
+		"view_product": "Ver producto"
+	}
 }

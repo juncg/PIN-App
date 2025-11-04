@@ -2,9 +2,10 @@ import ProductsFilters from "@/components/sidebar/products-filters";
 import { ProductServices } from "./page-service";
 import { ProductCard } from "@/components/cards/productCard";
 import { IProduct } from "@/lib/services/types";
+import { ISearchParams } from "@/types";
 
-export default async function ProductsPage() {
-	const { products } = await ProductServices();
+export default async function ProductsPage({ searchParams }: { searchParams: Promise<ISearchParams> }) {
+	const { translator, products } = await ProductServices(searchParams);
 
 	return (
 		<div className="flex min-h-screen flex-col">
@@ -16,7 +17,11 @@ export default async function ProductsPage() {
 
 					<main className="flex-1 min-w-0">
 						<div className="mb-4 flex items-center justify-between">
-							<p className="text-sm text-muted-foreground">Mostrando X productos</p>
+							<p className="text-sm text-muted-foreground">
+								{translator("showing_x_products", {
+									count: products?.length.toLocaleString() || 0,
+								})}
+							</p>
 						</div>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 							{products?.map((product: IProduct) => (
@@ -28,6 +33,10 @@ export default async function ProductsPage() {
 										description: product.description,
 										businessName:
 											(product.businesses && product.businesses[0]?.business?.name) || "N/A",
+										translator: translator,
+										id: product.id,
+										price: product.msrp || 0,
+										rating: product.rating || 0,
 									}}
 								/>
 							))}

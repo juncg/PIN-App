@@ -62,6 +62,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
 							name: product.name,
 							description: product.description,
 							businessName: (product.businesses && product.businesses[0]?.business?.name) || "N/A",
+							translator: translator,
+							id: product.id,
+							price: product.msrp || 0,
+							rating: product.rating || 0,
 						}}
 					/>
 				))}
