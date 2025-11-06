@@ -1,6 +1,6 @@
 import { GetFromDatabase } from "@/lib/services/general";
 import { IUser } from "@/lib/services/types";
-import { getUserUuid } from "@/lib/services/user.server";
+import { getUserUuid } from "@/lib/services/user";
 
 export async function ProfileServices() {
 	const uuid = await getUserUuid();
