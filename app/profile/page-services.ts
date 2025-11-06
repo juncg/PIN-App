@@ -1,15 +1,26 @@
 import { GetFromDatabase } from "@/lib/services/general";
 import { IUser } from "@/lib/services/types";
-import { getUserUuid } from "@/lib/services/user";
+import { getUserUuid } from "@/lib/services/user.server";
 
 export async function ProfileServices() {
 	const uuid = await getUserUuid();
+	const user = uuid
+		? await GetFromDatabase<IUser>({
+				tableName: "User",
+				select: "*",
+				filters: [{ method: "eq", column: "id", value: uuid }],
+		  })
+		: null;
 
-	const { data: user } = await GetFromDatabase<IUser>({
-		tableName: "User",
-		select: "*",
-		filters: [{ method: "eq", column: "id", value: uuid }],
+	const userData = user?.data?.[0];
+
+	const { data: userBusinesses } = await GetFromDatabase<any>({
+		tableName: "User_Business",
+		select: "Business(*)",
+		filters: [{ method: "eq", column: "user_id", value: uuid }],
 	});
 
-	return { user };
+	const companies = userBusinesses?.map((ub) => ub.Business) ?? [];
+
+	return { userData, companies };
 }

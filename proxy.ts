@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, PROTECTED_ROUTES, SUPPORTED_LOCALES } from "./lib/constants";
-import { updateSession } from "./lib/supabase/middleware";
+import { updateSession } from "./lib/supabase/proxy";
 
 function getLocaleFromAcceptLanguage(acceptLanguage: string | null): string {
 	if (!acceptLanguage) return DEFAULT_LOCALE;
