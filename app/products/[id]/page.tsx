@@ -1,12 +1,21 @@
-"use client";
-
 import { ISearchParams } from "@/types";
 import { ProductDetails } from "@/components/products/product-details";
+import { ProductDetailsServices } from "./page-services";
 
-export default async function ProductsPage({ searchParams }: { searchParams: Promise<ISearchParams> }) {
+interface ProductPageProps {
+	params: Promise<{
+		id: number;
+	}>;
+	searchParams: Promise<ISearchParams>;
+}
+
+export default async function ProductsPage({ params }: ProductPageProps) {
+	const { id } = await params;
+	const { product } = await ProductDetailsServices(id);
+
 	return (
 		<div>
-			<ProductDetails />
+			<ProductDetails product={product} />
 		</div>
 	);
 }
