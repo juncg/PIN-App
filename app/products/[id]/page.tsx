@@ -11,11 +11,11 @@ interface ProductPageProps {
 
 export default async function ProductsPage({ params }: ProductPageProps) {
 	const { id } = await params;
-	const { product } = await ProductDetailsServices(id);
+	const { product, ratingDistribution, numOfReviews } = await ProductDetailsServices(id);
 
 	return (
 		<div>
-			<ProductDetails product={product} />
+			<ProductDetails product={product} ratingDistribution={ratingDistribution} numOfReviews={numOfReviews} />
 		</div>
 	);
 }
