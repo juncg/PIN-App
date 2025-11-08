@@ -1,5 +1,5 @@
 import { GetFromDatabase } from "@/lib/services/general";
-import { IProduct } from "@/lib/services/types";
+import { IProduct, IReview } from "@/lib/services/types";
 import { getTranslations } from "next-intl/server";
 import { DEFAULT_LOCALE } from "@/lib/constants";
 import { ExecuteRpcFunction } from "@/lib/services/general";
@@ -20,7 +20,7 @@ function createDefaultDistribution(): RatingDistribution[] {
 	];
 }
 
-async function getProductRatingDistribution(productId: number): Promise<RatingDistribution[]> {
+async function GetProductRatingDistribution(productId: number): Promise<RatingDistribution[]> {
 	const { data, error } = await ExecuteRpcFunction<RatingDistribution>({
 		functionName: "get_product_rating_distribution",
 		params: {
@@ -48,9 +48,23 @@ export async function ProductDetailsServices(id: number) {
 		],
 	});
 
-	const ratingDistribution = await getProductRatingDistribution(id);
+	const { data: productReviews } = await GetFromDatabase<IReview>({
+		tableName: "Review",
+		select: "*, user:User(*), Review_Product!inner(product_id)",
+		filters: [
+			{ method: "eq", column: "Review_Product.product_id", value: id },
+			{ method: "order", column: "created_at", ascending: false },
+		],
+	});
+
+	const ratingDistribution = await GetProductRatingDistribution(id);
 
 	const numOfReviews = ratingDistribution.reduce((total, item) => total + item.count, 0);
 
-	return { product: product?.[0] || null, ratingDistribution, numOfReviews: numOfReviews || 0 };
+	return {
+		product: product?.[0] || null,
+		ratingDistribution,
+		numOfReviews: numOfReviews || 0,
+		productReviews: productReviews || [],
+	};
 }

@@ -687,6 +687,7 @@ export type Database = {
           comment_locked_state:
             | Database["public"]["Enums"]["Comment_Locked_State"]
             | null
+          content: string | null
           created_at: string
           creator_id: string
           forum_id: number | null
@@ -701,6 +702,7 @@ export type Database = {
           comment_locked_state?:
             | Database["public"]["Enums"]["Comment_Locked_State"]
             | null
+          content?: string | null
           created_at?: string
           creator_id: string
           forum_id?: number | null
@@ -715,6 +717,7 @@ export type Database = {
           comment_locked_state?:
             | Database["public"]["Enums"]["Comment_Locked_State"]
             | null
+          content?: string | null
           created_at?: string
           creator_id?: string
           forum_id?: number | null
@@ -1050,6 +1053,16 @@ export type Database = {
         Args: { given_user_id: string; post_id: number; target_table: string }
         Returns: number
       }
+      get_product_rating_distribution: {
+        Args: { product_id_input: number }
+        Returns: Database["public"]["CompositeTypes"]["rating_distribution_item"][]
+        SetofOptions: {
+          from: "*"
+          to: "rating_distribution_item"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
       Chosen_Notification_State:
@@ -1062,7 +1075,11 @@ export type Database = {
       Verification: "Unverified" | "Paid" | "Official"
     }
     CompositeTypes: {
-      [_ in never]: never
+      rating_distribution_item: {
+        stars: number | null
+        count: number | null
+        percentage: number | null
+      }
     }
   }
 }

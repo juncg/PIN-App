@@ -42,6 +42,10 @@ export type IProduct = Tables<"Product"> & {
 	}[];
 };
 
+export type IReview = Tables<"Review"> & {
+	user?: Tables<"User">;
+};
+
 export interface IGetFromDatabase {
 	tableName: string;
 	select: string;
