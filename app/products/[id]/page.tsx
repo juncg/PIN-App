@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProductReviewSection } from "@/components/products/product-review-section";
 import { ProductImages } from "@/components/products/product-images";
+import { getUserUuid } from "@/lib/services/user";
 
 interface ProductPageProps {
 	params: Promise<{
@@ -24,6 +25,7 @@ const product2 = {
 export default async function ProductsPage({ params }: ProductPageProps) {
 	const { id } = await params;
 	const { product, ratingDistribution, numOfReviews, productReviews } = await ProductDetailsServices(id);
+	const userUuid = await getUserUuid();
 
 	if (!product) {
 		return <div>Loading...</div>;
@@ -123,6 +125,7 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 						ratingDistribution={ratingDistribution}
 						numOfReviews={numOfReviews}
 						productReviews={productReviews}
+						userId={userUuid || ""}
 					/>
 				</TabsContent>
 			</Tabs>
