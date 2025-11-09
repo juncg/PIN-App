@@ -5,14 +5,14 @@ import { ISearchParams } from "@/types";
 import { ProductServices } from "./page-services";
 
 export default async function ProductsPage({ searchParams }: { searchParams: Promise<ISearchParams> }) {
-	const { translator, products } = await ProductServices(searchParams);
+	const { translator, products, categories } = await ProductServices(searchParams);
 
 	return (
 		<div className="flex min-h-screen flex-col">
 			<div className="container flex-1 px-4 py-6">
 				<div className="flex gap-6">
 					<aside className="w-64 shrink-0">
-						<ProductsFilters />
+						<ProductsFilters categories={categories ?? []} />
 					</aside>
 
 					<main className="flex-1 min-w-0">

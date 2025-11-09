@@ -46,6 +46,8 @@ export type IReview = Tables<"Review"> & {
 	user?: Tables<"User">;
 };
 
+export type ICategory = Tables<"Category">;
+
 export interface IGetFromDatabase {
 	tableName: string;
 	select: string;
