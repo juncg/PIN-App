@@ -3,6 +3,7 @@ import { GetFromDatabase } from "@/lib/services/general";
 import { IOffer } from "@/lib/services/types";
 import { getTranslations } from "next-intl/server";
 import { ISearchParams } from "../../types";
+import { getUserUuid } from "@/lib/services/user";
 
 async function fetchOffers(page: number = 0, pageSize: number = OFFERS_PAGE_SIZE, postName: string = "") {
 	const from = page * pageSize;
@@ -29,12 +30,21 @@ async function fetchOffers(page: number = 0, pageSize: number = OFFERS_PAGE_SIZE
 }
 
 export async function OfferServices(searchParams: Promise<ISearchParams>) {
+	const uuid = await getUserUuid();
+
+    const userBusinesses = await GetFromDatabase<{ business_id: number }>({ 
+        tableName: "User_Business",
+        select: "business_id",
+        filters: [{ method: "eq", column: "user_id", value: uuid }], 
+    });
+
+    const isBusinessUser = userBusinesses.data !== null;
 	const params = await searchParams;
 	const translator = await getTranslations({ locale: params.locale || DEFAULT_LOCALE, namespace: "offers" });
 
 	const offers = await fetchOffers(0, OFFERS_PAGE_SIZE, params.postName || "");
 
-	return { translator, offers };
+	return { translator, offers, isBusinessUser };
 }
 
 export async function LoadMoreOffers(page: number, pageSize: number, postName: string = "") {

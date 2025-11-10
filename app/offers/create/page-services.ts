@@ -1,5 +1,6 @@
 import { GetFromDatabase } from "@/lib/services/general";
 import { IForum } from "@/lib/services/types";
+import { uuid } from "zod";
 
 export async function CreateOfferServices() {
 	const forums = await GetFromDatabase<IForum>({
@@ -12,5 +13,5 @@ export async function CreateOfferServices() {
 		select: "*",
 	});
 
-	return { forums, tags };
+	return { forums, tags }; 
 }

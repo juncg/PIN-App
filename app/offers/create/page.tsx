@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { CreateOfferServices } from "./page-services";
 
 export default async function Page() {
-	const { forums, tags } = await CreateOfferServices();
+	const { forums, tags} = await CreateOfferServices();
 
 	return (
 		<div className="flex flex-center flex-col gap-8">

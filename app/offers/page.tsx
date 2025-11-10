@@ -10,7 +10,7 @@ import { ISearchParams } from "../../types";
 import { LoadMoreOffers, OfferServices } from "./page-services";
 
 export default async function Offers({ searchParams }: { searchParams: Promise<ISearchParams> }) {
-	const { translator, offers } = await OfferServices(searchParams);
+	const { translator, offers, isBusinessUser } = await OfferServices(searchParams);
 	const userUuid = await getUserUuid();
 	const params = await searchParams;
 
@@ -22,12 +22,14 @@ export default async function Offers({ searchParams }: { searchParams: Promise<I
 					<P className="text-muted-foreground">Aqui puedes ver las ofertas existentes</P>
 				</div>
 
-				<Link href={userUuid ? "/offers/create" : "/auth/login"}>
-					<Button className="flex items-center gap-2">
-						<Plus className="w-5 h-5" />
-						Nueva Oferta
-					</Button>
-				</Link>
+				{userUuid && isBusinessUser && (
+                    <Link href={"/offers/create"}>
+                        <Button className="flex items-center gap-2">
+                            <Plus className="w-5 h-5" />
+                            Nueva Oferta
+                        </Button>
+                    </Link>
+                )}
 			</div>
 
 			<SearchInput />
