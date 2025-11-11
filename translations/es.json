@@ -4,7 +4,8 @@
 		"petitions": "Peticiones",
 		"offer": "Oferta",
 		"offers": "Ofertas",
-		"products": "Productos"
+		"products": "Productos",
+		"view_product": "Ver producto"
 	},
 
 	"businesses": {
@@ -31,6 +32,5 @@
 		"price_high_low": "Precio: de mayor a menor",
 		"rating_high_low": "Calificación: de mayor a menor",
 		"rating_low_high": "Calificación: de menor a mayor"
-
 	}
 }
