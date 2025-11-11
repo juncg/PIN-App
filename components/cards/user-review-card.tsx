@@ -3,6 +3,9 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { IReview } from "@/lib/services/types";
+import { Separator } from "../ui/separator";
+import { LikeButton } from "../buttons/like-button";
+import { useUser } from "@/hooks/use-user";
 
 interface UserReviewCardProps {
 	review: IReview;
@@ -28,6 +31,9 @@ function GetRelativeTime(dateString: string): string {
 }
 
 export function UserReviewCard({ review }: UserReviewCardProps) {
+	const { userUuid } = useUser();
+	const likedByUser = review.User_Review?.some((u) => u.user_id === userUuid && u.liked);
+
 	return (
 		<Card key={1} className="p-6">
 			<div className="flex items-start justify-between mb-4">
@@ -62,6 +68,20 @@ export function UserReviewCard({ review }: UserReviewCardProps) {
 
 			<h4 className="font-semibold mb-2">{review.title}</h4>
 			<p className="text-muted-foreground mb-4">{review.content}</p>
+
+			<Separator />
+
+			<div className="flex flex-row justify-between">
+				<div className="flex flex-row justify-start gap-6">
+					<LikeButton
+						likes={review.likes ?? 0}
+						likedByUser={likedByUser ?? false}
+						post_id={review.id}
+						typeOfPost={"Review"}
+						user_id={userUuid}
+					/>
+				</div>
+			</div>
 		</Card>
 	);
 }

@@ -44,6 +44,7 @@ export type IProduct = Tables<"Product"> & {
 
 export type IReview = Tables<"Review"> & {
 	user?: Tables<"User">;
+	User_Review?: Tables<"User_Review">[];
 };
 
 export type ICategory = Tables<"Category">;

@@ -11,7 +11,7 @@ export interface ILikeButton {
 	likes: number;
 	likedByUser: boolean;
 	post_id: number;
-	typeOfPost?: "Oferta" | "Petición";
+	typeOfPost?: "Oferta" | "Petición" | "Review";
 	user_id: string | null;
 }
 
@@ -23,9 +23,9 @@ export function LikeButton(props: ILikeButton) {
 
 	const handleLike = async () => {
 		if (!user_id) {
-            setShowLoginDialog(true);
-            return;
-        }
+			setShowLoginDialog(true);
+			return;
+		}
 
 		const newLikedState = !liked;
 		const newLikesCount = newLikedState ? numberOfLikes + 1 : numberOfLikes - 1;
@@ -48,12 +48,12 @@ export function LikeButton(props: ILikeButton) {
 				<Heart className={cn("mr-2", liked && "fill-red-500 text-red-500")} />
 				{numberOfLikes || 0}
 			</Button>
-			
+
 			<NotLoggedInDialog
-                open={showLoginDialog}
-                onOpenChange={setShowLoginDialog}
-                description="Debes iniciar sesión para darle like a esta publicación."
-            />
+				open={showLoginDialog}
+				onOpenChange={setShowLoginDialog}
+				description="Debes iniciar sesión para darle like a esta publicación."
+			/>
 		</>
 	);
 }
