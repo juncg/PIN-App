@@ -1002,30 +1002,63 @@ export type Database = {
           },
         ]
       }
-      User_User: {
+      User_Review: {
         Row: {
-          followed_id: string
-          follower_id: string
+          liked: boolean
+          review_id: number
+          user_id: string
         }
         Insert: {
-          followed_id: string
-          follower_id: string
+          liked: boolean
+          review_id: number
+          user_id?: string
         }
         Update: {
-          followed_id?: string
-          follower_id?: string
+          liked?: boolean
+          review_id?: number
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "User_User_followed_id_fkey"
-            columns: ["followed_id"]
+            foreignKeyName: "User_Review_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "Review"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "User_Review_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "User"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      User_User: {
+        Row: {
+          following_id: string
+          user_id: string
+        }
+        Insert: {
+          following_id: string
+          user_id: string
+        }
+        Update: {
+          following_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "User_User_following_id_fkey"
+            columns: ["following_id"]
             isOneToOne: false
             referencedRelation: "User"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "User_User_follower_id_fkey"
-            columns: ["follower_id"]
+            foreignKeyName: "User_User_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "User"
             referencedColumns: ["id"]
@@ -1062,6 +1095,10 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      update_product_rating: {
+        Args: { p_product_id: number }
+        Returns: undefined
       }
     }
     Enums: {

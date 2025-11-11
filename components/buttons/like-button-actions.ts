@@ -3,7 +3,11 @@
 import { ExecuteRpcFunction, GetFromDatabase, PostToDatabase, PutToDatabase } from "@/lib/services/general";
 import { getUserUuid } from "@/lib/services/user";
 
-export async function handleLikeAction(post_id: number, currentlyLiked: boolean, typeOfPost?: "Oferta" | "Petición") {
+export async function handleLikeAction(
+	post_id: number,
+	currentlyLiked: boolean,
+	typeOfPost?: "Oferta" | "Petición" | "Review"
+) {
 	try {
 		const user_id = await getUserUuid();
 
@@ -11,9 +15,29 @@ export async function handleLikeAction(post_id: number, currentlyLiked: boolean,
 			throw new Error("Usuario no autenticado");
 		}
 
-		const tableName = typeOfPost === "Petición" ? "Petition" : "Offer";
-		const userTableName = typeOfPost === "Petición" ? "User_Petition" : "User_Offer";
-		const postIdColumn = typeOfPost === "Petición" ? "petition_id" : "offer_id";
+		let tableName: string;
+		let userTableName: string;
+		let postIdColumn: string;
+
+		switch (typeOfPost) {
+			case "Petición":
+				tableName = "Petition";
+				userTableName = "User_Petition";
+				postIdColumn = "petition_id";
+				break;
+			case "Oferta":
+				tableName = "Offer";
+				userTableName = "User_Offer";
+				postIdColumn = "offer_id";
+				break;
+			case "Review":
+				tableName = "Review";
+				userTableName = "User_Review";
+				postIdColumn = "review_id";
+				break;
+			default:
+				throw new Error(`Invalid typeOfPost: ${typeOfPost}`);
+		}
 
 		if (!currentlyLiked) {
 			const existingRelations = await GetFromDatabase({
@@ -35,16 +59,25 @@ export async function handleLikeAction(post_id: number, currentlyLiked: boolean,
 					],
 				});
 			} else {
+				const baseContent = {
+					user_id: user_id,
+					[postIdColumn]: post_id,
+					liked: true,
+				};
+
+				const contentJson =
+					typeOfPost === "Review"
+						? baseContent
+						: {
+								...baseContent,
+								subscribed: false,
+								email_notification: "None",
+								native_notification: "None",
+						  };
+
 				await PostToDatabase({
 					tableName: userTableName,
-					contentJson: {
-						user_id: user_id,
-						[postIdColumn]: post_id,
-						liked: true,
-						subscribed: false,
-						email_notification: "None",
-						native_notification: "None",
-					},
+					contentJson,
 				});
 			}
 

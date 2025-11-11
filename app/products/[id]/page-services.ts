@@ -48,9 +48,9 @@ export async function ProductDetailsServices(id: number) {
 		],
 	});
 
-	const { data: productReviews } = await GetFromDatabase<IReview>({
+	const { data: productReviews, error: reviewsError } = await GetFromDatabase<IReview>({
 		tableName: "Review",
-		select: "*, user:User(*), Review_Product!inner(product_id)",
+		select: "*, user:User!Review_creator_id_fkey(*), Review_Product!inner(product_id)",
 		filters: [
 			{ method: "eq", column: "Review_Product.product_id", value: id },
 			{ method: "order", column: "created_at", ascending: false },
