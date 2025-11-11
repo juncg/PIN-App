@@ -26,5 +26,13 @@ export async function HomeServices(searchParams: Promise<ISearchParams>) {
 		filters: [{ method: "order", column: "created_at", ascending: false }],
 	});
 
+	offers?.map((offer: IOffer) => {
+		offer.type = "Offer";
+	});
+
+	petitions?.map((petition: IPetition) => {
+		petition.type = "Petition";
+	});
+
 	return { translator, offers, petitions, products };
 }

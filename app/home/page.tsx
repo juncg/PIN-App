@@ -17,16 +17,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
 				</Link>
 
 				{petitions?.map((petition: IPetition) => (
-					<PostCard
-						key={petition.id}
-						props={{
-							className: "w-full",
-							typeOfPost: "Petición",
-							likedByUser: petition?.User_Petition?.[0]?.liked || false,
-							post: petition,
-							subscribedByUser: petition?.User_Petition?.[0]?.subscribed || false,
-						}}
-					/>
+					<PostCard key={petition.id} className="w-full" post={petition} />
 				))}
 			</div>
 
@@ -36,16 +27,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
 				</Link>
 
 				{offers?.map((offer: IOffer) => (
-					<PostCard
-						key={offer.id}
-						props={{
-							className: "w-full",
-							typeOfPost: "Oferta",
-							likedByUser: offer?.User_Offer?.[0]?.liked || false,
-							post: offer,
-							subscribedByUser: offer?.User_Offer?.[0]?.subscribed || false,
-						}}
-					/>
+					<PostCard key={offer.id} className="w-full" post={offer} />
 				))}
 			</div>
 
