@@ -4,6 +4,7 @@ import { IOffer } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
 import { getTranslations } from "next-intl/server";
 import { ISearchParams } from "../../types";
+import { is } from "date-fns/locale";
 
 async function fetchOffers(page: number = 0, pageSize: number = OFFERS_PAGE_SIZE, postName: string = "") {
 	const from = page * pageSize;
@@ -42,7 +43,7 @@ export async function OfferServices(searchParams: Promise<ISearchParams>) {
 		filters: [{ method: "eq", column: "user_id", value: uuid }],
 	});
 
-	const isBusinessUser = userBusinesses.data !== null;
+	const isBusinessUser = userBusinesses.data !== null && userBusinesses.data.length > 0;
 	const params = await searchParams;
 	const translator = await getTranslations({ locale: params.locale || DEFAULT_LOCALE, namespace: "offers" });
 
