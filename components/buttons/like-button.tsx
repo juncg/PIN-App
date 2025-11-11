@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { handleLikeAction } from "./like-button-actions";
 import { NotLoggedInDialog } from "../dialogs/not-logged-in-dialog";
@@ -20,6 +20,14 @@ export function LikeButton(props: ILikeButton) {
 	const [numberOfLikes, setLikes] = useState<number>(likes);
 	const [liked, setLiked] = useState<boolean>(likedByUser);
 	const [showLoginDialog, setShowLoginDialog] = useState(false);
+
+	useEffect(() => {
+		setLiked(likedByUser);
+	}, [likedByUser]);
+
+	useEffect(() => {
+		setLikes(likes);
+	}, [likes]);
 
 	const handleLike = async () => {
 		if (!user_id) {

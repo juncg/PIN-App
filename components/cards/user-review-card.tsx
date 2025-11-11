@@ -32,7 +32,8 @@ function GetRelativeTime(dateString: string): string {
 
 export function UserReviewCard({ review }: UserReviewCardProps) {
 	const { userUuid } = useUser();
-	const likedByUser = review.User_Review?.some((u) => u.user_id === userUuid && u.liked);
+	const likedByUser =
+		review.User_Review?.some((userReview) => userReview.user_id === userUuid && userReview.liked) ?? false;
 
 	return (
 		<Card key={1} className="p-6">
@@ -75,7 +76,7 @@ export function UserReviewCard({ review }: UserReviewCardProps) {
 				<div className="flex flex-row justify-start gap-6">
 					<LikeButton
 						likes={review.likes ?? 0}
-						likedByUser={likedByUser ?? false}
+						likedByUser={likedByUser}
 						post_id={review.id}
 						typeOfPost={"Review"}
 						user_id={userUuid}

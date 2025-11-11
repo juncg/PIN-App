@@ -28,8 +28,6 @@ export function ProductReviewSection({
 	const [reviewFilter, setReviewFilter] = useState("all");
 	const [isCreateReviewOpen, setIsCreateReviewOpen] = useState(false);
 
-	console.log("Product Reviews:", productReviews);
-
 	return (
 		<div className="space-y-6">
 			<ProductReviewsSummaryCard

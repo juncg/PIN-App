@@ -50,12 +50,14 @@ export async function ProductDetailsServices(id: number) {
 
 	const { data: productReviews, error: reviewsError } = await GetFromDatabase<IReview>({
 		tableName: "Review",
-		select: "*, user:User!Review_creator_id_fkey(*), Review_Product!inner(product_id)",
+		select: "*, user:User!Review_creator_id_fkey(*), User_Review!left(liked, user_id), Review_Product!inner(product_id)",
 		filters: [
 			{ method: "eq", column: "Review_Product.product_id", value: id },
 			{ method: "order", column: "created_at", ascending: false },
 		],
 	});
+
+	console.log("Reviews: ", productReviews);
 
 	const ratingDistribution = await GetProductRatingDistribution(id);
 
