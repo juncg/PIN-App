@@ -23,6 +23,13 @@
 		"products": "Products",
 		"showing_x_products": "Showing {count} products",
 		"filters": "Filters",
-		"view_product": "View Product"
+		"view_product": "View Product",
+		"sort_by": "Sort By",
+		"newest": "Newest",
+		"oldest": "Oldest",
+		"price_low_high": "Price: Low to High",
+		"price_high_low": "Price: High to Low",
+		"rating_high_low": "Rating: High to Low",
+		"rating_low_high": "Rating: Low to High"
 	}
 }

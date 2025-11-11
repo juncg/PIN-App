@@ -23,6 +23,14 @@
 		"products": "Productos",
 		"showing_x_products": "Mostrando {count} productos",
 		"filters": "Filtros",
-		"view_product": "Ver producto"
+		"view_product": "Ver producto",
+		"sort_by": "Ordenar por",
+		"newest": "Más nuevo",
+		"oldest": "Más antiguo",
+		"price_low_high": "Precio: de menor a mayor",
+		"price_high_low": "Precio: de mayor a menor",
+		"rating_high_low": "Calificación: de mayor a menor",
+		"rating_low_high": "Calificación: de menor a mayor"
+
 	}
 }
