@@ -42,7 +42,7 @@ export function PostCard({ props }: { props: IPostCard }) {
 	const tags = (post as IOffer | IPetition).tags?.map((t) => t.name).filter(Boolean) as string[] | undefined;
 
 	const displayImages =
-		images && images.length > 0 ? images : ["/images/placeholder.jpg", "/images/placeholder.jpg", "/images/placeholder.jpg"];
+		images && images.length > 0 ? images : ["/images/placeholder.png", "/images/placeholder.png", "/images/placeholder.png"];
 	const offerCompletionPercentage = parseFloat(((subscribers * 100) / (post?.target_progress ?? 1)).toFixed(2));
 	const postUrl = `${BASE_DOMAIN}${post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}`;
 

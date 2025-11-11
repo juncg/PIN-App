@@ -19,7 +19,7 @@ export default function NotFound() {
 			{showSpecialImage && (
 				<div className="relative w-64 h-64 hover:animate-spin transition-transform duration-300 hover:rotate-360">
 					<Image
-						src="/images/placeholder.jpg"
+						src="/images/placeholder.png"
 						alt="Página no encontrada"
 						fill
 						className="object-contain"
