@@ -25,6 +25,7 @@ export interface IPostCard {
 
 export function PostCard(props: IPostCard) {
 	const { post, className, images } = props;
+	console.log(post);
 	const { userUuid } = useUser();
 	const [subscribers, setSubscribers] = useState(post.current_progress);
 

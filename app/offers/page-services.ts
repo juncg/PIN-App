@@ -1,9 +1,9 @@
 import { DEFAULT_LOCALE, OFFERS_PAGE_SIZE } from "@/lib/constants";
 import { GetFromDatabase } from "@/lib/services/general";
 import { IOffer } from "@/lib/services/types";
+import { getUserUuid } from "@/lib/services/user";
 import { getTranslations } from "next-intl/server";
 import { ISearchParams } from "../../types";
-import { getUserUuid } from "@/lib/services/user";
 
 async function fetchOffers(page: number = 0, pageSize: number = OFFERS_PAGE_SIZE, postName: string = "") {
 	const from = page * pageSize;
@@ -26,19 +26,23 @@ async function fetchOffers(page: number = 0, pageSize: number = OFFERS_PAGE_SIZE
 		],
 	});
 
+	offers?.map((offer: IOffer) => {
+		offer.type = "Offer";
+	});
+
 	return offers || [];
 }
 
 export async function OfferServices(searchParams: Promise<ISearchParams>) {
 	const uuid = await getUserUuid();
 
-    const userBusinesses = await GetFromDatabase<{ business_id: number }>({ 
-        tableName: "User_Business",
-        select: "business_id",
-        filters: [{ method: "eq", column: "user_id", value: uuid }], 
-    });
+	const userBusinesses = await GetFromDatabase<{ business_id: number }>({
+		tableName: "User_Business",
+		select: "business_id",
+		filters: [{ method: "eq", column: "user_id", value: uuid }],
+	});
 
-    const isBusinessUser = userBusinesses.data !== null;
+	const isBusinessUser = userBusinesses.data !== null;
 	const params = await searchParams;
 	const translator = await getTranslations({ locale: params.locale || DEFAULT_LOCALE, namespace: "offers" });
 

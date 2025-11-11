@@ -84,13 +84,7 @@ export function InfinitePostList({
 		<div className="space-y-4">
 			<div className="grid gap-4">
 				{posts.map((post) => (
-					<PostCard
-						key={post.id}
-						props={{
-							className: "w-full",
-							post: post,
-						}}
-					/>
+					<PostCard key={post.id} className="w-full" post={post} />
 				))}
 			</div>
 

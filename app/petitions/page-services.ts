@@ -25,6 +25,10 @@ async function fetchPetitions(page: number = 0, pageSize: number = PETITIONS_PAG
 		],
 	});
 
+	petitions?.map((petition: IPetition) => {
+		petition.type = "Petition";
+	});
+
 	return petitions || [];
 }
 
