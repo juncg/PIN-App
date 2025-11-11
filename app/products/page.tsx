@@ -3,10 +3,11 @@ import ProductsFilters from "@/components/sidebar/products-filters";
 import { IProduct } from "@/lib/services/types";
 import { ISearchParams } from "@/types";
 import { ProductServices } from "./page-services";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { OrderSelect } from "@/components/select/order-select";
 
 export default async function ProductsPage({ searchParams }: { searchParams: Promise<ISearchParams> }) {
-	const { translator, products, categories } = await ProductServices(searchParams);
+	const { translator, products, categories, clientTranslations } = await ProductServices(searchParams);
+	const params = await searchParams;
 
 	return (
 		<div className="flex min-h-screen flex-col">
@@ -23,19 +24,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
 									count: products?.length.toLocaleString() || 0,
 								})}
 							</p>
-							<Select>
-								<SelectTrigger className="w-[180px]">
-									<SelectValue placeholder={translator("sort_by")} />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="newest">{translator("newest")}</SelectItem>
-									<SelectItem value="oldest">{translator("oldest")}</SelectItem>
-									<SelectItem value="price_low_high">{translator("price_low_high")}</SelectItem>
-									<SelectItem value="price_high_low">{translator("price_high_low")}</SelectItem>
-									<SelectItem value="rating_low_high">{translator("rating_low_high")}</SelectItem>
-									<SelectItem value="rating_high_low">{translator("rating_high_low")}</SelectItem>
-								</SelectContent>
-							</Select>
+							<OrderSelect translations={clientTranslations} defaultValue={params.orderBy || "newest"} />
 						</div>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 							{products?.map((product: IProduct) => (
