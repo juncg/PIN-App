@@ -4,7 +4,7 @@ import { AppSidebar } from "@/components/sidebar/sidebar";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
-import { Geist } from "next/font/google";
+import { Funnel_Sans } from "next/font/google";
 import Error from "./error";
 import "./globals.css";
 
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 	description: "Descubre increíbles ofertas y compra más barato en conjunto con la gente",
 };
 
-const geistSans = Geist({
-	variable: "--font-geist-sans",
+const funnelSans = Funnel_Sans({
+	variable: "--font-funnel-sans",
 	display: "swap",
 	subsets: ["latin"],
 });
@@ -29,7 +29,7 @@ export default async function RootLayout({
 }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body className={`${geistSans.className} antialiased`}>
+			<body className={`${funnelSans.className} antialiased`}>
 				<ErrorBoundary errorComponent={Error}>
 					<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
 						<ConditionalLayout header={<Header />} sidebar={<AppSidebar />}>
