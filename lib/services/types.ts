@@ -16,6 +16,7 @@ export type IPetition = Tables<"Petition"> & {
 	}[];
 	tags?: Tables<"Tag">[];
 	User_Petition?: Tables<"User_Petition">[];
+	User: Tables<"User">;
 };
 
 export type IBusiness = Tables<"Business"> & {
