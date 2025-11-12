@@ -7,6 +7,7 @@ import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Funnel_Sans } from "next/font/google";
 import Error from "./error";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const defaultUrl = process.env.VERCEL_URL || "http://localhost:3000";
 
@@ -35,6 +36,7 @@ export default async function RootLayout({
 						<ConditionalLayout header={<Header />} sidebar={<AppSidebar />}>
 							{children}
 						</ConditionalLayout>
+						<Toaster />
 					</ThemeProvider>
 				</ErrorBoundary>
 			</body>
