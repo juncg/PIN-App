@@ -24,7 +24,6 @@ function Switch({ className, innerTextUnchecked, innerTextChecked, ...props }: S
 	}, [props.checked]);
 
 	React.useEffect(() => {
-		// Medir ambos thumbs y usar el más ancho
 		const widthChecked = thumbRefChecked.current?.offsetWidth || 0;
 		const widthUnchecked = thumbRefUnchecked.current?.offsetWidth || 0;
 		const maxWidth = Math.max(widthChecked, widthUnchecked);
@@ -42,7 +41,6 @@ function Switch({ className, innerTextUnchecked, innerTextChecked, ...props }: S
 
 	return (
 		<>
-			{/* Elementos ocultos para medir ambos textos */}
 			<span className="fixed invisible pointer-events-none" aria-hidden="true">
 				<span
 					ref={thumbRefChecked}
