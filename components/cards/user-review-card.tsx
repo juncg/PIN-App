@@ -6,34 +6,37 @@ import { IReview } from "@/lib/services/types";
 import { Separator } from "../ui/separator";
 import { LikeButton } from "../buttons/like-button";
 import { useUser } from "@/hooks/use-user";
+import { GetRelativeTime } from "@/lib/services/utilities";
+import { PostActionsDropdown } from "../buttons/post-actions-button";
+import { DeleteFromDatabase, ExecuteRpcFunction } from "@/lib/services/general";
 
 interface UserReviewCardProps {
 	review: IReview;
-}
-
-//intencion de mover a otro archivo para poder usarlo con otros componentes, ademas de permitir traducciones.
-function GetRelativeTime(dateString: string): string {
-	const date = new Date(dateString);
-	const now = new Date();
-	const diffInMs = now.getTime() - date.getTime();
-	const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
-	const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
-	const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-	const diffInMonths = Math.floor(diffInDays / 30);
-	const diffInYears = Math.floor(diffInDays / 365);
-
-	if (diffInMinutes < 1) return "Ahora mismo";
-	if (diffInMinutes < 60) return `Hace ${diffInMinutes} ${diffInMinutes === 1 ? "minuto" : "minutos"}`;
-	if (diffInHours < 24) return `Hace ${diffInHours} ${diffInHours === 1 ? "hora" : "horas"}`;
-	if (diffInDays < 30) return `Hace ${diffInDays} ${diffInDays === 1 ? "día" : "días"}`;
-	if (diffInMonths < 12) return `Hace ${diffInMonths} ${diffInMonths === 1 ? "mes" : "meses"}`;
-	return `Hace ${diffInYears} ${diffInYears === 1 ? "año" : "años"}`;
 }
 
 export function UserReviewCard({ review }: UserReviewCardProps) {
 	const { userUuid } = useUser();
 	const likedByUser =
 		review.User_Review?.some((userReview) => userReview.user_id === userUuid && userReview.liked) ?? false;
+
+	const handleDeleteReview = async () => {
+		const { error } = await DeleteFromDatabase({ tableName: "Review", matchColumn: "id", matchValue: review.id });
+		if (error) {
+			console.error("Error al eliminar la reseña:", error);
+		}
+		const { error: updateError } = await ExecuteRpcFunction({
+			functionName: "update_product_rating",
+			params: { p_product_id: review.Review_Product?.[0]?.product_id },
+		});
+
+		if (updateError) {
+			throw new Error(updateError.message || "Error al actualizar la calificación del producto");
+		}
+
+		window.location.reload();
+	};
+
+	console.log("Review in UserReviewCard:", review);
 
 	return (
 		<Card key={1} className="p-6">
@@ -45,7 +48,9 @@ export function UserReviewCard({ review }: UserReviewCardProps) {
 					</Avatar>
 					<div>
 						<div className="flex items-center gap-2 mb-1">
-							<span className="font-semibold ">{review.user?.name + " " + review.user?.surnames}</span>
+							<span className="font-semibold ">
+								{review.user?.id === userUuid ? "Tú" : review.user?.name + " " + review.user?.surnames}
+							</span>
 						</div>
 						<div className="flex items-center gap-2">
 							<div className="flex items-center gap-1">
@@ -53,7 +58,9 @@ export function UserReviewCard({ review }: UserReviewCardProps) {
 									<Star
 										key={i}
 										className={`h-4 w-4 ${
-											i < review.stars ? "fill-amber-500 text-amber-500" : "text-muted-foreground"
+											i < (review.stars ?? 0)
+												? "fill-amber-500 text-amber-500"
+												: "text-muted-foreground"
 										}`}
 									/>
 								))}
@@ -62,9 +69,17 @@ export function UserReviewCard({ review }: UserReviewCardProps) {
 						</div>
 					</div>
 				</div>
-				<Button variant="ghost" size="icon">
-					<MoreHorizontal className="h-4 w-4" />
-				</Button>
+
+				<PostActionsDropdown
+					isOwner={review.user?.id === userUuid}
+					onEdit={() => {
+						/* Implement edit functionality */
+					}}
+					onDelete={handleDeleteReview}
+					onReport={() => {
+						/* Implement report functionality */
+					}}
+				/>
 			</div>
 
 			<h4 className="font-semibold mb-2">{review.title}</h4>
