@@ -27,9 +27,23 @@ export default function ProfileUserCompanyState(props: IProfileUserCompanyState)
 				</AccordionTrigger>
 
 				<AccordionContent className="flex flex-col gap-4 text-balance">
-					<Badge className="justify-center">{isBusiness ? "Usuario empresa" : "Cuenta personal"}</Badge>
+					<Badge className="justify-center">{isBusiness ? "Usuario empresa" : "Cuenta personal"}
 
-					<Button>Mejora a business</Button>
+
+
+					</Badge>
+					<Link href="/upgrade-user">
+
+
+						<Badge className="w-full justify-center"> Mejora a Business
+
+
+						</Badge>
+
+					</Link>
+
+
+
 				</AccordionContent>
 			</AccordionItem>
 
