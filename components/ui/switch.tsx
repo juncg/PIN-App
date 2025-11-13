@@ -61,7 +61,7 @@ function Switch({ className, innerTextUnchecked, innerTextChecked, ...props }: S
 			<SwitchPrimitive.Root
 				data-slot="switch"
 				className={cn(
-					"peer data-[state=checked]:bg-black data-[state=unchecked]:bg-black focus-visible:border-ring focus-visible:ring-ring/50 inline-flex h-auto min-h-[2.5rem] shrink-0 items-center rounded-md shadow-md transition-all outline-none disabled:cursor-not-allowed disabled:opacity-50 p-1",
+					"peer data-[state=checked]:bg-primary data-[state=unchecked]:bg-primary focus-visible:border-ring focus-visible:ring-ring/50 inline-flex h-auto min-h-[2.5rem] shrink-0 items-center rounded-md shadow-md transition-all outline-none disabled:cursor-not-allowed disabled:opacity-50 p-1",
 					className
 				)}
 				style={{ width: `${maxThumbWidth * 1.3 + 8}px` }}
@@ -72,11 +72,11 @@ function Switch({ className, innerTextUnchecked, innerTextChecked, ...props }: S
 				<SwitchPrimitive.Thumb
 					data-slot="switch-thumb"
 					className={cn(
-						"pointer-events-none flex items-center justify-center h-full min-w-[5rem] px-4 py-1 rounded-md ring-0 transition-all duration-200 data-[state=checked]:translate-x-[30%] data-[state=unchecked]:translate-x-0 data-[state=checked]:bg-lime-400 data-[state=unchecked]:bg-white"
+						"pointer-events-none flex items-center justify-center h-full min-w-[5rem] px-4 py-1 rounded-md ring-0 transition-all duration-200 data-[state=checked]:translate-x-[30%] data-[state=unchecked]:translate-x-0 data-[state=checked]:bg-ternary data-[state=unchecked]:bg-secondary"
 					)}
 					style={{ width: `${maxThumbWidth}px` }}
 				>
-					<P className="font-bold">{checked ? innerTextChecked : innerTextUnchecked}</P>
+					<P className="font-bold text-primary">{checked ? innerTextChecked : innerTextUnchecked}</P>
 				</SwitchPrimitive.Thumb>
 			</SwitchPrimitive.Root>
 		</>
