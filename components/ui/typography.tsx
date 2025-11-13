@@ -29,7 +29,7 @@ export function H4({ children, className }: ITypography) {
 }
 
 export function P({ children, className }: ITypography) {
-	return <p className={cn("leading-7 [&:not(:first-child)]:mt-6", className)}>{children}</p>;
+	return <p className={cn("leading-7", className)}>{children}</p>;
 }
 
 export function Blockquote({ children, className }: ITypography) {

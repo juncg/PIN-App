@@ -1,5 +1,5 @@
-import { PostCard } from "@/components/cards/postCard";
-import { ProductCard } from "@/components/cards/productCard";
+import { PostCard } from "@/components/cards/post-card";
+import { ProductCard } from "@/components/cards/product-card";
 import { H1 } from "@/components/ui/typography";
 import { IOffer, IPetition, IProduct } from "@/lib/services/types";
 import Link from "next/link";

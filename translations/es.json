@@ -32,5 +32,10 @@
 		"price_high_low": "Precio: de mayor a menor",
 		"rating_high_low": "Calificación: de mayor a menor",
 		"rating_low_high": "Calificación: de menor a mayor"
+	},
+
+	"forums": {
+		"forum": "Foro",
+		"forums": "Foros"
 	}
 }

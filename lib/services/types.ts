@@ -35,6 +35,11 @@ export type IForum = Tables<"Forum"> & {
 	businesses?: {
 		business: Tables<"Business">;
 	}[];
+	Business?: Tables<"Business">;
+	Forum_Tag?: {
+		Tag: Tables<"Tag">;
+	}[];
+	Forum_User?: Tables<"Forum_User">[];
 };
 
 export type IProduct = Tables<"Product"> & {

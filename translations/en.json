@@ -32,5 +32,10 @@
 		"price_high_low": "Price: High to Low",
 		"rating_high_low": "Rating: High to Low",
 		"rating_low_high": "Rating: Low to High"
+	},
+
+	"forums": {
+		"forum": "Forum",
+		"forums": "Forums"
 	}
 }

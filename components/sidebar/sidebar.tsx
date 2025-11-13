@@ -1,6 +1,6 @@
 "use client";
 
-import { Building, Hand, Home, Settings, ShoppingBag, Tag, User } from "lucide-react";
+import { Building, Hand, Home, Settings, ShoppingBag, Tag, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -44,6 +44,11 @@ const items = [
 		url: "/businesses",
 		icon: Building,
 	},
+	{
+		title: "Foros",
+		url: "/forums",
+		icon: Users,
+	},
 ];
 
 const settingsItems = [
@@ -73,7 +78,7 @@ export function AppSidebar() {
 	}, [pathname, setOpenMobile, setOpen]);
 
 	return (
-		<Sidebar className="bg-background">
+		<Sidebar>
 			<SidebarContent>
 				<SidebarGroup>
 					<SidebarGroupLabel>Deal&Buy</SidebarGroupLabel>

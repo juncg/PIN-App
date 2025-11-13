@@ -1,4 +1,4 @@
-import { BusinessCard } from "@/components/cards/businessCard";
+import { BusinessCard } from "@/components/cards/business-card";
 import { H1 } from "@/components/ui/typography";
 import { IBusiness } from "@/lib/services/types";
 import { ISearchParams } from "../../types";

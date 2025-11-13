@@ -15,3 +15,5 @@ export const OFFERS_PAGE_SIZE = 5;
 export const OFFERS_MAX_POSTS = 50;
 export const PETITIONS_PAGE_SIZE = 5;
 export const PETITIONS_MAX_POSTS = 50;
+export const FORUMS_PAGE_SIZE = 5;
+export const FORUMS_MAX_POSTS = 50;

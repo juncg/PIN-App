@@ -1,13 +1,12 @@
-import { H1, H2, H4 } from "@/components/ui/typography";
-import { PetitionDetailsService } from "./page-services";
-import { ISearchParams } from "@/types";
 import { ProductImages } from "@/components/products/product-images";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { Users } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
 import { GetRelativeTime } from "@/lib/services/utilities";
+import { ISearchParams } from "@/types";
+import { Users } from "lucide-react";
+import { PetitionDetailsService } from "./page-services";
 
 interface PetitionPageProps {
 	params: Promise<{
@@ -32,8 +31,6 @@ export default async function PetitionPage({ params }: PetitionPageProps) {
 	const petitionCompletitionPercentage = parseFloat(
 		((petition[0].current_progress * 100) / (petition[0]?.target_progress ?? 1)).toFixed(2)
 	);
-
-	console.log(petition);
 
 	return (
 		<div className="container mx-auto px-4 py-8">

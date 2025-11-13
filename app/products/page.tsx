@@ -1,9 +1,9 @@
-import { ProductCard } from "@/components/cards/productCard";
+import { ProductCard } from "@/components/cards/product-card";
+import { OrderSelect } from "@/components/select/order-select";
 import ProductsFilters from "@/components/sidebar/products-filters";
 import { IProduct } from "@/lib/services/types";
 import { ISearchParams } from "@/types";
 import { ProductServices } from "./page-services";
-import { OrderSelect } from "@/components/select/order-select";
 
 export default async function ProductsPage({ searchParams }: { searchParams: Promise<ISearchParams> }) {
 	const { translator, products, categories, clientTranslations } = await ProductServices(searchParams);

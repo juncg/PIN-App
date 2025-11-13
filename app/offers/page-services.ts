@@ -4,7 +4,6 @@ import { IOffer } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
 import { getTranslations } from "next-intl/server";
 import { ISearchParams } from "../../types";
-import { is } from "date-fns/locale";
 
 async function fetchOffers(page: number = 0, pageSize: number = OFFERS_PAGE_SIZE, postName: string = "") {
 	const from = page * pageSize;
