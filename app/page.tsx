@@ -1,5 +1,5 @@
+import { Switch } from "@/components/ui-custom/switch";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { H1 } from "@/components/ui/typography";
 import Link from "next/link";
 
