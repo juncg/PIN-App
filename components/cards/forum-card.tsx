@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@/hooks/use-user";
 import { IForum } from "@/lib/services/types";
 import { cn } from "@/lib/utils";
 import { Users } from "lucide-react";
@@ -18,23 +17,22 @@ export interface IForumCard {
 
 export function ForumCard(props: IForumCard) {
 	const { forum, className } = props;
-	const { userUuid } = useUser();
+
+	const profileImage = forum.profile_picture || "/images/jancarlo.jpg";
 
 	return (
 		<article className={cn("flex flex-col border border-spacing-2 rounded-lg p-4 gap-4", className)}>
 			<div className="flex justify-between items-center border-b pb-4">
 				<div className="flex items-center gap-4">
-					{forum.profile_picture && (
-						<div className="relative w-16 h-16 overflow-hidden rounded-full flex-shrink-0">
-							<Image
-								src={forum.profile_picture}
-								alt={forum.name || "Forum"}
-								fill
-								className="object-cover"
-								unoptimized
-							/>
-						</div>
-					)}
+					<div className="relative w-16 h-16 overflow-hidden rounded-full flex-shrink-0 border-2 border-muted">
+						<Image
+							src={profileImage}
+							alt={forum.name || "Forum"}
+							fill
+							className="object-cover"
+							unoptimized
+						/>
+					</div>
 					<div className="flex flex-col gap-1">
 						<H3>{forum.name}</H3>
 						<H4>{forum.businesses?.[0]?.business?.name}</H4>
