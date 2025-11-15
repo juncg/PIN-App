@@ -1,13 +1,13 @@
 import { Header } from "@/components/header/header";
 import { ConditionalLayout } from "@/components/layout/layout-content";
 import { AppSidebar } from "@/components/sidebar/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
-import { Funnel_Sans } from "next/font/google";
+import { Funnel_Display, Funnel_Sans } from "next/font/google";
 import Error from "./error";
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
 
 const defaultUrl = process.env.VERCEL_URL || "http://localhost:3000";
 
@@ -23,6 +23,12 @@ const funnelSans = Funnel_Sans({
 	subsets: ["latin"],
 });
 
+const funnelDisplay = Funnel_Display({
+	variable: "--font-funnel-display",
+	display: "swap",
+	subsets: ["latin"],
+});
+
 export default async function RootLayout({
 	children,
 }: Readonly<{
@@ -30,7 +36,7 @@ export default async function RootLayout({
 }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body className={`${funnelSans.className} antialiased`}>
+			<body className={`${funnelSans.variable} ${funnelDisplay.variable} font-funnel-sans antialiased`}>
 				<ErrorBoundary errorComponent={Error}>
 					<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
 						<ConditionalLayout header={<Header />} sidebar={<AppSidebar />}>

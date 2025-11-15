@@ -1,7 +1,7 @@
 import { InfinitePostList } from "@/components/posts/infinite-post-list";
 import { SearchInput } from "@/components/search/search";
+import { H1, P } from "@/components/ui-custom/typography";
 import { Button } from "@/components/ui/button";
-import { H1, P } from "@/components/ui/typography";
 import { OFFERS_MAX_POSTS, OFFERS_PAGE_SIZE } from "@/lib/constants";
 import { getUserUuid } from "@/lib/services/user";
 import { Plus } from "lucide-react";
@@ -23,13 +23,13 @@ export default async function Offers({ searchParams }: { searchParams: Promise<I
 				</div>
 
 				{userUuid && isBusinessUser && (
-                    <Link href={"/offers/create"}>
-                        <Button className="flex items-center gap-2">
-                            <Plus className="w-5 h-5" />
-                            Nueva Oferta
-                        </Button>
-                    </Link>
-                )}
+					<Link href={"/offers/create"}>
+						<Button className="flex items-center gap-2">
+							<Plus className="w-5 h-5" />
+							Nueva Oferta
+						</Button>
+					</Link>
+				)}
 			</div>
 
 			<SearchInput />

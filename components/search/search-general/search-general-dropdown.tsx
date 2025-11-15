@@ -1,8 +1,8 @@
 "use client";
 
+import { H4, P } from "@/components/ui-custom/typography";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { H4, P } from "@/components/ui/typography";
 import { IBusiness, IForum, IOffer, IPetition, IProduct, IUser } from "@/lib/services/types";
 import { Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";

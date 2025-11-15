@@ -237,7 +237,7 @@ Always use existing components from `components/ui/`:
 -   `Card`, `CardHeader`, `CardContent` - Containers
 -   `Dialog`, `Sheet`, `Popover` - Overlays
 -   `Badge`, `Separator`, `Avatar` - UI elements
--   `H1`, `H2`, `H3`, `H4`, `P`, `Muted` - Typography from `typography.tsx`
+-   `H1`, `H2`, `H3`, `H4`, `P` - Typography from `typography.tsx`
 
 ```typescript
 import { Button } from "@/components/ui/button";

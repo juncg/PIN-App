@@ -5,10 +5,10 @@ import { cn } from "@/lib/utils";
 import { Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { H3, H4, P } from "../ui-custom/typography";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
-import { H3, H4, P } from "../ui/typography";
 
 export interface IForumCard {
 	className?: string;

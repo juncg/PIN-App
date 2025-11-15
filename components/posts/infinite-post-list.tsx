@@ -4,8 +4,8 @@ import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { TPost } from "@/types";
 import { useCallback, useEffect, useState } from "react";
 import { PostCard } from "../cards/post-card";
+import { P } from "../ui-custom/typography";
 import { Skeleton } from "../ui/skeleton";
-import { P } from "../ui/typography";
 
 interface InfinitePostListProps {
 	initialPosts: TPost[];

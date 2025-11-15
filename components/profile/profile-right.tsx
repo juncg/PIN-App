@@ -3,11 +3,10 @@
 import { IBusiness, IUser } from "@/lib/services/types";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { H3, P } from "../ui-custom/typography";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
 import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
 import { Card, CardHeader, CardTitle } from "../ui/card";
-import { H3, P } from "../ui/typography";
 
 interface IProfileUserCompanyState {
 	className?: string;
@@ -27,23 +26,10 @@ export default function ProfileUserCompanyState(props: IProfileUserCompanyState)
 				</AccordionTrigger>
 
 				<AccordionContent className="flex flex-col gap-4 text-balance">
-					<Badge className="justify-center">{isBusiness ? "Usuario empresa" : "Cuenta personal"}
-
-
-
-					</Badge>
+					<Badge className="justify-center">{isBusiness ? "Usuario empresa" : "Cuenta personal"}</Badge>
 					<Link href="/upgrade-user">
-
-
-						<Badge className="w-full justify-center"> Mejora a Business
-
-
-						</Badge>
-
+						<Badge className="w-full justify-center"> Mejora a Business</Badge>
 					</Link>
-
-
-
 				</AccordionContent>
 			</AccordionItem>
 

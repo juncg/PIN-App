@@ -1,5 +1,5 @@
+import { H4, P } from "@/components/ui-custom/typography";
 import { Badge } from "@/components/ui/badge";
-import { H4, Muted } from "@/components/ui/typography";
 import { IBusiness, IForum, IOffer, IPetition, IProduct, IUser } from "@/lib/services/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -85,7 +85,7 @@ export function SearchGeneralDropdownItem({ item, type }: SearchGeneralDropdownI
 
 				<div className="flex-1 min-w-0">
 					<H4 className="truncate mb-1">{title}</H4>
-					{subtitle && <Muted className="text-sm truncate">{subtitle}</Muted>}
+					{subtitle && <P className="text-sm text-muted-foreground truncate">{subtitle}</P>}
 
 					{tags && tags.length > 0 && (
 						<div className="flex gap-1 mt-2">
