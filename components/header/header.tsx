@@ -1,9 +1,9 @@
-import { LocaleSwitcher } from "@/components/ui/locale-switcher";
+import { LocaleSwitcher } from "@/components/ui-custom/locale-switcher";
 import Link from "next/link";
 import { AuthButton } from "../auth/auth-buttons";
 import { SearchGeneral } from "../search/search-general/search-general";
+import { ThemeSwitcher } from "../ui-custom/theme-switcher";
 import { SidebarTrigger } from "../ui/sidebar";
-import { ThemeSwitcher } from "../ui/theme-switcher";
 
 export function Header() {
 	return (
@@ -12,7 +12,7 @@ export function Header() {
 				<div className="flex items-center gap-2">
 					<SidebarTrigger />
 					<Link className="font-semibold text-lg" href={"/home"}>
-						Deal&Buy
+						Deal&Buy.
 					</Link>
 				</div>
 
