@@ -1,5 +1,5 @@
 import { SecurityTestPanel } from "@/components/security/security-test-panel";
-import { H1, P } from "@/components/ui/typography";
+import { H1, P } from "@/components/ui-custom/typography";
 
 export default function SecurityTestPage() {
     return (

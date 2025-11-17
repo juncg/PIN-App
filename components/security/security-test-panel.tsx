@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { H3, P, Muted } from "@/components/ui/typography";
+import { H3, P } from "@/components/ui-custom/typography";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
@@ -314,7 +314,7 @@ export function SecurityTestPanel() {
         <Card className="max-w-4xl mx-auto">
             <CardHeader>
                 <H3>Security Test Panel</H3>
-                <Muted>Test security vulnerabilities from end-user perspective</Muted>
+                <P className="text-muted-foreground">Test security vulnerabilities from end-user perspective</P>
             </CardHeader>
             <CardContent className="space-y-4">
                 <Button onClick={runSecurityTests} disabled={isRunning} className="w-full">
@@ -335,7 +335,7 @@ export function SecurityTestPanel() {
                                         </div>
                                         <P className="text-sm">{result.message}</P>
                                         {result.details && (
-                                            <Muted className="text-xs mt-2">Details: {result.details}</Muted>
+                                            <P className="text-xs text-muted-foreground mt-2">Details: {result.details}</P>
                                         )}
                                     </div>
                                 </div>
@@ -348,9 +348,9 @@ export function SecurityTestPanel() {
                     <Card className="p-4 bg-muted">
                         <P className="font-semibold mb-2">Summary</P>
                         <div className="flex gap-4">
-                            <Muted>Passed: {results.filter((r) => r.status === "pass").length}</Muted>
-                            <Muted>Failed: {results.filter((r) => r.status === "fail").length}</Muted>
-                            <Muted>Warnings: {results.filter((r) => r.status === "warning").length}</Muted>
+                            <P className="text-muted-foreground">Passed: {results.filter((r) => r.status === "pass").length}</P>
+                            <P className="text-muted-foreground">Failed: {results.filter((r) => r.status === "fail").length}</P>
+                            <P className="text-muted-foreground">Warnings: {results.filter((r) => r.status === "warning").length}</P>
                         </div>
                     </Card>
                 )}
