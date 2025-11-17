@@ -10,12 +10,12 @@ import { useState, useEffect } from "react";
 import { LikeButton } from "../buttons/like-button";
 import { SubscribeButton } from "../buttons/subscribe-button";
 import { ShareComponent } from "../share-post/share";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui-custom/carousel";
+import { H3, H4, P } from "../ui-custom/typography";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel";
 import { Progress } from "../ui/progress";
 import { Separator } from "../ui/separator";
-import { H3, H4, P } from "../ui/typography";
 
 export interface IPostCard {
     className?: string;

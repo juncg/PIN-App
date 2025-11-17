@@ -1,9 +1,9 @@
 import { InfinitePostList } from "@/components/posts/infinite-post-list";
+import { H1, H2, H3, P } from "@/components/ui-custom/typography";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { H1, H2, H3, Muted, P } from "@/components/ui/typography";
 import { TPost } from "@/types";
 import { Users, Verified } from "lucide-react";
 import Image from "next/image";
@@ -98,7 +98,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 								<div className="flex items-center gap-2">
 									<Users className="w-5 h-5 text-muted-foreground" />
 									<P className="font-semibold">{forumData.followers || 0}</P>
-									<Muted>seguidores</Muted>
+									<P className="text-muted">seguidores</P>
 								</div>
 							</div>
 

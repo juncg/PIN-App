@@ -1,5 +1,5 @@
 import ProfileRight from "@/components/profile/profile-right";
-import { H1, H2 } from "@/components/ui/typography";
+import { H1, H2 } from "@/components/ui-custom/typography";
 import Image from "next/image";
 import { ProfileServices } from "./page-services";
 

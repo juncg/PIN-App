@@ -25,6 +25,10 @@ export default {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
 			},
+			fontFamily: {
+				"funnel-sans": "var(--font-funnel-sans)",
+				"funnel-display": "var(--font-funnel-display)",
+			},
 			colors: {
 				background: "hsl(var(--background))",
 				foreground: "hsl(var(--foreground))",
@@ -39,10 +43,12 @@ export default {
 				primary: {
 					DEFAULT: "hsl(var(--primary))",
 					foreground: "hsl(var(--primary-foreground))",
+					unchanged: "hsl(var(--primary-unchanged))",
 				},
 				secondary: {
 					DEFAULT: "hsl(var(--secondary))",
 					foreground: "hsl(var(--secondary-foreground))",
+					unchanged: "hsl(var(--secondary-unchanged))",
 				},
 				ternary: {
 					DEFAULT: "hsl(var(--ternary))",

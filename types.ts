@@ -9,5 +9,6 @@ export type TPost = IOffer | IPetition;
 export interface ISearchParams {
 	locale?: string;
 	postName?: string;
+	search?: string;
 	orderBy?: string;
 }

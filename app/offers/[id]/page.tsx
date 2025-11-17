@@ -1,4 +1,4 @@
-import { H1, H2 } from "@/components/ui/typography";
+import { H1, H2 } from "@/components/ui-custom/typography";
 
 export default async function OfferPage() {
 	return (

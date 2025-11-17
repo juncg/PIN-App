@@ -1,6 +1,6 @@
 import { Switch } from "@/components/ui-custom/switch";
+import { H1 } from "@/components/ui-custom/typography";
 import { Button } from "@/components/ui/button";
-import { H1 } from "@/components/ui/typography";
 import Link from "next/link";
 
 export default function Home() {
@@ -12,7 +12,9 @@ export default function Home() {
 				<Link href={"/home"}>Ir al inicio</Link>
 			</Button>
 
-			<Switch innerTextChecked="¡Apuntado!" innerTextUnchecked="Apúntate" />
+			<div className="bg-primary-unchanged p-5">
+				<Switch innerTextChecked="Apuntado." innerTextUnchecked="Apuntarme" />
+			</div>
 		</section>
 	);
 }

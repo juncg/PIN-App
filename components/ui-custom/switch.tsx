@@ -2,7 +2,7 @@
 
 import * as SwitchPrimitive from "@radix-ui/react-switch";
 
-import { P } from "@/components/ui/typography";
+import { P } from "@/components/ui-custom/typography";
 import { cn } from "@/lib/utils";
 import { ComponentProps, useEffect, useRef, useState } from "react";
 
@@ -72,10 +72,10 @@ export function Switch({
 			<SwitchPrimitive.Root
 				data-slot="switch"
 				className={cn(
-					"peer data-[state=checked]:bg-primary data-[state=unchecked]:bg-primary focus-visible:border-ring focus-visible:ring-ring/50 inline-flex h-auto min-h-[2.5rem] shrink-0 items-center rounded-md shadow-md transition-all outline-none disabled:cursor-not-allowed disabled:opacity-50 p-1",
+					"peer bg-primary-unchanged border-[3px] border-secondary-unchanged inline-flex h-auto min-h-[2.5rem] shrink-0 items-center rounded-[10px] transition-all disabled:cursor-not-allowed disabled:opacity-50",
 					className
 				)}
-				style={{ width: `${maxThumbWidth * 1.3 + 8}px` }}
+				style={{ width: `${maxThumbWidth * 1.2 + 6}px` }} // Expande el switch un 30% + (borde derecho en px + borde izquierdo en px) para que el interior, el thumb, se desplace
 				checked={checked}
 				onCheckedChange={handleChange}
 				defaultChecked={defaultChecked}
@@ -84,11 +84,13 @@ export function Switch({
 				<SwitchPrimitive.Thumb
 					data-slot="switch-thumb"
 					className={cn(
-						"pointer-events-none flex items-center justify-center h-full min-w-[5rem] px-4 py-1 rounded-md ring-0 transition-all duration-200 data-[state=checked]:translate-x-[30%] data-[state=unchecked]:translate-x-0 data-[state=checked]:bg-ternary data-[state=unchecked]:bg-secondary"
+						"pointer-events-none flex items-center justify-center h-full min-w-[5rem] px-4 py-1 rounded-[10px] border-[3px] border-primary-unchanged transition-all duration-200 data-[state=checked]:translate-x-[20%] data-[state=unchecked]:translate-x-0 data-[state=checked]:bg-ternary data-[state=unchecked]:bg-secondary-unchanged"
 					)}
 					style={{ width: `${maxThumbWidth}px` }}
 				>
-					<P className="font-bold text-primary">{checked ? innerTextChecked : innerTextUnchecked}</P>
+					<P className="font-bold text-primary-unchanged">
+						{checked ? innerTextChecked : innerTextUnchecked}
+					</P>
 				</SwitchPrimitive.Thumb>
 			</SwitchPrimitive.Root>
 		</>

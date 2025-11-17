@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { H3, P } from "../ui-custom/typography";
 import { Button } from "../ui/button";
-import { H3, P } from "../ui/typography";
 
 export interface IBusinessCard {
 	className?: string;

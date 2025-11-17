@@ -1,22 +1,24 @@
 "use client";
 
 import SelectTags from "@/components/select/select-tags";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { useUser } from "@/hooks/use-user";
 import { PostToDatabase } from "@/lib/services/general";
 import { IForum, IOffer } from "@/lib/services/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { PostgrestError } from "@supabase/supabase-js";
-import { AlertCircle, CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { APIErrorHandler } from "../error-handlers/api-error-handler";
+import { Alert, IAlert } from "../ui-custom/alert";
+import { DateInput } from "../ui-custom/date-input";
+import { Label } from "../ui-custom/label";
+import { Switch } from "../ui-custom/switch";
+import { Textarea } from "../ui/textarea";
+import { FormField } from "./base/form-field";
 import { CreateOfferSchema, type TCreateOfferSchema } from "./schemas/offer";
 
 interface OfferFormProps {
@@ -26,14 +28,10 @@ interface OfferFormProps {
 
 export default function OfferForm({ forums, tags }: OfferFormProps) {
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [alert, setAlert] = useState<{
-		type: "success" | "error";
-		message: string;
-	} | null>(null);
+	const [alert, setAlert] = useState<IAlert | null>(null);
 	const [selectedTags, setSelectedTags] = useState<number[]>([]);
 	const [apiError, setApiError] = useState<PostgrestError | null>(null);
 	const { userUuid } = useUser();
-
 	const router = useRouter();
 
 	const {
@@ -49,10 +47,10 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 		defaultValues: {
 			title: "",
 			text: "",
-			target_progress: 0,
-			target_completition_date: "",
+			target_progress: undefined,
+			target_completition_date: undefined,
 			comment_locked_state: "Unlocked",
-			fee: 0,
+			fee: undefined,
 			forum_id: null,
 			state: "Posted",
 		},
@@ -71,14 +69,14 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 		}
 	}, [alert]);
 
-	const handleOfferCreation = async (data: TCreateOfferSchema) => {
+	async function handleOfferCreation(data: TCreateOfferSchema) {
 		setIsSubmitting(true);
 		setAlert(null);
 		setApiError(null);
 
 		if (!userUuid) {
 			setAlert({
-				type: "error",
+				type: "Error",
 				message: "Debes iniciar sesión para crear una oferta.",
 			});
 			setIsSubmitting(false);
@@ -115,6 +113,7 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 
 			const inserted = response.data;
 			const offerId = inserted?.[0]?.id;
+
 			if (offerId && selectedTags.length > 0) {
 				const tagRelations = selectedTags.map((tagId) => ({
 					offer_id: offerId,
@@ -137,127 +136,123 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 		} catch (error) {
 			console.error("Error creating offer:", error);
 			setAlert({
-				type: "error",
+				type: "Error",
 				message: "Error al crear la oferta. Inténtalo de nuevo.",
 			});
 		} finally {
 			setIsSubmitting(false);
 		}
-	};
+	}
 
 	return (
 		<>
-			{alert && (
-				<Alert
-					className={`mb-4 ${
-						alert.type === "success" ? "border-green-500 bg-green-50" : "border-red-500 bg-red-50"
-					}`}
-				>
-					{alert.type === "success" ? (
-						<CheckCircle className="h-4 w-4 text-green-600" />
-					) : (
-						<AlertCircle className="h-4 w-4 text-red-600" />
-					)}
-					<AlertDescription className={alert.type === "success" ? "text-green-800" : "text-red-800"}>
-						{alert.message}
-					</AlertDescription>
-				</Alert>
-			)}
+			{alert && <Alert message={alert.message} type={alert.type} />}
 
 			<APIErrorHandler error={apiError} />
 
-			<form onSubmit={handleSubmit(handleOfferCreation)}>
-				<div className="flex flex-col gap-6">
-					<div className="grid gap-2">
-						<Label htmlFor="title">Titulo</Label>
-						<Input id="title" type="text" {...register("title")} disabled={isSubmitting} />
-						{errors.title && <p className="text-sm text-red-600">{errors.title.message}</p>}
+			<form className="flex flex-col gap-6" onSubmit={handleSubmit(handleOfferCreation)}>
+				<FormField label="Título" errorMessage={errors.title?.message || ""} htmlFor="title">
+					<Input id="title" type="text" {...register("title")} disabled={isSubmitting} />
+				</FormField>
+
+				<FormField label="Descripción" errorMessage={errors.text?.message || ""} htmlFor="text">
+					<Textarea className="h-40" id="text" {...register("text")} disabled={isSubmitting} />
+				</FormField>
+
+				<div className="flex gap-6 items-start justify-between">
+					<div className="flex gap-6 items-start">
+						<FormField
+							label="Objetivo numérico"
+							errorMessage={errors.target_progress?.message || ""}
+							htmlFor="target_progress"
+						>
+							<Input
+								id="target_progress"
+								type="number"
+								{...register("target_progress", { valueAsNumber: true })}
+								disabled={isSubmitting}
+							/>
+						</FormField>
+
+						<FormField label="Cuota" errorMessage={errors.fee?.message || ""} htmlFor="fee">
+							<Input
+								id="fee"
+								type="number"
+								{...register("fee", { valueAsNumber: true })}
+								disabled={isSubmitting}
+							/>
+						</FormField>
+
+						<FormField
+							label="Fecha límite del objetivo"
+							errorMessage={errors.target_completition_date?.message || ""}
+							htmlFor="target_completition_date"
+						>
+							<DateInput
+								id="target_completition_date"
+								buttonText="Elige una fecha"
+								buttonDisabled={isSubmitting}
+								defaultDate={new Date(Date.now() + 24 * 60 * 60 * 1000)}
+								disabled={{
+									before: new Date(Date.now() + 24 * 60 * 60 * 1000),
+									after: new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000),
+								}}
+								startMonth={new Date()}
+								endMonth={new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000)}
+							/>
+						</FormField>
 					</div>
-					<div className="grid gap-2">
-						<Label htmlFor="text">Descripción</Label>
-						<Input id="text" type="text" {...register("text")} disabled={isSubmitting} />
-						{errors.text && <p className="text-sm text-red-600">{errors.text.message}</p>}
-					</div>
-					<div className="grid gap-2">
-						<Label htmlFor="target_progress">Objetivo numérico</Label>
-						<Input
-							id="target_progress"
-							type="number"
-							{...register("target_progress", { valueAsNumber: true })}
-							disabled={isSubmitting}
-						/>
-						{errors.target_progress && (
-							<p className="text-sm text-red-600">{errors.target_progress.message}</p>
-						)}
-					</div>
-					<div className="grid gap-2">
-						<Label htmlFor="target_completition_date">Fecha limite del objetivo</Label>
-						<Input
-							id="target_completition_date"
-							type="date"
-							{...register("target_completition_date")}
-							disabled={isSubmitting}
-						/>
-						{errors.target_completition_date && (
-							<p className="text-sm text-red-600">{errors.target_completition_date.message}</p>
-						)}
-					</div>
-					<div className="grid gap-2">
-						<Label htmlFor="allowComments">Permitir comentarios</Label>
+
+					<FormField label="Permitir comentarios" htmlFor="allow_comments">
 						<Switch
-							id="allowComments"
+							id="allow_comments"
 							checked={allowComments}
 							onCheckedChange={(checked) =>
 								setValue("comment_locked_state", checked ? "Unlocked" : "Locked")
 							}
 							disabled={isSubmitting}
+							innerTextChecked="Activado."
+							innerTextUnchecked="Desactivado"
 						/>
-					</div>
-					<div className="grid gap-2">
-						<Label htmlFor="fee">Cuota</Label>
-						<Input
-							id="fee"
-							type="number"
-							{...register("fee", { valueAsNumber: true })}
-							disabled={isSubmitting}
-						/>
-						{errors.fee && <p className="text-sm text-red-600">{errors.fee.message}</p>}
-					</div>
-					<div className="grid gap-2">
-						<Label htmlFor="forumId">Foro</Label>
-						<Select
-							value={forumId?.toString() || ""}
-							onValueChange={(value) => setValue("forum_id", Number(value))}
-							disabled={isSubmitting}
-						>
-							<SelectTrigger>
-								<SelectValue placeholder="Selecciona un foro" />
-							</SelectTrigger>
-							<SelectContent>
-								{forums.map((forum) => (
-									<SelectItem key={forum.id} value={forum.id.toString()}>
-										{forum.name}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-						{errors.forum_id && <p className="text-sm text-red-600">{errors.forum_id.message}</p>}
-					</div>
-					<div className="grid gap-2">
-						<SelectTags
-							availableTags={tags}
-							selectedTags={selectedTags}
-							onTagsChange={setSelectedTags}
-							label="Tags"
-							placeholder="Selecciona tags para la petición"
-							disabled={isSubmitting}
-						/>
-					</div>
-					<div className="justify-end">
-						<Button type="submit" disabled={isSubmitting}>
-							{isSubmitting ? "Creando..." : "Crear Oferta"}
-						</Button>
-					</div>
+					</FormField>
+				</div>
+
+				<div className="grid gap-2">
+					<Label htmlFor="forumId">Foro</Label>
+					<Select
+						value={forumId?.toString() || ""}
+						onValueChange={(value) => setValue("forum_id", Number(value))}
+						disabled={isSubmitting}
+					>
+						<SelectTrigger>
+							<SelectValue placeholder="Selecciona un foro" />
+						</SelectTrigger>
+						<SelectContent>
+							{forums.map((forum) => (
+								<SelectItem key={forum.id} value={forum.id.toString()}>
+									{forum.name}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+					{errors.forum_id && <p className="text-sm text-red-600">{errors.forum_id.message}</p>}
+				</div>
+
+				<div className="grid gap-2">
+					<SelectTags
+						availableTags={tags}
+						selectedTags={selectedTags}
+						onTagsChange={setSelectedTags}
+						label="Tags"
+						placeholder="Selecciona tags para la petición"
+						disabled={isSubmitting}
+					/>
+				</div>
+
+				<div className="justify-end">
+					<Button type="submit" disabled={isSubmitting}>
+						{isSubmitting ? "Creando..." : "Crear Oferta"}
+					</Button>
 				</div>
 			</form>
 		</>

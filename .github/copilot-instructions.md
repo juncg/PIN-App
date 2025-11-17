@@ -19,7 +19,8 @@ You are an AI assistant helping developers work on **PIN-App**, a Next.js-based 
 ```
 app/              # Next.js App Router pages and layouts
 components/       # Reusable React components
-  ui/            # shadcn/ui base components
+  ui/             # shadcn/ui base components (shouldn't be used for anything but for creating ui-custom components)
+  ui-custom/	  # Actual modified components
   cards/         # Card components for entities
   forms/         # Form components with validation
   buttons/       # Action buttons
@@ -237,7 +238,7 @@ Always use existing components from `components/ui/`:
 -   `Card`, `CardHeader`, `CardContent` - Containers
 -   `Dialog`, `Sheet`, `Popover` - Overlays
 -   `Badge`, `Separator`, `Avatar` - UI elements
--   `H1`, `H2`, `H3`, `H4`, `P`, `Muted` - Typography from `typography.tsx`
+-   `H1`, `H2`, `H3`, `H4`, `P` - Typography from `typography.tsx`
 
 ```typescript
 import { Button } from "@/components/ui/button";

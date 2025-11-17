@@ -32,7 +32,7 @@ export const OfferSchema = z.object({
 	id: z.number(),
 	title: z.string().min(1, "El título es requerido"),
 	text: z.string().min(1, "El texto es requerido"),
-	fee: z.number().min(0, "La tarifa debe ser mayor o igual a 0"),
+	fee: z.number().min(1, "La tarifa debe ser mayor o igual a 1"),
 	target_progress: z.number().min(0, "El progreso objetivo debe ser mayor o igual a 0"),
 	current_progress: z.number().min(0, "El progreso actual debe ser mayor o igual a 0"),
 	target_completition_date: z.string(),
