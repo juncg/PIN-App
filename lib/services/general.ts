@@ -189,7 +189,7 @@ export async function ExecuteRpcFunction<T = unknown>({
 	functionName: string;
 	params?: Record<string, any>;
 }): Promise<SupabaseApiResult<T>> {
-	const { supabase } = await GetClient();
+	const { supabase } = await GetServiceClient();
 	const { data, error } = await supabase.rpc(functionName, params);
 
 	if (DEBUG && error) {
