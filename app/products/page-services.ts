@@ -38,10 +38,36 @@ export async function ProductServices(searchParams: Promise<ISearchParams>) {
 			ascending = false;
 	}
 
+	const filters: any[] = [{ method: "order", column: orderColumn, ascending }];
+
+	const minPrice = params.minPrice ? Number(params.minPrice) : null;
+	const maxPrice = params.maxPrice ? Number(params.maxPrice) : null;
+
+	if (minPrice !== null && minPrice > 0) {
+		filters.push({ method: "gte", column: "msrp", value: minPrice });
+	}
+
+	if (maxPrice !== null && maxPrice < 10000) {
+		filters.push({ method: "lte", column: "msrp", value: maxPrice });
+	}
+
+	const minRating = params.minRating ? Number(params.minRating) : null;
+	if (minRating !== null && minRating > 0) {
+		filters.push({ method: "gte", column: "rating", value: minRating });
+	}
+
+	let selectQuery = "*, businesses:Product_Business!inner(business:Business(*))";
+
+	if (params.categories) {
+		const categoryIds = params.categories.split(",").map(Number);
+		selectQuery += ", Product_Category!inner(category_id)";
+		filters.push({ method: "in", column: "Product_Category.category_id", value: categoryIds });
+	}
+
 	const { data: products } = await GetFromDatabase<IProduct>({
 		tableName: "Product",
-		select: "*, businesses:Product_Business!inner(business:Business(*))",
-		filters: [{ method: "order", column: orderColumn, ascending }],
+		select: selectQuery,
+		filters,
 	});
 
 	const { data: categories } = await GetFromDatabase<ICategory>({

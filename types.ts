@@ -11,4 +11,8 @@ export interface ISearchParams {
 	postName?: string;
 	search?: string;
 	orderBy?: string;
+	minPrice?: string;
+	maxPrice?: string;
+	categories?: string;
+	minRating?: string;
 }
