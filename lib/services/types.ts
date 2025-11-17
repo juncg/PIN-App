@@ -39,7 +39,7 @@ export type IForum = Tables<"Forum"> & {
 	Forum_Tag?: {
 		Tag: Tables<"Tag">;
 	}[];
-	Forum_User?: Tables<"Forum_User">[];
+	User_Forum?: Tables<"User_Forum">[];
 };
 
 export type IProduct = Tables<"Product"> & {

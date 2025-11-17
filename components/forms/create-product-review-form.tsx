@@ -48,7 +48,7 @@ export function CreateProductReviewForm({ onCancel, userUuid, productId }: Creat
 				content: content,
 				stars: rating,
 				creator_id: userUuid,
-				forum_id: null,
+				forum_id: 1,
 			};
 
 			const { data, error } = await PostToDatabase<IReview>({

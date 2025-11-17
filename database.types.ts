@@ -258,36 +258,6 @@ export type Database = {
           },
         ]
       }
-      Forum_User: {
-        Row: {
-          forum_id: number
-          user_id: string
-        }
-        Insert: {
-          forum_id: number
-          user_id: string
-        }
-        Update: {
-          forum_id?: number
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Forum_User_forum_id_fkey"
-            columns: ["forum_id"]
-            isOneToOne: false
-            referencedRelation: "Forum"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Forum_User_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "User"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       Offer: {
         Row: {
           comment_locked_state: Database["public"]["Enums"]["Comment_Locked_State"]
@@ -901,6 +871,36 @@ export type Database = {
           },
           {
             foreignKeyName: "User_Business_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "User"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      User_Forum: {
+        Row: {
+          forum_id: number
+          user_id: string
+        }
+        Insert: {
+          forum_id: number
+          user_id: string
+        }
+        Update: {
+          forum_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Forum_User_forum_id_fkey"
+            columns: ["forum_id"]
+            isOneToOne: false
+            referencedRelation: "Forum"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Forum_User_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "User"
