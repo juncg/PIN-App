@@ -1,3 +1,5 @@
+-- Restores subscriptions/current_progress in posts to their actual value
+
 UPDATE "Offer" SET current_progress = 0;
 
 -- Update only those with actual subscribers

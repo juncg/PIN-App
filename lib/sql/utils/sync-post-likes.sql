@@ -1,3 +1,5 @@
+-- Restores likes in posts to their actual value
+
 UPDATE "Offer" SET likes = 0;
 
 -- Update only those with actual likes
