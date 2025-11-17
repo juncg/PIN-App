@@ -7,8 +7,9 @@ import { RatingDistribution } from "@/app/products/[id]/page-services";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { Star, Plus } from "lucide-react";
-import { CreateProductReviewForm } from "../forms/create-product-review-form";
+import { ProductReviewForm } from "../forms/product-review-form";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 
 interface ProductReviewSectionProps {
 	product: IProduct;
@@ -25,8 +26,19 @@ export function ProductReviewSection({
 	productReviews,
 	userId,
 }: ProductReviewSectionProps) {
+	const router = useRouter();
 	const [reviewFilter, setReviewFilter] = useState("all");
 	const [isCreateReviewOpen, setIsCreateReviewOpen] = useState(false);
+
+	const handleSuccess = () => {
+		setIsCreateReviewOpen(false);
+		router.refresh();
+	};
+
+	const filteredReviews =
+		reviewFilter === "all"
+			? productReviews
+			: productReviews?.filter((review) => review.stars === parseInt(reviewFilter));
 
 	return (
 		<div className="space-y-6">
@@ -64,10 +76,16 @@ export function ProductReviewSection({
 			</div>
 
 			<div className="space-y-4">
-				{productReviews && productReviews.length > 0 ? (
-					productReviews.map((review) => <UserReviewCard key={review.id} review={review} />)
+				{filteredReviews && filteredReviews.length > 0 ? (
+					filteredReviews.map((review) => (
+						<UserReviewCard key={review.id} review={review} currentUserId={userId} productId={product.id} />
+					))
 				) : (
-					<p className="text-muted-foreground">No hay reseñas para este producto.</p>
+					<p className="text-muted-foreground">
+						{reviewFilter === "all"
+							? "No hay reseñas para este producto."
+							: `No hay reseñas con ${reviewFilter} estrellas.`}
+					</p>
 				)}
 			</div>
 
@@ -77,8 +95,9 @@ export function ProductReviewSection({
 						<DialogTitle>Crear nueva reseña</DialogTitle>
 						<DialogDescription>Comparte tu experiencia con {product.name}</DialogDescription>
 					</DialogHeader>
-					<CreateProductReviewForm
+					<ProductReviewForm
 						onCancel={() => setIsCreateReviewOpen(false)}
+						onSuccess={handleSuccess}
 						userUuid={userId}
 						productId={product.id}
 					/>
