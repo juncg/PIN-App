@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "13.0.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       Business: {
@@ -638,6 +663,7 @@ export type Database = {
           content: string | null
           created_at: string
           creator_id: string
+          edited_at: string | null
           forum_id: number | null
           id: number
           likes: number | null
@@ -653,6 +679,7 @@ export type Database = {
           content?: string | null
           created_at?: string
           creator_id: string
+          edited_at?: string | null
           forum_id?: number | null
           id?: number
           likes?: number | null
@@ -668,6 +695,7 @@ export type Database = {
           content?: string | null
           created_at?: string
           creator_id?: string
+          edited_at?: string | null
           forum_id?: number | null
           id?: number
           likes?: number | null
@@ -999,19 +1027,16 @@ export type Database = {
         Row: {
           liked: boolean
           review_id: number
-          stars: number
           user_id: string
         }
         Insert: {
           liked: boolean
           review_id: number
-          stars?: number
           user_id?: string
         }
         Update: {
           liked?: boolean
           review_id?: number
-          stars?: number
           user_id?: string
         }
         Relationships: [
@@ -1245,6 +1270,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       Chosen_Notification_State: [
