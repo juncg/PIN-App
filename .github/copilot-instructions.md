@@ -19,7 +19,8 @@ You are an AI assistant helping developers work on **PIN-App**, a Next.js-based 
 ```
 app/              # Next.js App Router pages and layouts
 components/       # Reusable React components
-  ui/            # shadcn/ui base components
+  ui/             # shadcn/ui base components (shouldn't be used for anything but for creating ui-custom components)
+  ui-custom/	  # Actual modified components
   cards/         # Card components for entities
   forms/         # Form components with validation
   buttons/       # Action buttons
