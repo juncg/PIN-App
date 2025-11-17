@@ -1,6 +1,6 @@
 "use client";
 
-import SelectTags from "@/components/select/select-tags";
+import { SelectTags } from "@/components/select/select-tags";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -15,7 +15,6 @@ import { useForm } from "react-hook-form";
 import { APIErrorHandler } from "../error-handlers/api-error-handler";
 import { Alert, IAlert } from "../ui-custom/alert";
 import { DateInput } from "../ui-custom/date-input";
-import { Label } from "../ui-custom/label";
 import { Switch } from "../ui-custom/switch";
 import { Textarea } from "../ui/textarea";
 import { FormField } from "./base/form-field";
@@ -58,6 +57,11 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 
 	const forumId = watch("forum_id");
 	const allowComments = watch("comment_locked_state") === "Unlocked";
+
+	useEffect(() => {
+		const defaultDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
+		setValue("target_completition_date", defaultDate.toISOString());
+	}, [setValue]);
 
 	useEffect(() => {
 		if (alert) {
@@ -151,59 +155,84 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 			<APIErrorHandler error={apiError} />
 
 			<form className="flex flex-col gap-6" onSubmit={handleSubmit(handleOfferCreation)}>
-				<FormField label="Título" errorMessage={errors.title?.message || ""} htmlFor="title">
+				<FormField label="Título" errorMessage={errors.title?.message || ""} htmlFor="title" required>
 					<Input id="title" type="text" {...register("title")} disabled={isSubmitting} />
 				</FormField>
 
-				<FormField label="Descripción" errorMessage={errors.text?.message || ""} htmlFor="text">
+				<FormField label="Descripción" errorMessage={errors.text?.message || ""} htmlFor="text" required>
 					<Textarea className="h-40" id="text" {...register("text")} disabled={isSubmitting} />
 				</FormField>
 
 				<div className="flex gap-6 items-start justify-between">
-					<div className="flex gap-6 items-start">
-						<FormField
-							label="Objetivo numérico"
-							errorMessage={errors.target_progress?.message || ""}
-							htmlFor="target_progress"
+					<FormField
+						label="Objetivo numérico"
+						errorMessage={errors.target_progress?.message || ""}
+						htmlFor="target_progress"
+						required
+					>
+						<Input
+							id="target_progress"
+							type="number"
+							{...register("target_progress", { valueAsNumber: true })}
+							disabled={isSubmitting}
+						/>
+					</FormField>
+
+					<FormField label="Cuota" errorMessage={errors.fee?.message || ""} htmlFor="fee" required>
+						<Input
+							id="fee"
+							type="number"
+							{...register("fee", { valueAsNumber: true })}
+							disabled={isSubmitting}
+						/>
+					</FormField>
+
+					<FormField
+						label="Fecha límite del objetivo"
+						errorMessage={errors.target_completition_date?.message || ""}
+						htmlFor="target_completition_date"
+						required
+					>
+						<DateInput
+							id="target_completition_date"
+							buttonText="Elige una fecha"
+							buttonDisabled={isSubmitting}
+							defaultDate={new Date(Date.now() + 24 * 60 * 60 * 1000)}
+							disabled={{
+								before: new Date(Date.now() + 24 * 60 * 60 * 1000),
+								after: new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000),
+							}}
+							startMonth={new Date()}
+							endMonth={new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000)}
+							onDateChange={(date) => {
+								if (date) {
+									setValue("target_completition_date", date.toISOString());
+								}
+							}}
+							{...register("target_completition_date")}
+						/>
+					</FormField>
+
+					<FormField label="Foro asociado" htmlFor="forum_id" errorMessage={errors.forum_id?.message}>
+						<Select
+							value={forumId?.toString() || ""}
+							onValueChange={(value) => setValue("forum_id", Number(value))}
+							disabled={isSubmitting}
 						>
-							<Input
-								id="target_progress"
-								type="number"
-								{...register("target_progress", { valueAsNumber: true })}
-								disabled={isSubmitting}
-							/>
-						</FormField>
+							<SelectTrigger id="forum_id">
+								<SelectValue placeholder="Selecciona un foro" />
+							</SelectTrigger>
+							<SelectContent>
+								{forums.map((forum) => (
+									<SelectItem key={forum.id} value={forum.id.toString()}>
+										{forum.name}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</FormField>
 
-						<FormField label="Cuota" errorMessage={errors.fee?.message || ""} htmlFor="fee">
-							<Input
-								id="fee"
-								type="number"
-								{...register("fee", { valueAsNumber: true })}
-								disabled={isSubmitting}
-							/>
-						</FormField>
-
-						<FormField
-							label="Fecha límite del objetivo"
-							errorMessage={errors.target_completition_date?.message || ""}
-							htmlFor="target_completition_date"
-						>
-							<DateInput
-								id="target_completition_date"
-								buttonText="Elige una fecha"
-								buttonDisabled={isSubmitting}
-								defaultDate={new Date(Date.now() + 24 * 60 * 60 * 1000)}
-								disabled={{
-									before: new Date(Date.now() + 24 * 60 * 60 * 1000),
-									after: new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000),
-								}}
-								startMonth={new Date()}
-								endMonth={new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000)}
-							/>
-						</FormField>
-					</div>
-
-					<FormField label="Permitir comentarios" htmlFor="allow_comments">
+					<FormField label="Permitir comentarios" htmlFor="allow_comments" required>
 						<Switch
 							id="allow_comments"
 							checked={allowComments}
@@ -217,43 +246,19 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 					</FormField>
 				</div>
 
-				<div className="grid gap-2">
-					<Label htmlFor="forumId">Foro</Label>
-					<Select
-						value={forumId?.toString() || ""}
-						onValueChange={(value) => setValue("forum_id", Number(value))}
-						disabled={isSubmitting}
-					>
-						<SelectTrigger>
-							<SelectValue placeholder="Selecciona un foro" />
-						</SelectTrigger>
-						<SelectContent>
-							{forums.map((forum) => (
-								<SelectItem key={forum.id} value={forum.id.toString()}>
-									{forum.name}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-					{errors.forum_id && <p className="text-sm text-red-600">{errors.forum_id.message}</p>}
-				</div>
-
-				<div className="grid gap-2">
+				<FormField label="Tags" htmlFor="tags">
 					<SelectTags
 						availableTags={tags}
 						selectedTags={selectedTags}
 						onTagsChange={setSelectedTags}
-						label="Tags"
-						placeholder="Selecciona tags para la petición"
+						placeholder="Selecciona los tags para la petición"
 						disabled={isSubmitting}
 					/>
-				</div>
+				</FormField>
 
-				<div className="justify-end">
-					<Button type="submit" disabled={isSubmitting}>
-						{isSubmitting ? "Creando..." : "Crear Oferta"}
-					</Button>
-				</div>
+				<Button type="submit" disabled={isSubmitting}>
+					{isSubmitting ? "Creando..." : "Crear Oferta"}
+				</Button>
 			</form>
 		</>
 	);

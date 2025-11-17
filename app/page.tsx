@@ -12,9 +12,7 @@ export default function Home() {
 				<Link href={"/home"}>Ir al inicio</Link>
 			</Button>
 
-			<div className="bg-primary-unchanged p-5">
-				<Switch innerTextChecked="Apuntado." innerTextUnchecked="Apuntarme" />
-			</div>
+			<Switch innerTextChecked="Apuntado." innerTextUnchecked="Apuntarme" />
 		</section>
 	);
 }

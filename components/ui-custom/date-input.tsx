@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import { parseDate } from "chrono-node";
 import { ChevronDownIcon } from "lucide-react";
 import { ComponentProps, useState } from "react";
@@ -17,6 +18,7 @@ interface IDateInput extends Omit<ComponentProps<"button">, "disabled"> {
 	className?: string;
 	startMonth?: Date;
 	endMonth?: Date;
+	onDateChange?: (date: Date | undefined) => void;
 }
 
 export function DateInput({
@@ -28,6 +30,7 @@ export function DateInput({
 	buttonDisabled,
 	startMonth,
 	endMonth,
+	onDateChange,
 	...props
 }: IDateInput) {
 	const [open, setOpen] = useState(false);
@@ -38,7 +41,13 @@ export function DateInput({
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
-				<Button className={className} variant="outline" id={id} disabled={buttonDisabled} {...props}>
+				<Button
+					className={cn(className, "justify-between")}
+					variant="outline"
+					id={id}
+					disabled={buttonDisabled}
+					{...props}
+				>
 					{date ? parsedDate : buttonText}
 					<ChevronDownIcon />
 				</Button>
@@ -47,13 +56,17 @@ export function DateInput({
 			<PopoverContent>
 				<Calendar
 					id={id}
-					className="w-full h-full"
+					className="w-full h-[350px]"
 					mode="single"
 					selected={date}
 					captionLayout="dropdown"
 					onSelect={(date) => {
 						setDate(date);
 						setOpen(false);
+
+						if (onDateChange) {
+							onDateChange(date);
+						}
 					}}
 					disabled={disabled}
 					startMonth={startMonth}

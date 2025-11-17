@@ -1,26 +1,26 @@
 "use client";
 
-import { Label } from "@/components/ui/label";
 import type { Option } from "@/components/ui/multi-select";
 import MultipleSelector from "@/components/ui/multi-select";
+import { cn } from "@/lib/utils";
 
 interface SelectTagsProps {
+	className?: string;
 	availableTags: { id: number; name: string }[];
 	selectedTags: number[];
 	onTagsChange: (tagIds: number[]) => void;
-	label?: string;
 	placeholder?: string;
 	disabled?: boolean;
 }
 
-const SelectTags = ({
+export function SelectTags({
+	className,
 	availableTags,
 	selectedTags,
 	onTagsChange,
-	label = "Tags",
 	placeholder = "Selecciona tags",
 	disabled = false,
-}: SelectTagsProps) => {
+}: SelectTagsProps) {
 	const tagOptions: Option[] = availableTags.map((tag) => ({
 		value: tag.id.toString(),
 		label: tag.name,
@@ -39,11 +39,9 @@ const SelectTags = ({
 	};
 
 	return (
-		<div className="w-full space-y-2">
-			<Label>{label}</Label>
+		<div className={cn("w-full space-y-2", className)}>
 			<MultipleSelector
 				commandProps={{
-					label: label,
 					filter: (value, search) => {
 						if (!search) return 1;
 						const label = tagOptions.find((opt) => opt.value === value)?.label || "";
@@ -62,6 +60,4 @@ const SelectTags = ({
 			/>
 		</div>
 	);
-};
-
-export default SelectTags;
+}
