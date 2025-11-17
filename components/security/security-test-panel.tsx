@@ -12,6 +12,11 @@ type TestResult = {
     status: "pass" | "fail" | "warning";
     message: string;
     details?: string;
+    subTests?: {
+        test: string;
+        passed: boolean;
+        message: string;
+    }[];
 };
 
 export function SecurityTestPanel() {
@@ -295,6 +300,116 @@ export function SecurityTestPanel() {
             });
         }
 
+        // Test 10: Past Target Date Validation
+        try {
+            const pastDate = new Date();
+            pastDate.setDate(pastDate.getDate() - 7); // 7 days ago
+            
+            const response = await fetch("/api/security-test/past-target-date", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    target_date: pastDate.toISOString(),
+                }),
+            });
+            const data = await response.json();
+            
+            testResults.push({
+                name: "Past Target Date Validation",
+                status: data.canCreate ? "fail" : "pass",
+                message: data.canCreate
+                    ? "⚠️ Can create offer with past target date"
+                    : "✅ Cannot create offer with past target date",
+                details: data.message,
+            });
+        } catch (error) {
+            testResults.push({
+                name: "Past Target Date Validation",
+                status: "warning",
+                message: "Test failed to execute",
+                details: String(error),
+            });
+        }
+
+        // Test 10: Business User Offer Creation
+        try {
+            const response = await fetch("/api/security-test/business-offer-creation", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+            });
+            const data = await response.json();
+            
+            testResults.push({
+                name: "Business User Offer Creation",
+                status: data.validationPassed ? "pass" : "fail",
+                message: data.validationPassed
+                    ? data.isBusinessUser
+                        ? "✅ Business user can create offers"
+                        : "✅ Non-business user properly blocked"
+                    : data.isBusinessUser
+                        ? "⚠️ Business user cannot create offers"
+                        : "⚠️ Non-business user can create offers",
+                details: data.message,
+            });
+        } catch (error) {
+            testResults.push({
+                name: "Business User Offer Creation",
+                status: "warning",
+                message: "Test failed to execute",
+                details: String(error),
+            });
+        }
+
+        // Test 12: Offer Update Restrictions
+        try {
+            const response = await fetch("/api/security-test/offer-update-restrictions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+            });
+            const data = await response.json();
+
+            testResults.push({
+                name: "Offer Update Restrictions",
+                status: data.allTestsPassed ? "pass" : "fail",
+                message: data.message,
+                details: `${data.testResults?.filter((r: any) => r.passed).length || 0}/${data.testResults?.length || 0} sub-tests passed`,
+                subTests: data.testResults,
+            });
+        } catch (error) {
+            testResults.push({
+                name: "Offer Update Restrictions",
+                status: "warning",
+                message: "Test failed to execute",
+                details: String(error),
+            });
+        }
+
+        // Test 13: Petition Update Restrictions (5-minute grace period)
+        try {
+            const response = await fetch("/api/security-test/petition-update-restrictions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+            });
+            const data = await response.json();
+
+            testResults.push({
+                name: "Petition Update Restrictions",
+                status: data.allTestsPassed ? "pass" : "fail",
+                message: data.message,
+                details: data.hasOldPetitionTests 
+                    ? `${data.summary?.passed || 0}/${data.summary?.total || 0} tests passed (${data.summary?.newPetitionTests || 0} new, ${data.summary?.oldPetitionTests || 0} old)`
+                    : `${data.summary?.passed || 0}/${data.summary?.total || 0} tests passed (only new petition tested - create an old petition for full coverage)`,
+                subTests: data.testResults,
+            });
+        } catch (error) {
+            testResults.push({
+                name: "Petition Update Restrictions",
+                status: "warning",
+                message: "Test failed to execute",
+                details: String(error),
+            });
+        }
+
         setResults(testResults);
         setIsRunning(false);
     };
@@ -314,14 +429,16 @@ export function SecurityTestPanel() {
         <Card className="max-w-4xl mx-auto">
             <CardHeader>
                 <H3>Security Test Panel</H3>
-                <P className="text-muted-foreground">Test security vulnerabilities from end-user perspective</P>
+                <P className="text-muted-foreground">
+                    Test security vulnerabilities from end-user perspective
+                </P>
             </CardHeader>
             <CardContent className="space-y-4">
-                <Button onClick={runSecurityTests} disabled={isRunning} className="w-full">
+                <Button onClick={runSecurityTests} disabled={isRunning}>
                     {isRunning ? "Running Tests..." : "Run Security Tests"}
                 </Button>
 
-                <Separator />
+				<Separator/>
 
                 {results.length > 0 && (
                     <div className="space-y-4">
@@ -330,12 +447,39 @@ export function SecurityTestPanel() {
                                 <div className="flex items-start justify-between gap-4">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-2">
-                                            <Badge className={getStatusColor(result.status)}>{result.status}</Badge>
+                                            <Badge className={getStatusColor(result.status)}>
+                                                {result.status}
+                                            </Badge>
                                             <P className="font-semibold">{result.name}</P>
                                         </div>
                                         <P className="text-sm">{result.message}</P>
                                         {result.details && (
-                                            <P className="text-xs text-muted-foreground mt-2">Details: {result.details}</P>
+                                            <P className="text-xs text-muted-foreground mt-2">
+                                                {result.details}
+                                            </P>
+                                        )}
+
+                                        {/* Sub-tests display */}
+                                        {result.subTests && result.subTests.length > 0 && (
+                                            <div className="mt-3 space-y-1 pl-4 border-l-2">
+                                                {result.subTests.map((subTest, idx) => (
+                                                    <div key={idx} className="text-xs">
+                                                        <span
+                                                            className={
+                                                                subTest.passed
+                                                                    ? "text-green-600"
+                                                                    : "text-red-600"
+                                                            }
+                                                        >
+                                                            {subTest.passed ? "✓" : "✗"}
+                                                        </span>{" "}
+                                                        <span className="font-medium">
+                                                            {subTest.test}:
+                                                        </span>{" "}
+                                                        {subTest.message}
+                                                    </div>
+                                                ))}
+                                            </div>
                                         )}
                                     </div>
                                 </div>
@@ -348,9 +492,15 @@ export function SecurityTestPanel() {
                     <Card className="p-4 bg-muted">
                         <P className="font-semibold mb-2">Summary</P>
                         <div className="flex gap-4">
-                            <P className="text-muted-foreground">Passed: {results.filter((r) => r.status === "pass").length}</P>
-                            <P className="text-muted-foreground">Failed: {results.filter((r) => r.status === "fail").length}</P>
-                            <P className="text-muted-foreground">Warnings: {results.filter((r) => r.status === "warning").length}</P>
+                            <P className="text-muted-foreground">
+                                Passed: {results.filter((r) => r.status === "pass").length}
+                            </P>
+                            <P className="text-muted-foreground">
+                                Failed: {results.filter((r) => r.status === "fail").length}
+                            </P>
+                            <P className="text-muted-foreground">
+                                Warnings: {results.filter((r) => r.status === "warning").length}
+                            </P>
                         </div>
                     </Card>
                 )}

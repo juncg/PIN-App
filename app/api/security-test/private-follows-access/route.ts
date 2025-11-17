@@ -27,7 +27,7 @@ export async function POST(request: Request) {
             });
         }
 
-        // Test 1: Check if private user actually has follows to test with
+        // Validate user privacy settings FIRST
         const { data: privateUserData } = await GetFromDatabase<Tables<"User">>({
             tableName: "User",
             select: "public_user_follows",
@@ -36,6 +36,66 @@ export async function POST(request: Request) {
             ],
         });
 
+        const { data: publicUserData } = await GetFromDatabase<Tables<"User">>({
+            tableName: "User",
+            select: "public_user_follows",
+            filters: [
+                { method: "eq", column: "id", value: publicUserId },
+            ],
+        });
+
+        // Check if users exist
+        if (!privateUserData?.[0]) {
+            return NextResponse.json({
+                privateFails: false,
+                publicSucceeds: false,
+                message: "❌ Private user ID not found - please use a valid user ID",
+                error: `User ${privateUserId} does not exist`,
+            }, { status: 400 });
+        }
+
+        if (!publicUserData?.[0]) {
+            return NextResponse.json({
+                privateFails: false,
+                publicSucceeds: false,
+                message: "❌ Public user ID not found - please use a valid user ID",
+                error: `User ${publicUserId} does not exist`,
+            }, { status: 400 });
+        }
+
+        // Check if privacy settings match expectations
+        const privateUserIsActuallyPrivate = privateUserData[0].public_user_follows === false;
+        const publicUserIsActuallyPublic = publicUserData[0].public_user_follows === true;
+
+        if (!privateUserIsActuallyPrivate) {
+            return NextResponse.json({
+                privateFails: false,
+                publicSucceeds: false,
+                message: "❌ The 'private' user has public_user_follows = true",
+                error: "Please select a user with public_user_follows set to false, or update this user's privacy settings",
+                details: {
+                    privateUserId,
+                    currentSetting: privateUserData[0].public_user_follows,
+                    expectedSetting: false,
+                },
+            }, { status: 400 });
+        }
+
+        if (!publicUserIsActuallyPublic) {
+            return NextResponse.json({
+                privateFails: false,
+                publicSucceeds: false,
+                message: "❌ The 'public' user has public_user_follows = false",
+                error: "Please select a user with public_user_follows set to true, or update this user's privacy settings",
+                details: {
+                    publicUserId,
+                    currentSetting: publicUserData[0].public_user_follows,
+                    expectedSetting: true,
+                },
+            }, { status: 400 });
+        }
+
+        // Now run the actual tests
         const { data: privateFollowsData, error: privateError } = await GetFromDatabase<Tables<"User_User">>({
             tableName: "User_User",
             select: "*",
@@ -44,7 +104,7 @@ export async function POST(request: Request) {
             ],
         });
 
-        // Check if private user has any follows in the database (as their own query would show)
+        // Check if private user has any follows in the database
         const { data: actualPrivateFollows } = await GetFromDatabase<Tables<"User_User">>({
             tableName: "User_User",
             select: "count",
@@ -55,22 +115,12 @@ export async function POST(request: Request) {
 
         const privateUserHasFollows = actualPrivateFollows && actualPrivateFollows.length > 0;
 
-        // RLS is working if: user is private AND (we got no data OR got an error)
-        // Only mark as blocked if the private user actually has follows to hide
-        const isPrivateBlocked = privateUserData?.[0]?.public_user_follows === false && 
-                                 (privateFollowsData === null || 
-                                  privateFollowsData.length === 0 ||
-                                  privateError !== null);
+        // RLS is working if: we got no data OR got an error
+        const isPrivateBlocked = privateFollowsData === null || 
+                                 privateFollowsData.length === 0 ||
+                                 privateError !== null;
 
-        // Test 2: Try to access public user's follows
-        const { data: publicUserData } = await GetFromDatabase<Tables<"User">>({
-            tableName: "User",
-            select: "public_user_follows",
-            filters: [
-                { method: "eq", column: "id", value: publicUserId },
-            ],
-        });
-
+        // Test public user's follows
         const { data: publicFollowsData, error: publicError } = await GetFromDatabase<Tables<"User_User">>({
             tableName: "User_User",
             select: "*",
@@ -80,8 +130,7 @@ export async function POST(request: Request) {
         });
 
         // Public should be accessible (no error, data exists - even if empty array)
-        const isPublicAccessible = publicUserData?.[0]?.public_user_follows === true && 
-                                   !publicError && publicFollowsData !== null;
+        const isPublicAccessible = !publicError && publicFollowsData !== null;
 
         return NextResponse.json({
             privateFails: isPrivateBlocked,
@@ -96,7 +145,7 @@ export async function POST(request: Request) {
             details: {
                 private: {
                     userId: privateUserId,
-                    publicUserFollows: privateUserData?.[0]?.public_user_follows,
+                    publicUserFollows: privateUserData[0].public_user_follows,
                     blocked: isPrivateBlocked,
                     hasError: privateError !== null,
                     errorMessage: privateError?.message,
@@ -105,7 +154,7 @@ export async function POST(request: Request) {
                 },
                 public: {
                     userId: publicUserId,
-                    publicUserFollows: publicUserData?.[0]?.public_user_follows,
+                    publicUserFollows: publicUserData[0].public_user_follows,
                     accessible: isPublicAccessible,
                     hasError: publicError !== null,
                     errorMessage: publicError?.message,

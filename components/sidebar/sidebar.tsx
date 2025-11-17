@@ -1,6 +1,6 @@
 "use client";
 
-import { Building, Hand, Home, Settings, ShoppingBag, Tag, User, Users } from "lucide-react";
+import { Building, Hand, Home, Settings, Shield, ShoppingBag, Tag, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -50,6 +50,15 @@ const items = [
 		icon: Users,
 	},
 ];
+
+if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
+	items.push({
+		title: "Security Tests",
+		url: "/security-test",
+		icon: Shield,
+	});
+}
+
 
 const settingsItems = [
 	{

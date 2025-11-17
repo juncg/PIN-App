@@ -1114,7 +1114,7 @@ export type Database = {
         | "None"
         | "OnlyWhenGoalReached"
       Comment_Locked_State: "Locked" | "Unlocked"
-      Post_State: "Draft" | "Posted"
+      Post_State: "Draft" | "Posted" | "Cancelled"
       Verification: "Unverified" | "Paid" | "Official"
     }
     CompositeTypes: {
@@ -1254,7 +1254,7 @@ export const Constants = {
         "OnlyWhenGoalReached",
       ],
       Comment_Locked_State: ["Locked", "Unlocked"],
-      Post_State: ["Draft", "Posted"],
+      Post_State: ["Draft", "Posted", "Cancelled"],
       Verification: ["Unverified", "Paid", "Official"],
     },
   },

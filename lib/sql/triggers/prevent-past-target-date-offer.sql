@@ -20,5 +20,3 @@ CREATE TRIGGER enforce_future_target_date_offer
   BEFORE INSERT OR UPDATE OF target_completition_date ON "Offer"
   FOR EACH ROW
   EXECUTE FUNCTION prevent_past_target_date_offer();
-
-RAISE NOTICE 'Added prevent_past_target_date_offer trigger to Offer';

@@ -1,7 +1,12 @@
+import { redirect } from "next/navigation";
 import { SecurityTestPanel } from "@/components/security/security-test-panel";
 import { H1, P } from "@/components/ui-custom/typography";
 
 export default function SecurityTestPage() {
+    if (process.env.NEXT_PUBLIC_DEBUG_MODE !== "true") {
+        redirect("/home");
+    }
+
     return (
         <div className="container mx-auto px-4 py-8 space-y-8">
             <div className="text-center space-y-2">

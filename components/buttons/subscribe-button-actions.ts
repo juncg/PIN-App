@@ -51,7 +51,7 @@ export async function handleSubscribeAction(
 
         const result = data[0];
 
-		if (process.env.DEBUG === "true") {
+		if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
             console.log("[DEBUG] Subscribe Action Response:", {
                 post_id,
                 typeOfPost,
