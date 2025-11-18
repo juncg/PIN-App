@@ -9,9 +9,9 @@ async function fetchForums(page: number = 0, pageSize: number = FORUMS_PAGE_SIZE
 	const from = page * pageSize;
 	const to = from + pageSize - 1;
 
-	const { data: forums } = await GetFromDatabase<IForum>({
+	const { data: forums, error } = await GetFromDatabase<IForum>({
 		tableName: "Forum",
-		select: `*, Forum_User!left(forum_id, user_id), Business!inner(*)`,
+		select: `*, User_Forum!left(forum_id, user_id), Business(*)`,
 		filters: [
 			{
 				method: "range",

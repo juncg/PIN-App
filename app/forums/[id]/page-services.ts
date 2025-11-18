@@ -10,7 +10,7 @@ export async function ForumDetailsService(forumId: number) {
 		select: `*, 
 			Business!inner(id, name, description, verification),
 			Forum_Tag(Tag(id, name)),
-			Forum_User!left(forum_id, user_id)`,
+			User_Forum!left(forum_id, user_id)`,
 		filters: [
 			{
 				method: "eq",
@@ -24,7 +24,7 @@ export async function ForumDetailsService(forumId: number) {
 		return { forum: null, isFollowing: false };
 	}
 
-	const isFollowing = forum[0].Forum_User?.some((fu) => fu.user_id === uuid) || false;
+	const isFollowing = forum[0].User_Forum?.some((fu) => fu.user_id === uuid) || false;
 
 	return { forum, isFollowing };
 }
