@@ -1,13 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Star, Stars } from "lucide-react";
+import { Star } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { IReview } from "@/lib/services/types";
 import { PostToDatabase, ExecuteRpcFunction, PutToDatabase } from "@/lib/services/general";
+import { CreateReviewSchema, type TCreateReviewSchema } from "./schemas/review";
+import { FormField } from "./base/form-field";
+import { Alert, IAlert } from "../ui-custom/alert";
+import { APIErrorHandler } from "../error-handlers/api-error-handler";
+import type { PostgrestError } from "@supabase/supabase-js";
+import { toast } from "sonner";
 
 interface ProductReviewFormProps {
 	onCancel?: () => void;
@@ -25,50 +32,75 @@ export function ProductReviewForm({
 	existingReview,
 }: ProductReviewFormProps) {
 	const isEditMode = !!existingReview;
-	const [rating, setRating] = useState(existingReview?.stars || 0);
 	const [hoveredRating, setHoveredRating] = useState(0);
-	const [title, setTitle] = useState(existingReview?.title || "");
-	const [content, setContent] = useState(existingReview?.content || "");
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [alert, setAlert] = useState<IAlert | null>(null);
+	const [apiError, setApiError] = useState<PostgrestError | null>(null);
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		setValue,
+		watch,
+		reset,
+	} = useForm<TCreateReviewSchema>({
+		resolver: zodResolver(CreateReviewSchema),
+		mode: "onBlur",
+		reValidateMode: "onChange",
+		defaultValues: {
+			title: existingReview?.title || "",
+			content: existingReview?.content || "",
+			stars: existingReview?.stars || 0,
+		},
+	});
+
+	const rating = watch("stars");
 
 	useEffect(() => {
 		if (existingReview) {
-			setRating(existingReview.stars);
-			setTitle(existingReview.title || "");
-			setContent(existingReview.content || "");
+			reset({
+				title: existingReview.title || "",
+				content: existingReview.content || "",
+				stars: existingReview.stars,
+			});
 		}
-	}, [existingReview]);
+	}, [existingReview, reset]);
 
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
+	useEffect(() => {
+		if (alert) {
+			const timer = setTimeout(() => {
+				setAlert(null);
+			}, 5000);
 
-		if (rating === 0) {
-			alert("Por favor selecciona una calificación");
-			return;
+			return () => clearTimeout(timer);
 		}
+	}, [alert]);
 
-		if (!title.trim() || !content.trim()) {
-			alert("Por favor completa todos los campos");
-			return;
-		}
-
+	const handleReviewSubmit = async (data: TCreateReviewSchema) => {
 		setIsSubmitting(true);
+		setAlert(null);
+		setApiError(null);
 
 		try {
 			if (isEditMode && existingReview) {
 				const { error } = await PutToDatabase({
 					tableName: "Review",
 					contentJson: {
-						title: title.trim(),
-						content: content.trim(),
-						stars: rating,
+						title: data.title.trim(),
+						content: data.content.trim(),
+						stars: data.stars,
+						edited_at: new Date().toISOString(),
 					},
 					filters: [{ method: "eq", column: "id", value: existingReview.id }],
 				});
 
 				if (error) {
-					throw new Error(error.message || "Error al actualizar la reseña");
+					setApiError(error);
+					return;
 				}
+
+				toast.success("Reseña actualizada exitosamente");
 			} else {
 				const review: Omit<IReview, "id"> = {
 					created_at: new Date().toISOString(),
@@ -76,36 +108,42 @@ export function ProductReviewForm({
 					comment_locked_state: "Unlocked",
 					likes: 0,
 					superlikes: 0,
-					title: title.trim(),
-					content: content.trim(),
-					stars: rating,
+					title: data.title.trim(),
+					content: data.content.trim(),
+					stars: data.stars,
 					creator_id: userUuid,
 					forum_id: 1,
 					edited_at: null,
 				};
 
-				const { data, error } = await PostToDatabase<IReview>({
+				const { data: reviewData, error } = await PostToDatabase<IReview>({
 					tableName: "Review",
-					contentJson: review,
+					contentJson: [review],
 				});
 
-				if (error || !data || data.length === 0) {
-					throw new Error(error?.message || "Error al crear la reseña");
+				if (error || !reviewData || reviewData.length === 0) {
+					setApiError(error || null);
+					return;
 				}
 
-				const reviewId = data[0].id;
+				const reviewId = reviewData[0].id;
 
 				const { error: relationError } = await PostToDatabase({
 					tableName: "Review_Product",
-					contentJson: {
-						review_id: reviewId,
-						product_id: productId,
-					},
+					contentJson: [
+						{
+							review_id: reviewId,
+							product_id: productId,
+						},
+					],
 				});
 
 				if (relationError) {
-					throw new Error(relationError.message || "Error al vincular la reseña con el producto");
+					setApiError(relationError);
+					return;
 				}
+
+				toast.success("Reseña creada exitosamente");
 			}
 
 			const { error: updateError } = await ExecuteRpcFunction({
@@ -117,24 +155,24 @@ export function ProductReviewForm({
 				console.error("Error updating product rating:", updateError);
 			}
 
-			setRating(0);
-			setTitle("");
-			setContent("");
+			reset();
 
 			if (onSuccess) {
 				onSuccess();
 			}
 		} catch (error) {
 			console.error("Error submitting review:", error);
+			setAlert({
+				type: "Error",
+				message: "Error al procesar la reseña. Inténtalo de nuevo.",
+			});
 		} finally {
 			setIsSubmitting(false);
 		}
 	};
 
 	const handleCancel = () => {
-		setRating(0);
-		setTitle("");
-		setContent("");
+		reset();
 
 		if (onCancel) {
 			onCancel();
@@ -142,86 +180,71 @@ export function ProductReviewForm({
 	};
 
 	return (
-		<form onSubmit={handleSubmit} className="space-y-6">
-			<div>
-				<Label className="text-base font-semibold">Calificación</Label>
-				<div className="flex gap-1 mt-2">
-					{[1, 2, 3, 4, 5].map((star) => (
-						<button
-							key={star}
-							type="button"
-							onClick={() => setRating(star)}
-							onMouseEnter={() => setHoveredRating(star)}
-							onMouseLeave={() => setHoveredRating(0)}
-							className="transition-transform hover:scale-110"
-							disabled={isSubmitting}
-						>
-							<Star
-								className={`w-8 h-8 ${
-									star <= (hoveredRating || rating)
-										? "fill-yellow-400 text-yellow-400"
-										: "text-gray-300"
-								}`}
-							/>
-						</button>
-					))}
+		<>
+			{alert && <Alert message={alert.message} type={alert.type} />}
+
+			<APIErrorHandler error={apiError} />
+
+			<form onSubmit={handleSubmit(handleReviewSubmit)} className="space-y-4">
+				<FormField label="Calificación" errorMessage={errors.stars?.message || ""} htmlFor="stars" required>
+					<div className="flex gap-1">
+						{[1, 2, 3, 4, 5].map((star) => (
+							<button
+								key={star}
+								type="button"
+								onClick={() => setValue("stars", star, { shouldValidate: true })}
+								onMouseEnter={() => setHoveredRating(star)}
+								onMouseLeave={() => setHoveredRating(0)}
+								className="transition-transform hover:scale-110"
+								disabled={isSubmitting}
+							>
+								<Star
+									className={`w-6 h-6 ${
+										star <= (hoveredRating || rating)
+											? "fill-yellow-400 text-yellow-400"
+											: "text-gray-300"
+									}`}
+								/>
+							</button>
+						))}
+					</div>
+				</FormField>
+
+				<FormField label="Título" errorMessage={errors.title?.message || ""} htmlFor="title" required>
+					<Input
+						id="title"
+						type="text"
+						placeholder="Resume tu experiencia"
+						{...register("title")}
+						disabled={isSubmitting}
+					/>
+				</FormField>
+
+				<FormField label="Contenido" errorMessage={errors.content?.message || ""} htmlFor="content" required>
+					<Textarea
+						id="content"
+						placeholder="Cuéntanos más sobre tu experiencia"
+						{...register("content")}
+						className="min-h-[100px] resize-none"
+						disabled={isSubmitting}
+					/>
+				</FormField>
+
+				<div className="flex gap-3 justify-end pt-2">
+					<Button type="button" variant="outline" onClick={handleCancel} disabled={isSubmitting}>
+						Cancelar
+					</Button>
+					<Button type="submit" disabled={isSubmitting}>
+						{isSubmitting
+							? isEditMode
+								? "Actualizando..."
+								: "Creando..."
+							: isEditMode
+							? "Actualizar"
+							: "Crear"}
+					</Button>
 				</div>
-			</div>
-
-			<div>
-				<Label htmlFor="title" className="text-base font-semibold">
-					Título
-				</Label>
-				<Input
-					id="title"
-					type="text"
-					placeholder="Resume tu experiencia"
-					value={title}
-					onChange={(e) => setTitle(e.target.value)}
-					className="mt-2"
-					disabled={isSubmitting}
-					required
-				/>
-			</div>
-
-			<div>
-				<Label htmlFor="content" className="text-base font-semibold">
-					Contenido
-				</Label>
-				<Textarea
-					id="content"
-					placeholder="Cuéntanos más sobre tu experiencia con este producto"
-					value={content}
-					onChange={(e) => setContent(e.target.value)}
-					className="mt-2 min-h-[150px]"
-					disabled={isSubmitting}
-					required
-				/>
-			</div>
-
-			<div>
-				<Label htmlFor="images" className="text-base font-semibold">
-					Imágenes
-				</Label>
-				<div className="mt-2 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-					<p className="text-gray-500">No implementado</p>
-				</div>
-			</div>
-
-			<div className="flex gap-4 justify-end">
-				<Button type="button" variant="outline" onClick={handleCancel} disabled={isSubmitting}>
-					Cancelar
-				</Button>
-				<Button type="submit" disabled={isSubmitting}>
-					{isSubmitting
-						? isEditMode
-							? "Actualizando..."
-							: "Creando..."
-						: isEditMode
-						? "Actualizar reseña"
-						: "Crear reseña"}
-				</Button>
-			</div>
-		</form>
+			</form>
+		</>
 	);
 }
