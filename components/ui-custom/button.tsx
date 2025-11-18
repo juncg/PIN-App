@@ -10,11 +10,7 @@ export const buttonVariants = cva(
 		variants: {
 			variant: {
 				default: "bg-secondary text-primary hover:scale-105 transition border-[2px] border-primary",
-				destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-				outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-				secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-				ghost: "hover:bg-accent hover:text-accent-foreground",
-				link: "text-primary underline-offset-4 hover:underline",
+				secondary: "bg-primary text-secondary hover:scale-105 transition border-[2px] border-primary",
 			},
 			size: {
 				default: "h-9 px-7 py-3.5",

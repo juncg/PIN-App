@@ -398,6 +398,7 @@ export type Database = {
           current_progress: number
           forum_id: number | null
           id: number
+          images: string[] | null
           likes: number
           state: Database["public"]["Enums"]["Post_State"]
           superlikes: number
@@ -412,6 +413,7 @@ export type Database = {
           current_progress?: number
           forum_id?: number | null
           id?: number
+          images?: string[] | null
           likes?: number
           state?: Database["public"]["Enums"]["Post_State"]
           superlikes?: number
@@ -426,6 +428,7 @@ export type Database = {
           current_progress?: number
           forum_id?: number | null
           id?: number
+          images?: string[] | null
           likes?: number
           state?: Database["public"]["Enums"]["Post_State"]
           superlikes?: number

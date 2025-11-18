@@ -1,7 +1,10 @@
+import { PostCardHorizontal } from "@/components/cards/post-card-horizontal";
+import { ProfileAltenatingButtons } from "@/components/profile/profile-alternating-buttons";
 import { ProfileRightColumn } from "@/components/profile/profile-right-column";
 import { Button } from "@/components/ui-custom/button";
 import { H1, H2, H4, P } from "@/components/ui-custom/typography";
-import { CalendarDays, MapPin, Newspaper, SquareCheckBigIcon, Users } from "lucide-react";
+import { IOffer, IPetition } from "@/lib/services/types";
+import { CalendarDays, MapPin, Users } from "lucide-react";
 import Image from "next/image";
 import { ProfileServices } from "./page-services";
 
@@ -14,10 +17,14 @@ export default async function Profile() {
 		followingBusinessesCount,
 		followingUsers,
 		followingUsersCount,
+		subscribedOffers,
+		subscribedOffersCount,
+		subscribedPetitions,
+		subscribedPetitionsCount,
 	} = await ProfileServices();
 
 	return (
-		<section className="flex flex-row justify-center gap-16">
+		<section className="flex flex-row justify-center items-start gap-16">
 			<div className="flex flex-col gap-10 items-start w-full">
 				<div className="flex gap-16 w-full">
 					<div className="flex flex-col gap-10 w-2/3">
@@ -65,25 +72,59 @@ export default async function Profile() {
 					</div>
 				</div>
 
-				<div className="flex w-full gap-4">
-					<Button className="w-full">
-						Mis suscripciones <SquareCheckBigIcon />
-					</Button>
-					<Button className="w-full">
-						Mis publicaciones <Newspaper />
-					</Button>
-				</div>
+				<ProfileAltenatingButtons
+					subscriptionsContent={
+						<>
+							<div className="flex flex-col gap-12 w-full">
+								<span className="flex items-end gap-6">
+									<H2>Ofertas.</H2>
+									<P className="text-muted-foreground line-clamp-2">
+										{subscribedOffersCount} ofertas en total
+									</P>
+								</span>
 
-				<div>
-					<span>
-						<H2>Ofertas.</H2>
-						<P></P>
-					</span>
-				</div>
+								<div className="flex flex-col gap-8 w-full">
+									{subscribedOffers.map((offer: IOffer) => {
+										return <PostCardHorizontal key={offer.id} post={offer} />;
+									})}
+								</div>
+
+								<div className="mx-auto">
+									<Button>Mostrar más</Button>
+								</div>
+							</div>
+
+							<div className="flex flex-col gap-12 w-full">
+								<span className="flex items-end gap-6">
+									<H2>Peticiones.</H2>
+									<P className="text-muted-foreground line-clamp-2">
+										{subscribedPetitionsCount} peticiones en total
+									</P>
+								</span>
+
+								<div className="flex flex-col gap-8 w-full">
+									{subscribedPetitions.map((petition: IPetition) => {
+										return <PostCardHorizontal key={petition.id} post={petition} />;
+									})}
+								</div>
+
+								<div className="mx-auto">
+									<Button>Mostrar más</Button>
+								</div>
+							</div>
+						</>
+					}
+					postsContent={
+						<div>
+							<H2>Mis publicaciones</H2>
+							<P className="text-muted-foreground">Contenido de publicaciones aquí</P>
+						</div>
+					}
+				/>
 			</div>
 
 			<ProfileRightColumn
-				className="w-1/4"
+				className="w-2/5"
 				userData={userData}
 				followingBusinesses={followingBusinesses}
 				followingBusinessesTotalCount={followingBusinessesCount}
