@@ -29,7 +29,7 @@ export function H2({ children, className }: ITypography) {
 
 export function H3({ children, className }: ITypography) {
 	return (
-		<h3 className={cn("font-funnel-display scroll-m-20 text-2xl font-semibold tracking-tight", className)}>
+		<h3 className={cn("font-funnel-sans scroll-m-20 text-2xl font-semibold tracking-tight", className)}>
 			{children}
 		</h3>
 	);
@@ -37,7 +37,7 @@ export function H3({ children, className }: ITypography) {
 
 export function H4({ children, className }: ITypography) {
 	return (
-		<h4 className={cn("font-funnel-display scroll-m-20 text-xl font-semibold tracking-tight", className)}>
+		<h4 className={cn("font-funnel-sans scroll-m-20 text-xl font-semibold tracking-tight", className)}>
 			{children}
 		</h4>
 	);

@@ -33,7 +33,7 @@ export function ConditionalLayout({ children, header, sidebar }: ConditionalLayo
 					{sidebar}
 
 					<main className="flex-1 p-6 md:p-8 overflow-auto w-full">
-						<div className="max-w-7xl mx-auto">{children}</div>
+						<div className="mx-auto px-32">{children}</div>
 					</main>
 				</div>
 			</div>

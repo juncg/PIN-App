@@ -12,31 +12,6 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "13.0.5"
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       Business: {
@@ -46,6 +21,7 @@ export type Database = {
           id: number
           name: string | null
           owner_id: string
+          profile_picture: string | null
           verification: Database["public"]["Enums"]["Verification"] | null
         }
         Insert: {
@@ -54,6 +30,7 @@ export type Database = {
           id?: number
           name?: string | null
           owner_id: string
+          profile_picture?: string | null
           verification?: Database["public"]["Enums"]["Verification"] | null
         }
         Update: {
@@ -62,6 +39,7 @@ export type Database = {
           id?: number
           name?: string | null
           owner_id?: string
+          profile_picture?: string | null
           verification?: Database["public"]["Enums"]["Verification"] | null
         }
         Relationships: [
@@ -834,6 +812,7 @@ export type Database = {
       User: {
         Row: {
           banner: string | null
+          bio: string | null
           birth_date: string | null
           id: string
           name: string | null
@@ -848,6 +827,7 @@ export type Database = {
         }
         Insert: {
           banner?: string | null
+          bio?: string | null
           birth_date?: string | null
           id: string
           name?: string | null
@@ -862,6 +842,7 @@ export type Database = {
         }
         Update: {
           banner?: string | null
+          bio?: string | null
           birth_date?: string | null
           id?: string
           name?: string | null
@@ -1270,9 +1251,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       Chosen_Notification_State: [
