@@ -6,6 +6,7 @@ import { BadgeCheck, UserCircle } from "lucide-react";
 import { AvatarGroup } from "../ui-custom/avatar-group";
 import { Button } from "../ui-custom/button";
 import { H3, P } from "../ui-custom/typography";
+import Link from "next/link";
 
 interface IProfileUserCompanyState {
 	className?: string;
@@ -86,9 +87,11 @@ export function ProfileRightColumn(props: IProfileUserCompanyState) {
 			</div>
 
 			{!isBusiness && (
-				<Button>
-					Mejorar a Business <BadgeCheck />
-				</Button>
+				<Link href="/upgrade-user">
+					<Button>
+						Registrar Empresa <BadgeCheck />
+					</Button>
+				</Link>
 			)}
 		</section>
 	);
