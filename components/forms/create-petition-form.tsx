@@ -1,6 +1,6 @@
 "use client";
 
-import SelectTags from "@/components/select/select-tags";
+import { SelectTags } from "@/components/select/select-tags";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
