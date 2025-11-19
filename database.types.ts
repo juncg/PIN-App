@@ -854,6 +854,7 @@ export type Database = {
           followers: number | null
           forum_follows: number
           id: string
+          joined_at: string
           location: string | null
           name: string | null
           posts_liked: number
@@ -875,6 +876,7 @@ export type Database = {
           followers?: number | null
           forum_follows?: number
           id: string
+          joined_at?: string
           location?: string | null
           name?: string | null
           posts_liked?: number
@@ -896,6 +898,7 @@ export type Database = {
           followers?: number | null
           forum_follows?: number
           id?: string
+          joined_at?: string
           location?: string | null
           name?: string | null
           posts_liked?: number

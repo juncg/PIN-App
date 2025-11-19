@@ -15,3 +15,26 @@ export function GetRelativeTime(dateString: string): string {
 	if (diffInMonths < 12) return `Hace ${diffInMonths} ${diffInMonths === 1 ? "mes" : "meses"}`;
 	return `Hace ${diffInYears} ${diffInYears === 1 ? "año" : "años"}`;
 }
+
+export function GetJoinedDate(dateString: string): string {
+	const date = new Date(dateString);
+	const months = [
+		"enero",
+		"febrero",
+		"marzo",
+		"abril",
+		"mayo",
+		"junio",
+		"julio",
+		"agosto",
+		"septiembre",
+		"octubre",
+		"noviembre",
+		"diciembre",
+	];
+
+	const month = months[date.getMonth()];
+	const year = date.getFullYear();
+
+	return `Se unió en ${month} ${year}`;
+}

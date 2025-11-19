@@ -4,6 +4,7 @@ import { Building, Hand, Home, Settings, Shield, ShoppingBag, Tag, User, Users }
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
+import { useUser } from "@/hooks/use-user";
 
 import {
 	Sidebar,
@@ -59,23 +60,10 @@ if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
 	});
 }
 
-
-const settingsItems = [
-	{
-		title: "Perfil",
-		url: "/profile",
-		icon: User,
-	},
-	{
-		title: "Configuración",
-		url: "/settings",
-		icon: Settings,
-	},
-];
-
 export function AppSidebar() {
 	const pathname = usePathname();
 	const { setOpenMobile, setOpen } = useSidebar();
+	const { userUuid } = useUser();
 	const prevPathnameRef = useRef(pathname);
 
 	useEffect(() => {
@@ -85,6 +73,19 @@ export function AppSidebar() {
 			prevPathnameRef.current = pathname;
 		}
 	}, [pathname, setOpenMobile, setOpen]);
+
+	const settingsItems = [
+		{
+			title: "Perfil",
+			url: userUuid ? `/profile/${userUuid}` : "/profile",
+			icon: User,
+		},
+		{
+			title: "Configuración",
+			url: "/settings",
+			icon: Settings,
+		},
+	];
 
 	return (
 		<Sidebar>
@@ -120,7 +121,7 @@ export function AppSidebar() {
 			<SidebarFooter>
 				<SidebarMenu>
 					{settingsItems.map((item) => {
-						const isActive = pathname === item.url;
+						const isActive = pathname === item.url || pathname.startsWith(`/profile/${userUuid}`);
 						return (
 							<SidebarMenuItem key={item.title}>
 								<SidebarMenuButton asChild isActive={isActive}>

@@ -2,8 +2,7 @@ import { GetFromDatabase, GetServiceClient } from "@/lib/services/general";
 import { IUser } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
 
-export async function ProfileServices() {
-	const uuid = await getUserUuid();
+export async function ProfileServices(uuid: number) {
 	const user = uuid
 		? await GetFromDatabase<IUser>({
 				tableName: "User",

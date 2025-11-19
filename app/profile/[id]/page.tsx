@@ -7,8 +7,18 @@ import { IOffer, IPetition } from "@/lib/services/types";
 import { CalendarDays, MapPin, Users } from "lucide-react";
 import Image from "next/image";
 import { ProfileServices } from "./page-services";
+import { ISearchParams } from "@/types";
+import { GetJoinedDate } from "@/lib/services/utilities";
 
-export default async function Profile() {
+interface ProfilePageProps {
+	params: Promise<{
+		id: number;
+	}>;
+	searchParams: Promise<ISearchParams>;
+}
+
+export default async function Profile({ params }: ProfilePageProps) {
+	const { id } = await params;
 	const {
 		userData,
 		followingForums,
@@ -21,7 +31,7 @@ export default async function Profile() {
 		subscribedOffersCount,
 		subscribedPetitions,
 		subscribedPetitionsCount,
-	} = await ProfileServices();
+	} = await ProfileServices(id);
 
 	return (
 		<section className="flex flex-row justify-center items-start gap-16">
@@ -58,11 +68,11 @@ export default async function Profile() {
 							</P>
 							<P className="flex gap-2 items-center">
 								<Users className="!h-4" />
-								Seguidores: 123456
+								Seguidores: {userData?.followers}
 							</P>
 							<P className="flex gap-2 items-center">
 								<CalendarDays className="!h-4" />
-								Se unió en noviembre 2025
+								{GetJoinedDate(userData?.joined_at.toString() || "")}
 							</P>
 						</span>
 
