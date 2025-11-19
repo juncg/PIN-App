@@ -47,7 +47,7 @@ export function PostCard(props: IPostCard) {
 
 	const displayImages: string[] = post.images?.filter((img) => img && img.trim() !== "")?.length //logica para que no entre un empty string en el carrusel
 		? post.images.filter((img) => img && img.trim() !== "")
-		: ["/images/placeholder.png"];
+		: ["/images/placeholder.png", "/images/placeholder.png", "/images/placeholder.png"];
 
 	const offerCompletionPercentage = parseFloat(((currentProgress * 100) / (post?.target_progress ?? 1)).toFixed(2));
 	const postUrl = `${BASE_DOMAIN}${post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}`;
