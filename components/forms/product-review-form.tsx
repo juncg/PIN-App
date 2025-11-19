@@ -1,20 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Star } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ExecuteRpcFunction, PostToDatabase, PutToDatabase } from "@/lib/services/general";
 import { IReview } from "@/lib/services/types";
-import { PostToDatabase, ExecuteRpcFunction, PutToDatabase } from "@/lib/services/general";
-import { CreateReviewSchema, type TCreateReviewSchema } from "./schemas/review";
-import { FormField } from "./base/form-field";
-import { Alert, IAlert } from "../ui-custom/alert";
-import { APIErrorHandler } from "../error-handlers/api-error-handler";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { PostgrestError } from "@supabase/supabase-js";
+import { Star } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { APIErrorHandler } from "../error-handlers/api-error-handler";
+import { FormField } from "./base/form-field";
+import { CreateReviewSchema, type TCreateReviewSchema } from "./schemas/review";
 
 interface ProductReviewFormProps {
 	onCancel?: () => void;
@@ -181,8 +180,6 @@ export function ProductReviewForm({
 
 	return (
 		<>
-			{alert && <Alert message={alert.message} type={alert.type} />}
-
 			<APIErrorHandler error={apiError} />
 
 			<form onSubmit={handleSubmit(handleReviewSubmit)} className="space-y-4">
