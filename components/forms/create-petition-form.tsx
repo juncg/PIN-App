@@ -41,13 +41,34 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 
 	const router = useRouter();
 	const { userUuid } = useUser();
-
+	const uploadedUrls: string[] = [];
 	const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 
 	const handlePetitionCreation = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsSubmitting(true);
 
+		// LOGICA DE GUARDAR IMAGENES EN SUPABASE, NO ACABA DE ENTENDER AL 100% COMO FUNCIONA , CUIDADO
+		if (images.length > 0) {
+			for (const file of images) {
+				try {
+					const fileName = `${Date.now()}-${file.name}`;
+					const { error: uploadError } = await supabase.storage
+						.from("Images")
+						.upload(fileName, file, { cacheControl: "3600", upsert: false });
+
+					if (uploadError) {
+						console.error("Upload error:", uploadError.message);
+						continue; // skip this file
+					}
+
+					const { data } = supabase.storage.from("Images").getPublicUrl(fileName);
+					uploadedUrls.push(data.publicUrl);
+				} catch (err: any) {
+					console.error("Unexpected error uploading file:", err.message);
+				}
+			}
+		}
 		try {
 			const newPetition: Omit<IPetition, "id"> = {
 				title: title,
@@ -61,6 +82,7 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 				likes: 0,
 				superlikes: 0,
 				state: "Posted",
+				images: uploadedUrls,
 			};
 
 			const response = await PostToDatabase<Omit<IPetition, "id">>({
@@ -81,29 +103,6 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 				});
 			}
 
-			// LOGICA DE GUARDAR IMAGENES EN SUPABASE, NO ACABA DE ENTENDER AL 100% COMO FUNCIONA , CUIDADO
-			if (images.length > 0) {
-				const uploadedUrls: string[] = [];
-
-				for (const file of images) {
-					try {
-						const fileName = `${Date.now()}-${file.name}`;
-						const { error: uploadError } = await supabase.storage
-							.from("Images")
-							.upload(fileName, file, { cacheControl: "3600", upsert: false });
-
-						if (uploadError) {
-							console.error("Upload error:", uploadError.message);
-							continue; // skip this file
-						}
-
-						const { publicUrl } = supabase.storage.from("Images").getPublicUrl(fileName);
-						uploadedUrls.push(publicUrl);
-					} catch (err: any) {
-						console.error("Unexpected error uploading file:", err.message);
-					}
-				}
-			}
 			router.push("/petitions");
 		} catch (error) {
 			console.error("Error creating petition:", error);
