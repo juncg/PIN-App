@@ -82,7 +82,7 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 				likes: 0,
 				superlikes: 0,
 				state: "Posted",
-				images: uploadedUrls,
+				images: uploadedUrls || null,
 			};
 
 			const response = await PostToDatabase<Omit<IPetition, "id">>({
