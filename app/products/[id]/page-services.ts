@@ -57,8 +57,6 @@ export async function ProductDetailsServices(id: number) {
 		],
 	});
 
-	console.log("Reviews: ", productReviews);
-
 	const ratingDistribution = await GetProductRatingDistribution(id);
 
 	const numOfReviews = ratingDistribution.reduce((total, item) => total + item.count, 0);

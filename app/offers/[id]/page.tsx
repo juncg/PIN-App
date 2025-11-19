@@ -1,10 +1,25 @@
-import { H1, H2 } from "@/components/ui-custom/typography";
+import { OfferDetailsService } from "./page-services";
+import { OfferDetails } from "@/components/detail-pages/offer-details-page";
+import { getUserUuid } from "@/lib/services/user";
+import { ISearchParams } from "@/types";
 
-export default async function OfferPage() {
-	return (
-		<div className="flex flex-col items-center justify-center h-full gap-4">
-			<H1>Offer Page</H1>
-			<H2>Esto no esta implementado</H2>
-		</div>
-	);
+interface OfferPageProps {
+	params: Promise<{
+		id: number;
+	}>;
+	searchParams: Promise<ISearchParams>;
+}
+
+export default async function OfferPage({ params }: OfferPageProps) {
+	const { id } = await params;
+	const userUuid = await getUserUuid();
+	const { offer } = await OfferDetailsService(id);
+
+	if (!offer || offer.length === 0) {
+		return <div>Oferta no encontrada</div>;
+	}
+
+	const subscribedByUser = offer[0].User_Offer?.some((u) => u.user_id === userUuid && u.subscribed);
+
+	return <OfferDetails offer={offer[0]} subscribedByUser={subscribedByUser ?? false} userUuid={userUuid} />;
 }
