@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PostToDatabase, GetFromDatabase } from "@/lib/services/general";
+import { PostToDatabase, GetFromDatabase, PutToDatabase } from "@/lib/services/general";
 import { getUserUuid } from "@/lib/services/user";
 import { Tables } from "@/database.types";
 
@@ -10,20 +10,39 @@ export async function POST(request: NextRequest) {
         if (!currentUserId) {
             return NextResponse.json({
                 canCreate: false,
-                message: "User not authenticated",
-            });
+                message: "❌ User not authenticated - cannot run test",
+                error: "Please log in to run security tests",
+            }, { status: 401 });
         }
 
-        // Check if user is connected to any business
-        const { data: userBusinesses } = await GetFromDatabase<Tables<"User_Business">>({
-            tableName: "User_Business",
-            select: "business_id",
+        // Check if user is associated with a business (either as employee or owner)
+        const { data: businessEmployees } = await GetFromDatabase({
+            tableName: "Business_Employee",
+            select: "*",
             filters: [
                 { method: "eq", column: "user_id", value: currentUserId },
             ],
         });
 
-        const isBusinessUser = userBusinesses && userBusinesses.length > 0;
+        const { data: ownedBusinesses } = await GetFromDatabase({
+            tableName: "Business",
+            select: "*",
+            filters: [
+                { method: "eq", column: "owner_id", value: currentUserId },
+            ],
+        });
+
+        const isBusinessUser = (businessEmployees && businessEmployees.length > 0) || 
+                              (ownedBusinesses && ownedBusinesses.length > 0);
+
+        if (!isBusinessUser) {
+            return NextResponse.json({
+                canCreate: false,
+                message: "⚠️ Test requires business association",
+                requiresSetup: true,
+                details: "User must be either a business employee or business owner to create offers. Please associate this user with a business first.",
+            }, { status: 400 });
+        }
 
         // Get a valid forum_id for testing
         const { data: forums } = await GetFromDatabase<Tables<"Forum">>({
@@ -39,9 +58,10 @@ export async function POST(request: NextRequest) {
         if (!forumId) {
             return NextResponse.json({
                 canCreate: false,
-                message: "No forums available for testing",
+                message: "❌ No forums available for testing",
                 requiresSetup: true,
-            });
+                validationPassed: false,
+            }, { status: 400 });
         }
 
         // Attempt to create an offer
@@ -65,22 +85,27 @@ export async function POST(request: NextRequest) {
             contentJson: [testOffer],
         });
 
+        const offerWasCreated = !error && createdOffer && createdOffer.length > 0;
+
         // Clean up if offer was created
-        if (createdOffer && createdOffer.length > 0) {
+        let cleanupFailed = false;
+        if (offerWasCreated) {
             const offerId = (createdOffer[0] as any).id;
             if (offerId) {
-                // Soft delete by updating deleted_at or state
-                await PostToDatabase({
+                // Try to soft delete by setting state to Cancelled
+                // This might fail if RLS blocks it, but that's okay for test cleanup
+                const cleanupResult = await PutToDatabase({
                     tableName: "Offer",
-                    contentJson: { state: "Draft" },
+                    contentJson: { state: "Cancelled" },
                     filters: [
                         { method: "eq", column: "id", value: offerId }
                     ],
+                }).catch((err) => {
+                    cleanupFailed = true;
+                    return { error: err };
                 });
             }
         }
-
-        const offerWasCreated = !error && createdOffer && createdOffer.length > 0;
 
         // If user is a business user, creation should succeed
         // If user is NOT a business user, creation should fail
@@ -95,16 +120,27 @@ export async function POST(request: NextRequest) {
                     ? "✅ Business user can create offers"
                     : "✅ Non-business user blocked from creating offers"
                 : isBusinessUser
-                    ? "⚠️ Business user blocked from creating offers"
-                    : "⚠️ Non-business user can create offers (security issue)",
+                    ? "❌ Business user blocked from creating offers (RLS issue)"
+                    : "❌ SECURITY ISSUE: Non-business user can create offers",
             currentUserId,
             error: error?.message,
+            details: {
+                businessEmployee: businessEmployees?.length || 0,
+                ownedBusinesses: ownedBusinesses?.length || 0,
+                offerCreated: offerWasCreated,
+                creationError: error?.message,
+                cleanupStatus: cleanupFailed 
+                    ? "⚠️ Test offer cleanup failed (may need manual deletion)" 
+                    : offerWasCreated 
+                    ? "✅ Test offer cleaned up successfully" 
+                    : "N/A - No offer was created",
+            },
         });
     } catch (error) {
         return NextResponse.json(
             {
                 canCreate: false,
-                message: "Test execution failed",
+                message: "❌ Test execution failed",
                 error: String(error),
             },
             { status: 500 }

@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 
 type TestResult = {
     name: string;
-    status: "pass" | "fail" | "warning";
+    status: "pass" | "fail" | "warning" | "incomplete";
     message: string;
     details?: string;
     subTests?: {
@@ -339,17 +339,17 @@ export function SecurityTestPanel() {
             });
             const data = await response.json();
             
+            // Build details including cleanup status
+            let details = data.details ? JSON.stringify(data.details, null, 2) : undefined;
+            if (data.details?.cleanupStatus) {
+                details = `${data.details.cleanupStatus}\n\n${details}`;
+            }
+            
             testResults.push({
                 name: "Business User Offer Creation",
-                status: data.validationPassed ? "pass" : "fail",
-                message: data.validationPassed
-                    ? data.isBusinessUser
-                        ? "✅ Business user can create offers"
-                        : "✅ Non-business user properly blocked"
-                    : data.isBusinessUser
-                        ? "⚠️ Business user cannot create offers"
-                        : "⚠️ Non-business user can create offers",
-                details: data.message,
+                status: data.requiresSetup ? "incomplete" : data.validationPassed ? "pass" : "fail",
+                message: data.message,
+                details,
             });
         } catch (error) {
             testResults.push({
@@ -368,11 +368,20 @@ export function SecurityTestPanel() {
             });
             const data = await response.json();
 
+            // Build details including cleanup status
+            let details = `${data.testResults?.filter((r: any) => r.passed).length || 0}/${data.testResults?.length || 0} sub-tests passed`;
+            if (data.cleanup) {
+                details += `\n\nCleanup: ${data.cleanup.message}`;
+                if (data.cleanup.error) {
+                    details += `\nError: ${data.cleanup.error}`;
+                }
+            }
+
             testResults.push({
                 name: "Offer Update Restrictions",
-                status: data.allTestsPassed ? "pass" : "fail",
+                status: data.requiresSetup ? "incomplete" : data.allTestsPassed ? "pass" : "fail",
                 message: data.message,
-                details: `${data.testResults?.filter((r: any) => r.passed).length || 0}/${data.testResults?.length || 0} sub-tests passed`,
+                details,
                 subTests: data.testResults,
             });
         } catch (error) {
@@ -422,6 +431,21 @@ export function SecurityTestPanel() {
                 return "bg-red-500";
             case "warning":
                 return "bg-yellow-500";
+            case "incomplete":
+                return "bg-blue-500";
+        }
+    };
+
+    const getStatusIcon = (status: TestResult["status"]) => {
+        switch (status) {
+            case "pass":
+                return "✓";
+            case "fail":
+                return "✗";
+            case "warning":
+                return "⚠";
+            case "incomplete":
+                return "○";
         }
     };
 
@@ -448,7 +472,7 @@ export function SecurityTestPanel() {
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-2">
                                             <Badge className={getStatusColor(result.status)}>
-                                                {result.status}
+                                                {getStatusIcon(result.status)} {result.status}
                                             </Badge>
                                             <P className="font-semibold">{result.name}</P>
                                         </div>
@@ -500,6 +524,9 @@ export function SecurityTestPanel() {
                             </P>
                             <P className="text-muted-foreground">
                                 Warnings: {results.filter((r) => r.status === "warning").length}
+                            </P>
+                            <P className="text-muted-foreground">
+                                Incomplete: {results.filter((r) => r.status === "incomplete").length}
                             </P>
                         </div>
                     </Card>

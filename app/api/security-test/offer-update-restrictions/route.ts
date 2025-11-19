@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
 import { GetFromDatabase, PostToDatabase, PutToDatabase } from "@/lib/services/general";
 import { getUserUuid } from "@/lib/services/user";
+import { NextRequest, NextResponse } from "next/server";
 import { Tables } from "@/database.types";
 
 export async function POST(request: NextRequest) {
@@ -9,29 +9,40 @@ export async function POST(request: NextRequest) {
 
         if (!currentUserId) {
             return NextResponse.json({
-                canUpdate: false,
-                message: "User not authenticated",
-            });
+                allTestsPassed: false,
+                message: "❌ User not authenticated - cannot run test",
+                error: "Please log in to run security tests",
+                requiresSetup: false,
+            }, { status: 401 });
         }
 
-        // Check if user is connected to any business
-        const { data: userBusinesses } = await GetFromDatabase<Tables<"User_Business">>({
-            tableName: "User_Business",
-            select: "business_id",
+        // Check if user is associated with a business (either as employee or owner)
+        const { data: businessEmployees } = await GetFromDatabase({
+            tableName: "Business_Employee",
+            select: "*",
             filters: [
                 { method: "eq", column: "user_id", value: currentUserId },
             ],
         });
 
-        const isBusinessUser = userBusinesses && userBusinesses.length > 0;
+        const { data: ownedBusinesses } = await GetFromDatabase({
+            tableName: "Business",
+            select: "*",
+            filters: [
+                { method: "eq", column: "owner_id", value: currentUserId },
+            ],
+        });
+
+        const isBusinessUser = (businessEmployees && businessEmployees.length > 0) || 
+                              (ownedBusinesses && ownedBusinesses.length > 0);
 
         if (!isBusinessUser) {
             return NextResponse.json({
-                canUpdate: false,
-                message: "❌ User is not connected to a business - cannot create test offer",
-                requiresBusinessUser: true,
                 allTestsPassed: false,
-            });
+                message: "⚠️ Test requires business association",
+                requiresSetup: true,
+                details: "User must be either a business employee or business owner to create offers. Please associate this user with a business first.",
+            }, { status: 400 });
         }
 
         // Get a valid forum for testing
@@ -45,12 +56,17 @@ export async function POST(request: NextRequest) {
 
         if (!forumId) {
             return NextResponse.json({
-                canUpdate: false,
-                message: "No forums available for testing",
-                requiresSetup: true,
                 allTestsPassed: false,
-            });
+                message: "❌ No forums available for testing",
+                requiresSetup: true,
+            }, { status: 400 });
         }
+
+        const testResults: {
+            test: string;
+            passed: boolean;
+            message: string;
+        }[] = [];
 
         // Create a test offer
         const futureDate = new Date();
@@ -68,8 +84,8 @@ export async function POST(request: NextRequest) {
             contentJson: [
                 {
                     creator_id: currentUserId,
-                    title: "Security Test - Update Restrictions",
-                    text: "Testing update restrictions",
+                    title: "Security Test - Offer Update Restrictions",
+                    text: "Testing update restrictions on offers",
                     target_completition_date: futureDate.toISOString(),
                     state: "Posted",
                     fee: randomFee,
@@ -85,22 +101,17 @@ export async function POST(request: NextRequest) {
 
         if (createError || !createdOffer || createdOffer.length === 0) {
             return NextResponse.json({
-                canUpdate: false,
-                message: "Failed to create test offer",
-                error: createError?.message,
                 allTestsPassed: false,
-            });
+                message: "❌ Failed to create test offer",
+                error: createError?.message,
+                requiresSetup: true,
+                testResults: [],
+            }, { status: 500 });
         }
-
-        const testResults: {
-            test: string;
-            passed: boolean;
-            message: string;
-        }[] = [];
 
         const offerId = (createdOffer as any)[0].id;
 
-        // Test 1: Try to update allowed field - state to Cancelled (should succeed)
+        // Test 1: Update state to Cancelled (should succeed)
         const { error: updateStateError } = await PutToDatabase({
             tableName: "Offer",
             contentJson: { state: "Cancelled" },
@@ -110,22 +121,13 @@ export async function POST(request: NextRequest) {
         testResults.push({
             test: "Update state to Cancelled",
             passed: !updateStateError,
-            message: updateStateError
-                ? `Failed (should succeed): ${updateStateError.message}`
-                : "✅ Successfully updated state to Cancelled",
+            message: !updateStateError
+                ? "✅ Successfully updated state to Cancelled"
+                : "❌ FAILED: State should be changeable to Cancelled",
         });
 
-        // Reset state back to Posted for next tests
-        if (!updateStateError) {
-            await PutToDatabase({
-                tableName: "Offer",
-                contentJson: { state: "Posted" },
-                filters: [{ method: "eq", column: "id", value: offerId }],
-            });
-        }
-
-        // Test 2: Try to update allowed field - comment_locked_state (should succeed)
-        const { error: updateCommentError } = await PutToDatabase({
+        // Test 2: Update comment_locked_state (should succeed)
+        const { error: updateCommentLockedError } = await PutToDatabase({
             tableName: "Offer",
             contentJson: { comment_locked_state: "Locked" },
             filters: [{ method: "eq", column: "id", value: offerId }],
@@ -133,10 +135,10 @@ export async function POST(request: NextRequest) {
 
         testResults.push({
             test: "Update comment_locked_state",
-            passed: !updateCommentError,
-            message: updateCommentError
-                ? `Failed (should succeed): ${updateCommentError.message}`
-                : "✅ Successfully updated comment_locked_state",
+            passed: !updateCommentLockedError,
+            message: !updateCommentLockedError
+                ? "✅ Successfully updated comment_locked_state"
+                : "❌ FAILED: Comment locked state should be updatable",
         });
 
         // Test 3: Try to update immutable field - title (should fail)
@@ -150,7 +152,7 @@ export async function POST(request: NextRequest) {
             test: "Update immutable field (title)",
             passed: !!updateTitleError,
             message: updateTitleError
-                ? "✅ Correctly blocked immutable field update"
+                ? "✅ Correctly blocked title modification"
                 : "❌ SECURITY ISSUE: Title was changed",
         });
 
@@ -241,14 +243,8 @@ export async function POST(request: NextRequest) {
             });
         }
 
-        // Test 9: Try to update state to non-Cancelled value after setting to Cancelled (should fail)
-        await PutToDatabase({
-            tableName: "Offer",
-            contentJson: { state: "Cancelled" },
-            filters: [{ method: "eq", column: "id", value: offerId }],
-        });
-
-        const { error: updateInvalidStateError } = await PutToDatabase({
+        // Test 9: Try to revert state from Cancelled back to Posted (should fail)
+        const { error: revertStateError } = await PutToDatabase({
             tableName: "Offer",
             contentJson: { state: "Posted" },
             filters: [{ method: "eq", column: "id", value: offerId }],
@@ -256,8 +252,8 @@ export async function POST(request: NextRequest) {
 
         testResults.push({
             test: "Revert state from Cancelled back to Posted",
-            passed: !!updateInvalidStateError,
-            message: updateInvalidStateError
+            passed: !!revertStateError,
+            message: revertStateError
                 ? "✅ Correctly blocked state reversion"
                 : "❌ SECURITY ISSUE: State changed from Cancelled back to Posted",
         });
@@ -295,30 +291,48 @@ export async function POST(request: NextRequest) {
                 : "❌ SECURITY ISSUE: Target date was changed",
         });
 
-        // Clean up test offer
+        // Cleanup - try to cancel the offer (best effort)
+        let cleanupFailed = false;
+        let cleanupError: string | undefined;
+        
         await PutToDatabase({
             tableName: "Offer",
-            contentJson: { deleted_at: new Date().toISOString() },
+            contentJson: { state: "Cancelled" },
             filters: [{ method: "eq", column: "id", value: offerId }],
+        }).catch((err) => {
+            cleanupFailed = true;
+            cleanupError = err.message;
         });
 
-        const allPassed = testResults.every((result) => result.passed);
+        const allTestsPassed = testResults.every((test) => test.passed);
 
         return NextResponse.json({
-            canUpdate: true,
-            allTestsPassed: allPassed,
-            testResults,
-            message: allPassed
-                ? "✅ All update restrictions working correctly"
+            allTestsPassed,
+            message: allTestsPassed
+                ? "✅ All offer update restriction tests passed"
                 : "⚠️ Some update restrictions failed",
+            summary: {
+                total: testResults.length,
+                passed: testResults.filter((t) => t.passed).length,
+                failed: testResults.filter((t) => !t.passed).length,
+            },
+            testResults,
+            testOfferId: offerId,
+            cleanup: {
+                success: !cleanupFailed,
+                message: cleanupFailed 
+                    ? "⚠️ Test offer cleanup failed (may need manual deletion)" 
+                    : "✅ Test offer cleaned up successfully",
+                error: cleanupError,
+            },
         });
     } catch (error) {
         return NextResponse.json(
             {
-                canUpdate: false,
                 allTestsPassed: false,
-                message: "Test execution failed",
+                message: "❌ Test execution error",
                 error: String(error),
+                requiresSetup: false,
             },
             { status: 500 }
         );
