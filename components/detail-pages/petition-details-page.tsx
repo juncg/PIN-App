@@ -1,14 +1,15 @@
 "use client";
 
-import { ProductImages } from "@/components/products/product-images";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { GetRelativeTime } from "@/lib/services/utilities";
-import { Users } from "lucide-react";
+import { Users, ChevronLeft, ChevronRight } from "lucide-react";
 import { IPetition } from "@/lib/services/types";
 import { useEffect, useState } from "react";
 import { SubscribeButton } from "../buttons/subscribe-button";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 interface PetitionDetailsProps {
 	petition: IPetition;
@@ -16,13 +17,10 @@ interface PetitionDetailsProps {
 	userUuid: string | null;
 }
 
-const images = {
-	images: ["/placeholder.png", "/placeholder.png", "/placeholder.png", "/placeholder.png"],
-};
-
 export function PetitionDetails({ petition, subscribedByUser, userUuid }: PetitionDetailsProps) {
 	const [currentProgress, setCurrentProgress] = useState(petition.current_progress);
 	const [isSubscribed, setIsSubscribed] = useState(subscribedByUser);
+	const [selectedImage, setSelectedImage] = useState(0);
 
 	useEffect(() => {
 		setCurrentProgress(petition.current_progress);
@@ -38,10 +36,71 @@ export function PetitionDetails({ petition, subscribedByUser, userUuid }: Petiti
 		setIsSubscribed(!isSubscribed);
 	};
 
+	const displayImages: string[] = petition.images?.filter((img) => img && img.trim() !== "")?.length
+		? petition.images.filter((img) => img && img.trim() !== "")
+		: ["/images/placeholder.png"];
+
 	return (
 		<div className="container mx-auto px-4 py-8">
 			<div className="grid lg:grid-cols-2 gap-8 mb-12">
-				<ProductImages images={images.images} />
+				<div className="space-y-4 w-full">
+					<div className="relative aspect-video bg-muted rounded-lg overflow-hidden">
+						<Image
+							src={displayImages[selectedImage]}
+							alt={`${petition.title} - imagen ${selectedImage + 1}`}
+							fill
+							className="object-cover"
+							unoptimized
+						/>
+						{displayImages.length > 1 && (
+							<>
+								<Button
+									variant="ghost"
+									size="icon"
+									className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
+									onClick={() =>
+										setSelectedImage((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1))
+									}
+								>
+									<ChevronLeft className="h-6 w-6" />
+								</Button>
+								<Button
+									variant="ghost"
+									size="icon"
+									className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
+									onClick={() =>
+										setSelectedImage((prev) => (prev === displayImages.length - 1 ? 0 : prev + 1))
+									}
+								>
+									<ChevronRight className="h-6 w-6" />
+								</Button>
+							</>
+						)}
+					</div>
+					{displayImages.length > 1 && (
+						<div className="grid grid-cols-4 gap-2">
+							{displayImages.map((image, index) => (
+								<button
+									key={index}
+									onClick={() => setSelectedImage(index)}
+									className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-colors ${
+										selectedImage === index
+											? "border-primary"
+											: "border-transparent hover:border-muted-foreground/50"
+									}`}
+								>
+									<Image
+										src={image}
+										alt={`${petition.title} - miniatura ${index + 1}`}
+										fill
+										className="object-cover"
+										unoptimized
+									/>
+								</button>
+							))}
+						</div>
+					)}
+				</div>
 
 				<div className="space-y-6">
 					<div className="flex flex-wrap gap-2 mb-3">
@@ -80,8 +139,7 @@ export function PetitionDetails({ petition, subscribedByUser, userUuid }: Petiti
 						<div className="flex items-center justify-between mb-3">
 							<span className="text-lg font-black">Progreso del objetivo</span>
 							<span className="text-lg font-black">
-								{petition.current_progress} de {petition.target_progress}{" "}
-								<Users className="w-5 h-5 inline" />
+								{currentProgress} de {petition.target_progress} <Users className="w-5 h-5 inline" />
 							</span>
 						</div>
 						<div className="flex flex-col gap-2">

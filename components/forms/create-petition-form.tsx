@@ -3,6 +3,7 @@
 import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
+import imageCompression from "browser-image-compression";
 
 import { SelectTags } from "@/components/select/select-tags";
 import { Button } from "@/components/ui/button";
@@ -44,22 +45,44 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 	const uploadedUrls: string[] = [];
 	const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 
+	const compressImage = async (file: File): Promise<File> => {
+		const options = {
+			maxSizeMB: 1,
+			maxWidthOrHeight: 1920,
+			useWebWorker: true,
+			fileType: "image/webp",
+			initialQuality: 0.6,
+		};
+
+		try {
+			const compressedFile = await imageCompression(file, options);
+			return compressedFile;
+		} catch (error) {
+			console.error("Error compressing image:", error);
+			return file;
+		}
+	};
+
 	const handlePetitionCreation = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsSubmitting(true);
 
-		// LOGICA DE GUARDAR IMAGENES EN SUPABASE, NO ACABA DE ENTENDER AL 100% COMO FUNCIONA , CUIDADO
 		if (images.length > 0) {
 			for (const file of images) {
 				try {
-					const fileName = `${Date.now()}-${file.name}`;
+					const compressedFile = await compressImage(file);
+
+					const fileName = `${Date.now()}-${compressedFile.name}`;
 					const { error: uploadError } = await supabase.storage
 						.from("Images")
-						.upload(fileName, file, { cacheControl: "3600", upsert: false });
+						.upload(fileName, compressedFile, {
+							cacheControl: "3600",
+							upsert: false,
+						});
 
 					if (uploadError) {
 						console.error("Upload error:", uploadError.message);
-						continue; // skip this file
+						continue;
 					}
 
 					const { data } = supabase.storage.from("Images").getPublicUrl(fileName);
@@ -199,7 +222,7 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 
 				{/* Images */}
 				<div className="grid gap-2">
-					<Label>Fotos</Label>
+					<Label>Imágenes</Label>
 					<FilePond
 						ref={filePondRef}
 						files={images}
