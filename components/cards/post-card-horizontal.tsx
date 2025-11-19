@@ -35,8 +35,8 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 			<div className="flex flex-col justify-between p-6 w-full">
 				<div className="flex w-full justify-between gap-8">
 					<div>
-						<H3>{post.title}</H3>
-						<P className="text-muted-foreground">{post.text}</P>
+						<H3 className="line-clamp-2">{post.title}</H3>
+						<P className="text-muted-foreground line-clamp-2">{post.text}</P>
 					</div>
 
 					<div className="flex flex-col items-end">
