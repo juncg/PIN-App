@@ -1,16 +1,27 @@
 "use client";
 
+import React, { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@supabase/supabase-js";
+
 import { SelectTags } from "@/components/select/select-tags";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+
 import { useUser } from "@/hooks/use-user";
 import { PostToDatabase } from "@/lib/services/general";
 import { IForum, IPetition } from "@/lib/services/types";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+
+import { FilePond, registerPlugin } from "react-filepond";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+
+import "filepond/dist/filepond.min.css";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+
+registerPlugin(FilePondPluginImagePreview);
 
 interface CreatePetitionFormProps {
 	forums: IForum[];
@@ -24,9 +35,14 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 	const [allowComments, setAllowComments] = useState(true);
 	const [forumId, setForumId] = useState<number | null>(null);
 	const [selectedTags, setSelectedTags] = useState<number[]>([]);
+	const [images, setImages] = useState<File[]>([]);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const filePondRef = useRef<FilePond>(null);
+
 	const router = useRouter();
 	const { userUuid } = useUser();
+
+	const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 
 	const handlePetitionCreation = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -65,6 +81,29 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 				});
 			}
 
+			// LOGICA DE GUARDAR IMAGENES EN SUPABASE, NO ACABA DE ENTENDER AL 100% COMO FUNCIONA , CUIDADO
+			if (images.length > 0) {
+				const uploadedUrls: string[] = [];
+
+				for (const file of images) {
+					try {
+						const fileName = `${Date.now()}-${file.name}`;
+						const { error: uploadError } = await supabase.storage
+							.from("Images")
+							.upload(fileName, file, { cacheControl: "3600", upsert: false });
+
+						if (uploadError) {
+							console.error("Upload error:", uploadError.message);
+							continue; // skip this file
+						}
+
+						const { publicUrl } = supabase.storage.from("Images").getPublicUrl(fileName);
+						uploadedUrls.push(publicUrl);
+					} catch (err: any) {
+						console.error("Unexpected error uploading file:", err.message);
+					}
+				}
+			}
 			router.push("/petitions");
 		} catch (error) {
 			console.error("Error creating petition:", error);
@@ -76,8 +115,9 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 	return (
 		<form onSubmit={handlePetitionCreation}>
 			<div className="flex flex-col gap-6">
+				{/* Title */}
 				<div className="grid gap-2">
-					<Label htmlFor="title">Titulo</Label>
+					<Label htmlFor="title">Título</Label>
 					<Input
 						id="title"
 						type="text"
@@ -87,6 +127,8 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 						disabled={isSubmitting}
 					/>
 				</div>
+
+				{/* Description */}
 				<div className="grid gap-2">
 					<Label htmlFor="text">Descripción</Label>
 					<Input
@@ -98,6 +140,8 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 						disabled={isSubmitting}
 					/>
 				</div>
+
+				{/* Target Progress */}
 				<div className="grid gap-2">
 					<Label htmlFor="targetProgress">Objetivo numérico</Label>
 					<Input
@@ -109,6 +153,8 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 						disabled={isSubmitting}
 					/>
 				</div>
+
+				{/* Allow Comments */}
 				<div className="grid gap-2">
 					<Label htmlFor="allowComments">Permitir comentarios</Label>
 					<Switch
@@ -118,6 +164,8 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 						disabled={isSubmitting}
 					/>
 				</div>
+
+				{/* Forum */}
 				<div className="grid gap-2">
 					<Label htmlFor="forumId">Foro</Label>
 					<Select
@@ -126,7 +174,7 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 						disabled={isSubmitting}
 					>
 						<SelectTrigger>
-							<SelectValue placeholder={"Selecciona un foro"} />
+							<SelectValue placeholder="Selecciona un foro" />
 						</SelectTrigger>
 						<SelectContent>
 							{forums.map((forum) => (
@@ -137,6 +185,8 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 						</SelectContent>
 					</Select>
 				</div>
+
+				{/* Tags */}
 				<div className="grid gap-2">
 					<SelectTags
 						availableTags={tags}
@@ -148,6 +198,25 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 					/>
 				</div>
 
+				{/* Images */}
+				<div className="grid gap-2">
+					<Label>Fotos</Label>
+					<FilePond
+						ref={filePondRef}
+						files={images}
+						allowMultiple={true}
+						maxFiles={5}
+						onupdatefiles={(fileItems: any[]) => setImages(fileItems.map((fi) => fi.file as File))}
+						name="images"
+						labelIdle='Arrastra y suelta tus imágenes o <span class="filepond--label-action">Selecciona</span>'
+						disabled={isSubmitting}
+						acceptedFileTypes={["image/*"]}
+						instantUpload={false}
+						imagePreviewHeight={150}
+					/>
+				</div>
+
+				{/* Submit Button */}
 				<div className="justify-end">
 					<Button type="submit" disabled={isSubmitting}>
 						{isSubmitting ? "Creando..." : "Crear Petición"}
