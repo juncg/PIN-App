@@ -49,6 +49,18 @@ export type IProduct = Tables<"Product"> & {
 	}[];
 };
 
+export type IBusinessUser = Tables<"User_Business"> & {
+	user?: Tables<"User">;
+	business?: Tables<"Business">;
+};
+
+export type IBusinessEmployee = Tables<"Business_Employee"> & {
+	user?: Tables<"User">;
+	business?: Tables<"Business">;
+};
+
+
+
 export type IReview = Tables<"Review"> & {
 	user?: Tables<"User">;
 	User_Review?: Tables<"User_Review">[];
@@ -85,33 +97,33 @@ export interface IDeleteToDatabase {
 
 export type ISupabaseGenericFilter =
 	| {
-			method:
-				| "eq"
-				| "gt"
-				| "lt"
-				| "gte"
-				| "lte"
-				| "like"
-				| "ilike"
-				| "is"
-				| "in"
-				| "neq"
-				| "contains"
-				| "containedBy"
-				| "not"
-				| "or"
-				| "order"
-				| "range"
-				| "single"
-				| "limit"
-				| "rangeFrom"
-				| "rangeTo";
-			column?: string;
-			value?: unknown;
-			operator?: string;
-			ascending?: boolean;
-			nullsFirst?: boolean;
-			from?: number;
-			to?: number;
-	  }
+		method:
+		| "eq"
+		| "gt"
+		| "lt"
+		| "gte"
+		| "lte"
+		| "like"
+		| "ilike"
+		| "is"
+		| "in"
+		| "neq"
+		| "contains"
+		| "containedBy"
+		| "not"
+		| "or"
+		| "order"
+		| "range"
+		| "single"
+		| "limit"
+		| "rangeFrom"
+		| "rangeTo";
+		column?: string;
+		value?: unknown;
+		operator?: string;
+		ascending?: boolean;
+		nullsFirst?: boolean;
+		from?: number;
+		to?: number;
+	}
 	| { method: "or"; value: string };
