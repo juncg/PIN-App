@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "13.0.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       Business: {
@@ -46,6 +71,39 @@ export type Database = {
           {
             foreignKeyName: "Business_owner_id_fkey"
             columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "User"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      Business_Employee: {
+        Row: {
+          business_id: number
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          business_id?: number
+          created_at?: string
+          user_id?: string
+        }
+        Update: {
+          business_id?: number
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Business_Employee_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "Business"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Business_Employee_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "User"
             referencedColumns: ["id"]
@@ -817,8 +875,14 @@ export type Database = {
           banner: string | null
           bio: string | null
           birth_date: string | null
+          business_follows: number
+          followers: number | null
+          forum_follows: number
           id: string
+          joined_at: string
+          location: string | null
           name: string | null
+          posts_liked: number
           profile_picture: string | null
           public_forum_follows: boolean
           public_likes: boolean
@@ -826,14 +890,21 @@ export type Database = {
           public_petition_subscriptions: boolean
           public_user_follows: boolean
           surnames: string | null
+          user_follows: number
           username: string
         }
         Insert: {
           banner?: string | null
           bio?: string | null
           birth_date?: string | null
+          business_follows?: number
+          followers?: number | null
+          forum_follows?: number
           id: string
+          joined_at?: string
+          location?: string | null
           name?: string | null
+          posts_liked?: number
           profile_picture?: string | null
           public_forum_follows?: boolean
           public_likes?: boolean
@@ -841,14 +912,21 @@ export type Database = {
           public_petition_subscriptions?: boolean
           public_user_follows?: boolean
           surnames?: string | null
+          user_follows?: number
           username: string
         }
         Update: {
           banner?: string | null
           bio?: string | null
           birth_date?: string | null
+          business_follows?: number
+          followers?: number | null
+          forum_follows?: number
           id?: string
+          joined_at?: string
+          location?: string | null
           name?: string | null
+          posts_liked?: number
           profile_picture?: string | null
           public_forum_follows?: boolean
           public_likes?: boolean
@@ -856,6 +934,7 @@ export type Database = {
           public_petition_subscriptions?: boolean
           public_user_follows?: boolean
           surnames?: string | null
+          user_follows?: number
           username?: string
         }
         Relationships: []
@@ -1254,6 +1333,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       Chosen_Notification_State: [
