@@ -10,13 +10,9 @@ interface PetitionPageProps {
 	searchParams: Promise<ISearchParams>;
 }
 
-const images = {
-	images: ["/placeholder.png", "/placeholder.png", "/placeholder.png", "/placeholder.png"],
-};
-
 export default async function PetitionPage({ params }: PetitionPageProps) {
 	const { id } = await params;
-	const { petition } = await PetitionDetailsService(id);
+	const { petition, comments } = await PetitionDetailsService(id);
 	const userUuid = await getUserUuid();
 
 	if (!petition || petition.length === 0) {
@@ -25,5 +21,12 @@ export default async function PetitionPage({ params }: PetitionPageProps) {
 
 	const subscribedByUser = petition[0].User_Petition?.some((u) => u.user_id === userUuid && u.subscribed);
 
-	return <PetitionDetails petition={petition[0]} subscribedByUser={subscribedByUser ?? false} userUuid={userUuid} />;
+	return (
+		<PetitionDetails
+			petition={petition[0]}
+			subscribedByUser={subscribedByUser ?? false}
+			userUuid={userUuid}
+			comments={comments}
+		/>
+	);
 }

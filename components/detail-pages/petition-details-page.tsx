@@ -4,20 +4,22 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { IPetition } from "@/lib/services/types";
+import { IComment, IPetition } from "@/lib/services/types";
 import { GetRelativeTime } from "@/lib/services/utilities";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { SubscribeButton } from "../buttons/subscribe-button";
+import { CommentsSection } from "../posts/comments-section";
 
 interface PetitionDetailsProps {
 	petition: IPetition;
 	subscribedByUser: boolean;
 	userUuid: string | null;
+	comments?: IComment[];
 }
 
-export function PetitionDetails({ petition, subscribedByUser, userUuid }: PetitionDetailsProps) {
+export function PetitionDetails({ petition, subscribedByUser, userUuid, comments }: PetitionDetailsProps) {
 	const [currentProgress, setCurrentProgress] = useState(petition.current_progress);
 	const [isSubscribed, setIsSubscribed] = useState(subscribedByUser);
 	const [selectedImage, setSelectedImage] = useState(0);
@@ -35,6 +37,8 @@ export function PetitionDetails({ petition, subscribedByUser, userUuid }: Petiti
 		setCurrentProgress(newProgress);
 		setIsSubscribed(!isSubscribed);
 	};
+
+	console.log("Comments en PetitionDetails:", comments);
 
 	const displayImages: string[] = petition.images?.filter((img) => img && img.trim() !== "")?.length
 		? petition.images.filter((img) => img && img.trim() !== "")
@@ -164,7 +168,6 @@ export function PetitionDetails({ petition, subscribedByUser, userUuid }: Petiti
 					</div>
 				</div>
 			</div>
-
 			<div className="bg-muted rounded-2xl border-3  p-6">
 				<div className="flex items-center gap-4 mb-6">
 					<div className="flex -space-x-3">
@@ -206,6 +209,7 @@ export function PetitionDetails({ petition, subscribedByUser, userUuid }: Petiti
 					fullWidth={true}
 				/>
 			</div>
+			<CommentsSection postType="Petition" postId={petition.id} userUuid={userUuid} comments={comments} />{" "}
 		</div>
 	);
 }

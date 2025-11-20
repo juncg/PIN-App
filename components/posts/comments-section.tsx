@@ -1,0 +1,149 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { H3, P } from "@/components/ui-custom/typography";
+import { Separator } from "@/components/ui/separator";
+import { Loader2, Plus } from "lucide-react";
+import { toast } from "sonner";
+import { NotLoggedInDialog } from "@/components/dialogs/not-logged-in-dialog";
+import { IComment } from "@/lib/services/types";
+import { CommentCard } from "../cards/comment-card";
+import { PostToDatabase } from "@/lib/services/general";
+
+interface CommentsSectionProps {
+	postId: number;
+	postType: "Petition" | "Offer";
+	userUuid: string | null;
+	comments?: IComment[];
+}
+
+export function CommentsSection({ postId, postType, userUuid, comments: initialComments = [] }: CommentsSectionProps) {
+	const [comments, setComments] = useState<IComment[]>(initialComments);
+	const [newComment, setNewComment] = useState("");
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [showLoginDialog, setShowLoginDialog] = useState(false);
+
+	useEffect(() => {
+		setComments(initialComments);
+	}, [initialComments]);
+
+	const handleSubmit = async () => {
+		if (!userUuid) {
+			setShowLoginDialog(true);
+			return;
+		}
+
+		if (!newComment.trim()) {
+			toast.error("El comentario no puede estar vacío");
+			return;
+		}
+
+		setIsSubmitting(true);
+		try {
+			const commentData: Omit<IComment, "id"> = {
+				text: newComment,
+				created_at: new Date().toISOString(),
+				creator_id: userUuid,
+				forum_id: null,
+				likes: 0,
+				superlikes: 0,
+				comment_locked_state: "Unlocked",
+				state: "Posted",
+			};
+
+			const { data: response, error } = await PostToDatabase({
+				tableName: "Comment",
+				contentJson: [commentData],
+			});
+
+			if (error) {
+				console.log("Error al publicar comentario:", error);
+				toast.error("Error al publicar comentario");
+				return;
+			}
+
+			const { error: postError } = await PostToDatabase({
+				tableName: "Comment_Post",
+				contentJson: [
+					{
+						comment_id: response[0].id,
+						offer_id: postType === "Offer" ? postId : null,
+						petition_id: postType === "Petition" ? postId : null,
+						referenced_comment_id: null,
+						review_id: null,
+					},
+				],
+			});
+
+			toast.success("Comentario publicado");
+			setNewComment("");
+		} catch (error) {
+			toast.error("Error al publicar comentario");
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
+
+	const totalComments = comments.reduce((acc, comment) => {
+		return acc + 1 + (comment.replies?.length || 0);
+	}, 0);
+
+	return (
+		<div className="space-y-6 mt-12">
+			<div className="flex items-center gap-2">
+				<H3>Comentarios</H3>
+				<div className="bg-muted px-2 py-0.5 rounded-full text-xs font-medium">{totalComments}</div>
+			</div>
+
+			<Separator />
+
+			<div className="flex gap-4">
+				<Avatar className="flex-shrink-0">
+					<AvatarFallback> </AvatarFallback>
+				</Avatar>
+				<div className="flex-1 space-y-2">
+					<Textarea
+						placeholder={userUuid ? "Escribe un comentario..." : "Inicia sesión para comentar"}
+						value={newComment}
+						onChange={(e) => setNewComment(e.target.value)}
+						disabled={isSubmitting || !userUuid}
+						className="min-h-[100px] resize-none"
+					/>
+					<div className="flex justify-end">
+						<Button
+							onClick={handleSubmit}
+							disabled={isSubmitting || !newComment.trim() || !userUuid}
+							size="sm"
+						>
+							{isSubmitting ? (
+								<Loader2 className="h-4 w-4 animate-spin mr-2" />
+							) : (
+								<Plus className="h-4 w-4 mr-2" />
+							)}
+							Publicar
+						</Button>
+					</div>
+				</div>
+			</div>
+
+			<div className="space-y-6">
+				{comments.length > 0 ? (
+					comments.map((comment) => <CommentCard key={comment.id} comment={comment} />)
+				) : (
+					<div className="text-center py-12 ">
+						<P className="text-muted-foreground">No hay comentarios todavía. ¡Sé el primero en comentar!</P>
+					</div>
+				)}
+			</div>
+
+			<NotLoggedInDialog
+				open={showLoginDialog}
+				onOpenChange={setShowLoginDialog}
+				description="Necesitas iniciar sesión para publicar un comentario."
+			/>
+		</div>
+	);
+}

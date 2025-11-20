@@ -5,19 +5,21 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { IOffer } from "@/lib/services/types";
+import { IComment, IOffer } from "@/lib/services/types";
 import { GetRelativeTime } from "@/lib/services/utilities";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { CommentsSection } from "../posts/comments-section";
 
 interface OfferDetailsProps {
 	offer: IOffer;
 	subscribedByUser: boolean;
 	userUuid: string | null;
+	comments?: IComment[];
 }
 
-export function OfferDetails({ offer, subscribedByUser, userUuid }: OfferDetailsProps) {
+export function OfferDetails({ offer, subscribedByUser, userUuid, comments }: OfferDetailsProps) {
 	const [currentProgress, setCurrentProgress] = useState(offer.current_progress);
 	const [isSubscribed, setIsSubscribed] = useState(subscribedByUser);
 	const [selectedImage, setSelectedImage] = useState(0);
@@ -162,7 +164,6 @@ export function OfferDetails({ offer, subscribedByUser, userUuid }: OfferDetails
 					</div>
 				</div>
 			</div>
-
 			<div className="bg-muted rounded-2xl border-3 p-6">
 				<div className="flex items-center gap-4 mb-6">
 					<div className="flex -space-x-3">
@@ -204,6 +205,7 @@ export function OfferDetails({ offer, subscribedByUser, userUuid }: OfferDetails
 					fullWidth={true}
 				/>
 			</div>
+			<CommentsSection postType="Offer" postId={offer.id} userUuid={userUuid} comments={comments} />{" "}
 		</div>
 	);
 }
