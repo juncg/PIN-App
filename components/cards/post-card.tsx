@@ -61,7 +61,7 @@ export function PostCard(props: IPostCard) {
             <div className="grid grid-cols-[1fr_auto] items-start gap-4 border-b pb-4">
                 <div className="flex flex-col gap-2">
                     <Link href={post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}>
-                        <H3 className="-mt-2 hover:underline cursor-pointer">{post.title}</H3>
+                        <H3 className="-mt-1 hover:underline cursor-pointer">{post.title}</H3>
                     </Link>
                     <H4>{post?.businesses?.[0]?.business.name}</H4>
                 </div>
