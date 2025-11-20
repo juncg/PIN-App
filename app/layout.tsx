@@ -1,7 +1,7 @@
 import { Header } from "@/components/header/header";
 import { ConditionalLayout } from "@/components/layout/layout-content";
 import { AppSidebar } from "@/components/sidebar/sidebar";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui-custom/sonner";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";

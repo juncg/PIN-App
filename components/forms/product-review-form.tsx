@@ -33,7 +33,6 @@ export function ProductReviewForm({
 	const isEditMode = !!existingReview;
 	const [hoveredRating, setHoveredRating] = useState(0);
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [alert, setAlert] = useState<IAlert | null>(null);
 	const [apiError, setApiError] = useState<PostgrestError | null>(null);
 
 	const {
@@ -66,19 +65,8 @@ export function ProductReviewForm({
 		}
 	}, [existingReview, reset]);
 
-	useEffect(() => {
-		if (alert) {
-			const timer = setTimeout(() => {
-				setAlert(null);
-			}, 5000);
-
-			return () => clearTimeout(timer);
-		}
-	}, [alert]);
-
 	const handleReviewSubmit = async (data: TCreateReviewSchema) => {
 		setIsSubmitting(true);
-		setAlert(null);
 		setApiError(null);
 
 		try {
@@ -161,10 +149,7 @@ export function ProductReviewForm({
 			}
 		} catch (error) {
 			console.error("Error submitting review:", error);
-			setAlert({
-				type: "Error",
-				message: "Error al procesar la reseña. Inténtalo de nuevo.",
-			});
+			toast.error("Error", { description: "Error al procesar la reseña. Inténtalo de nuevo." });
 		} finally {
 			setIsSubmitting(false);
 		}

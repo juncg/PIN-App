@@ -16,7 +16,6 @@ import { CreateBusinessSchema, TCreateBusinessSchema } from "./schemas/business"
 
 export default function CreateJoinBusinessForm() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [alert, setAlert] = useState<IAlert | null>(null);
 	const [apiError, setApiError] = useState<any | null>(null);
 	const { userUuid } = useUser();
 	const {
@@ -35,11 +34,12 @@ export default function CreateJoinBusinessForm() {
 
 	async function handleBusinessCreation(data: TCreateBusinessSchema) {
 		setIsSubmitting(true);
-		setAlert(null);
 		setApiError(null);
 
 		if (!userUuid) {
-			setAlert({ type: "Error", message: "Debes iniciar sesión para crear o vincular una empresa." });
+			toast.error("Ha habido un error.", {
+				description: "Debes iniciar sesión para crear o vincular una empresa.",
+			});
 			setIsSubmitting(false);
 			return;
 		}
@@ -83,10 +83,10 @@ export default function CreateJoinBusinessForm() {
 				return;
 			}
 
-			setAlert({ type: "Success", message: "Empresa creada correctamente y perfil upgradeado PROVISIONAL" });
+			toast.success("Éxito.", { description: "Empresa creada correctamente." });
 		} catch (error) {
 			console.error("Error creating business:", error);
-			setAlert({ type: "Error", message: "Error al crear la empresa. Inténtalo de nuevo." });
+			toast.error("Ha habido un error", { description: "Error al crear la empresa. Inténtalo de nuevo." });
 		} finally {
 			reset({ name: "", description: "" });
 			setIsSubmitting(false);
@@ -95,34 +95,6 @@ export default function CreateJoinBusinessForm() {
 
 	return (
 		<>
-			<Button
-				variant="outline"
-				onClick={() =>
-					toast("Event has been created", {
-						description: "Sunday, December 03, 2023 at 9:00 AM",
-					})
-				}
-			>
-				Show Toast
-			</Button>
-
-			{alert && (
-				<Button
-					variant="outline"
-					onClick={() =>
-						toast("Event has been created", {
-							description: "Sunday, December 03, 2023 at 9:00 AM",
-							action: {
-								label: "Undo",
-								onClick: () => console.log("Undo"),
-							},
-						})
-					}
-				>
-					Show Toast
-				</Button>
-			)}
-
 			<APIErrorHandler error={apiError} />
 
 			<form className="flex flex-col gap-6" onSubmit={handleSubmit(handleBusinessCreation)}>
