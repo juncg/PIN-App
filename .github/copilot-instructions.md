@@ -398,7 +398,7 @@ Always use Next.js `Image` component:
 import Image from "next/image";
 
 <Image
-	src={imageUrl || "/images/placeholder.png"}
+	src={imageUrl || "/placeholder.png"}
 	alt="Description"
 	fill
 	className="object-cover"
@@ -408,8 +408,8 @@ import Image from "next/image";
 
 Default images:
 
--   Profile: `/images/jancarlo.jpg`
--   Placeholder: `/images/placeholder.png`
+-   Profile: `/jancarlo.jpg`
+-   Placeholder: `/placeholder.png`
 
 ## Common Patterns
 

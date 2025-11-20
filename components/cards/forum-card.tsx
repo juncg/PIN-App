@@ -18,7 +18,7 @@ export interface IForumCard {
 export function ForumCard(props: IForumCard) {
 	const { forum, className } = props;
 
-	const profileImage = forum.profile_picture || "/images/jancarlo.jpg";
+	const profileImage = forum.profile_picture || "/jancarlo.jpg";
 
 	return (
 		<article className={cn("flex flex-col border border-spacing-2 rounded-lg p-4 gap-4", className)}>

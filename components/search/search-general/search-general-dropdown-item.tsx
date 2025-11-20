@@ -80,7 +80,7 @@ export function SearchGeneralDropdownItem({ item, type }: SearchGeneralDropdownI
 		<Link href={href} className="block hover:bg-accent/50 transition-colors">
 			<div className="flex gap-4 p-4">
 				<div className="relative w-16 h-16 flex-shrink-0 rounded-md overflow-hidden bg-muted flex items-center justify-center">
-					<Image src="/images/placeholder.png" alt={title || ""} fill className="object-cover" unoptimized />
+					<Image src="/placeholder.png" alt={title || ""} fill className="object-cover" unoptimized />
 				</div>
 
 				<div className="flex-1 min-w-0">

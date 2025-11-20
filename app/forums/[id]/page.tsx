@@ -32,8 +32,8 @@ export default async function ForumPage({ params }: ForumPageProps) {
 	const tags = forumData.Forum_Tag?.map((ft) => ft.Tag.name).filter(Boolean) || [];
 	const { offers: initialOffers, petitions: initialPetitions } = await fetchForumPosts(id, 0, 10);
 
-	const bannerImage = forumData.banner || "/images/placeholder.png";
-	const profileImage = forumData.profile_picture || "/images/jancarlo.jpg";
+	const bannerImage = forumData.banner || "/placeholder.png";
+	const profileImage = forumData.profile_picture || "/jancarlo.jpg";
 
 	return (
 		<div className="container mx-auto px-4 py-8">

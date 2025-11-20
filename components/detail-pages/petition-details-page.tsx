@@ -1,15 +1,15 @@
 "use client";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { GetRelativeTime } from "@/lib/services/utilities";
-import { Users, ChevronLeft, ChevronRight } from "lucide-react";
 import { IPetition } from "@/lib/services/types";
+import { GetRelativeTime } from "@/lib/services/utilities";
+import { ChevronLeft, ChevronRight, Users } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { SubscribeButton } from "../buttons/subscribe-button";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
 
 interface PetitionDetailsProps {
 	petition: IPetition;
@@ -38,7 +38,7 @@ export function PetitionDetails({ petition, subscribedByUser, userUuid }: Petiti
 
 	const displayImages: string[] = petition.images?.filter((img) => img && img.trim() !== "")?.length
 		? petition.images.filter((img) => img && img.trim() !== "")
-		: ["/images/placeholder.png"];
+		: ["/placeholder.png"];
 
 	return (
 		<div className="container mx-auto px-4 py-8">
