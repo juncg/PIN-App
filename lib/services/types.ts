@@ -2,20 +2,16 @@ import { Tables } from "@/database.types";
 
 export type IOffer = Tables<"Offer"> & {
 	type: "Offer";
-	businesses?: {
-		business: Tables<"Business">;
-	}[];
-	tags?: Tables<"Tag">[];
+	businesses?: { business: Tables<"Business"> }[];
+	tags?: { Tag: Tables<"Tag"> }[];
 	User_Offer?: Tables<"User_Offer">[];
 	User?: Tables<"User">;
 };
 
 export type IPetition = Tables<"Petition"> & {
 	type: "Petition";
-	businesses?: {
-		business: Tables<"Business">;
-	}[];
-	tags?: Tables<"Tag">[];
+	businesses?: { business: Tables<"Business"> }[];
+	tags?: { Tag: Tables<"Tag"> }[];
 	User_Petition?: Tables<"User_Petition">[];
 	User: Tables<"User">;
 };

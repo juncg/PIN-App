@@ -1,0 +1,1 @@
+ALTER TABLE your_table ALTER COLUMN column_name DROP NOT NULL

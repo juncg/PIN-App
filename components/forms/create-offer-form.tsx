@@ -3,22 +3,31 @@
 import { SelectTags } from "@/components/select/select-tags";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useUser } from "@/hooks/use-user";
 import { PostToDatabase } from "@/lib/services/general";
+import { compressImage, uploadImage } from "@/lib/services/media-upload";
 import { IForum, IOffer } from "@/lib/services/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { PostgrestError } from "@supabase/supabase-js";
+import { createClient, type PostgrestError } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { APIErrorHandler } from "../error-handlers/api-error-handler";
-import { Alert, IAlert } from "../ui-custom/alert";
 import { DateInput } from "../ui-custom/date-input";
 import { Switch } from "../ui-custom/switch";
 import { Textarea } from "../ui/textarea";
 import { FormField } from "./base/form-field";
 import { CreateOfferSchema, type TCreateOfferSchema } from "./schemas/offer";
+import { FilePond, registerPlugin } from "react-filepond";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import { Tables } from "@/database.types";
+
+import "filepond/dist/filepond.min.css";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+
+registerPlugin(FilePondPluginImagePreview);
 
 interface OfferFormProps {
 	forums: IForum[];
@@ -27,11 +36,12 @@ interface OfferFormProps {
 
 export default function OfferForm({ forums, tags }: OfferFormProps) {
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [alert, setAlert] = useState<IAlert | null>(null);
 	const [selectedTags, setSelectedTags] = useState<number[]>([]);
 	const [apiError, setApiError] = useState<PostgrestError | null>(null);
+	const [images, setImages] = useState<File[]>([]);
 	const { userUuid } = useUser();
 	const router = useRouter();
+	const filePondRef = useRef<FilePond>(null);
 
 	const {
 		register,
@@ -50,7 +60,7 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 			target_completition_date: undefined,
 			comment_locked_state: "Unlocked",
 			fee: undefined,
-			forum_id: null,
+			forum_id: undefined,
 			state: "Posted",
 		},
 	});
@@ -63,32 +73,19 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 		setValue("target_completition_date", defaultDate.toISOString());
 	}, [setValue]);
 
-	useEffect(() => {
-		if (alert) {
-			const timer = setTimeout(() => {
-				setAlert(null);
-			}, 5000);
-
-			return () => clearTimeout(timer);
-		}
-	}, [alert]);
-
 	async function handleOfferCreation(data: TCreateOfferSchema) {
 		setIsSubmitting(true);
-		setAlert(null);
 		setApiError(null);
 
-		if (!userUuid) {
-			setAlert({
-				type: "Error",
-				message: "Debes iniciar sesión para crear una oferta.",
-			});
-			setIsSubmitting(false);
-			return;
+		const uploadedUrls: string[] = [];
+		for (const file of images) {
+			const compressedFile = await compressImage(file);
+			const url = await uploadImage(compressedFile);
+			if (url) uploadedUrls.push(url);
 		}
 
 		try {
-			const newOffer = {
+			const newOffer: Omit<Tables<"Offer">, "id"> = {
 				title: data.title,
 				text: data.text,
 				target_progress: data.target_progress,
@@ -98,10 +95,11 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 				current_progress: 0,
 				comment_locked_state: data.comment_locked_state ?? "Unlocked",
 				fee: data.fee,
-				forum_id: data.forum_id ?? null,
+				forum_id: data.forum_id,
 				likes: 0,
 				superlikes: 0,
 				state: data.state ?? "Posted",
+				images: uploadedUrls || null,
 			};
 
 			const response = await PostToDatabase<IOffer>({
@@ -139,10 +137,6 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 			router.push("/offers");
 		} catch (error) {
 			console.error("Error creating offer:", error);
-			setAlert({
-				type: "Error",
-				message: "Error al crear la oferta. Inténtalo de nuevo.",
-			});
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -150,8 +144,6 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 
 	return (
 		<>
-			{alert && <Alert message={alert.message} type={alert.type} />}
-
 			<APIErrorHandler error={apiError} />
 
 			<form className="flex flex-col gap-6" onSubmit={handleSubmit(handleOfferCreation)}>
@@ -213,7 +205,12 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 						/>
 					</FormField>
 
-					<FormField label="Foro asociado" htmlFor="forum_id" errorMessage={errors.forum_id?.message}>
+					<FormField
+						label="Foro asociado"
+						htmlFor="forum_id"
+						errorMessage={errors.forum_id?.message}
+						required
+					>
 						<Select
 							value={forumId?.toString() || ""}
 							onValueChange={(value) => setValue("forum_id", Number(value))}
@@ -255,6 +252,24 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 						disabled={isSubmitting}
 					/>
 				</FormField>
+
+				{/* Images */}
+				<div className="grid gap-2">
+					<Label>Imágenes</Label>
+					<FilePond
+						ref={filePondRef}
+						files={images}
+						allowMultiple={true}
+						maxFiles={5}
+						onupdatefiles={(fileItems: any[]) => setImages(fileItems.map((fi) => fi.file as File))}
+						name="images"
+						labelIdle='Arrastra y suelta tus imágenes o <span class="filepond--label-action">Selecciona</span>'
+						disabled={isSubmitting}
+						acceptedFileTypes={["image/*"]}
+						instantUpload={false}
+						imagePreviewHeight={150}
+					/>
+				</div>
 
 				<Button type="submit" disabled={isSubmitting}>
 					{isSubmitting ? "Creando..." : "Crear Oferta"}

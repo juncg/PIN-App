@@ -3,19 +3,23 @@ on "public"."Offer"
 to authenticated
 with check (
     (auth.uid() = creator_id)
-    AND (
-        -- Either employee of a business
-        EXISTS (
-            SELECT 1 
-            FROM "Business_Employee" 
-            WHERE user_id = auth.uid()
-        )
-        OR
-        -- Or owner of a business
+    AND
+    (
+        -- Must be from a forum associated to a business that the user is associated with
         EXISTS (
             SELECT 1
-            FROM "Business"
-            WHERE owner_id = auth.uid()
+            FROM "Forum" AS f
+            JOIN "Business" AS b ON f."business_id" = b."id"
+            WHERE f."id" = forum_id
+            AND (
+                b."owner_id" = auth.uid()
+                OR EXISTS (
+                    SELECT 1
+                    FROM "Business_Employee" AS be
+                    WHERE be."business_id" = b."id"
+                    AND be."user_id" = auth.uid()
+                )
+            )
         )
     )
 );
@@ -27,29 +31,42 @@ using (
     true
 );
 
-alter policy "Update for authenticated users only on condition"
+alter policy "Update for creator or forum owner"
 on "public"."Offer"
 to authenticated
 using (
     (auth.uid() = creator_id)
-    AND (
-        -- Either employee of a business
-        EXISTS (
-            SELECT 1 
-            FROM "Business_Employee" 
-            WHERE user_id = auth.uid()
-        )
-        OR
-        -- Or owner of a business
-        EXISTS (
-            SELECT 1
-            FROM "Business"
-            WHERE owner_id = auth.uid()
+    OR
+    -- Allow if user is the owner of the forum the offer is in
+    EXISTS (
+        SELECT 1
+        FROM "Forum" AS f
+        WHERE f.id = forum_id
+        AND f.business_id = (
+            SELECT b.id
+            FROM "Business" AS b
+            WHERE b.owner_id = auth.uid()
+            AND b.id = f.business_id
         )
     )
 )
 with check (
-    (auth.uid() = creator_id) AND
+    (
+        (auth.uid() = creator_id)
+        OR
+        EXISTS (
+            SELECT 1
+            FROM "Forum" AS f
+            WHERE f.id = forum_id
+            AND f.business_id = (
+                SELECT b.id
+                FROM "Business" AS b
+                WHERE b.owner_id = auth.uid()
+                AND b.id = f.business_id
+            )
+        )
+    )
+    AND
     (
         -- State: must be unchanged OR being set to 'Cancelled'
         (state = (SELECT state FROM "Offer" AS old_offer WHERE old_offer.id = "Offer".id) OR state = 'Cancelled') AND

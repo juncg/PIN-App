@@ -17,6 +17,8 @@ type CarouselProps = {
 	plugins?: CarouselPlugin;
 	orientation?: "horizontal" | "vertical";
 	setApi?: (api: CarouselApi) => void;
+	initialSlide?: number;
+    onSlideChange?: (index: number) => void;
 };
 
 type CarouselContextProps = {
@@ -46,9 +48,11 @@ function Carousel({
 	setApi,
 	plugins,
 	className,
+	initialSlide = 0,
+	onSlideChange,
 	children,
 	...props
-}: React.ComponentProps<"div"> & CarouselProps) {
+}: CarouselProps & React.ComponentProps<"div">) {
 	const [carouselRef, api] = useEmblaCarousel(
 		{
 			...opts,

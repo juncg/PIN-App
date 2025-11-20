@@ -64,7 +64,7 @@ export const CreateOfferSchema = z.object({
 	target_completition_date: z.string().min(1, "La fecha es requerida"),
 	comment_locked_state: CommentLockedStateSchema.optional(),
 	state: PostStateSchema.optional(),
-	forum_id: z.number().nullable().optional(),
+	forum_id: z.number().min(0, "Debes elegir un foro al que pertenecerá la oferta"),
 });
 
 export type TOfferSchema = z.infer<typeof OfferSchema>;

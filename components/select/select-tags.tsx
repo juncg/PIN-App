@@ -9,6 +9,7 @@ interface SelectTagsProps {
 	availableTags: { id: number; name: string }[];
 	selectedTags: number[];
 	onTagsChange: (tagIds: number[]) => void;
+	label?: string;
 	placeholder?: string;
 	disabled?: boolean;
 }

@@ -110,7 +110,7 @@ export function PetitionDetails({ petition, subscribedByUser, userUuid }: Petiti
 									key={index}
 									className="bg-primary text-black text-xs font-black px-3 py-1 rounded-full"
 								>
-									{tagItem.Tag.name.toUpperCase()}
+									{tagItem.Tag.name?.toUpperCase()}
 								</span>
 							))
 						) : (

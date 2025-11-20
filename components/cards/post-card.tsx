@@ -16,156 +16,178 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
 import { Separator } from "../ui/separator";
+import { PopOutMedia } from "../floating-panels/pop-out-media";
 
 export interface IPostCard {
-	className?: string;
-	post: IOffer | IPetition;
-	images?: string[];
+    className?: string;
+    post: IOffer | IPetition;
+    images?: string[];
 }
 
 export function PostCard(props: IPostCard) {
-	const { post, className, images } = props;
-	const { userUuid } = useUser();
-	const [currentProgress, setCurrentProgress] = useState(post.current_progress);
+    const { post, className, images } = props;
+    const { userUuid } = useUser();
+    const [currentProgress, setCurrentProgress] = useState(post.current_progress);
+    const [isDialogOpen, setIsDialogOpen] = useState(false); // Add state for dialog
+    const [startIndex, setStartIndex] = useState(0); // Add state for starting image index
 
-	// Sync with prop changes (on page reload)
-	useEffect(() => {
-		setCurrentProgress(post.current_progress);
-	}, [post.current_progress]);
+    // Sync with prop changes (on page reload)
+    useEffect(() => {
+        setCurrentProgress(post.current_progress);
+    }, [post.current_progress]);
 
-	const subscribedByUser =
-		post.type === "Offer"
-			? !!(post as IOffer).User_Offer?.some((u) => u.user_id === userUuid && u.subscribed)
-			: !!(post as IPetition).User_Petition?.some((u) => u.user_id === userUuid && u.subscribed);
+    const subscribedByUser =
+        post.type === "Offer"
+            ? !!(post as IOffer).User_Offer?.some((u) => u.user_id === userUuid && u.subscribed)
+            : !!(post as IPetition).User_Petition?.some((u) => u.user_id === userUuid && u.subscribed);
 
-	const likedByUser =
-		post.type === "Offer"
-			? !!(post as IOffer).User_Offer?.some((u) => u.user_id === userUuid && u.liked)
-			: !!(post as IPetition).User_Petition?.some((u) => u.user_id === userUuid && u.liked);
+    const likedByUser =
+        post.type === "Offer"
+            ? !!(post as IOffer).User_Offer?.some((u) => u.user_id === userUuid && u.liked)
+            : !!(post as IPetition).User_Petition?.some((u) => u.user_id === userUuid && u.liked);
 
-	const tags = (post as IOffer | IPetition).tags?.map((t) => t.name).filter(Boolean) as string[] | undefined;
+    const tags = (post as IOffer | IPetition).tags?.map((t) => t.Tag?.name).filter(Boolean) as string[] | undefined;
 
-	const displayImages: string[] = post.images?.filter((img) => img && img.trim() !== "")?.length //logica para que no entre un empty string en el carrusel
-		? post.images.filter((img) => img && img.trim() !== "")
-		: ["/images/placeholder.png", "/images/placeholder.png", "/images/placeholder.png"];
+    const displayImages: string[] = post.images?.filter((img) => img && img.trim() !== "")?.length //logica para que no entre un empty string en el carrusel
+        ? post.images.filter((img) => img && img.trim() !== "")
+        : ["/images/placeholder.png", "/images/placeholder.png", "/images/placeholder.png"];
 
-	const offerCompletionPercentage = parseFloat(((currentProgress * 100) / (post?.target_progress ?? 1)).toFixed(2));
-	const postUrl = `${BASE_DOMAIN}${post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}`;
+    const offerCompletionPercentage = parseFloat(((currentProgress * 100) / (post?.target_progress ?? 1)).toFixed(2));
 
-	return (
-		<article className={cn("flex flex-col border border-spacing-2 rounded-lg p-4 gap-4", className)}>
-			<div className="flex justify-between items-center border-b pb-4">
-				<div className="flex flex-col gap-2">
-					<H3>{post.title}</H3>
-					<H4>{post?.businesses?.[0]?.business.name}</H4>
-				</div>
+    const postUrl = `${BASE_DOMAIN}${post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}`;
 
-				<div className="flex flex-col gap-2">
-					<Badge>{post.type === "Petition" ? "Petición" : "Oferta"}</Badge>
-				</div>
-			</div>
+    return (
+        <article className={cn("flex flex-col border border-spacing-2 rounded-lg p-4 gap-4", className)}>
+            <div className="grid grid-cols-[1fr_auto] items-start gap-4 border-b pb-4">
+                <div className="flex flex-col gap-2">
+                    <Link href={post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}>
+                        <H3 className="-mt-2 hover:underline cursor-pointer">{post.title}</H3>
+                    </Link>
+                    <H4>{post?.businesses?.[0]?.business.name}</H4>
+                </div>
 
-			<div className="flex flex-col mb-10 gap-4">
-				<P>{post.text}</P>
+                <Badge>{post.type === "Petition" ? "Petición" : "Oferta"}</Badge>
+            </div>
 
-				{displayImages.length > 0 && (
-					<Carousel className="w-full mx-auto max-w-md">
-						<CarouselContent>
-							{displayImages.map((image, index) => (
-								<CarouselItem key={index}>
-									<div className="relative aspect-video w-full overflow-hidden rounded-md">
-										<Image
-											src={image}
-											alt={`${post.title} - imagen ${index + 1}`}
-											fill
-											className="object-cover"
-											unoptimized
-										/>
-									</div>
-								</CarouselItem>
-							))}
-						</CarouselContent>
-						{displayImages.length > 1 && (
-							<>
-								<CarouselPrevious className="left-2" />
-								<CarouselNext className="right-2" />
-							</>
-						)}
-					</Carousel>
-				)}
-			</div>
+            <div className="flex flex-col mb-10 gap-4">
+                <P>{post.text}</P>
 
-			<div className="flex flex-col gap-8">
-				<div className="flex justify-between">
-					<Link href={post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}>
-						<Button variant="default">Información</Button>
-					</Link>
+                {displayImages.length > 0 && (
+                    <Carousel className="w-full mx-auto max-w-md">
+                        <CarouselContent>
+                            {displayImages.map((image, index) => (
+                                <CarouselItem key={index}>
+                                    <div
+                                        className="relative aspect-video w-full overflow-hidden rounded-md cursor-pointer"
+                                        onClick={() => {
+                                            setStartIndex(index);
+                                            setIsDialogOpen(true);
+                                        }}
+                                    >
+                                        <Image
+                                            src={image}
+                                            alt={`${post.title} - imagen ${index + 1}`}
+                                            fill
+                                            className="object-cover"
+                                            unoptimized
+                                        />
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                        {displayImages.length > 1 && (
+                            <>
+                                <CarouselPrevious className="left-2" />
+                                <CarouselNext className="right-2" />
+                            </>
+                        )}
+                    </Carousel>
+                )}
+            </div>
 
-					<SubscribeButton
-						post_id={post.id}
-						typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
-						subscribers={currentProgress}
-						subscribedByUser={subscribedByUser}
-						user_id={userUuid}
-						onSubscriptionChange={setCurrentProgress}
-					/>
-				</div>
+            {/* Pop Out Media */}
+            <PopOutMedia
+                images={displayImages}
+                isOpen={isDialogOpen}
+                onClose={() => setIsDialogOpen(false)}
+                startIndex={startIndex}
+            />
 
-				{post.type === "Offer" && (
-					<div className="flex flex-col gap-2">
-						<Progress value={offerCompletionPercentage} />
+            <div className="flex flex-col gap-8">
+                <div className="flex justify-between">
+                    <Link href={post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}>
+                        <Button variant="default">Información</Button>
+                    </Link>
 
-						<div className="flex justify-between">
-							<H4>
-								{currentProgress} / {post.target_progress}
-							</H4>
+                    <SubscribeButton
+                        post_id={post.id}
+                        typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
+                        subscribers={currentProgress}
+                        subscribedByUser={subscribedByUser}
+                        user_id={userUuid}
+                        onSubscriptionChange={setCurrentProgress}
+                    />
+                </div>
 
-							<H4>{offerCompletionPercentage}%</H4>
-						</div>
-					</div>
-				)}
+                {post.type === "Offer" && (
+                    <div className="flex flex-col gap-2">
+                        <Progress value={post.target_progress === 0 ? 100 : offerCompletionPercentage} />
 
-				{post.type === "Petition" && (
-					<div className="flex flex-col gap-2">
-						<Progress value={offerCompletionPercentage} />
+                        <div className="flex justify-between">
+                            <H4>
+                                {post.target_progress === 0 ? `${currentProgress} suscritos` : `${currentProgress} / ${post.target_progress}`}
+                            </H4>
 
-						<div className="flex justify-between">
-							<H4>
-								{currentProgress} / {post.target_progress}
-							</H4>
+                            <H4 className={cn(post.target_progress > 0 && offerCompletionPercentage > 100 && "text-ternary")}>
+                                {post.target_progress === 0 ? "sin limite" : `${offerCompletionPercentage}%`}
+                            </H4>
+                        </div>
+                    </div>
+                )}
 
-							<H4>{offerCompletionPercentage}%</H4>
-						</div>
-					</div>
-				)}
-			</div>
+                {post.type === "Petition" && (
+                    <div className="flex flex-col gap-2">
+                        <Progress value={post.target_progress === 0 ? 100 : offerCompletionPercentage} />
 
-			{tags && tags.length > 0 && (
-				<div className="flex flex-wrap gap-2 py-2">
-					{tags.map((tag, index) => (
-						<Badge key={index} variant="secondary">
-							{tag}
-						</Badge>
-					))}
-				</div>
-			)}
+                        <div className="flex justify-between">
+                            <H4>
+                                {post.target_progress === 0 ? `${currentProgress} suscritos` : `${currentProgress} / ${post.target_progress}`}
+                            </H4>
 
-			<div className="flex">
-				<Separator />
-			</div>
+                            <H4 className={cn(post.target_progress > 0 && offerCompletionPercentage > 100 && "text-ternary")}>
+                                {post.target_progress === 0 ? "sin limite" : `${offerCompletionPercentage}%`}
+                            </H4>
+                        </div>
+                    </div>
+                )}
+            </div>
 
-			<div className="flex flex-row justify-between">
-				<div className="flex flex-row justify-start gap-6">
-					<LikeButton
-						likes={post.likes}
-						likedByUser={likedByUser}
-						post_id={post.id}
-						typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
-						user_id={userUuid}
-					/>
-					<ShareComponent url={postUrl} title={post.title} description={post.text} />
-				</div>
-			</div>
-		</article>
-	);
+            {tags && tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 py-2">
+                    {tags.map((tag, index) => (
+                        <Badge key={index} variant="secondary">
+                            {tag}
+                        </Badge>
+                    ))}
+                </div>
+            )}
+
+            <div className="flex">
+                <Separator />
+            </div>
+
+            <div className="flex flex-row justify-between">
+                <div className="flex flex-row justify-start gap-6">
+                    <LikeButton
+                        likes={post.likes}
+                        likedByUser={likedByUser}
+                        post_id={post.id}
+                        typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
+                        user_id={userUuid}
+                    />
+                    <ShareComponent url={postUrl} title={post.title} description={post.text} />
+                </div>
+            </div>
+        </article>
+    );
 }

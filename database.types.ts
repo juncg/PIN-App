@@ -298,10 +298,10 @@ export type Database = {
         Row: {
           comment_locked_state: Database["public"]["Enums"]["Comment_Locked_State"]
           created_at: string
-          creator_id: string
+          creator_id: string | null
           current_progress: number
           fee: number
-          forum_id: number | null
+          forum_id: number
           id: number
           images: string[] | null
           likes: number
@@ -315,10 +315,10 @@ export type Database = {
         Insert: {
           comment_locked_state?: Database["public"]["Enums"]["Comment_Locked_State"]
           created_at?: string
-          creator_id?: string
+          creator_id?: string | null
           current_progress?: number
           fee?: number
-          forum_id?: number | null
+          forum_id: number
           id?: number
           images?: string[] | null
           likes?: number
@@ -332,10 +332,10 @@ export type Database = {
         Update: {
           comment_locked_state?: Database["public"]["Enums"]["Comment_Locked_State"]
           created_at?: string
-          creator_id?: string
+          creator_id?: string | null
           current_progress?: number
           fee?: number
-          forum_id?: number | null
+          forum_id?: number
           id?: number
           images?: string[] | null
           likes?: number
@@ -427,7 +427,7 @@ export type Database = {
         Row: {
           comment_locked_state: Database["public"]["Enums"]["Comment_Locked_State"]
           created_at: string
-          creator_id: string
+          creator_id: string | null
           current_progress: number
           forum_id: number | null
           id: number
@@ -435,14 +435,14 @@ export type Database = {
           likes: number
           state: Database["public"]["Enums"]["Post_State"]
           superlikes: number
-          target_progress: number | null
+          target_progress: number
           text: string
           title: string
         }
         Insert: {
           comment_locked_state?: Database["public"]["Enums"]["Comment_Locked_State"]
           created_at?: string
-          creator_id?: string
+          creator_id?: string | null
           current_progress?: number
           forum_id?: number | null
           id?: number
@@ -450,14 +450,14 @@ export type Database = {
           likes?: number
           state?: Database["public"]["Enums"]["Post_State"]
           superlikes?: number
-          target_progress?: number | null
+          target_progress?: number
           text?: string
           title?: string
         }
         Update: {
           comment_locked_state?: Database["public"]["Enums"]["Comment_Locked_State"]
           created_at?: string
-          creator_id?: string
+          creator_id?: string | null
           current_progress?: number
           forum_id?: number | null
           id?: number
@@ -465,7 +465,7 @@ export type Database = {
           likes?: number
           state?: Database["public"]["Enums"]["Post_State"]
           superlikes?: number
-          target_progress?: number | null
+          target_progress?: number
           text?: string
           title?: string
         }
@@ -1177,7 +1177,7 @@ export type Database = {
         | "None"
         | "OnlyWhenGoalReached"
       Comment_Locked_State: "Locked" | "Unlocked"
-      Post_State: "Draft" | "Posted" | "Cancelled"
+      Post_State: "Draft" | "Posted" | "Cancelled" | "Completed"
       Verification: "Unverified" | "Paid" | "Official"
     }
     CompositeTypes: {
@@ -1317,7 +1317,7 @@ export const Constants = {
         "OnlyWhenGoalReached",
       ],
       Comment_Locked_State: ["Locked", "Unlocked"],
-      Post_State: ["Draft", "Posted", "Cancelled"],
+      Post_State: ["Draft", "Posted", "Cancelled", "Completed"],
       Verification: ["Unverified", "Paid", "Official"],
     },
   },
