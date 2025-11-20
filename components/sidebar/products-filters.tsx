@@ -9,6 +9,8 @@ import { Checkbox } from "../ui/checkbox";
 import { Separator } from "../ui/separator";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useTransition } from "react";
+import { Star } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ProductsFiltersProps {
 	categories: ICategory[];
@@ -93,20 +95,57 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 	};
 
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<h3 className="font-semibold">Filtros</h3>
-				{hasActiveFilters && (
-					<Button variant="ghost" size="sm" onClick={clearFilters} disabled={isPending}>
-						Limpiar
+		<div className="space-y-8">
+			<div className="space-y-4">
+				<div className="flex items-center justify-between">
+					<Label className="text-base font-bold">Categorías.</Label>
+					{hasActiveFilters && (
+						<Button
+							variant="ghost"
+							size="sm"
+							onClick={clearFilters}
+							disabled={isPending}
+							className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground"
+						>
+							Limpiar filtros
+						</Button>
+					)}
+				</div>
+				<div className="flex flex-wrap gap-2">
+					<Button
+						variant={selectedCategories.length === 0 ? "default" : "outline"}
+						size="sm"
+						className="rounded-full px-4"
+						onClick={() => setSelectedCategories([])}
+					>
+						Todo
 					</Button>
-				)}
+					{categories.map((category) => {
+						const isSelected = selectedCategories.includes(category.id.toString());
+						return (
+							<Button
+								key={category.id}
+								variant={isSelected ? "default" : "outline"}
+								size="sm"
+								className="rounded-full px-4"
+								onClick={() => {
+									const newCategories = isSelected
+										? selectedCategories.filter((c) => c !== category.id.toString())
+										: [...selectedCategories, category.id.toString()];
+									setSelectedCategories(newCategories);
+								}}
+							>
+								{category.name}
+							</Button>
+						);
+					})}
+				</div>
 			</div>
 
 			<div className="space-y-4">
 				<div>
-					<Label className="text-sm font-medium">Rango de precio</Label>
-					<div className="mt-4 px-2">
+					<Label className="text-base font-bold">Precio.</Label>
+					<div className="mt-6 px-2">
 						<Slider
 							value={priceRange}
 							onValueChange={setPriceRange}
@@ -118,50 +157,17 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 						/>
 					</div>
 					<div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
-						<span>${priceRange[0]}</span>
-						<span>${priceRange[1]}</span>
+						<span>{priceRange[0].toFixed(2)}€</span>
+						<span>{priceRange[1].toFixed(2)}€</span>
 					</div>
 				</div>
 			</div>
 
-			<Separator />
-
-			<div className="space-y-3">
-				<Label className="text-sm font-medium">Categorías</Label>
-				<div className="space-y-2">
-					{categories.map((category) => (
-						<div key={category.id} className="flex items-center justify-between">
-							<div className="flex items-center space-x-2">
-								<Checkbox
-									id={category.id.toString()}
-									checked={selectedCategories.includes(category.id.toString())}
-									disabled={isPending}
-									onCheckedChange={(checked) => {
-										const newCategories = checked
-											? [...selectedCategories, category.id.toString()]
-											: selectedCategories.filter((c) => c !== category.id.toString());
-										setSelectedCategories(newCategories);
-									}}
-								/>
-								<label
-									htmlFor={category.id.toString()}
-									className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-								>
-									{category.name}
-								</label>
-							</div>
-						</div>
-					))}
-				</div>
-			</div>
-
-			<Separator />
-
-			<div className="space-y-3">
-				<Label className="text-sm font-medium">Valoración</Label>
-				<div className="space-y-2">
+			<div className="space-y-4">
+				<Label className="text-base font-bold">Valoración.</Label>
+				<div className="space-y-3">
 					{[5, 4, 3, 2, 1].map((rating) => (
-						<div key={rating} className="flex items-center space-x-2">
+						<div key={rating} className="flex items-center space-x-3">
 							<Checkbox
 								id={`rating-${rating}`}
 								checked={selectedRating === rating}
@@ -169,14 +175,26 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 								onCheckedChange={(checked) => {
 									setSelectedRating(checked ? rating : 0);
 								}}
+								className="h-5 w-5 rounded-sm border-muted-foreground/50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
 							/>
 							<label
 								htmlFor={`rating-${rating}`}
 								className="text-sm leading-none cursor-pointer flex items-center gap-1"
 							>
-								<span className="text-yellow-500">{"★".repeat(rating)}</span>
-								<span className="text-muted-foreground">{"★".repeat(5 - rating)}</span>
-								{rating < 5 && <span className="text-muted-foreground ml-1">y más</span>}{" "}
+								<div className="flex">
+									{Array.from({ length: 5 }).map((_, i) => (
+										<Star
+											key={i}
+											className={cn(
+												"h-4 w-4",
+												i < rating
+													? "fill-primary text-primary"
+													: "fill-muted text-muted-foreground"
+											)}
+										/>
+									))}
+								</div>
+								{rating < 5 && <span className="text-muted-foreground ml-1 text-xs">y más</span>}
 							</label>
 						</div>
 					))}
