@@ -1,5 +1,6 @@
 import { PostCard } from "@/components/cards/post-card";
 import { ProductCard } from "@/components/cards/product-card";
+import { ProductCardHorizontal } from "@/components/cards/product-card-horizontal";
 import { H1 } from "@/components/ui-custom/typography";
 import { IOffer, IPetition, IProduct } from "@/lib/services/types";
 import Link from "next/link";
@@ -11,7 +12,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
 
 	return (
 		<section className="flex flex-row justify-center gap-8">
-			<div className="flex flex-col items-baseline gap-8 w-1/3">
+			<div className="flex flex-col items-baseline gap-8 w-[36%]">
 				<Link href={"/petitions"}>
 					<H1>{translator("petitions")}.</H1>
 				</Link>
@@ -21,7 +22,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
 				))}
 			</div>
 
-			<div className="flex flex-col items-baseline gap-8 w-1/3">
+			<div className="flex flex-col items-baseline gap-8 w-[36%] mr-12">
 				<Link href={"/offers"}>
 					<H1>{translator("offers")}.</H1>
 				</Link>
@@ -31,25 +32,13 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
 				))}
 			</div>
 
-			<div className="flex flex-col items-baseline gap-8 w-1/3">
+			<div className="flex flex-col items-baseline gap-7 w-[26%]">
 				<Link href={"/products"}>
 					<H1>{translator("products")}.</H1>
 				</Link>
 
 				{products?.map((product: IProduct) => (
-					<ProductCard
-						key={product.id}
-						props={{
-							className: "w-full",
-							name: product.name,
-							description: product.description,
-							businessName: (product.businesses && product.businesses[0]?.business?.name) || "N/A",
-							translator: translator,
-							id: product.id,
-							price: product.msrp || 0,
-							rating: product.rating || 0,
-						}}
-					/>
+					<ProductCardHorizontal key={product.id} {...product} />
 				))}
 			</div>
 		</section>

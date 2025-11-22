@@ -75,7 +75,7 @@ export function PostCard(props: IPostCard) {
 					/>
 				</div>
 
-				<Carousel className="w-full">
+				<Carousel className="w-full bg-secondary">
 					<CarouselContent>
 						{displayImages.map((image, index) => (
 							<CarouselItem key={index}>
@@ -91,7 +91,7 @@ export function PostCard(props: IPostCard) {
 										alt={`${post.title} - imagen ${index + 1}`}
 										fill
 										sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-										className="object-cover"
+										className="object-cover rounded-[20px]"
 										unoptimized
 									/>
 								</div>
