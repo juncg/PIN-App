@@ -16,13 +16,13 @@ export async function HomeServices(searchParams: Promise<ISearchParams>) {
 
 	const { data: offers } = await GetFromDatabase<IOffer>({
 		tableName: "Offer",
-		select: `*, User_Offer!left(liked, subscribed, user_id), tags:Offer_Tag(Tag(name))`,
+		select: `*, User_Offer!left(liked, subscribed, user_id), tags:Offer_Tag(Tag(name)), User!Offer_creator_id_fkey(*)`,
 		filters: [{ method: "order", column: "created_at", ascending: false }],
 	});
 
 	const { data: petitions } = await GetFromDatabase<IPetition>({
 		tableName: "Petition",
-		select: `*, User_Petition!left(liked, subscribed, user_id), tags:Petition_Tag(Tag(name))`,
+		select: `*, User_Petition!left(liked, subscribed, user_id), tags:Petition_Tag(Tag(name)), User!Petition_creator_id_fkey(*)`,
 		filters: [{ method: "order", column: "created_at", ascending: false }],
 	});
 

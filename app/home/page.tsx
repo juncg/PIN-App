@@ -13,7 +13,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
 		<section className="flex flex-row justify-center gap-8">
 			<div className="flex flex-col items-baseline gap-8 w-1/3">
 				<Link href={"/petitions"}>
-					<H1>{translator("petitions")}</H1>
+					<H1>{translator("petitions")}.</H1>
 				</Link>
 
 				{petitions?.map((petition: IPetition) => (
@@ -23,7 +23,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
 
 			<div className="flex flex-col items-baseline gap-8 w-1/3">
 				<Link href={"/offers"}>
-					<H1>{translator("offers")}</H1>
+					<H1>{translator("offers")}.</H1>
 				</Link>
 
 				{offers?.map((offer: IOffer) => (
@@ -33,7 +33,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
 
 			<div className="flex flex-col items-baseline gap-8 w-1/3">
 				<Link href={"/products"}>
-					<H1>{translator("products")}</H1>
+					<H1>{translator("products")}.</H1>
 				</Link>
 
 				{products?.map((product: IProduct) => (

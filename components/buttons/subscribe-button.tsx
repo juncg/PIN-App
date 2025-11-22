@@ -1,13 +1,14 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { AlertTriangle } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { NotLoggedInDialog } from "../dialogs/not-logged-in-dialog";
+import { Switch } from "../ui-custom/switch";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { handleSubscribeAction } from "./subscribe-button-actions";
-import { NotLoggedInDialog } from "../dialogs/not-logged-in-dialog";
-import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 
 export interface ISubscribeButton {
 	post_id: number;
@@ -17,6 +18,7 @@ export interface ISubscribeButton {
 	user_id: string | null;
 	onSubscriptionChange?: (newCount: number) => void;
 	fullWidth?: boolean;
+	variant?: "default" | "switch";
 }
 
 export function SubscribeButton(props: ISubscribeButton) {
@@ -28,6 +30,7 @@ export function SubscribeButton(props: ISubscribeButton) {
 		user_id,
 		onSubscriptionChange,
 		fullWidth = false,
+		variant = "default",
 	} = props;
 	const [numberOfSubscribers, setSubscribers] = useState<number>(subscribers);
 	const [subscribed, setSubscribed] = useState<boolean>(subscribedByUser);
@@ -104,9 +107,20 @@ export function SubscribeButton(props: ISubscribeButton) {
 
 	return (
 		<>
-			<Button onClick={handleSubscribe} disabled={isDisabled} className={cn(fullWidth && "w-full")}>
-				<span>{subscribed ? "Desuscribirme" : "Suscribirme"}</span>
-			</Button>
+			{variant === "switch" ? (
+				<Switch
+					checked={subscribed}
+					onCheckedChange={() => handleSubscribe()}
+					disabled={isDisabled}
+					innerTextChecked="Suscrito"
+					innerTextUnchecked="Suscribirse"
+					className={cn(fullWidth && "w-full")}
+				/>
+			) : (
+				<Button onClick={handleSubscribe} disabled={isDisabled} className={cn(fullWidth && "w-full")}>
+					<span>{subscribed ? "Desuscribirme" : "Suscribirme"}</span>
+				</Button>
+			)}
 
 			<Dialog open={showDialog} onOpenChange={setShowDialog}>
 				<DialogContent>
