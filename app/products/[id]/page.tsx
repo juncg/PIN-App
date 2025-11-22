@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProductReviewSection } from "@/components/products/product-review-section";
 import { ProductImages } from "@/components/products/product-images";
 import { getUserUuid } from "@/lib/services/user";
+import { H3 } from "@/components/ui-custom/typography";
 
 interface ProductPageProps {
 	params: Promise<{
@@ -100,35 +101,19 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 				</div>
 			</div>
 
-			<Tabs defaultValue="extra" className="mb-12">
-				<TabsList className="grid w-full grid-cols-2">
-					<TabsTrigger value="extra">Algo mas?</TabsTrigger>
-					<TabsTrigger value="reviews">Reseñas ({numOfReviews})</TabsTrigger>
-				</TabsList>
+			<div className="space-y-6">
+				<H3>Reseñas</H3>
 
-				<TabsContent value="extra" className="space-y-4">
-					<Card className="p-6">
-						<h3 className="text-xl font-semibold mb-4">
-							Aqui podriamos dar mas detalles del producto o alguna vaina asi que se nos ocurra
-						</h3>
-						<p className="text-muted-foreground mb-6">
-							Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore ea odio est illo accusamus
-							facere vero atque consequuntur, dolores assumenda. Perferendis beatae provident sit
-							excepturi illum dicta doloribus voluptate maiores.
-						</p>
-					</Card>
-				</TabsContent>
+				<Separator />
 
-				<TabsContent value="reviews" className="space-y-4">
-					<ProductReviewSection
-						product={product}
-						ratingDistribution={ratingDistribution}
-						numOfReviews={numOfReviews}
-						productReviews={productReviews}
-						userId={userUuid || ""}
-					/>
-				</TabsContent>
-			</Tabs>
+				<ProductReviewSection
+					product={product}
+					ratingDistribution={ratingDistribution}
+					numOfReviews={numOfReviews}
+					productReviews={productReviews}
+					userId={userUuid || ""}
+				/>
+			</div>
 		</div>
 	);
 }

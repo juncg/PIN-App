@@ -71,7 +71,7 @@ export function UserReviewCard({ review, currentUserId, productId }: UserReviewC
 				<div className="flex items-start justify-between mb-4">
 					<div className="flex items-center gap-3">
 						<Avatar className="h-12 w-12">
-							<AvatarImage src="/placeholder.png" />
+							<AvatarImage src={review.user?.profile_picture || undefined} />
 							<AvatarFallback>{review.user?.username}</AvatarFallback>
 						</Avatar>
 						<div>
