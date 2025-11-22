@@ -1,11 +1,11 @@
 "use client";
 
 import { SubscribeButton } from "@/components/buttons/subscribe-button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { IComment, IOffer } from "@/lib/services/types";
+import { IComment, IOffer, IUser } from "@/lib/services/types";
 import { GetRelativeTime } from "@/lib/services/utilities";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import Image from "next/image";
@@ -15,11 +15,11 @@ import { CommentsSection } from "../posts/comments-section";
 interface OfferDetailsProps {
 	offer: IOffer;
 	subscribedByUser: boolean;
-	userUuid: string | null;
+	currentUser: IUser | null;
 	comments?: IComment[];
 }
 
-export function OfferDetails({ offer, subscribedByUser, userUuid, comments }: OfferDetailsProps) {
+export function OfferDetails({ offer, subscribedByUser, currentUser, comments }: OfferDetailsProps) {
 	const [currentProgress, setCurrentProgress] = useState(offer.current_progress);
 	const [isSubscribed, setIsSubscribed] = useState(subscribedByUser);
 	const [selectedImage, setSelectedImage] = useState(0);
@@ -123,6 +123,7 @@ export function OfferDetails({ offer, subscribedByUser, userUuid, comments }: Of
 
 					<div className="flex items-center gap-3 mb-6">
 						<Avatar className="w-10 h-10 border-2 border-black">
+							<AvatarImage src={offer.User?.profile_picture || undefined} />
 							<AvatarFallback className="bg-primary text-black font-bold">
 								{offer.User?.username?.charAt(0).toLocaleUpperCase()}
 							</AvatarFallback>
@@ -200,12 +201,12 @@ export function OfferDetails({ offer, subscribedByUser, userUuid, comments }: Of
 					typeOfPost="Oferta"
 					subscribers={currentProgress}
 					subscribedByUser={isSubscribed}
-					user_id={userUuid}
+					user_id={currentUser?.id || null}
 					onSubscriptionChange={handleSubscriptionChange}
 					fullWidth={true}
 				/>
 			</div>
-			<CommentsSection postType="Offer" postId={offer.id} userUuid={userUuid} comments={comments} />{" "}
+			<CommentsSection postType="Offer" postId={offer.id} currentUser={currentUser} comments={comments} />{" "}
 		</div>
 	);
 }

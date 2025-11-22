@@ -12,8 +12,8 @@ interface PetitionPageProps {
 
 export default async function PetitionPage({ params }: PetitionPageProps) {
 	const { id } = await params;
-	const { petition, comments } = await PetitionDetailsService(id);
 	const userUuid = await getUserUuid();
+	const { petition, comments, currentUser } = await PetitionDetailsService(id, userUuid || "");
 
 	if (!petition || petition.length === 0) {
 		return <div>Loading...</div>;
@@ -25,8 +25,8 @@ export default async function PetitionPage({ params }: PetitionPageProps) {
 		<PetitionDetails
 			petition={petition[0]}
 			subscribedByUser={subscribedByUser ?? false}
-			userUuid={userUuid}
 			comments={comments}
+			currentUser={currentUser}
 		/>
 	);
 }

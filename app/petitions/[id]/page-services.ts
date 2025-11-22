@@ -1,8 +1,8 @@
 import { Tables } from "@/database.types";
 import { GetFromDatabase } from "@/lib/services/general";
-import { IPetition, IComment } from "@/lib/services/types";
+import { IPetition, IComment, IUser } from "@/lib/services/types";
 
-export async function PetitionDetailsService(id: number) {
+export async function PetitionDetailsService(id: number, userUuid: string) {
 	const { data: petition } = await GetFromDatabase<IPetition>({
 		tableName: "Petition",
 		select: `*, User!Petition_creator_id_fkey(*), User_Petition!left(liked, subscribed, user_id), tags:Petition_Tag(Tag(name))`,
@@ -58,5 +58,14 @@ export async function PetitionDetailsService(id: number) {
 		replies: [],
 	}));
 
-	return { petition, comments };
+	const currentUser =
+		userUuid && userUuid.trim() !== ""
+			? await GetFromDatabase<IUser>({
+					tableName: "User",
+					select: "*",
+					filters: [{ method: "eq", column: "id", value: userUuid }],
+			  })
+			: null;
+
+	return { petition, comments, currentUser: currentUser?.data?.[0] || null };
 }

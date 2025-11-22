@@ -1,10 +1,10 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { IComment, IPetition } from "@/lib/services/types";
+import { IComment, IPetition, IUser } from "@/lib/services/types";
 import { GetRelativeTime } from "@/lib/services/utilities";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import Image from "next/image";
@@ -15,11 +15,11 @@ import { CommentsSection } from "../posts/comments-section";
 interface PetitionDetailsProps {
 	petition: IPetition;
 	subscribedByUser: boolean;
-	userUuid: string | null;
 	comments?: IComment[];
+	currentUser: IUser | null;
 }
 
-export function PetitionDetails({ petition, subscribedByUser, userUuid, comments }: PetitionDetailsProps) {
+export function PetitionDetails({ petition, subscribedByUser, comments, currentUser }: PetitionDetailsProps) {
 	const [currentProgress, setCurrentProgress] = useState(petition.current_progress);
 	const [isSubscribed, setIsSubscribed] = useState(subscribedByUser);
 	const [selectedImage, setSelectedImage] = useState(0);
@@ -127,6 +127,7 @@ export function PetitionDetails({ petition, subscribedByUser, userUuid, comments
 
 					<div className="flex items-center gap-3 mb-6">
 						<Avatar className="w-10 h-10 border-2 border-black">
+							<AvatarImage src={petition.User?.profile_picture || undefined} />
 							<AvatarFallback className="bg-primary text-black font-bold">
 								{petition.User?.username?.charAt(0).toLocaleUpperCase()}
 							</AvatarFallback>
@@ -204,12 +205,12 @@ export function PetitionDetails({ petition, subscribedByUser, userUuid, comments
 					typeOfPost="Petición"
 					subscribers={currentProgress}
 					subscribedByUser={isSubscribed}
-					user_id={userUuid}
+					user_id={currentUser?.id || null}
 					onSubscriptionChange={handleSubscriptionChange}
 					fullWidth={true}
 				/>
 			</div>
-			<CommentsSection postType="Petition" postId={petition.id} userUuid={userUuid} comments={comments} />{" "}
+			<CommentsSection postType="Petition" postId={petition.id} comments={comments} currentUser={currentUser} />{" "}
 		</div>
 	);
 }

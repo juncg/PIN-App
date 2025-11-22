@@ -9,18 +9,23 @@ import { Separator } from "@/components/ui/separator";
 import { Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { NotLoggedInDialog } from "@/components/dialogs/not-logged-in-dialog";
-import { IComment } from "@/lib/services/types";
+import { IComment, IUser } from "@/lib/services/types";
 import { CommentCard } from "../cards/comment-card";
 import { PostToDatabase } from "@/lib/services/general";
 
 interface CommentsSectionProps {
 	postId: number;
 	postType: "Petition" | "Offer";
-	userUuid: string | null;
 	comments?: IComment[];
+	currentUser?: IUser | null;
 }
 
-export function CommentsSection({ postId, postType, userUuid, comments: initialComments = [] }: CommentsSectionProps) {
+export function CommentsSection({
+	postId,
+	postType,
+	comments: initialComments = [],
+	currentUser,
+}: CommentsSectionProps) {
 	const [comments, setComments] = useState<IComment[]>(initialComments);
 	const [newComment, setNewComment] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,7 +36,7 @@ export function CommentsSection({ postId, postType, userUuid, comments: initialC
 	}, [initialComments]);
 
 	const handleSubmit = async () => {
-		if (!userUuid) {
+		if (!currentUser) {
 			setShowLoginDialog(true);
 			return;
 		}
@@ -46,7 +51,7 @@ export function CommentsSection({ postId, postType, userUuid, comments: initialC
 			const commentData: Omit<IComment, "id"> = {
 				text: newComment,
 				created_at: new Date().toISOString(),
-				creator_id: userUuid,
+				creator_id: currentUser.id,
 				forum_id: null,
 				likes: 0,
 				superlikes: 0,
@@ -59,7 +64,7 @@ export function CommentsSection({ postId, postType, userUuid, comments: initialC
 				contentJson: [commentData],
 			});
 
-			if (error) {
+			if (error || !response) {
 				console.log("Error al publicar comentario:", error);
 				toast.error("Error al publicar comentario");
 				return;
@@ -77,6 +82,20 @@ export function CommentsSection({ postId, postType, userUuid, comments: initialC
 					},
 				],
 			});
+
+			if (postError) {
+				console.log("Error al vincular comentario:", postError);
+				toast.error("Error al publicar comentario");
+				return;
+			}
+
+			const newCommentWithUser: IComment = {
+				...response[0],
+				user: currentUser || undefined,
+				replies: [],
+			};
+
+			setComments((prevComments) => [newCommentWithUser, ...prevComments]);
 
 			toast.success("Comentario publicado");
 			setNewComment("");
@@ -102,20 +121,21 @@ export function CommentsSection({ postId, postType, userUuid, comments: initialC
 
 			<div className="flex gap-4">
 				<Avatar className="flex-shrink-0">
-					<AvatarFallback> </AvatarFallback>
+					<AvatarImage src={currentUser?.profile_picture || undefined} />
+					<AvatarFallback>{currentUser?.name?.[0].toUpperCase() || "U"}</AvatarFallback>
 				</Avatar>
 				<div className="flex-1 space-y-2">
 					<Textarea
-						placeholder={userUuid ? "Escribe un comentario..." : "Inicia sesión para comentar"}
+						placeholder={currentUser ? "Escribe un comentario..." : "Inicia sesión para comentar"}
 						value={newComment}
 						onChange={(e) => setNewComment(e.target.value)}
-						disabled={isSubmitting || !userUuid}
+						disabled={isSubmitting || !currentUser}
 						className="min-h-[100px] resize-none"
 					/>
 					<div className="flex justify-end">
 						<Button
 							onClick={handleSubmit}
-							disabled={isSubmitting || !newComment.trim() || !userUuid}
+							disabled={isSubmitting || !newComment.trim() || !currentUser}
 							size="sm"
 						>
 							{isSubmitting ? (

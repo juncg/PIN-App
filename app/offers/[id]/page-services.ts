@@ -1,8 +1,8 @@
 import { Tables } from "@/database.types";
 import { GetFromDatabase } from "@/lib/services/general";
-import { IComment, IOffer } from "@/lib/services/types";
+import { IComment, IOffer, IUser } from "@/lib/services/types";
 
-export async function OfferDetailsService(id: number) {
+export async function OfferDetailsService(id: number, userUuid: string) {
 	const { data: offer } = await GetFromDatabase<IOffer>({
 		tableName: "Offer",
 		select: `*, User!Offer_creator_id_fkey(*), User_Offer!left(liked, subscribed, user_id), tags:Offer_Tag(Tag(name))`,
@@ -58,7 +58,14 @@ export async function OfferDetailsService(id: number) {
 		replies: [],
 	}));
 
-	console.log("Fetched comments:", comments);
+	const currentUser =
+		userUuid && userUuid.trim() !== ""
+			? await GetFromDatabase<IUser>({
+					tableName: "User",
+					select: "*",
+					filters: [{ method: "eq", column: "id", value: userUuid }],
+			  })
+			: null;
 
-	return { offer, comments };
+	return { offer, comments, currentUser: currentUser?.data?.[0] || null };
 }

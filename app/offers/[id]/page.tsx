@@ -13,7 +13,7 @@ interface OfferPageProps {
 export default async function OfferPage({ params }: OfferPageProps) {
 	const { id } = await params;
 	const userUuid = await getUserUuid();
-	const { offer, comments } = await OfferDetailsService(id);
+	const { offer, comments, currentUser } = await OfferDetailsService(id, userUuid || "");
 
 	if (!offer || offer.length === 0) {
 		return <div>Oferta no encontrada</div>;
@@ -25,7 +25,7 @@ export default async function OfferPage({ params }: OfferPageProps) {
 		<OfferDetails
 			offer={offer[0]}
 			subscribedByUser={subscribedByUser ?? false}
-			userUuid={userUuid}
+			currentUser={currentUser}
 			comments={comments}
 		/>
 	);

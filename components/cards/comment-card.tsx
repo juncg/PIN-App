@@ -6,9 +6,14 @@ import { IComment } from "@/lib/services/types";
 import { P } from "../ui-custom/typography";
 import { GetRelativeTime } from "@/lib/services/utilities";
 import { MessageSquare } from "lucide-react";
+import { toast } from "sonner";
 
 export function CommentCard({ comment, level = 0 }: { comment: IComment; level?: number }) {
 	const [showReplyForm, setShowReplyForm] = useState(false);
+
+	const handleReplyClick = () => {
+		toast.info("Esta función no está implementada actualmente");
+	};
 
 	return (
 		<div className={`flex gap-4 group ${level > 0 ? "ml-12 mt-4" : ""}`}>
@@ -29,7 +34,7 @@ export function CommentCard({ comment, level = 0 }: { comment: IComment; level?:
 				<div className="flex items-center gap-4 text-xs text-muted-foreground">
 					<button
 						className="hover:text-foreground transition-colors flex items-center gap-1"
-						onClick={() => setShowReplyForm(!showReplyForm)}
+						onClick={handleReplyClick}
 					>
 						<MessageSquare className="h-3 w-3" />
 						Responder
