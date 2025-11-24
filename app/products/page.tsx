@@ -13,7 +13,8 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
 		<div className="flex min-h-screen flex-col">
 			<div className="container flex-1 px-4 py-6">
 				<div className="mb-8 text-sm text-muted-foreground">
-					<span>Inicio</span> <span className="mx-2">/</span> <span className="text-foreground font-medium">Productos</span>
+					<span>Inicio</span> <span className="mx-2">/</span>{" "}
+					<span className="text-foreground font-medium">Productos</span>
 				</div>
 
 				<div className="flex gap-8">
@@ -34,14 +35,8 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
 									key={product.id}
 									props={{
 										className: "w-full",
-										name: product.name,
-										description: product.description,
-										businessName:
-											(product.businesses && product.businesses[0]?.business?.name) || "N/A",
+										product: product,
 										translator: translator,
-										id: product.id,
-										price: product.msrp || 0,
-										rating: product.rating || 0,
 									}}
 								/>
 							))}
