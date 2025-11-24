@@ -19,10 +19,6 @@ interface ProductPageProps {
 	searchParams: Promise<ISearchParams>;
 }
 
-const product2 = {
-	images: ["/placeholder.png", "/placeholder.png", "/placeholder.png", "/placeholder.png"],
-};
-
 export default async function ProductsPage({ params }: ProductPageProps) {
 	const { id } = await params;
 	const { product, ratingDistribution, numOfReviews, productReviews } = await ProductDetailsServices(id);
@@ -35,7 +31,7 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 	return (
 		<div className="container mx-auto px-4 py-8">
 			<div className="grid lg:grid-cols-2 gap-8 mb-12">
-				<ProductImages images={product2.images} />
+				<ProductImages images={product.images || []} />
 
 				<div className="space-y-6">
 					<div>

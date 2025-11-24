@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { SubscribeButton } from "../buttons/subscribe-button";
 import { CommentsSection } from "../posts/comments-section";
+import { ProductImages } from "../products/product-images";
 
 interface PetitionDetailsProps {
 	petition: IPetition;
@@ -47,64 +48,7 @@ export function PetitionDetails({ petition, subscribedByUser, comments, currentU
 	return (
 		<div className="container mx-auto px-4 py-8">
 			<div className="grid lg:grid-cols-2 gap-8 mb-12">
-				<div className="space-y-4 w-full">
-					<div className="relative aspect-video bg-muted rounded-lg overflow-hidden">
-						<Image
-							src={displayImages[selectedImage]}
-							alt={`${petition.title} - imagen ${selectedImage + 1}`}
-							fill
-							className="object-cover"
-							unoptimized
-						/>
-						{displayImages.length > 1 && (
-							<>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
-									onClick={() =>
-										setSelectedImage((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1))
-									}
-								>
-									<ChevronLeft className="h-6 w-6" />
-								</Button>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
-									onClick={() =>
-										setSelectedImage((prev) => (prev === displayImages.length - 1 ? 0 : prev + 1))
-									}
-								>
-									<ChevronRight className="h-6 w-6" />
-								</Button>
-							</>
-						)}
-					</div>
-					{displayImages.length > 1 && (
-						<div className="grid grid-cols-4 gap-2">
-							{displayImages.map((image, index) => (
-								<button
-									key={index}
-									onClick={() => setSelectedImage(index)}
-									className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-colors ${
-										selectedImage === index
-											? "border-primary"
-											: "border-transparent hover:border-muted-foreground/50"
-									}`}
-								>
-									<Image
-										src={image}
-										alt={`${petition.title} - miniatura ${index + 1}`}
-										fill
-										className="object-cover"
-										unoptimized
-									/>
-								</button>
-							))}
-						</div>
-					)}
-				</div>
+				<ProductImages images={displayImages} />
 
 				<div className="space-y-6">
 					<div className="flex flex-wrap gap-2 mb-3">
