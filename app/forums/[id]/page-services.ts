@@ -52,7 +52,8 @@ export async function fetchForumPosts(forumId: number, page: number = 0, pageSiz
 		tableName: "Offer",
 		select: `*, 
 			Offer_Tag(Tag(id, name)),
-			User_Offer!left(liked, subscribed, user_id)`,
+			User_Offer!left(liked, subscribed, user_id),
+			User!Offer_creator_id_fkey(*)`,
 		filters: [
 			{
 				method: "eq",
@@ -71,7 +72,8 @@ export async function fetchForumPosts(forumId: number, page: number = 0, pageSiz
 		tableName: "Petition",
 		select: `*, 
 			Petition_Tag(Tag(id, name)),
-			User_Petition!left(liked, subscribed, user_id)`,
+			User_Petition!left(liked, subscribed, user_id),
+			User!Petition_creator_id_fkey(*)`,
 		filters: [
 			{
 				method: "eq",
