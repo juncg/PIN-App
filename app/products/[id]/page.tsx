@@ -1,16 +1,15 @@
-import { ISearchParams } from "@/types";
-import { ProductDetailsServices } from "./page-services";
-import { Button } from "@/components/ui/button";
-import { Star, ChevronLeft, ChevronRight, ArrowRightIcon } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
-import { Card } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ProductReviewSection } from "@/components/products/product-review-section";
 import { ProductImages } from "@/components/products/product-images";
-import { getUserUuid } from "@/lib/services/user";
+import { ProductReviewSection } from "@/components/products/product-review-section";
 import { H3 } from "@/components/ui-custom/typography";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { getUserUuid } from "@/lib/services/user";
+import { ISearchParams } from "@/types";
+import { ArrowRightIcon, Star } from "lucide-react";
+import Link from "next/link";
+import { ProductDetailsServices } from "./page-services";
 
 interface ProductPageProps {
 	params: Promise<{
@@ -85,7 +84,7 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 						</div>
 					</Card>
 
-					<Separator />
+					{/*<Separator />
 
 					<div>
 						<h1 className="text-3xl font-bold mb-2">Alguna vaina mas?</h1>
@@ -93,7 +92,7 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 							No se si tenemos que poner los tipicos botones de comprar y demas, asi que dejo este
 							apartado por ahora de bonus
 						</p>
-					</div>
+					</div>*/}
 				</div>
 			</div>
 

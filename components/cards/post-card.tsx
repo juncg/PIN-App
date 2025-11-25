@@ -3,6 +3,7 @@
 import { useUser } from "@/hooks/use-user";
 import { BASE_DOMAIN } from "@/lib/constants";
 import { IOffer, IPetition } from "@/lib/services/types";
+import { GetTimeRemaining } from "@/lib/services/utilities";
 import { cn } from "@/lib/utils";
 import { Timer, Users } from "lucide-react";
 import Image from "next/image";
@@ -14,7 +15,6 @@ import { PopOutMedia } from "../floating-panels/pop-out-media";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui-custom/carousel";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Progress } from "../ui/progress";
-import { GetTimeRemaining } from "@/lib/services/utilities";
 
 export interface IPostCard {
 	className?: string;

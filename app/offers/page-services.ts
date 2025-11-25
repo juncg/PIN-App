@@ -11,7 +11,7 @@ async function fetchOffers(page: number = 0, pageSize: number = OFFERS_PAGE_SIZE
 
 	const { data: offers } = await GetFromDatabase<IOffer>({
 		tableName: "Offer",
-		select: `*, User_Offer!left(liked, subscribed, user_id), tags:Offer_Tag(Tag(name))`,
+		select: `*, User_Offer!left(liked, subscribed, user_id), tags:Offer_Tag(Tag(name)), User!Offer_creator_id_fkey(*)`,
 		filters: [
 			{
 				method: "range",
