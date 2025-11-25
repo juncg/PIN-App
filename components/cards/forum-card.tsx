@@ -18,7 +18,7 @@ export interface IForumCard {
 export function ForumCard(props: IForumCard) {
 	const { forum, className } = props;
 
-	const profileImage = forum.profile_picture || "/placeholder.png";
+	console.log(forum);
 
 	return (
 		<article className={cn("flex flex-col border border-spacing-2 rounded-lg p-4 gap-4", className)}>
@@ -26,7 +26,7 @@ export function ForumCard(props: IForumCard) {
 				<div className="flex items-center gap-4">
 					<div className="relative w-16 h-16 overflow-hidden rounded-full flex-shrink-0 border-2 border-muted">
 						<Image
-							src={profileImage}
+							src={forum.profile_picture || "/placeholder.png"}
 							alt={forum.name || "Forum"}
 							fill
 							className="object-cover"

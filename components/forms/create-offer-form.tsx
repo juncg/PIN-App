@@ -2,32 +2,25 @@
 
 import { SelectTags } from "@/components/select/select-tags";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tables } from "@/database.types";
 import { useUser } from "@/hooks/use-user";
 import { PostToDatabase } from "@/lib/services/general";
 import { compressImage, uploadImage } from "@/lib/services/media-upload";
 import { IForum, IOffer } from "@/lib/services/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createClient, type PostgrestError } from "@supabase/supabase-js";
+import { type PostgrestError } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { APIErrorHandler } from "../error-handlers/api-error-handler";
 import { DateInput } from "../ui-custom/date-input";
+import { Input } from "../ui-custom/input";
 import { Switch } from "../ui-custom/switch";
 import { Textarea } from "../ui/textarea";
 import { FormField } from "./base/form-field";
+import FileDropzone from "./file-dropzone";
 import { CreateOfferSchema, type TCreateOfferSchema } from "./schemas/offer";
-import { FilePond, registerPlugin } from "react-filepond";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import { Tables } from "@/database.types";
-
-import "filepond/dist/filepond.min.css";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-
-registerPlugin(FilePondPluginImagePreview);
 
 interface OfferFormProps {
 	forums: IForum[];
@@ -41,7 +34,7 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 	const [images, setImages] = useState<File[]>([]);
 	const { userUuid } = useUser();
 	const router = useRouter();
-	const filePondRef = useRef<FilePond>(null);
+	// Dropzone handled by `FileDropzone` component
 
 	const {
 		register,
@@ -254,22 +247,7 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 				</FormField>
 
 				{/* Images */}
-				<div className="grid gap-2">
-					<Label>Imágenes</Label>
-					<FilePond
-						ref={filePondRef}
-						files={images}
-						allowMultiple={true}
-						maxFiles={5}
-						onupdatefiles={(fileItems: any[]) => setImages(fileItems.map((fi) => fi.file as File))}
-						name="images"
-						labelIdle='Arrastra y suelta tus imágenes o <span class="filepond--label-action">Selecciona</span>'
-						disabled={isSubmitting}
-						acceptedFileTypes={["image/*"]}
-						instantUpload={false}
-						imagePreviewHeight={150}
-					/>
-				</div>
+				<FileDropzone value={images} onChange={setImages} maxFiles={5} disabled={isSubmitting} />
 
 				<Button type="submit" disabled={isSubmitting}>
 					{isSubmitting ? "Creando..." : "Crear Oferta"}

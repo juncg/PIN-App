@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { IComment } from "@/lib/services/types";
-import { P } from "../ui-custom/typography";
 import { GetRelativeTime } from "@/lib/services/utilities";
 import { MessageSquare } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
+import { P } from "../ui-custom/typography";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export function CommentCard({ comment, level = 0 }: { comment: IComment; level?: number }) {
 	const [showReplyForm, setShowReplyForm] = useState(false);
@@ -18,7 +18,7 @@ export function CommentCard({ comment, level = 0 }: { comment: IComment; level?:
 	return (
 		<div className={`flex gap-4 group ${level > 0 ? "ml-12 mt-4" : ""}`}>
 			<Avatar className="h-10 w-10 border flex-shrink-0">
-				<AvatarImage src={comment.user?.profile_picture || undefined} />
+				<AvatarImage className="object-cover" src={comment.user?.profile_picture || undefined} />
 				<AvatarFallback>{comment.user?.name?.[0].toUpperCase() || "U"}</AvatarFallback>
 			</Avatar>
 			<div className="flex-1 space-y-2">

@@ -1,21 +1,20 @@
 "use client";
 
-import { Check, MoreHorizontal, Star } from "lucide-react";
-import { Button } from "../ui/button";
-import { Card } from "../ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { IReview } from "@/lib/services/types";
-import { Separator } from "../ui/separator";
-import { LikeButton } from "../buttons/like-button";
-import { useUser } from "@/hooks/use-user";
-import { GetRelativeTime } from "@/lib/services/utilities";
-import { PostActionsDropdown } from "../buttons/post-actions-button";
-import { DeleteFromDatabase, ExecuteRpcFunction } from "@/lib/services/general";
-import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ProductReviewForm } from "../forms/product-review-form";
+import { useUser } from "@/hooks/use-user";
+import { DeleteFromDatabase, ExecuteRpcFunction } from "@/lib/services/general";
+import { IReview } from "@/lib/services/types";
+import { GetRelativeTime } from "@/lib/services/utilities";
+import { Star } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
+import { LikeButton } from "../buttons/like-button";
+import { PostActionsDropdown } from "../buttons/post-actions-button";
+import { ProductReviewForm } from "../forms/product-review-form";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Card } from "../ui/card";
+import { Separator } from "../ui/separator";
 
 interface UserReviewCardProps {
 	review: IReview;
@@ -71,7 +70,7 @@ export function UserReviewCard({ review, currentUserId, productId }: UserReviewC
 				<div className="flex items-start justify-between mb-4">
 					<div className="flex items-center gap-3">
 						<Avatar className="h-12 w-12">
-							<AvatarImage src={review.user?.profile_picture || undefined} />
+							<AvatarImage className="object-cover" src={review.user?.profile_picture || undefined} />
 							<AvatarFallback>{review.user?.username}</AvatarFallback>
 						</Avatar>
 						<div>

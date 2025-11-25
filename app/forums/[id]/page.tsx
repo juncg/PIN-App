@@ -33,7 +33,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 	const { offers: initialOffers, petitions: initialPetitions } = await fetchForumPosts(id, 0, 10);
 
 	const bannerImage = forumData.banner || "/placeholder.png";
-	const profileImage = forumData.profile_picture || "/jancarlo.jpg";
+	const profileImage = forumData.profile_picture || "/placeholder.png";
 
 	return (
 		<div className="container mx-auto px-4 py-8">
@@ -135,6 +135,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 						<Separator />
 						{initialOffers.length > 0 ? (
 							<InfinitePostList
+								className="!grid-cols-2"
 								initialPosts={initialOffers as TPost[]}
 								loadMoreAction={loadMoreOffers.bind(null, id)}
 								pageSize={10}
@@ -156,6 +157,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 						<Separator />
 						{initialPetitions.length > 0 ? (
 							<InfinitePostList
+								className="!grid-cols-2"
 								initialPosts={initialPetitions as TPost[]}
 								loadMoreAction={loadMorePetitions.bind(null, id)}
 								pageSize={10}

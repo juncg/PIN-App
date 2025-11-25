@@ -1,17 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { NotLoggedInDialog } from "@/components/dialogs/not-logged-in-dialog";
+import { H3, P } from "@/components/ui-custom/typography";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { H3, P } from "@/components/ui-custom/typography";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, Plus } from "lucide-react";
-import { toast } from "sonner";
-import { NotLoggedInDialog } from "@/components/dialogs/not-logged-in-dialog";
-import { IComment, IUser } from "@/lib/services/types";
-import { CommentCard } from "../cards/comment-card";
+import { Textarea } from "@/components/ui/textarea";
 import { PostToDatabase } from "@/lib/services/general";
+import { IComment, IUser } from "@/lib/services/types";
+import { Loader2, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { CommentCard } from "../cards/comment-card";
 
 interface CommentsSectionProps {
 	postId: number;
@@ -121,7 +121,7 @@ export function CommentsSection({
 
 			<div className="flex gap-4">
 				<Avatar className="flex-shrink-0">
-					<AvatarImage src={currentUser?.profile_picture || undefined} />
+					<AvatarImage className="object-cover" src={currentUser?.profile_picture || undefined} />
 					<AvatarFallback>{currentUser?.name?.[0].toUpperCase() || "U"}</AvatarFallback>
 				</Avatar>
 				<div className="flex-1 space-y-2">

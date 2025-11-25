@@ -1,10 +1,10 @@
 "use client";
 
-import { Building, Hand, Home, Settings, Shield, ShoppingBag, Tag, User, Users } from "lucide-react";
+import { useUser } from "@/hooks/use-user";
+import { Hand, Home, Settings, Shield, ShoppingBag, Tag, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { useUser } from "@/hooks/use-user";
 
 import {
 	Sidebar,
@@ -39,11 +39,6 @@ const items = [
 		title: "Productos",
 		url: "/products",
 		icon: ShoppingBag,
-	},
-	{
-		title: "Empresas",
-		url: "/businesses",
-		icon: Building,
 	},
 	{
 		title: "Foros",

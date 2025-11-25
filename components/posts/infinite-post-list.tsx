@@ -1,6 +1,7 @@
 "use client";
 
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
+import { cn } from "@/lib/utils";
 import { TPost } from "@/types";
 import { useCallback, useEffect, useState } from "react";
 import { PostCard } from "../cards/post-card";
@@ -8,6 +9,7 @@ import { P } from "../ui-custom/typography";
 import { Skeleton } from "../ui/skeleton";
 
 interface InfinitePostListProps {
+	className?: string;
 	initialPosts: TPost[];
 	loadMoreAction: (page: number, pageSize: number, postName?: string) => Promise<TPost[]>;
 	searchParams?: {
@@ -19,6 +21,7 @@ interface InfinitePostListProps {
 }
 
 export function InfinitePostList({
+	className,
 	initialPosts,
 	loadMoreAction,
 	searchParams,
@@ -82,7 +85,7 @@ export function InfinitePostList({
 
 	return (
 		<div className="space-y-4">
-			<div className="grid grid-cols-3 gap-4">
+			<div className={cn("grid grid-cols-3 gap-4", className)}>
 				{posts.map((post) => (
 					<PostCard key={post.id} className="w-full" post={post} />
 				))}

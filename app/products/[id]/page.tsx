@@ -36,10 +36,12 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 					<div>
 						<h1 className="text-3xl font-bold mb-2">{product.name}</h1>
 						<div className="flex items-center gap-4 mb-4">
-							<div className="flex items-center gap-1">
-								<Star className="h-5 w-5 fill-amber-500 text-amber-500" />
-								<span className="font-semibold">{product.rating || 0.0}</span>
-								<span className="text-muted-foreground">{numOfReviews} reseñas</span>
+							<div className="flex items-center gap-2">
+								<div className="flex gap-1 items-center">
+									<Star className="h-5 w-5 fill-amber-500 text-amber-500" />
+									<span className="font-semibold">{(product.rating || 0.0).toFixed(1)}</span>
+								</div>
+								<span className="text-muted-foreground">({numOfReviews} reseñas)</span>
 							</div>
 						</div>
 					</div>
