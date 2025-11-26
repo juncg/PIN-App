@@ -20,8 +20,8 @@ test('offers can be created and viewed afterwards', async ({ page }) => {
 
     await page.locator('button:has-text("Nueva Oferta")').click();
 
-
-    await page.locator('#title').fill('Oferta test random' + (Math.random() * 100) );
+    const offerName:string = 'Oferta test random' + (Math.random() * 100);
+    await page.locator('#title').fill(offerName);
 
     await page.locator('#text').fill('Descripción genérica.');
 
@@ -43,7 +43,9 @@ test('offers can be created and viewed afterwards', async ({ page }) => {
 
     await page.getByRole('button', { name: 'Crear Oferta' }).click(); // boton crear oferta se clicka al final
 
-    
+
+    await page.waitForTimeout(20000); // give it time to load stuff
+    await expect(page.locator(`text=${offerName}`)).toBeVisible();
 
 
 });
