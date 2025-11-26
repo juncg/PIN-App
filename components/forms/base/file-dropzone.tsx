@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui-custom/button";
-import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { Input } from "../../ui-custom/input";
 import { Label } from "../../ui-custom/label";
@@ -107,7 +106,7 @@ export default function FileDropzone({
 				<div className="grid grid-cols-3 gap-2 mt-2">
 					{value.map((file, idx) => (
 						<div key={idx} className="relative rounded overflow-hidden bg-muted-foreground/5">
-							<Image src={previews[idx]} alt={file.name} className="h-24 w-full object-contain" />
+							<img src={previews[idx]} alt={file.name} className="h-24 w-full object-contain" />
 							<Button
 								type="button"
 								onClick={(ev) => {
