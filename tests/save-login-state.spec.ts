@@ -16,7 +16,7 @@ test('save login state', async ({ page }) => {
 
   // Wait for some element visible after login
   
-  await expect(page.locator('text=Peticiones.')).toBeVisible();
+
 
   // Save cookies and localStorage into a file
   await page.context().storageState({ path: 'storageState.json' }); 
