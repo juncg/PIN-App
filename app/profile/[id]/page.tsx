@@ -9,6 +9,8 @@ import Image from "next/image";
 import { ProfileServices } from "./page-services";
 import { ISearchParams } from "@/types";
 import { GetJoinedDate } from "@/lib/services/utilities";
+import { FollowButton } from "@/components/buttons/follow-button";
+import { getUserUuid } from "@/lib/services/user";
 
 interface ProfilePageProps {
 	params: Promise<{
@@ -31,7 +33,10 @@ export default async function Profile({ params }: ProfilePageProps) {
 		subscribedOffersCount,
 		subscribedPetitions,
 		subscribedPetitionsCount,
+		followedByUser,
 	} = await ProfileServices(id);
+	const currentUserId = await getUserUuid();
+	const isCurrentUser = currentUserId === userData?.id;
 
 	return (
 		<section className="flex flex-row justify-center items-start gap-16">
@@ -77,7 +82,17 @@ export default async function Profile({ params }: ProfilePageProps) {
 						</span>
 
 						<span>
-							<Button>Editar perfil</Button>
+							{!isCurrentUser ? (
+								<FollowButton
+									variant="switch"
+									followedByUser={followedByUser}
+									entityId={id}
+									entityType="User"
+									currentUserId={currentUserId}
+								/>
+							) : (
+								<Button className="bg-primary-foreground text-primary">Editar perfil</Button>
+							)}
 						</span>
 					</div>
 				</div>

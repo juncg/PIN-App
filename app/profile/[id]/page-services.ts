@@ -3,6 +3,9 @@ import { IUser } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
 
 export async function ProfileServices(uuid: number) {
+	const currentUserUuid = await getUserUuid();
+	var followedByUser = false;
+
 	const user = uuid
 		? await GetFromDatabase<IUser>({
 				tableName: "User",
@@ -12,6 +15,7 @@ export async function ProfileServices(uuid: number) {
 		: null;
 
 	const userData = user?.data?.[0];
+	console.log("User Data fetched in services: ", userData);
 
 	const { data: followingForumsRaw } = await GetFromDatabase<any>({
 		tableName: "User_Forum",
@@ -128,6 +132,18 @@ export async function ProfileServices(uuid: number) {
 		if (!error && typeof count === "number") subscribedPetitionsCount = count;
 	}
 
+	if (userData && currentUserUuid) {
+		const { data: isFollowingData } = await GetFromDatabase<any>({
+			tableName: "User_User",
+			filters: [
+				{ method: "eq", column: "user_id", value: currentUserUuid },
+				{ method: "eq", column: "following_id", value: userData.id },
+			],
+		});
+
+		followedByUser = (isFollowingData && isFollowingData.length > 0) || false;
+	}
+
 	return {
 		userData,
 		followingForums,
@@ -140,5 +156,6 @@ export async function ProfileServices(uuid: number) {
 		subscribedOffersCount,
 		subscribedPetitions,
 		subscribedPetitionsCount,
+		followedByUser,
 	};
 }
