@@ -22,6 +22,7 @@ export function SearchGeneralDropdownItem({ item, type }: SearchGeneralDropdownI
 					title: offer.title,
 					subtitle: offer.text?.substring(0, 50),
 					tags: offer.tags?.slice(0, 2),
+					image: offer?.images?.[0] || "",
 				};
 			}
 			case "petition": {
@@ -33,6 +34,7 @@ export function SearchGeneralDropdownItem({ item, type }: SearchGeneralDropdownI
 						? `${petition.User.name} ${petition.User.surnames || ""}`.trim()
 						: undefined,
 					tags: petition.tags?.slice(0, 2),
+					image: petition?.images?.[0] || "",
 				};
 			}
 			case "forum": {
@@ -42,6 +44,7 @@ export function SearchGeneralDropdownItem({ item, type }: SearchGeneralDropdownI
 					title: forum.name,
 					subtitle: forum.Business?.name,
 					tags: forum.Forum_Tag?.slice(0, 2).map((ft) => ft.Tag),
+					image: forum.profile_picture || "",
 				};
 			}
 			case "business": {
@@ -51,6 +54,7 @@ export function SearchGeneralDropdownItem({ item, type }: SearchGeneralDropdownI
 					title: business.name,
 					subtitle: business.description?.substring(0, 50),
 					tags: undefined,
+					image: business.profile_picture || "",
 				};
 			}
 			case "product": {
@@ -60,6 +64,7 @@ export function SearchGeneralDropdownItem({ item, type }: SearchGeneralDropdownI
 					title: product.name,
 					subtitle: product.msrp ? `$${product.msrp}` : product.description?.substring(0, 50),
 					tags: undefined,
+					image: product?.images?.[0] || "",
 				};
 			}
 			case "user": {
@@ -69,18 +74,25 @@ export function SearchGeneralDropdownItem({ item, type }: SearchGeneralDropdownI
 					title: `${user.name} ${user.surnames || ""}`.trim(),
 					subtitle: user.username,
 					tags: undefined,
+					image: user.profile_picture || "",
 				};
 			}
 		}
 	};
 
-	const { href, title, subtitle, tags } = getItemData();
+	const { href, title, subtitle, tags, image } = getItemData();
 
 	return (
 		<Link href={href} className="block hover:bg-accent/50 transition-colors">
 			<div className="flex gap-4 p-4">
 				<div className="relative w-16 h-16 flex-shrink-0 rounded-md overflow-hidden bg-muted flex items-center justify-center">
-					<Image src="/placeholder.png" alt={title || ""} fill className="object-cover" unoptimized />
+					<Image
+						src={image || "/placeholder.png"}
+						alt={title || ""}
+						fill
+						className="object-cover"
+						unoptimized
+					/>
 				</div>
 
 				<div className="flex-1 min-w-0">
@@ -89,7 +101,7 @@ export function SearchGeneralDropdownItem({ item, type }: SearchGeneralDropdownI
 
 					{tags && tags.length > 0 && (
 						<div className="flex gap-1 mt-2">
-							{tags.map((tag, index) => (
+							{tags.map((tag: any, index: number) => (
 								<Badge key={index} variant="secondary" className="text-xs">
 									{tag.name}
 								</Badge>

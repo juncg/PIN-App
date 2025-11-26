@@ -3,7 +3,7 @@ import { Tables } from "@/database.types";
 export type IOffer = Tables<"Offer"> & {
 	type: "Offer";
 	businesses?: { business: Tables<"Business"> }[];
-	tags?: { Tag: Tables<"Tag"> }[];
+	tags?: { Tag: ITag }[];
 	User_Offer?: Tables<"User_Offer">[];
 	User?: Tables<"User">;
 };
@@ -11,7 +11,7 @@ export type IOffer = Tables<"Offer"> & {
 export type IPetition = Tables<"Petition"> & {
 	type: "Petition";
 	businesses?: { business: Tables<"Business"> }[];
-	tags?: { Tag: Tables<"Tag"> }[];
+	tags?: { Tag: ITag }[];
 	User_Petition?: Tables<"User_Petition">[];
 	User: Tables<"User">;
 };
@@ -34,7 +34,7 @@ export type IForum = Tables<"Forum"> & {
 	}[];
 	Business?: Tables<"Business">;
 	Forum_Tag?: {
-		Tag: Tables<"Tag">;
+		Tag: ITag;
 	}[];
 	User_Forum?: Tables<"User_Forum">[];
 };
@@ -67,6 +67,8 @@ export type IComment = Tables<"Comment"> & {
 	user?: Tables<"User">;
 	replies?: IComment[];
 };
+
+export type ITag = Tables<"Tag">;
 
 export interface IGetFromDatabase {
 	tableName: string;
