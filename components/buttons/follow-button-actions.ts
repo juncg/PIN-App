@@ -1,3 +1,5 @@
+"use server";
+
 import { ExecuteRpcFunction } from "@/lib/services/general";
 import { getUserUuid } from "@/lib/services/user";
 

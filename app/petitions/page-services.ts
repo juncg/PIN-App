@@ -10,7 +10,7 @@ async function fetchPetitions(page: number = 0, pageSize: number = PETITIONS_PAG
 
 	const { data: petitions } = await GetFromDatabase<IPetition>({
 		tableName: "Petition",
-		select: `*, User_Petition!left(liked, subscribed, user_id), tags:Petition_Tag(Tag(name))`,
+		select: `*, User_Petition!left(liked, subscribed, user_id), tags:Petition_Tag(Tag(name)), User!Petition_creator_id_fkey(*)`,
 		filters: [
 			{
 				method: "range",

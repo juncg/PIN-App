@@ -4,6 +4,7 @@ import { IForum } from "@/lib/services/types";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
 import { FollowButton } from "../buttons/follow-button";
 import { useUser } from "@/hooks/use-user";
+import Link from "next/link";
 
 export interface IForumCard {
 	className?: string;
@@ -27,7 +28,9 @@ export function ForumCard({ className, forum, currentUserId }: IForumCard) {
 						</Avatar>
 						<div>
 							<div className="flex flex-col items-start gap-0.5">
-								<h3 className="font-bold text-lg">{forum.name}</h3>
+								<Link href={`/forums/${forum.id}`} className="text-s font-bold hover:underline">
+									{forum.name}
+								</Link>
 								<span className="text-xs text-muted-foreground">{forum.Business?.name}</span>
 							</div>
 						</div>
