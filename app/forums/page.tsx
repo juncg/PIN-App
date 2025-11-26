@@ -1,6 +1,6 @@
 import { InfiniteForumList } from "@/components/forums/infinite-forum-list";
 import { SearchInput } from "@/components/search/search";
-import { H1, P } from "@/components/ui-custom/typography";
+import { H1, H2, P } from "@/components/ui-custom/typography";
 import { Button } from "@/components/ui/button";
 import { FORUMS_MAX_POSTS, FORUMS_PAGE_SIZE } from "@/lib/constants";
 import { getUserUuid } from "@/lib/services/user";
@@ -8,6 +8,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { ISearchParams } from "../../types";
 import { ForumsServices, LoadMoreForums } from "./forums-services";
+import { ForumCard } from "@/components/cards/forum-card";
 
 export default async function Forums({ searchParams }: { searchParams: Promise<ISearchParams> }) {
 	const { translator, forums, isBusinessUser } = await ForumsServices(searchParams);
@@ -33,6 +34,16 @@ export default async function Forums({ searchParams }: { searchParams: Promise<I
 			</div>
 
 			<SearchInput />
+
+			<div className="space-y-6">
+				<H2 className="text-2xl font-bold">Recomendado para ti.</H2>
+				<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+					{forums &&
+						forums
+							.slice(0, 4)
+							.map((forum) => <ForumCard key={forum.id} forum={forum} currentUserId={userUuid} />)}
+				</div>
+			</div>
 
 			<InfiniteForumList
 				initialForums={forums ?? []}
