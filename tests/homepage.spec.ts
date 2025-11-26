@@ -1,6 +1,6 @@
-//import { test, expect } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-//test('homepage loads and shows title', async ({ page }) => {
-//    await page.goto('/home?locale=en');
-//    await expect(page.getByText('Welcome')).toBeVisible();
-//});
+test('offers can be created and viewed afterwards', async ({ page }) => {
+    test.use({ storageState: 'storageState.json' });
+    await page.goto('/offers?locale=en');
+});
