@@ -3,6 +3,7 @@
 import { IForum } from "@/lib/services/types";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
 import { FollowButton } from "../buttons/follow-button";
+import { useUser } from "@/hooks/use-user";
 
 export interface IForumCard {
 	className?: string;
@@ -11,6 +12,10 @@ export interface IForumCard {
 }
 
 export function ForumCard({ className, forum, currentUserId }: IForumCard) {
+	const { userUuid } = useUser();
+
+	const followedByUser = forum.User_Forum?.some((u) => u.user_id === userUuid && u.forum_id === forum.id);
+
 	return (
 		<div className="rounded-xl border bg-card text-card-foreground p-6 flex flex-col justify-between h-full hover:border-muted transition-colors shadow-sm">
 			<div className="space-y-4">
@@ -49,7 +54,7 @@ export function ForumCard({ className, forum, currentUserId }: IForumCard) {
 					entityId={forum.id}
 					entityType="Forum"
 					currentUserId={currentUserId}
-					followedByUser={false}
+					followedByUser={followedByUser || false}
 					variant="switch"
 				/>
 			</div>
