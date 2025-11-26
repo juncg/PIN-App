@@ -8,6 +8,8 @@ import { TPost } from "@/types";
 import { Users, Verified } from "lucide-react";
 import Image from "next/image";
 import { ForumDetailsService, fetchForumPosts, loadMoreOffers, loadMorePetitions } from "./page-services";
+import { FollowButton } from "@/components/buttons/follow-button";
+import { getUserUuid } from "@/lib/services/user";
 
 interface ForumPageProps {
 	params: Promise<{
@@ -17,6 +19,7 @@ interface ForumPageProps {
 
 export default async function ForumPage({ params }: ForumPageProps) {
 	const { id } = await params;
+	const userUuid = await getUserUuid();
 	const { forum, isFollowing } = await ForumDetailsService(id);
 
 	if (!forum || forum.length === 0) {
@@ -81,9 +84,13 @@ export default async function ForumPage({ params }: ForumPageProps) {
 									)}
 								</div>
 
-								<Button size="lg" variant={isFollowing ? "outline" : "default"}>
-									{isFollowing ? "Siguiendo" : "Seguir Foro"}
-								</Button>
+								<FollowButton
+									followedByUser={isFollowing}
+									entityId={forumData.id}
+									entityType="Forum"
+									currentUserId={userUuid}
+									variant="switch"
+								/>
 							</div>
 
 							<Separator />

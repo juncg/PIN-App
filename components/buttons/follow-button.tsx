@@ -58,7 +58,7 @@ export function FollowButton({
 		setIsLoading(true);
 
 		try {
-			const result = await handleFollowAction(entityId, entityType, previousFollowed);
+			const result = await handleFollowAction(entityId, entityType);
 
 			if (!result.success) {
 				setFollowed(previousFollowed);
