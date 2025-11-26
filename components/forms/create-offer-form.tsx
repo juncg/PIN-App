@@ -18,8 +18,8 @@ import { DateInput } from "../ui-custom/date-input";
 import { Input } from "../ui-custom/input";
 import { Switch } from "../ui-custom/switch";
 import { Textarea } from "../ui/textarea";
+import FileDropzone from "./base/file-dropzone";
 import { FormField } from "./base/form-field";
-import FileDropzone from "./file-dropzone";
 import { CreateOfferSchema, type TCreateOfferSchema } from "./schemas/offer";
 
 interface OfferFormProps {
@@ -34,7 +34,6 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 	const [images, setImages] = useState<File[]>([]);
 	const { userUuid } = useUser();
 	const router = useRouter();
-	// Dropzone handled by `FileDropzone` component
 
 	const {
 		register,
@@ -246,7 +245,6 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 					/>
 				</FormField>
 
-				{/* Images */}
 				<FileDropzone value={images} onChange={setImages} maxFiles={5} disabled={isSubmitting} />
 
 				<Button type="submit" disabled={isSubmitting}>

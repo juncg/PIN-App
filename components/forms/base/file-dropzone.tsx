@@ -1,8 +1,10 @@
 "use client";
 
+import { Button } from "@/components/ui-custom/button";
+import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
-import { Input } from "../ui-custom/input";
-import { Label } from "../ui-custom/label";
+import { Input } from "../../ui-custom/input";
+import { Label } from "../../ui-custom/label";
 
 interface FileDropzoneProps {
 	value: File[];
@@ -105,17 +107,17 @@ export default function FileDropzone({
 				<div className="grid grid-cols-3 gap-2 mt-2">
 					{value.map((file, idx) => (
 						<div key={idx} className="relative rounded overflow-hidden bg-muted-foreground/5">
-							<img src={previews[idx]} alt={file.name} className="h-24 w-full object-contain" />
-							<button
+							<Image src={previews[idx]} alt={file.name} className="h-24 w-full object-contain" />
+							<Button
 								type="button"
 								onClick={(ev) => {
 									ev.stopPropagation();
 									removeAt(idx);
 								}}
-								className="absolute right-1 top-1 rounded-full bg-black/50 px-1 text-xs text-white"
+								className="absolute right-1 top-1 rounded-full px-1 text-xs"
 							>
 								Eliminar
-							</button>
+							</Button>
 						</div>
 					))}
 				</div>

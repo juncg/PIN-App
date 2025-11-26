@@ -1,226 +1,211 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-
 import { SelectTags } from "@/components/select/select-tags";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-
+import { Tables } from "@/database.types";
 import { useUser } from "@/hooks/use-user";
 import { PostToDatabase } from "@/lib/services/general";
-import { IForum, IPetition } from "@/lib/services/types";
-import { Tables } from "@/database.types";
-
-import { FilePond, registerPlugin } from "react-filepond";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-
-import "filepond/dist/filepond.min.css";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-
-registerPlugin(FilePondPluginImagePreview);
-
-// Import the new image upload utilities
 import { compressImage, uploadImage } from "@/lib/services/media-upload";
+import { IForum, IPetition } from "@/lib/services/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type PostgrestError } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { APIErrorHandler } from "../error-handlers/api-error-handler";
+import { Input } from "../ui-custom/input";
+import { Switch } from "../ui-custom/switch";
+import { Textarea } from "../ui/textarea";
+import FileDropzone from "./base/file-dropzone";
+import { FormField } from "./base/form-field";
+import { CreatePetitionSchema, type TCreatePetitionSchema } from "./schemas/petition";
 
 interface CreatePetitionFormProps {
-    forums: IForum[];
-    tags: { id: number; name: string }[];
+	forums: IForum[];
+	tags: { id: number; name: string }[];
 }
 
 export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormProps) {
-    const [title, setTitle] = useState("");
-    const [text, setText] = useState("");
-    const [targetProgress, setTargetProgress] = useState(0);
-    const [allowComments, setAllowComments] = useState(true);
-    const [forumId, setForumId] = useState<number | null>(null);
-    const [selectedTags, setSelectedTags] = useState<number[]>([]);
-    const [images, setImages] = useState<File[]>([]);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const filePondRef = useRef<FilePond>(null);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [selectedTags, setSelectedTags] = useState<number[]>([]);
+	const [apiError, setApiError] = useState<PostgrestError | null>(null);
+	const [images, setImages] = useState<File[]>([]);
+	const { userUuid } = useUser();
+	const router = useRouter();
 
-    const router = useRouter();
-    const { userUuid } = useUser();
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		setValue,
+		watch,
+	} = useForm<TCreatePetitionSchema>({
+		resolver: zodResolver(CreatePetitionSchema),
+		mode: "onBlur",
+		reValidateMode: "onChange",
+		defaultValues: {
+			title: "",
+			text: "",
+			target_progress: undefined,
+			comment_locked_state: "Unlocked",
+			forum_id: undefined,
+			state: "Posted",
+		},
+	});
 
-    const handlePetitionCreation = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsSubmitting(true);
+	const forumId = watch("forum_id");
+	const allowComments = watch("comment_locked_state") === "Unlocked";
 
-        const uploadedUrls: string[] = [];
-        for (const file of images) {
-            try {
-                const compressedFile = await compressImage(file);
-                const url = await uploadImage(compressedFile);
-                if (url) uploadedUrls.push(url);
-            } catch (err: any) {
-                console.error("Error uploading image:", err.message);
-            }
-        }
+	async function handlePetitionCreation(data: TCreatePetitionSchema) {
+		setIsSubmitting(true);
+		setApiError(null);
 
-        try {
-            const newPetition: Omit<Tables<"Petition">, "id"> = {
-                title: title,
-                text: text,
-                target_progress: targetProgress,
-                created_at: new Date().toISOString(),
-                creator_id: userUuid,
-                current_progress: 0,
-                comment_locked_state: "Unlocked",
-                forum_id: forumId,
-                likes: 0,
-                superlikes: 0,
-                state: "Posted",
-                images: uploadedUrls.length > 0 ? uploadedUrls : null,
-            };
+		const uploadedUrls: string[] = [];
+		for (const file of images) {
+			const compressedFile = await compressImage(file);
+			const url = await uploadImage(compressedFile);
+			if (url) uploadedUrls.push(url);
+		}
 
-            const response = await PostToDatabase({
-                tableName: "Petition",
-                contentJson: [newPetition],
-            });
+		try {
+			const newPetition: Omit<Tables<"Petition">, "id"> = {
+				title: data.title,
+				text: data.text,
+				target_progress: data.target_progress,
+				created_at: new Date().toISOString(),
+				creator_id: userUuid,
+				current_progress: 0,
+				comment_locked_state: data.comment_locked_state ?? "Unlocked",
+				forum_id: data.forum_id,
+				likes: 0,
+				superlikes: 0,
+				state: data.state ?? "Posted",
+				images: uploadedUrls.length > 0 ? uploadedUrls : null,
+			};
 
-            if (response.error) {
-                console.error("Error creating petition:", response.error.message);
-                setIsSubmitting(false);
-                return;
-            }
+			const response = await PostToDatabase<IPetition>({
+				tableName: "Petition",
+				contentJson: [newPetition],
+			});
 
-            const insertedPetitions = response.data as unknown as IPetition[];
+			if (response.error) {
+				setIsSubmitting(false);
+				setApiError(response.error);
+				return;
+			}
 
-            if (insertedPetitions && insertedPetitions[0]?.id && selectedTags.length > 0) {
-                const petitionId = insertedPetitions[0].id;
-                const tagRelations = selectedTags.map((tagId) => ({
-                    petition_id: petitionId,
-                    tag_id: tagId,
-                }));
+			const inserted = response.data;
+			const petitionId = inserted?.[0]?.id;
 
-                await PostToDatabase({
-                    tableName: "Petition_Tag",
-                    contentJson: tagRelations,
-                });
-            }
+			if (petitionId && selectedTags.length > 0) {
+				const tagRelations = selectedTags.map((tagId) => ({
+					petition_id: petitionId,
+					tag_id: tagId,
+				}));
 
-            router.push("/petitions");
-        } catch (error) {
-            console.error("Error creating petition:", error);
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+				const tagResp = await PostToDatabase({
+					tableName: "Petition_Tag",
+					contentJson: tagRelations,
+				});
 
-    return (
-        <form onSubmit={handlePetitionCreation}>
-            <div className="flex flex-col gap-6">
-                {/* Title */}
-                <div className="grid gap-2">
-                    <Label htmlFor="title">Título</Label>
-                    <Input
-                        id="title"
-                        type="text"
-                        required
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        disabled={isSubmitting}
-                    />
-                </div>
+				if (tagResp.error) {
+					setIsSubmitting(false);
+					setApiError(tagResp.error);
+					return;
+				}
+			}
 
-                {/* Description */}
-                <div className="grid gap-2">
-                    <Label htmlFor="text">Descripción</Label>
-                    <Input
-                        id="text"
-                        type="text"
-                        required
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                        disabled={isSubmitting}
-                    />
-                </div>
+			router.push("/petitions");
+		} catch (error) {
+			console.error("Error creating petition:", error);
+		} finally {
+			setIsSubmitting(false);
+		}
+	}
 
-                {/* Target Progress */}
-                <div className="grid gap-2">
-                    <Label htmlFor="targetProgress">Objetivo numérico</Label>
-                    <Input
-                        id="targetProgress"
-                        type="number"
-                        required
-                        value={targetProgress}
-                        onChange={(e) => setTargetProgress(Number(e.target.value))}
-                        disabled={isSubmitting}
-                    />
-                </div>
+	return (
+		<>
+			<APIErrorHandler error={apiError} />
 
-                {/* Allow Comments */}
-                <div className="grid gap-2">
-                    <Label htmlFor="allowComments">Permitir comentarios</Label>
-                    <Switch
-                        id="allowComments"
-                        checked={allowComments}
-                        onCheckedChange={setAllowComments}
-                        disabled={isSubmitting}
-                    />
-                </div>
+			<form className="flex flex-col gap-6" onSubmit={handleSubmit(handlePetitionCreation)}>
+				<FormField label="Título" errorMessage={errors.title?.message || ""} htmlFor="title" required>
+					<Input id="title" type="text" {...register("title")} disabled={isSubmitting} />
+				</FormField>
 
-                {/* Forum */}
-                <div className="grid gap-2">
-                    <Label htmlFor="forumId">Foro</Label>
-                    <Select
-                        value={forumId?.toString() || ""}
-                        onValueChange={(value) => setForumId(Number(value))}
-                        disabled={isSubmitting}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Selecciona un foro" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {forums.map((forum) => (
-                                <SelectItem key={forum.id} value={forum.id.toString()}>
-                                    {forum.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
+				<FormField label="Descripción" errorMessage={errors.text?.message || ""} htmlFor="text" required>
+					<Textarea className="h-40" id="text" {...register("text")} disabled={isSubmitting} />
+				</FormField>
 
-                {/* Tags */}
-                <div className="grid gap-2">
-                    <SelectTags
-                        availableTags={tags}
-                        selectedTags={selectedTags}
-                        onTagsChange={setSelectedTags}
-                        label="Tags"
-                        placeholder="Selecciona tags para la petición"
-                        disabled={isSubmitting}
-                    />
-                </div>
+				<div className="flex gap-6 items-start justify-between">
+					<FormField
+						label="Objetivo numérico"
+						errorMessage={errors.target_progress?.message || ""}
+						htmlFor="target_progress"
+						required
+					>
+						<Input
+							id="target_progress"
+							type="number"
+							{...register("target_progress", { valueAsNumber: true })}
+							disabled={isSubmitting}
+						/>
+					</FormField>
 
-                {/* Images */}
-                <div className="grid gap-2">
-                    <Label>Imágenes</Label>
-                    <FilePond
-                        ref={filePondRef}
-                        files={images}
-                        allowMultiple={true}
-                        maxFiles={5}
-                        onupdatefiles={(fileItems: any[]) => setImages(fileItems.map((fi) => fi.file as File))}
-                        name="images"
-                        labelIdle='Arrastra y suelta tus imágenes o <span class="filepond--label-action">Selecciona</span>'
-                        disabled={isSubmitting}
-                        acceptedFileTypes={["image/*"]}
-                        instantUpload={false}
-                        imagePreviewHeight={150}
-                    />
-                </div>
+					<FormField
+						label="Foro asociado"
+						htmlFor="forum_id"
+						errorMessage={errors.forum_id?.message}
+						required
+					>
+						<Select
+							value={forumId?.toString() || ""}
+							onValueChange={(value) => setValue("forum_id", Number(value))}
+							disabled={isSubmitting}
+						>
+							<SelectTrigger id="forum_id">
+								<SelectValue placeholder="Selecciona un foro" />
+							</SelectTrigger>
+							<SelectContent>
+								{forums.map((forum) => (
+									<SelectItem key={forum.id} value={forum.id.toString()}>
+										{forum.name}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</FormField>
 
-                {/* Submit Button */}
-                <div className="justify-end">
-                    <Button type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? "Creando..." : "Crear Petición"}
-                    </Button>
-                </div>
-            </div>
-        </form>
-    );
+					<FormField label="Permitir comentarios" htmlFor="allow_comments" required>
+						<Switch
+							id="allow_comments"
+							checked={allowComments}
+							onCheckedChange={(checked) =>
+								setValue("comment_locked_state", checked ? "Unlocked" : "Locked")
+							}
+							disabled={isSubmitting}
+							innerTextChecked="Activado."
+							innerTextUnchecked="Desactivado"
+						/>
+					</FormField>
+				</div>
+
+				<FormField label="Tags" htmlFor="tags">
+					<SelectTags
+						availableTags={tags}
+						selectedTags={selectedTags}
+						onTagsChange={setSelectedTags}
+						placeholder="Selecciona los tags para la petición"
+						disabled={isSubmitting}
+					/>
+				</FormField>
+
+				<FileDropzone value={images} onChange={setImages} maxFiles={5} disabled={isSubmitting} />
+
+				<Button type="submit" disabled={isSubmitting}>
+					{isSubmitting ? "Creando..." : "Crear Petición"}
+				</Button>
+			</form>
+		</>
+	);
 }
