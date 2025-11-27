@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { formatFullDateWithOrdinal } from '../app/dateFormat';
 
 test.use({ storageState: 'storageState.json' });
 
@@ -31,7 +32,9 @@ test('offers can be created and viewed afterwards', async ({ page }) => {
 
     await page.locator('#target_completition_date').click(); // abre date picker
 
-    await page.getByRole('button', { name: 'Saturday, November 29th, 2025' }).click(); // hace click en una fecha 
+    const currentDay: string = formatFullDateWithOrdinal();
+
+    await page.getByRole('button', { name: currentDay }).click(); // hace click en una fecha 
     // WARNING: HAY QUE CAMBIAR MANUALMENTE FECHA CADA VEZ, si alguien sabe arreglarlo q lo arregle xd
     // probablmente se pueda cogiendo la fecha actual y pasandolo a una string con el formato que usamos 
 

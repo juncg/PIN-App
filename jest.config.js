@@ -8,4 +8,7 @@ module.exports = {
   transform: {
     ...tsJestTransformCfg,
   },
+  testPathIgnorePatterns: [
+    "tests-playwright" // <--- ignore Playwright tests
+  ]
 };
