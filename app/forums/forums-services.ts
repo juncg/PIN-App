@@ -44,7 +44,13 @@ export async function ForumsServices(searchParams: Promise<ISearchParams>) {
 
 	const forums = await fetchForums(0, FORUMS_PAGE_SIZE, params.postName || "");
 
-	return { translator, forums, isBusinessUser };
+	const popularForums = await GetFromDatabase<IForum>({
+		tableName: "Forum",
+		select: `*, User_Forum!left(forum_id, user_id), Business(*)`,
+		filters: [{ method: "order", column: "followers", ascending: false }],
+	});
+
+	return { translator, forums, isBusinessUser, popularForums: popularForums.data || [] };
 }
 
 export async function LoadMoreForums(page: number, pageSize: number, forumName: string = "") {

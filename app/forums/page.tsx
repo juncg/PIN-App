@@ -1,17 +1,15 @@
-import { InfiniteForumList } from "@/components/forums/infinite-forum-list";
 import { SearchInput } from "@/components/search/search";
 import { H1, H2, P } from "@/components/ui-custom/typography";
 import { Button } from "@/components/ui/button";
-import { FORUMS_MAX_POSTS, FORUMS_PAGE_SIZE } from "@/lib/constants";
 import { getUserUuid } from "@/lib/services/user";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { ISearchParams } from "../../types";
-import { ForumsServices, LoadMoreForums } from "./forums-services";
+import { ForumsServices } from "./forums-services";
 import { ForumCard } from "@/components/cards/forum-card";
 
 export default async function Forums({ searchParams }: { searchParams: Promise<ISearchParams> }) {
-	const { translator, forums, isBusinessUser } = await ForumsServices(searchParams);
+	const { translator, forums, isBusinessUser, popularForums } = await ForumsServices(searchParams);
 	const userUuid = await getUserUuid();
 	const params = await searchParams;
 
@@ -45,13 +43,25 @@ export default async function Forums({ searchParams }: { searchParams: Promise<I
 				</div>
 			</div>
 
-			<InfiniteForumList
-				initialForums={forums ?? []}
-				loadMoreAction={LoadMoreForums}
-				searchParams={params}
-				pageSize={FORUMS_PAGE_SIZE}
-				maxForums={FORUMS_MAX_POSTS}
-			/>
+			<div className="space-y-6">
+				<H2 className="text-2xl font-bold">Lo más popular.</H2>
+				<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+					{popularForums &&
+						popularForums
+							.slice(0, 4)
+							.map((forum) => <ForumCard key={forum.id} forum={forum} currentUserId={userUuid} />)}
+				</div>
+			</div>
+
+			<div className="space-y-6">
+				<H2 className="text-2xl font-bold">Trending en X CATEGORIA.</H2>
+				<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
+			</div>
+
+			<div className="space-y-6">
+				<H2 className="text-2xl font-bold">Trending en Y CATEGORIA.</H2>
+				<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
+			</div>
 		</section>
 	);
 }
