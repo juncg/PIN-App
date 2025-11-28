@@ -20,7 +20,6 @@ export function Header() {
 
 				<div className="flex gap-2 md:gap-4 items-center ml-auto">
 					<AuthButton />
-					<ThemeSwitcher />
 					<LocaleSwitcher />
 				</div>
 			</div>

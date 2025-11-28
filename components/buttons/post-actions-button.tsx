@@ -57,7 +57,7 @@ export function PostActionsDropdown({ isOwner, onEdit, onDelete, onReport }: Pos
 						<MoreHorizontal className="h-4 w-4" />
 					</Button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent align="end" className="w-48">
+				<DropdownMenuContent align="end" className="w-32">
 					{isOwner ? (
 						<>
 							<DropdownMenuItem onClick={onEdit} className="cursor-pointer">
@@ -71,13 +71,13 @@ export function PostActionsDropdown({ isOwner, onEdit, onDelete, onReport }: Pos
 								<Trash className="mr-2 h-4 w-4" />
 								<span>Eliminar</span>
 							</DropdownMenuItem>
-							<DropdownMenuSeparator />
 						</>
-					) : null}
-					<DropdownMenuItem onClick={handleReport} className="cursor-pointer">
-						<Flag className="mr-2 h-4 w-4" />
-						<span>Reportar</span>
-					</DropdownMenuItem>
+					) : (
+						<DropdownMenuItem onClick={handleReport} className="cursor-pointer">
+							<Flag className="mr-2 h-4 w-4" />
+							<span>Reportar</span>
+						</DropdownMenuItem>
+					)}
 				</DropdownMenuContent>
 			</DropdownMenu>
 
