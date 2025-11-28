@@ -46,9 +46,13 @@ export default async function Forums({ searchParams }: { searchParams: Promise<I
 				<div key={category.id} className="space-y-6">
 					<H2 className="text-2xl font-bold">Tendencia en {category.name}.</H2>
 					<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-						{forums.map((forum) => (
-							<ForumCard key={forum.id} forum={forum} currentUserId={userUuid} />
-						))}
+						{forums.length === 0 ? (
+							<div className="text-center col-span-full">
+								<p className="text-xl text-muted-foreground">No hay foros a mostrar.</p>
+							</div>
+						) : (
+							forums.map((forum) => <ForumCard key={forum.id} forum={forum} currentUserId={userUuid} />)
+						)}
 					</div>
 				</div>
 			))}
