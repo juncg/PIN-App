@@ -8,6 +8,8 @@ import { ForumDetailsService, fetchForumPosts, loadMoreOffers, loadMorePetitions
 import { FollowButton } from "@/components/buttons/follow-button";
 import { getUserUuid } from "@/lib/services/user";
 import Link from "next/link";
+import { SidebarForumCard } from "@/components/cards/sidebar-forum-card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
 
 interface ForumPageProps {
 	params: Promise<{
@@ -18,17 +20,8 @@ interface ForumPageProps {
 export default async function ForumPage({ params }: ForumPageProps) {
 	const { id } = await params;
 	const userUuid = await getUserUuid();
-	const { forum, isFollowing, counts } = await ForumDetailsService(id);
-	const categories = [
-		"Cuidado personal",
-		"Moda y accesorios",
-		"Juegos",
-		"Viajes y hoteles",
-		"Hogar y jardín",
-		"Automoción y vehículos",
-		"Deportes y ocio",
-		"Tecnología",
-	];
+	const { forum, isFollowing, counts, categories, popularForums, businessForums, randomForums } =
+		await ForumDetailsService(id);
 
 	if (!forum || forum.length === 0) {
 		return (
@@ -47,9 +40,9 @@ export default async function ForumPage({ params }: ForumPageProps) {
 	const profileImage = forumData.profile_picture || "/placeholder.png";
 
 	return (
-		<div className="container mx-auto max-w-[1600px] px-4 md:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+		<div className="container mx-auto max-w-[1600px] px-4 md:px-6 py-6 grid grid-cols-1 lg:grid-cols-[20%_60%_20%] gap-6 lg:gap-8">
 			{/* Left Sidebar */}
-			<div className="hidden lg:block lg:col-span-3 space-y-6">
+			<div className="hidden lg:block space-y-6">
 				<div className="flex items-center text-sm text-muted-foreground">
 					<Link href="/forums" className="hover:text-foreground transition-colors">
 						Foros
@@ -59,15 +52,18 @@ export default async function ForumPage({ params }: ForumPageProps) {
 				</div>
 
 				<div className="flex flex-wrap gap-2">
+					<Button variant={"outline"} size="sm" className="rounded-full px-4">
+						Todo
+					</Button>
 					{categories.map((category) => {
 						return (
 							<Button
-								key={category}
+								key={category.id}
 								variant="outline"
 								size="sm"
 								className="rounded-full px-4 hover:bg-accent hover:text-accent-foreground"
 							>
-								{category}
+								{category.name}
 							</Button>
 						);
 					})}
@@ -75,17 +71,25 @@ export default async function ForumPage({ params }: ForumPageProps) {
 
 				<div className="space-y-3">
 					<h3 className="font-semibold text-foreground">Recomendado para ti.</h3>
-					<div className="space-y-3"></div>
+					<div className="space-y-3">
+						{randomForums.map((forum) => (
+							<SidebarForumCard key={forum.id} forum={forum} />
+						))}
+					</div>
 				</div>
 
 				<div className="space-y-3">
 					<h3 className="font-semibold text-foreground">Lo más popular.</h3>
-					<div className="space-y-3 opacity-50 pointer-events-none"></div>
+					<div className="space-y-3 pointer-events-none">
+						{popularForums.map((forum) => (
+							<SidebarForumCard key={forum.id} forum={forum} />
+						))}
+					</div>
 				</div>
 			</div>
 
 			{/* Main Content */}
-			<div className="col-span-1 lg:col-span-6 space-y-8">
+			<div className="space-y-8">
 				{/* Forum Header */}
 				<div className="relative mb-8">
 					{/* Banner */}
@@ -206,10 +210,19 @@ export default async function ForumPage({ params }: ForumPageProps) {
 			</div>
 
 			{/* Right Sidebar */}
-			<div className="hidden lg:block lg:col-span-3 space-y-6">
+			<div className="hidden lg:block space-y-6">
 				<div className="flex items-center gap-3 mb-6">
 					<div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
-						<Image src="/placeholder.png" alt="Empresa" width={24} height={24} className="rounded-full" />
+						<Avatar className="h-10 w-10 rounded-full">
+							<AvatarImage
+								src={forumData.Business?.profile_picture || "/placeholder.png"}
+								alt={forumData.name || "Forum"}
+								className="object-cover"
+							/>
+							<AvatarFallback className="bg-transparent text-foreground font-bold">
+								{forumData.name?.charAt(0).toUpperCase()}
+							</AvatarFallback>
+						</Avatar>
 					</div>
 					<div className="flex items-center gap-1.5">
 						<span className="font-bold text-xl text-foreground">{forumData.Business?.name}</span>
@@ -218,7 +231,11 @@ export default async function ForumPage({ params }: ForumPageProps) {
 
 				<div className="space-y-3">
 					<h3 className="text-sm font-medium text-muted-foreground">Más foros de la empresa.</h3>
-					<div className="space-y-3"></div>
+					<div className="space-y-3">
+						{businessForums.map((forum) => (
+							<SidebarForumCard key={forum.id} forum={forum} />
+						))}
+					</div>
 				</div>
 
 				<div className="space-y-3">

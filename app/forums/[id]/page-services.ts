@@ -1,5 +1,5 @@
 import { GetClient, GetFromDatabase } from "@/lib/services/general";
-import { IForum } from "@/lib/services/types";
+import { ICategory, IForum } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
 
 export async function ForumDetailsService(forumId: number) {
@@ -8,7 +8,7 @@ export async function ForumDetailsService(forumId: number) {
 	const { data: forum } = await GetFromDatabase<IForum>({
 		tableName: "Forum",
 		select: `*, 
-			Business!inner(id, name, description, verification),
+			Business!inner(*),
 			Forum_Tag(Tag(id, name)),
 			User_Forum!left(forum_id, user_id)`,
 		filters: [
@@ -60,6 +60,43 @@ export async function ForumDetailsService(forumId: number) {
 
 	const isFollowing = forum[0].User_Forum?.some((fu) => fu.user_id === uuid) || false;
 
+	const { data: categories } = await GetFromDatabase<ICategory>({
+		tableName: "Category",
+		select: "*",
+		filters: [{ method: "order", column: "name", ascending: true }],
+	});
+
+	const { data: popularForums } = await GetFromDatabase<IForum>({
+		tableName: "Forum",
+		select: "*, Business(*)",
+		filters: [
+			{ method: "order", column: "followers", ascending: false },
+			{ method: "range", from: 0, to: 4 },
+			{ method: "neq", column: "id", value: forumId },
+		],
+	});
+
+	const { data: businessForums } = await GetFromDatabase<IForum>({
+		tableName: "Forum",
+		select: "*, Business(*)",
+		filters: [
+			{ method: "eq", column: "business_id", value: forum[0].business_id },
+			{ method: "neq", column: "id", value: forumId },
+			{ method: "order", column: "followers", ascending: false },
+			{ method: "range", from: 0, to: 4 },
+		],
+	});
+
+	const { data: randomForums } = await GetFromDatabase<IForum>({
+		tableName: "Forum",
+		select: "*, Business(*)",
+		filters: [
+			{ method: "neq", column: "id", value: forumId },
+			{ method: "order", column: "created_at", ascending: false },
+			{ method: "range", from: 0, to: 5 },
+		],
+	});
+
 	return {
 		forum,
 		isFollowing,
@@ -67,6 +104,10 @@ export async function ForumDetailsService(forumId: number) {
 			petitions: petitions?.length || 0,
 			offers: offers?.length || 0,
 		},
+		categories: categories || [],
+		popularForums: popularForums || [],
+		businessForums: businessForums || [],
+		randomForums: randomForums || [],
 	};
 }
 
