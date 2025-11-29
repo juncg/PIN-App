@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { Label } from "../ui-custom/label";
-import { Button } from "../ui/button";
-import { Slider } from "../ui/slider";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState, useTransition } from "react";
+import { Button } from "../ui-custom/button";
+import { Label } from "../ui-custom/label";
+import { Slider } from "../ui-custom/slider";
 
 interface PostsFiltersProps {}
 

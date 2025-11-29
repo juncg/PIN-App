@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
-import { Button } from "../ui/button";
+import { Button } from "../ui-custom/button";
 
 export function PostTypeFilter() {
 	const searchParams = useSearchParams();

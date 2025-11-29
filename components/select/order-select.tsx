@@ -1,7 +1,7 @@
 "use client";
 
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui-custom/select";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface OrderSelectProps {
 	translations: {

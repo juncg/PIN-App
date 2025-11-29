@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui-custom/dialog";
 import { useUser } from "@/hooks/use-user";
 import { DeleteFromDatabase, ExecuteRpcFunction } from "@/lib/services/general";
 import { IReview } from "@/lib/services/types";
@@ -12,9 +12,9 @@ import { toast } from "sonner";
 import { LikeButton } from "../buttons/like-button";
 import { PostActionsDropdown } from "../buttons/post-actions-button";
 import { ProductReviewForm } from "../forms/product-review-form";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Card } from "../ui/card";
-import { Separator } from "../ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
+import { Card } from "../ui-custom/card";
+import { Separator } from "../ui-custom/separator";
 
 interface UserReviewCardProps {
 	review: IReview;

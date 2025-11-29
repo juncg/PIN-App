@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Button } from "../ui-custom/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui-custom/dialog";
 
 interface NotLoggedInDialogProps {
 	open: boolean;

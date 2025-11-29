@@ -1,9 +1,9 @@
 "use client";
 
 import { SubscribeButton } from "@/components/buttons/subscribe-button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
+import { Progress } from "@/components/ui-custom/progress";
+import { Separator } from "@/components/ui-custom/separator";
 import { IComment, IOffer, IUser } from "@/lib/services/types";
 import { GetRelativeTime } from "@/lib/services/utilities";
 import { Users } from "lucide-react";

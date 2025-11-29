@@ -1,7 +1,7 @@
 "use client";
 
 import { RatingDistribution } from "@/app/products/[id]/page-services";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui-custom/dialog";
 import { IProduct, IReview } from "@/lib/services/types";
 import { Plus, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -9,7 +9,7 @@ import { useState } from "react";
 import { ProductReviewsSummaryCard } from "../cards/product-reviews-summary-card";
 import { UserReviewCard } from "../cards/user-review-card";
 import { ProductReviewForm } from "../forms/product-review-form";
-import { Button } from "../ui/button";
+import { Button } from "../ui-custom/button";
 
 interface ProductReviewSectionProps {
 	product: IProduct;

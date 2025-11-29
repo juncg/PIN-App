@@ -3,10 +3,10 @@
 import { ChevronDownIcon } from "lucide-react";
 import * as React from "react";
 
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui-custom/button";
+import { Calendar } from "@/components/ui-custom/calendar";
+import { Label } from "@/components/ui-custom/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui-custom/popover";
 
 export function DatePicker() {
 	const [open, setOpen] = React.useState(false);

@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
 import { IForum } from "@/lib/services/types";
 import Link from "next/link";
 

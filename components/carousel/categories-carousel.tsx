@@ -1,17 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui-custom/button";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui-custom/carousel";
 import { ICategory } from "@/lib/services/types";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useTransition } from "react";
-import {
-	Carousel,
-	CarouselContent,
-	CarouselItem,
-	CarouselNext,
-	CarouselPrevious,
-} from "@/components/ui-custom/carousel";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
 
 interface CategoriesCarouselProps {
 	categories: ICategory[];

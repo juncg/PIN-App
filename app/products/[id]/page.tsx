@@ -1,10 +1,10 @@
 import { ProductImages } from "@/components/products/product-images";
 import { ProductReviewSection } from "@/components/products/product-review-section";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
+import { Button } from "@/components/ui-custom/button";
+import { Card } from "@/components/ui-custom/card";
+import { Separator } from "@/components/ui-custom/separator";
 import { H3 } from "@/components/ui-custom/typography";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { getUserUuid } from "@/lib/services/user";
 import { ISearchParams } from "@/types";
 import { ArrowRightIcon, Star } from "lucide-react";

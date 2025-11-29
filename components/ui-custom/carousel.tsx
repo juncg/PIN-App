@@ -4,7 +4,7 @@ import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-reac
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui-custom/button";
 import { cn } from "@/lib/utils";
 
 type CarouselApi = UseEmblaCarouselType[1];
@@ -18,7 +18,7 @@ type CarouselProps = {
 	orientation?: "horizontal" | "vertical";
 	setApi?: (api: CarouselApi) => void;
 	initialSlide?: number;
-    onSlideChange?: (index: number) => void;
+	onSlideChange?: (index: number) => void;
 };
 
 type CarouselContextProps = {

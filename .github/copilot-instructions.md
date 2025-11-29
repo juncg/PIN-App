@@ -68,7 +68,7 @@ export default async function ExamplePage() {
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui-custom/button";
 
 export function ExampleForm() {
 	const [value, setValue] = useState("");
@@ -232,7 +232,7 @@ export async function loadMoreForumPosts(forumId: number, page: number, pageSize
 
 ### UI Components (shadcn/ui)
 
-Always use existing components from `components/ui/`:
+Always use existing components from `components/ui-custom/`:
 
 -   `Button`, `Input`, `Label`, `Textarea` - Form elements
 -   `Card`, `CardHeader`, `CardContent` - Containers
@@ -241,9 +241,9 @@ Always use existing components from `components/ui/`:
 -   `H1`, `H2`, `H3`, `H4`, `P` - Typography from `typography.tsx`
 
 ```typescript
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { H1, P } from "@/components/ui/typography";
+import { Button } from "@/components/ui-custom/button";
+import { Card } from "@/components/ui-custom/card";
+import { H1, P } from "@/components/ui-custom/typography";
 
 <Card className="p-6">
 	<H1>Title</H1>
@@ -264,9 +264,9 @@ import { H1, P } from "@/components/ui/typography";
 "use client";
 
 import { useState } from "react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui-custom/label";
+import { Input } from "@/components/ui-custom/input";
+import { Button } from "@/components/ui-custom/button";
 import { toast } from "sonner";
 
 export function ExampleForm() {
@@ -474,7 +474,7 @@ try {
 ### Loading States
 
 ```typescript
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui-custom/skeleton";
 
 {
 	isLoading ? <Skeleton className="h-32 w-full" /> : <Content />;
@@ -484,8 +484,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 ### Empty States
 
 ```typescript
-import { Card } from "@/components/ui/card";
-import { H3, P } from "@/components/ui/typography";
+import { Card } from "@/components/ui-custom/card";
+import { H3, P } from "@/components/ui-custom/typography";
 
 {
 	items.length === 0 ? (
@@ -507,7 +507,7 @@ import { H3, P } from "@/components/ui/typography";
 ✅ Use service layer for all database operations
 ✅ Type all data with interfaces from `lib/services/types.ts`
 ✅ Include loading and error states in interactive components
-✅ Use existing UI components from `components/ui/`
+✅ Use existing UI components from `components/ui-custom/`
 ✅ Mark server actions with `"use server"`
 ✅ Use `cn()` for conditional classNames
 ✅ Use Next.js `Image` component for images
@@ -540,7 +540,7 @@ import { H3, P } from "@/components/ui/typography";
 Use `@/` for absolute imports from project root:
 
 ```typescript
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui-custom/button";
 import { GetFromDatabase } from "@/lib/services/general";
 import { IForum } from "@/lib/services/types";
 ```
@@ -607,8 +607,8 @@ export async function loadMoreExamples(page: number, pageSize: number) {
 
 // 3. Page component (app/example/[id]/page.tsx)
 import { ExampleService } from "./page-services";
-import { H1, P } from "@/components/ui/typography";
-import { Card } from "@/components/ui/card";
+import { H1, P } from "@/components/ui-custom/typography";
+import { Card } from "@/components/ui-custom/card";
 
 interface ExamplePageProps {
 	params: Promise<{ id: number }>;
@@ -639,9 +639,9 @@ export default async function ExamplePage({ params }: ExamplePageProps) {
 ("use client");
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui-custom/button";
+import { Input } from "@/components/ui-custom/input";
+import { Label } from "@/components/ui-custom/label";
 import { toast } from "sonner";
 import { PostToDatabase } from "@/lib/services/general";
 

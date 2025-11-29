@@ -7,17 +7,17 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui-custom/alert-dialog";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui-custom/dropdown-menu";
 import { Flag, MoreHorizontal, Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Button } from "../ui/button";
+import { Button } from "../ui-custom/button";
 
 interface PostActionsDropdownProps {
 	isOwner: boolean;

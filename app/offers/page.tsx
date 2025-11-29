@@ -1,7 +1,7 @@
 import { InfinitePostList } from "@/components/posts/infinite-post-list";
 import { SearchInput } from "@/components/search/search";
+import { Button } from "@/components/ui-custom/button";
 import { H1, P } from "@/components/ui-custom/typography";
-import { Button } from "@/components/ui/button";
 import { OFFERS_MAX_POSTS, OFFERS_PAGE_SIZE } from "@/lib/constants";
 import { getUserUuid } from "@/lib/services/user";
 import { Plus } from "lucide-react";

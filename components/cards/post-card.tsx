@@ -12,9 +12,9 @@ import { useEffect, useState } from "react";
 import { LikeButton } from "../buttons/like-button";
 import { SubscribeButton } from "../buttons/subscribe-button";
 import { PopOutMedia } from "../floating-panels/pop-out-media";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui-custom/carousel";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Progress } from "../ui/progress";
+import { Progress } from "../ui-custom/progress";
 
 export interface IPostCard {
 	className?: string;
@@ -146,7 +146,7 @@ export function PostCard(props: IPostCard) {
 
 				<div className="flex items-center justify-between pt-2">
 					<div className="flex items-center gap-2">
-						<Avatar className="h-8 w-8 border hover">
+						<Avatar className="h-8 w-8 rounded-full hover">
 							<AvatarImage src={post.User?.profile_picture || businessImage} />
 							<AvatarFallback>{businessName[0]}</AvatarFallback>
 						</Avatar>

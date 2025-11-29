@@ -1,6 +1,6 @@
 "use client";
 
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui-custom/sidebar";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 

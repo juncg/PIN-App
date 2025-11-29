@@ -4,8 +4,8 @@ import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { IForum } from "@/lib/services/types";
 import { useCallback, useEffect, useState } from "react";
 import { ForumCard } from "../cards/forum-card";
+import { Skeleton } from "../ui-custom/skeleton";
 import { P } from "../ui-custom/typography";
-import { Skeleton } from "../ui/skeleton";
 
 interface InfiniteForumListProps {
 	initialForums: IForum[];

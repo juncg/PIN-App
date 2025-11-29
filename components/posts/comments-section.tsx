@@ -1,11 +1,11 @@
 "use client";
 
 import { NotLoggedInDialog } from "@/components/dialogs/not-logged-in-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
+import { Button } from "@/components/ui-custom/button";
+import { Separator } from "@/components/ui-custom/separator";
+import { Textarea } from "@/components/ui-custom/textarea";
 import { H3, P } from "@/components/ui-custom/typography";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
 import { PostToDatabase } from "@/lib/services/general";
 import { IComment, IUser } from "@/lib/services/types";
 import { Loader2, Plus } from "lucide-react";

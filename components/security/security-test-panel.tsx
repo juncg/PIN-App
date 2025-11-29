@@ -1,10 +1,10 @@
 "use client";
 
+import { Badge } from "@/components/ui-custom/badge";
+import { Button } from "@/components/ui-custom/button";
+import { Card, CardContent, CardHeader } from "@/components/ui-custom/card";
+import { Separator } from "@/components/ui-custom/separator";
 import { H3, P } from "@/components/ui-custom/typography";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 
 type TestResult = {

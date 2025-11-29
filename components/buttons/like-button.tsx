@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { NotLoggedInDialog } from "../dialogs/not-logged-in-dialog";
-import { Button } from "../ui/button";
+import { Button } from "../ui-custom/button";
 import { handleLikeAction } from "./like-button-actions";
 
 export interface ILikeButton {

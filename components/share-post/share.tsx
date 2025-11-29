@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui-custom/button";
+import { Input } from "@/components/ui-custom/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui-custom/popover";
+import { Separator } from "@/components/ui-custom/separator";
 import { Check, Copy, Share2 } from "lucide-react";
 import { useState } from "react";
 import {

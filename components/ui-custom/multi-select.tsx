@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { useEffect } from "react";
 
-import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
+import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui-custom/command";
 import { cn } from "@/lib/utils";
 import { Command as CommandPrimitive, useCommandState } from "cmdk";
 import { XIcon } from "lucide-react";

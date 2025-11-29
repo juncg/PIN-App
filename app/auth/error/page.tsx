@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui-custom/card";
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ error: string }> }) {
 	const params = await searchParams;

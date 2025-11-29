@@ -1,7 +1,7 @@
 import { RatingDistribution } from "@/app/products/[id]/page-services";
 import { Star } from "lucide-react";
-import { Card } from "../ui/card";
-import { Progress } from "../ui/progress";
+import { Card } from "../ui-custom/card";
+import { Progress } from "../ui-custom/progress";
 
 interface ProductReviewsSummaryCardProps {
 	rating: number | null;

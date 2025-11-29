@@ -1,7 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui-custom/button";
 import { H1, P } from "@/components/ui-custom/typography";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";

@@ -1,7 +1,7 @@
 "use client";
 
-import type { Option } from "@/components/ui/multi-select";
-import MultipleSelector from "@/components/ui/multi-select";
+import type { Option } from "@/components/ui-custom/multi-select";
+import MultipleSelector from "@/components/ui-custom/multi-select";
 import { cn } from "@/lib/utils";
 
 interface SelectTagsProps {

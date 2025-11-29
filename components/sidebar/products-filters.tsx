@@ -5,10 +5,10 @@ import { cn } from "@/lib/utils";
 import { Star } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
-import { Label } from "../ui/label";
-import { Slider } from "../ui/slider";
+import { Button } from "../ui-custom/button";
+import { Checkbox } from "../ui-custom/checkbox";
+import { Label } from "../ui-custom/label";
+import { Slider } from "../ui-custom/slider";
 
 interface ProductsFiltersProps {
 	categories: ICategory[];

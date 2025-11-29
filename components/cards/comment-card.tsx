@@ -5,8 +5,8 @@ import { GetRelativeTime } from "@/lib/services/utilities";
 import { MessageSquare } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
 import { P } from "../ui-custom/typography";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export function CommentCard({ comment, level = 0 }: { comment: IComment; level?: number }) {
 	const [showReplyForm, setShowReplyForm] = useState(false);

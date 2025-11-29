@@ -5,9 +5,9 @@ import { AlertTriangle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { NotLoggedInDialog } from "../dialogs/not-logged-in-dialog";
+import { Button } from "../ui-custom/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui-custom/dialog";
 import { Switch } from "../ui-custom/switch";
-import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { handleSubscribeAction } from "./subscribe-button-actions";
 
 export interface ISubscribeButton {

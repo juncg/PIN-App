@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui-custom/button";
+import { Card } from "@/components/ui-custom/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui-custom/select";
+import { Textarea } from "@/components/ui-custom/textarea";
 import { Tables } from "@/database.types";
 import { PostToDatabase } from "@/lib/services/general";
 import { compressImage, uploadImage } from "@/lib/services/media-upload";
