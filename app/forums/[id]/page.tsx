@@ -6,7 +6,7 @@ import { H1, H2, P } from "@/components/ui-custom/typography";
 import { Button } from "@/components/ui/button";
 import { getUserUuid } from "@/lib/services/user";
 import { TPost } from "@/types";
-import { ChevronRight, Verified } from "lucide-react";
+import { Verified } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { ForumDetailsService, fetchForumPosts, loadMoreOffers, loadMorePetitions } from "./page-services";
@@ -47,8 +47,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 					<Link href="/forums" className="hover:text-white transition-colors">
 						Foros
 					</Link>
-					<ChevronRight className="h-4 w-4 mx-1" />
-					<span className="text-white font-medium">Foro</span>
+					<span className="mx-2">/</span> <span className="text-white font-medium">Foro</span>
 				</div>
 
 				<div className="flex flex-wrap gap-2">

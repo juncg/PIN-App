@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@/hooks/use-user";
-import { Hand, Home, Settings, Shield, ShoppingBag, Tag, User, Users } from "lucide-react";
+import { Hand, Home, Settings, Shield, ShoppingBag, Tag, Timer, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -44,6 +44,11 @@ const items = [
 		title: "Foros",
 		url: "/forums",
 		icon: Users,
+	},
+	{
+		title: "Posts",
+		url: "/posts",
+		icon: Timer,
 	},
 ];
 
