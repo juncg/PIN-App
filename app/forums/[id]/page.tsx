@@ -47,8 +47,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 					<Link href="/forums" className="hover:text-foreground transition-colors">
 						Foros
 					</Link>
-					<ChevronRight className="h-4 w-4 mx-1" />
-					<span className="text-foreground font-medium">Foro</span>
+					<span className="mx-2">/</span> <span className="text-foreground font-medium">Foro</span>
 				</div>
 
 				<div className="flex flex-wrap gap-2">
