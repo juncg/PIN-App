@@ -14,8 +14,6 @@ interface IPostCardHorizontalProps {
 export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 	const { className, post } = props;
 
-	console.log(post);
-
 	const offerCompletionPercentage = parseFloat(
 		((post?.current_progress * 100) / (post?.target_progress ?? 1)).toFixed(2)
 	);

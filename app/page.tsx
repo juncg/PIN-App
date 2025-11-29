@@ -1,4 +1,4 @@
-import { Icon } from "@/components/icons/icon";
+import { Icon } from "@/components/ui-custom/icon";
 import { Switch } from "@/components/ui-custom/switch";
 import { H1 } from "@/components/ui-custom/typography";
 import { Button } from "@/components/ui/button";

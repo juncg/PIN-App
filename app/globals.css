@@ -18,17 +18,9 @@
 
 		/* ADDITIONAL COLORS */
 		--destructive: #c92626;
-		--muted: 0 0% 14.9%;
+		--muted: #555555;
 
 		/* NUMERIC VARIABLES */
 		--radius: 0.5rem;
-	}
-
-	* {
-		@apply border-hover;
-	}
-
-	body {
-		@apply bg-black;
 	}
 }

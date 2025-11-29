@@ -35,19 +35,19 @@ export default {
 
 			colors: {
 				/* DESIGN COLORS */
-				black: "rgb(var(--black))",
-				white: "rgb(var(--white))",
-				chernobyl: "rgb(var(--chernobyl))",
-				darkmode: "rgb(var(--darkmode))",
-				hover: "rgb(var(--hover))",
-				cardborder: "rgb(var(--cardborder))",
-				placeholder: "rgb(var(--placeholder))",
-				darkgrey: "rgb(var(--darkgrey))",
-				lightgrey: "rgb(var(--lightgrey))",
+				black: "var(--black)",
+				white: "var(--white)",
+				chernobyl: "var(--chernobyl)",
+				darkmode: "var(--darkmode)",
+				hover: "var(--hover)",
+				cardborder: "var(--cardborder)",
+				placeholder: "var(--placeholder)",
+				darkgrey: "var(--darkgrey)",
+				lightgrey: "var(--lightgrey)",
 
 				/* ADDITIONAL COLORS */
-				destructive: "rgb(var(--destructive))",
-				muted: "rgb(var(--muted))",
+				destructive: "var(--destructive)",
+				muted: "var(--muted)",
 			},
 
 			borderRadius: {

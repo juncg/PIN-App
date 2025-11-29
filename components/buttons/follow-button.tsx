@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { NotLoggedInDialog } from "../dialogs/not-logged-in-dialog";
-import { Switch } from "../ui-custom/switch";
 import { Button } from "../ui-custom/button";
+import { Switch } from "../ui-custom/switch";
 import { handleFollowAction } from "./follow-button-actions";
 
 interface IFollowButton {
@@ -29,8 +29,6 @@ export function FollowButton({
 	const [followers, setFollowers] = useState<number>(followersCount || 0);
 	const [showLoginDialog, setShowLoginDialog] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
-
-	console.log();
 
 	useEffect(() => {
 		setFollowed(followedByUser);
