@@ -1,16 +1,16 @@
+import { FollowButton } from "@/components/buttons/follow-button";
 import { PostCardHorizontal } from "@/components/cards/post-card-horizontal";
 import { ProfileAltenatingButtons } from "@/components/profile/profile-alternating-buttons";
 import { ProfileRightColumn } from "@/components/profile/profile-right-column";
 import { Button } from "@/components/ui-custom/button";
 import { H1, H2, H4, P } from "@/components/ui-custom/typography";
 import { IOffer, IPetition } from "@/lib/services/types";
+import { getUserUuid } from "@/lib/services/user";
+import { GetJoinedDate } from "@/lib/services/utilities";
+import { ISearchParams } from "@/types";
 import { CalendarDays, MapPin, Users } from "lucide-react";
 import Image from "next/image";
 import { ProfileServices } from "./page-services";
-import { ISearchParams } from "@/types";
-import { GetJoinedDate } from "@/lib/services/utilities";
-import { FollowButton } from "@/components/buttons/follow-button";
-import { getUserUuid } from "@/lib/services/user";
 
 interface ProfilePageProps {
 	params: Promise<{
@@ -59,7 +59,7 @@ export default async function Profile({ params }: ProfilePageProps) {
 									{userData?.name} {userData?.surnames}.
 								</H1>
 
-								<H4 className="text-muted-foreground">@{userData?.username}</H4>
+								<H4 className="text-muted">@{userData?.username}</H4>
 							</span>
 						</span>
 
@@ -67,7 +67,7 @@ export default async function Profile({ params }: ProfilePageProps) {
 					</div>
 
 					<div className="flex flex-col gap-12 mt-8 w-1/3">
-						<span className="flex flex-col gap-4 text-muted-foreground">
+						<span className="flex flex-col gap-4 text-muted">
 							<P className="flex gap-2 items-center">
 								<MapPin className="!h-4" /> Ubicación: Ejemplo
 							</P>
@@ -91,7 +91,7 @@ export default async function Profile({ params }: ProfilePageProps) {
 									currentUserId={currentUserId}
 								/>
 							) : (
-								<Button className="bg-primary-foreground text-primary">Editar perfil</Button>
+								<Button className="bg-black text-black">Editar perfil</Button>
 							)}
 						</span>
 					</div>
@@ -103,9 +103,7 @@ export default async function Profile({ params }: ProfilePageProps) {
 							<div className="flex flex-col gap-12 w-full">
 								<span className="flex items-end gap-6">
 									<H2>Ofertas.</H2>
-									<P className="text-muted-foreground line-clamp-2">
-										{subscribedOffersCount} ofertas en total
-									</P>
+									<P className="text-muted line-clamp-2">{subscribedOffersCount} ofertas en total</P>
 								</span>
 
 								<div className="flex flex-col gap-8 w-full">
@@ -122,7 +120,7 @@ export default async function Profile({ params }: ProfilePageProps) {
 							<div className="flex flex-col gap-12 w-full">
 								<span className="flex items-end gap-6">
 									<H2>Peticiones.</H2>
-									<P className="text-muted-foreground line-clamp-2">
+									<P className="text-muted line-clamp-2">
 										{subscribedPetitionsCount} peticiones en total
 									</P>
 								</span>
@@ -142,7 +140,7 @@ export default async function Profile({ params }: ProfilePageProps) {
 					postsContent={
 						<div>
 							<H2>Mis publicaciones</H2>
-							<P className="text-muted-foreground">Contenido de publicaciones aquí</P>
+							<P className="text-muted">Contenido de publicaciones aquí</P>
 						</div>
 					}
 				/>

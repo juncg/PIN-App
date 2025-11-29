@@ -47,7 +47,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
 					</CardHeader>
 
 					<CardContent>
-						<p className="text-sm text-muted-foreground">
+						<p className="text-sm text-muted">
 							Si te registraste usando correo y contraseña, recibiras un correo de restablecimiento de
 							contraseña.
 						</p>

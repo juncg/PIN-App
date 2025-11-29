@@ -1,7 +1,7 @@
+import { RatingDistribution } from "@/app/products/[id]/page-services";
 import { Star } from "lucide-react";
 import { Card } from "../ui/card";
 import { Progress } from "../ui/progress";
-import { RatingDistribution } from "@/app/products/[id]/page-services";
 
 interface ProductReviewsSummaryCardProps {
 	rating: number | null;
@@ -24,14 +24,12 @@ export function ProductReviewsSummaryCard({
 							<Star
 								key={i}
 								className={`h-5 w-5 ${
-									i < Math.floor(rating ?? 0)
-										? "fill-amber-500 text-amber-500"
-										: "text-muted-foreground"
+									i < Math.floor(rating ?? 0) ? "fill-amber-500 text-amber-500" : "text-muted"
 								}`}
 							/>
 						))}
 					</div>
-					<p className="text-sm text-muted-foreground">Basado en {numOfReviews} reseñas</p>
+					<p className="text-sm text-muted">Basado en {numOfReviews} reseñas</p>
 				</div>
 
 				<div className="space-y-2">
@@ -42,7 +40,7 @@ export function ProductReviewsSummaryCard({
 								<Star className="h-3 w-3 fill-amber-500 text-amber-500" />
 							</div>
 							<Progress value={dist.percentage} className="flex-1" />
-							<span className="text-sm text-muted-foreground w-12 text-right">{dist.count}</span>
+							<span className="text-sm text-muted w-12 text-right">{dist.count}</span>
 						</div>
 					))}
 				</div>

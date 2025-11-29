@@ -3,10 +3,10 @@
 import { IBusiness, IForum, IUser } from "@/lib/services/types";
 import { cn } from "@/lib/utils";
 import { BadgeCheck, UserCircle } from "lucide-react";
+import Link from "next/link";
 import { AvatarGroup } from "../ui-custom/avatar-group";
 import { Button } from "../ui-custom/button";
 import { H3, P } from "../ui-custom/typography";
-import Link from "next/link";
 
 interface IProfileUserCompanyState {
 	className?: string;
@@ -61,26 +61,26 @@ export function ProfileRightColumn(props: IProfileUserCompanyState) {
 					{followingForums && followingForums.length >= 0 && (
 						<div className="flex flex-col gap-4">
 							<AvatarGroup avatarImages={forumsImages} shape="Squared" inclined />
-							<P className="text-muted-foreground">{followingForumsTotalCount} foros</P>
+							<P className="text-muted">{followingForumsTotalCount} foros</P>
 						</div>
 					)}
 
 					<div className="flex flex-col gap-4">
 						<AvatarGroup avatarImages={businessesImages} />
-						<P className="text-muted-foreground">{followingBusinessesTotalCount} empresas</P>
+						<P className="text-muted">{followingBusinessesTotalCount} empresas</P>
 					</div>
 				</div>
 
 				<div className="flex flex-col gap-4">
 					<AvatarGroup avatarImages={usersImages} />
-					<P className="text-muted-foreground">{followingUsersTotalCount} usuarios</P>
+					<P className="text-muted">{followingUsersTotalCount} usuarios</P>
 				</div>
 			</div>
 
 			<div className="flex flex-col gap-2">
 				<H3>Estado de la cuenta</H3>
 
-				<div className="flex gap-2 text-muted-foreground items-center">
+				<div className="flex gap-2 text-muted items-center">
 					<UserCircle className="h-4" />
 					<P>{isBusiness ? "Usuario business" : "Usuario pobre"}</P>
 				</div>

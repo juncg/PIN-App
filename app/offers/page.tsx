@@ -19,7 +19,7 @@ export default async function Offers({ searchParams }: { searchParams: Promise<I
 			<div className="flex justify-between items-center">
 				<div className="justify-start">
 					<H1>{translator("offers")}</H1>
-					<P className="text-muted-foreground">Aqui puedes ver las ofertas existentes</P>
+					<P className="text-muted">Aqui puedes ver las ofertas existentes</P>
 				</div>
 
 				{userUuid && isBusinessUser && (

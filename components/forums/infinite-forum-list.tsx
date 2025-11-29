@@ -77,7 +77,7 @@ export function InfiniteForumList({
 	});
 
 	if (forums.length === 0 && !isLoading) {
-		return <P className="text-muted-foreground">No se encontraron foros</P>;
+		return <P className="text-muted">No se encontraron foros</P>;
 	}
 
 	return (
@@ -100,7 +100,7 @@ export function InfiniteForumList({
 
 			{/* Message when limit has been reached */}
 			{!hasMore && forums.length > 0 && (
-				<P className="text-center text-muted-foreground py-4">No hay más foros para mostrar</P>
+				<P className="text-center text-muted py-4">No hay más foros para mostrar</P>
 			)}
 		</div>
 	);

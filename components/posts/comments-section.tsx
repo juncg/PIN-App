@@ -154,7 +154,7 @@ export function CommentsSection({
 					comments.map((comment) => <CommentCard key={comment.id} comment={comment} />)
 				) : (
 					<div className="text-center py-12 ">
-						<P className="text-muted-foreground">No hay comentarios todavía. ¡Sé el primero en comentar!</P>
+						<P className="text-muted">No hay comentarios todavía. ¡Sé el primero en comentar!</P>
 					</div>
 				)}
 			</div>

@@ -247,7 +247,7 @@ import { H1, P } from "@/components/ui/typography";
 
 <Card className="p-6">
 	<H1>Title</H1>
-	<P className="text-muted-foreground">Description</P>
+	<P className="text-muted">Description</P>
 	<Button>Action</Button>
 </Card>;
 ```
@@ -491,7 +491,7 @@ import { H3, P } from "@/components/ui/typography";
 	items.length === 0 ? (
 		<Card className="p-12 text-center">
 			<H3 className="mb-2">No items found</H3>
-			<P className="text-muted-foreground">Try creating a new item</P>
+			<P className="text-muted">Try creating a new item</P>
 		</Card>
 	) : (
 		<ItemsList items={items} />
@@ -622,7 +622,7 @@ export default async function ExamplePage({ params }: ExamplePageProps) {
 		return (
 			<Card className="p-12 text-center">
 				<H1>Not found</H1>
-				<P className="text-muted-foreground">Example does not exist</P>
+				<P className="text-muted">Example does not exist</P>
 			</Card>
 		);
 	}

@@ -26,14 +26,14 @@ export function CommentCard({ comment, level = 0 }: { comment: IComment; level?:
 					<span className="font-semibold text-sm">
 						{comment.user?.name} {comment.user?.surnames}
 					</span>
-					<span className="text-xs text-muted-foreground">@{comment.user?.username}</span>
-					<span className="text-xs text-muted-foreground">· {GetRelativeTime(comment.created_at)}</span>
+					<span className="text-xs text-muted">@{comment.user?.username}</span>
+					<span className="text-xs text-muted">· {GetRelativeTime(comment.created_at)}</span>
 				</div>
-				<P className="text-sm text-foreground/90 whitespace-pre-wrap">{comment.text}</P>
+				<P className="text-sm text-white/90 whitespace-pre-wrap">{comment.text}</P>
 
-				<div className="flex items-center gap-4 text-xs text-muted-foreground">
+				<div className="flex items-center gap-4 text-xs text-muted">
 					<button
-						className="hover:text-foreground transition-colors flex items-center gap-1"
+						className="hover:text-white transition-colors flex items-center gap-1"
 						onClick={handleReplyClick}
 					>
 						<MessageSquare className="h-3 w-3" />

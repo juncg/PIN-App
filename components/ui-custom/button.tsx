@@ -5,12 +5,12 @@ import { cn } from "@/lib/utils";
 import { forwardRef } from "react";
 
 export const buttonVariants = cva(
-	"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+	"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-lightgrey disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
 	{
 		variants: {
 			variant: {
-				default: "bg-secondary text-primary hover:scale-105 transition border-[2px] border-primary",
-				secondary: "bg-primary text-secondary hover:scale-105 transition border-[2px] border-primary",
+				default: "bg-black text-black hover:scale-105 transition border-[2px] border-black",
+				secondary: "bg-black text-black hover:scale-105 transition border-[2px] border-black",
 			},
 			size: {
 				default: "h-9 px-7 py-3.5",

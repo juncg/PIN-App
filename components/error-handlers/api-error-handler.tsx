@@ -12,7 +12,7 @@ export function APIErrorHandler({ error }: { error: PostgrestError | null }) {
 
 	if (error) {
 		if (error.code === "42501") {
-			return <NotLoggedInDialog />;
+			return <NotLoggedInDialog open />;
 		}
 	}
 

@@ -98,7 +98,7 @@ export function AppSidebar() {
 												href={item.url}
 												className={
 													isActive
-														? "bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
+														? "bg-black text-black hover:bg-black/90 font-semibold"
 														: ""
 												}
 											>
@@ -123,9 +123,7 @@ export function AppSidebar() {
 									<Link
 										href={item.url}
 										className={
-											isActive
-												? "bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
-												: ""
+											isActive ? "bg-black text-black hover:bg-black/90 font-semibold" : ""
 										}
 									>
 										<item.icon />

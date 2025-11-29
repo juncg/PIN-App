@@ -443,7 +443,7 @@ const MultipleSelector = ({
 		>
 			<div
 				className={cn(
-					"border-input focus-within:border-ring focus-within:ring-ring/50 has-aria-invalid:ring-destructive/20 dark:has-aria-invalid:ring-destructive/40 has-aria-invalid:border-destructive relative min-h-[38px] rounded-md border text-sm transition-[color,box-shadow] outline-none focus-within:ring-[3px] has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50",
+					"border-hover focus-within:border-lightgrey focus-within:ring-lightgrey/50 has-aria-invalid:ring-destructive/20 dark:has-aria-invalid:ring-destructive/40 has-aria-invalid:border-destructive relative min-h-[38px] rounded-md border text-sm transition-[color,box-shadow] outline-none focus-within:ring-[3px] has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50",
 					{
 						"p-1": selected.length !== 0,
 						"cursor-text": !disabled && selected.length !== 0,
@@ -462,7 +462,7 @@ const MultipleSelector = ({
 							<div
 								key={option.value}
 								className={cn(
-									"animate-fadeIn bg-background text-secondary-foreground hover:bg-background relative inline-flex h-7 cursor-default items-center rounded-md border pr-7 pl-2 text-xs font-medium transition-all disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-fixed:pr-2",
+									"animate-fadeIn bg-black text-white hover:bg-black relative inline-flex h-7 cursor-default items-center rounded-md border pr-7 pl-2 text-xs font-medium transition-all disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-fixed:pr-2",
 									badgeClassName
 								)}
 								data-fixed={option.fixed}
@@ -470,7 +470,7 @@ const MultipleSelector = ({
 							>
 								{option.label}
 								<button
-									className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute -inset-y-px -right-px flex size-7 items-center justify-center rounded-r-md border border-transparent p-0 outline-hidden transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
+									className="text-muted/80 hover:text-white focus-visible:border-lightgrey focus-visible:ring-lightgrey/50 absolute -inset-y-px -right-px flex size-7 items-center justify-center rounded-r-md border border-transparent p-0 outline-hidden transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
 									onKeyDown={(e) => {
 										if (e.key === "Enter") {
 											handleUnselect(option);
@@ -516,7 +516,7 @@ const MultipleSelector = ({
 						}}
 						placeholder={hidePlaceholderWhenSelected && selected.length !== 0 ? "" : placeholder}
 						className={cn(
-							"placeholder:text-muted-foreground/70 flex-1 bg-transparent outline-hidden disabled:cursor-not-allowed",
+							"placeholder:text-muted/70 flex-1 bg-transparent outline-hidden disabled:cursor-not-allowed",
 							{
 								"w-full": hidePlaceholderWhenSelected,
 								"px-3 py-2": selected.length === 0,
@@ -532,7 +532,7 @@ const MultipleSelector = ({
 							onChange?.(selected.filter((s) => s.fixed));
 						}}
 						className={cn(
-							"text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute top-0 right-0 flex size-9 items-center justify-center rounded-md border border-transparent transition-[color,box-shadow] outline-none focus-visible:ring-[3px]",
+							"text-muted/80 hover:text-white focus-visible:border-lightgrey focus-visible:ring-lightgrey/50 absolute top-0 right-0 flex size-9 items-center justify-center rounded-md border border-transparent transition-[color,box-shadow] outline-none focus-visible:ring-[3px]",
 							(hideClearAllButton ||
 								disabled ||
 								selected.length < 1 ||
@@ -548,7 +548,7 @@ const MultipleSelector = ({
 			<div className="relative">
 				<div
 					className={cn(
-						"border-input absolute top-2 z-10 w-full overflow-hidden rounded-md border",
+						"border-hover absolute top-2 z-10 w-full overflow-hidden rounded-md border",
 						"data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
 						!open && "hidden"
 					)}
@@ -556,7 +556,7 @@ const MultipleSelector = ({
 				>
 					{open && (
 						<CommandList
-							className="bg-popover text-popover-foreground shadow-lg outline-hidden"
+							className="bg-black text-white shadow-lg outline-hidden"
 							onMouseLeave={() => {
 								setOnScrollbar(false);
 							}}

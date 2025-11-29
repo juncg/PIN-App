@@ -35,7 +35,7 @@ export default function NotFound() {
 				<P>No hemos podido encontrar el recurso que estás buscando</P>
 
 				{showSpecialImage && (
-					<P className="text-sm text-muted-foreground mt-2">¡Felicidades! Encontraste la imagen secreta 🎉</P>
+					<P className="text-sm text-muted mt-2">¡Felicidades! Encontraste la imagen secreta 🎉</P>
 				)}
 			</div>
 

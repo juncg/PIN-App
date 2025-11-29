@@ -44,7 +44,7 @@ export function SearchGeneral() {
 	return (
 		<div className="absolute left-1/2 -translate-x-1/2">
 			<div className="relative">
-				<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+				<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
 				<Input
 					type="search"
 					placeholder="Buscar..."

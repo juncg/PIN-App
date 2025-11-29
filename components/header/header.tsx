@@ -2,12 +2,11 @@ import { LocaleSwitcher } from "@/components/ui-custom/locale-switcher";
 import Link from "next/link";
 import { AuthButton } from "../auth/auth-buttons";
 import { SearchGeneral } from "../search/search-general/search-general";
-import { ThemeSwitcher } from "../ui-custom/theme-switcher";
 import { SidebarTrigger } from "../ui/sidebar";
 
 export function Header() {
 	return (
-		<header className="sticky top-0 z-30 w-full flex border-b border-b-foreground/10 h-16 bg-background">
+		<header className="sticky top-0 z-30 w-full flex border-b border-b-white/10 h-16 bg-black">
 			<div className="w-full flex items-center px-4 md:px-6 relative">
 				<div className="flex items-center gap-2">
 					<SidebarTrigger />

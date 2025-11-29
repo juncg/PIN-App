@@ -21,28 +21,28 @@ const Toaster = ({ ...props }: ToasterProps) => {
 			}}
 			toastOptions={{
 				classNames: {
-					toast: "bg-popover text-popover-foreground border border-border rounded-md shadow-sm",
-					success: "bg-primary text-primary-foreground",
-					error: "bg-destructive text-destructive-foreground",
-					warning: "bg-accent text-accent-foreground",
-					info: "bg-secondary text-secondary-foreground",
-					loading: "bg-popover text-popover-foreground",
+					toast: "bg-black text-white border border-hover rounded-md shadow-sm",
+					success: "bg-black text-black",
+					error: "bg-destructive text-destructive",
+					warning: "bg-hover text-hover",
+					info: "bg-black text-white",
+					loading: "bg-black text-white",
 					title: "font-medium",
 					description: "text-sm opacity-90",
 					actionButton: "btn btn-sm",
 					cancelButton: "btn btn-sm btn-outline",
 				},
 				style: {
-					background: "hsl(var(--popover))",
-					color: "hsl(var(--popover-foreground))",
+					black: "hsl(var(--black))",
+					color: "hsl(var(--white))",
 					border: "1px solid hsl(var(--border))",
 					borderRadius: "var(--radius)",
 				},
 			}}
 			style={
 				{
-					"--normal-bg": "hsl(var(--popover))",
-					"--normal-text": "hsl(var(--popover-foreground))",
+					"--normal-bg": "hsl(var(--black))",
+					"--normal-text": "hsl(var(--white))",
 					"--normal-border": "hsl(var(--border))",
 					"--border-radius": "var(--radius)",
 				} as React.CSSProperties

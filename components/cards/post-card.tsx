@@ -59,7 +59,7 @@ export function PostCard(props: IPostCard) {
 	return (
 		<article
 			className={cn(
-				"group relative overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-sm transition-all hover:shadow-md",
+				"group relative overflow-hidden rounded-2xl border bg-black text-white shadow-sm transition-all hover:shadow-md",
 				className
 			)}
 		>
@@ -75,7 +75,7 @@ export function PostCard(props: IPostCard) {
 					/>
 				</div>
 
-				<Carousel className="w-full bg-secondary">
+				<Carousel className="w-full bg-black">
 					<CarouselContent>
 						{displayImages.map((image, index) => (
 							<CarouselItem key={index}>
@@ -101,8 +101,8 @@ export function PostCard(props: IPostCard) {
 
 					{displayImages.length > 1 && (
 						<>
-							<CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-							<CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+							<CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 text-muted hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+							<CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 text-muted hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
 						</>
 					)}
 				</Carousel>
@@ -115,17 +115,17 @@ export function PostCard(props: IPostCard) {
 						className="flex-1"
 					>
 						<h3 className="text-xl font-bold hover:underline">{post.title}</h3>
-						<p className="text-xs text-muted-foreground mt-1 line-clamp-2">{post.text}</p>
+						<p className="text-xs text-muted mt-1 line-clamp-2">{post.text}</p>
 					</Link>
 				</div>
 
 				<div className="space-y-2">
-					<div className="flex items-center justify-between text-xs text-muted-foreground">
+					<div className="flex items-center justify-between text-xs text-muted">
 						<div className="flex items-center gap-1.5">
 							{post.type === "Offer" ? (
 								<>
-									<Timer className="h-4 w-4 text-primary" />
-									<span className="text-sm text-primary">
+									<Timer className="h-4 w-4 text-black" />
+									<span className="text-sm text-black">
 										{GetTimeRemaining(post.target_completition_date)}
 									</span>
 								</>
@@ -134,8 +134,8 @@ export function PostCard(props: IPostCard) {
 							)}
 						</div>
 						<div className="flex items-center gap-1.5">
-							<Users className="h-5 w-5 text-primary" />
-							<span className="text-base font-bold text-primary">
+							<Users className="h-5 w-5 text-black" />
+							<span className="text-base font-bold text-black">
 								{currentProgress}{" "}
 								{post.target_progress > 0 ? `de ${post.target_progress}` : "suscritos"}
 							</span>
@@ -146,12 +146,12 @@ export function PostCard(props: IPostCard) {
 
 				<div className="flex items-center justify-between pt-2">
 					<div className="flex items-center gap-2">
-						<Avatar className="h-8 w-8 border border-border">
+						<Avatar className="h-8 w-8 border hover">
 							<AvatarImage src={post.User?.profile_picture || businessImage} />
 							<AvatarFallback>{businessName[0]}</AvatarFallback>
 						</Avatar>
 						<div className="flex flex-col">
-							<span className="text-[10px] text-muted-foreground uppercase tracking-wider">Creador</span>
+							<span className="text-[10px] text-muted uppercase tracking-wider">Creador</span>
 							<Link
 								href={`/profile/${post?.User?.id}`}
 								className="text-xs font-medium hover:underline cursor-pointer"

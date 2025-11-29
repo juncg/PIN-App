@@ -83,7 +83,7 @@ export function SearchGeneralDropdownItem({ item, type }: SearchGeneralDropdownI
 	const { href, title, subtitle, tags, image } = getItemData();
 
 	return (
-		<Link href={href} className="block hover:bg-accent/50 transition-colors">
+		<Link href={href} className="block hover:bg-hover/50 transition-colors">
 			<div className="flex gap-4 p-4">
 				<div className="relative w-16 h-16 flex-shrink-0 rounded-md overflow-hidden bg-muted flex items-center justify-center">
 					<Image
@@ -97,7 +97,7 @@ export function SearchGeneralDropdownItem({ item, type }: SearchGeneralDropdownI
 
 				<div className="flex-1 min-w-0">
 					<H4 className="truncate mb-1">{title}</H4>
-					{subtitle && <P className="text-sm text-muted-foreground truncate">{subtitle}</P>}
+					{subtitle && <P className="text-sm text-muted truncate">{subtitle}</P>}
 
 					{tags && tags.length > 0 && (
 						<div className="flex gap-1 mt-2">

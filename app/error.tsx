@@ -35,7 +35,7 @@ export default function Error() {
 				<P>Inténtalo de nuevo más tarde</P>
 
 				{showSpecialImage && (
-					<P className="text-sm text-muted-foreground mt-2">¡Felicidades! Encontraste la imagen secreta 🎉</P>
+					<P className="text-sm text-muted mt-2">¡Felicidades! Encontraste la imagen secreta 🎉</P>
 				)}
 			</div>
 

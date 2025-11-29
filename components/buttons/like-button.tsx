@@ -1,11 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { Heart } from "lucide-react";
 import { useEffect, useState } from "react";
+import { NotLoggedInDialog } from "../dialogs/not-logged-in-dialog";
 import { Button } from "../ui/button";
 import { handleLikeAction } from "./like-button-actions";
-import { NotLoggedInDialog } from "../dialogs/not-logged-in-dialog";
-import { Heart } from "lucide-react";
 
 export interface ILikeButton {
 	likes: number;
@@ -59,8 +59,8 @@ export function LikeButton(props: ILikeButton) {
 				<Button
 					onClick={handleLike}
 					className={cn(
-						"h-8 w-8 rounded-full bg-background/80 p-0 text-foreground backdrop-blur-sm transition-colors hover:bg-background hover:text-red-500",
-						liked ? "text-red-500" : "text-foreground hover:text-red-500"
+						"h-8 w-8 rounded-full bg-black/80 p-0 text-white backdrop-blur-sm transition-colors hover:bg-black hover:text-red-500",
+						liked ? "text-red-500" : "text-white hover:text-red-500"
 					)}
 					variant="ghost"
 				>
