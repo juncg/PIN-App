@@ -1,4 +1,4 @@
-import { GetFromDatabase } from "@/lib/services/general";
+import { GetClient, GetFromDatabase } from "@/lib/services/general";
 import { IForum } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
 
@@ -21,12 +21,53 @@ export async function ForumDetailsService(forumId: number) {
 	});
 
 	if (!forum || forum.length === 0) {
-		return { forum: null, isFollowing: false };
+		return { forum: null, isFollowing: false, counts: { petitions: 0, offers: 0 } };
 	}
+
+	const { data: petitions } = await GetFromDatabase({
+		tableName: "Petition",
+		select: "id",
+		filters: [
+			{
+				method: "eq",
+				column: "forum_id",
+				value: forumId,
+			},
+			{
+				method: "eq",
+				column: "state",
+				value: "Posted",
+			},
+		],
+	});
+
+	const { data: offers } = await GetFromDatabase({
+		tableName: "Offer",
+		select: "id",
+		filters: [
+			{
+				method: "eq",
+				column: "forum_id",
+				value: forumId,
+			},
+			{
+				method: "eq",
+				column: "state",
+				value: "Posted",
+			},
+		],
+	});
 
 	const isFollowing = forum[0].User_Forum?.some((fu) => fu.user_id === uuid) || false;
 
-	return { forum, isFollowing };
+	return {
+		forum,
+		isFollowing,
+		counts: {
+			petitions: petitions?.length || 0,
+			offers: offers?.length || 0,
+		},
+	};
 }
 
 export async function fetchForumPosts(forumId: number, page: number = 0, pageSize: number = 10) {

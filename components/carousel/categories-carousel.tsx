@@ -89,8 +89,6 @@ export function CategoriesCarousel({ categories }: CategoriesCarouselProps) {
 					);
 				})}
 			</CarouselContent>
-			<CarouselPrevious className="hidden md:flex" />
-			<CarouselNext className="hidden md:flex" />
 		</Carousel>
 	);
 }
