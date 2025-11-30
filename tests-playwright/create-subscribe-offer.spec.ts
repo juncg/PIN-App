@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 
 //npx playwright codegen --output=tests-playwright/create-subscribe-offer.spec.ts http://localhost:3000/?locale=en 
 // comando para hacer tests automaticos
+// para ejecutar ((headed para ver como lo hace)) npx playwright test --headed tests-playwright/create-subscribe-offer.spec.ts
 
 test('test', async ({ page }) => {
   await page.goto('http://localhost:3000/?locale=en');
