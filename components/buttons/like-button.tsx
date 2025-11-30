@@ -63,12 +63,11 @@ export function LikeButton(props: ILikeButton) {
 				<Button
 					onClick={handleLike}
 					className={cn(
-						"h-8 w-8 rounded-full bg-black/80 p-0 text-white backdrop-blur-sm transition-colors hover:bg-black hover:text-red-500",
-						liked ? "text-red-500" : "text-white hover:text-red-500"
+						"h-8 w-8 rounded-full p-0 bg-white text-darkmode transition-colors hover:text-destructive",
+						liked ? "text-destructive" : "hover:text-destructive"
 					)}
-					variant="ghost"
 				>
-					<Heart className={cn("h-4 w-4", liked && "fill-current text-red-500")} />
+					<Heart className={cn("h-4 w-4", liked && "fill-current text-destructive")} />
 				</Button>
 
 				<NotLoggedInDialog
@@ -83,7 +82,7 @@ export function LikeButton(props: ILikeButton) {
 	return (
 		<>
 			<Button variant="outline" className={cn("mt-4")} onClick={handleLike}>
-				<Heart className={cn("mr-2", liked && "fill-red-500 text-red-500")} />
+				<Heart className={cn("mr-2", liked && "fill-destructive text-destructive")} />
 				{numberOfLikes || 0}
 			</Button>
 

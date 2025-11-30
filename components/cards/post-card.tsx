@@ -45,6 +45,9 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 	const [currentProgress, setCurrentProgress] = useState(post.current_progress);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [startIndex, setStartIndex] = useState(0);
+	const [currentIndex, setCurrentIndex] = useState(0);
+	const [canScrollPrev, setCanScrollPrev] = useState(false);
+	const [canScrollNext, setCanScrollNext] = useState(false);
 
 	useEffect(() => {
 		setCurrentProgress(post.current_progress);
@@ -98,7 +101,19 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 							/>
 						</div>
 
-						<Carousel className="w-full">
+						<Carousel
+							className="w-full"
+							onSlideChange={(idx: number) => setCurrentIndex(idx)}
+							setApi={(api) => {
+								if (!api) return;
+								setCanScrollPrev(api.canScrollPrev());
+								setCanScrollNext(api.canScrollNext());
+								api.on("select", () => {
+									setCanScrollPrev(api.canScrollPrev());
+									setCanScrollNext(api.canScrollNext());
+								});
+							}}
+						>
 							<CarouselContent>
 								{displayImages.map((image, index) => (
 									<CarouselItem key={index}>
@@ -124,8 +139,12 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 
 							{displayImages.length > 1 && (
 								<>
-									<CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 text-lightgrey hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-									<CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 text-lightgrey hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+									{canScrollPrev && (
+										<CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 h-8 w-8 text-placeholder hover:text-darkmode opacity-0 group-hover:opacity-100 transition-all" />
+									)}
+									{canScrollNext && (
+										<CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 h-8 w-8 text-placeholder hover:text-darkmode opacity-0 group-hover:opacity-100 transition-all" />
+									)}
 								</>
 							)}
 						</Carousel>
