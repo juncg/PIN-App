@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui-custom/card";
 import { Separator } from "@/components/ui-custom/separator";
-import { H4 } from "@/components/ui-custom/typography";
+import { B1, H4 } from "@/components/ui-custom/typography";
 import { IBusiness, IForum, IOffer, IPetition, IProduct, IUser } from "@/lib/services/types";
 import { Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
