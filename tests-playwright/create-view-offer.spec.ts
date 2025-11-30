@@ -35,8 +35,7 @@ test('offers can be created and viewed afterwards', async ({ page }) => {
     const currentDay: string = formatFullDateWithOrdinal();
 
     await page.getByRole('button', { name: currentDay }).click(); // hace click en una fecha 
-    // WARNING: HAY QUE CAMBIAR MANUALMENTE FECHA CADA VEZ, si alguien sabe arreglarlo q lo arregle xd
-    // probablmente se pueda cogiendo la fecha actual y pasandolo a una string con el formato que usamos 
+    
 
     await page.locator('#forum_id').click(); // dropdown foro
 

@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui-custom/badge";
 import { Button } from "@/components/ui-custom/button";
 import { Card, CardContent, CardHeader } from "@/components/ui-custom/card";
 import { Separator } from "@/components/ui-custom/separator";
-import { H3 } from "@/components/ui-custom/typography";
+import { B1, H3 } from "@/components/ui-custom/typography";
 import { useState } from "react";
 
 type TestResult = {

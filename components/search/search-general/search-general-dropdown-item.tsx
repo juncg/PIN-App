@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui-custom/badge";
-import { H4 } from "@/components/ui-custom/typography";
+import { B1, H4 } from "@/components/ui-custom/typography";
 import { IBusiness, IForum, IOffer, IPetition, IProduct, IUser } from "@/lib/services/types";
 import Image from "next/image";
 import Link from "next/link";

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { TPost } from "@/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PostCard } from "../cards/post-card";
+import { B1 } from "../ui-custom/typography";
 
 interface InfinitePostGridProps {
 	className?: string;

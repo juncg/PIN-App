@@ -6,6 +6,7 @@ import { MessageSquare } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
+import { B1 } from "../ui-custom/typography";
 
 export function CommentCard({ comment, level = 0 }: { comment: IComment; level?: number }) {
 	const [showReplyForm, setShowReplyForm] = useState(false);

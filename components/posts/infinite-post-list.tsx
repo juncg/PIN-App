@@ -6,6 +6,7 @@ import { TPost } from "@/types";
 import { useCallback, useEffect, useState } from "react";
 import { PostCard } from "../cards/post-card";
 import { Skeleton } from "../ui-custom/skeleton";
+import { B1 } from "../ui-custom/typography";
 
 interface InfinitePostListProps {
 	className?: string;

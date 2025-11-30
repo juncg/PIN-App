@@ -6,7 +6,7 @@ import { BadgeCheck, UserCircle } from "lucide-react";
 import Link from "next/link";
 import { AvatarGroup } from "../ui-custom/avatar-group";
 import { Button } from "../ui-custom/button";
-import { H3 } from "../ui-custom/typography";
+import { B1, H3 } from "../ui-custom/typography";
 
 interface IProfileUserCompanyState {
 	className?: string;
