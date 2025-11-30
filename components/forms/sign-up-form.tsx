@@ -68,6 +68,19 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 					username: username,
 					banner: null,
 					profile_picture: null,
+					public_user_follows: true,
+					public_forum_follows: true,
+					public_petition_subscriptions: true,
+					public_offer_susbcriptions: true,
+					public_likes: true,
+					bio: null,
+					followers: 0,
+					location: "",
+					user_follows: 0,
+					forum_follows: 0,
+					business_follows: 0,
+					posts_liked: 0,
+					joined_at: new Date().toISOString(),
 				},
 			});
 
@@ -104,7 +117,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 								/>
 							</div>
 							<div className="grid gap-2">
-								<Label htmlFor="name">Apellidos</Label>
+								<Label htmlFor="surnames">Apellidos</Label>
 								<Input
 									id="surnames"
 									type="text"
@@ -114,9 +127,9 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 								/>
 							</div>
 							<div className="grid gap-2">
-								<Label htmlFor="name">Username</Label>
+								<Label htmlFor="username">Username</Label>
 								<Input
-									id="name"
+									id="username"
 									type="text"
 									required
 									value={username}
