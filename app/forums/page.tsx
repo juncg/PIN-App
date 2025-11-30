@@ -13,7 +13,7 @@ export default async function Forums({ searchParams }: { searchParams: Promise<I
 
 	return (
 		<section className="max-w-7xl mx-auto space-y-8">
-			<div className="mb-8 text-sm text-muted">
+			<div className="mb-8 text-sm text-lightgrey">
 				<span>Inicio</span> <span className="mx-2">/</span>{" "}
 				<span className="text-white font-medium">Foros</span>
 			</div>
@@ -48,7 +48,7 @@ export default async function Forums({ searchParams }: { searchParams: Promise<I
 					<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 						{forums.length === 0 ? (
 							<div className="text-center col-span-full">
-								<p className="text-xl text-muted">No hay foros a mostrar.</p>
+								<p className="text-xl text-lightgrey">No hay foros a mostrar.</p>
 							</div>
 						) : (
 							forums.map((forum) => <ForumCard key={forum.id} forum={forum} currentUserId={userUuid} />)

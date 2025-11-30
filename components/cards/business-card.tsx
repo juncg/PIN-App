@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "../ui-custom/button";
-import { H3, P } from "../ui-custom/typography";
+import { H3 } from "../ui-custom/typography";
 
 export interface IBusinessCard {
 	className?: string;
@@ -20,7 +20,7 @@ export function BusinessCard({ props }: { props: IBusinessCard }) {
 				</div>
 			</div>
 			<div className="flex flex-col mb-10 gap-4">
-				<P>{businessDescription}</P>
+				<B1>{businessDescription}</B1>
 				<Image className="mx-auto" src={"/placeholder.png"} alt="" width={300} height={600} unoptimized />
 			</div>{" "}
 			<div className="flex flex-col gap-8">

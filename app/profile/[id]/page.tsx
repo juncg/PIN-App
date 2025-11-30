@@ -3,7 +3,7 @@ import { PostCardHorizontal } from "@/components/cards/post-card-horizontal";
 import { ProfileAltenatingButtons } from "@/components/profile/profile-alternating-buttons";
 import { ProfileRightColumn } from "@/components/profile/profile-right-column";
 import { Button } from "@/components/ui-custom/button";
-import { H1, H2, H4, P } from "@/components/ui-custom/typography";
+import { B1, H1, H2, H4 } from "@/components/ui-custom/typography";
 import { IOffer, IPetition } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
 import { GetJoinedDate } from "@/lib/services/utilities";
@@ -59,26 +59,26 @@ export default async function Profile({ params }: ProfilePageProps) {
 									{userData?.name} {userData?.surnames}.
 								</H1>
 
-								<H4 className="text-muted">@{userData?.username}</H4>
+								<H4 className="text-lightgrey">@{userData?.username}</H4>
 							</span>
 						</span>
 
-						<P>{userData?.bio}</P>
+						<B1>{userData?.bio}</B1>
 					</div>
 
 					<div className="flex flex-col gap-12 mt-8 w-1/3">
-						<span className="flex flex-col gap-4 text-muted">
-							<P className="flex gap-2 items-center">
+						<span className="flex flex-col gap-4 text-lightgrey">
+							<B1 className="flex gap-2 items-center">
 								<MapPin className="!h-4" /> Ubicación: Ejemplo
-							</P>
-							<P className="flex gap-2 items-center">
+							</B1>
+							<B1 className="flex gap-2 items-center">
 								<Users className="!h-4" />
 								Seguidores: {userData?.followers}
-							</P>
-							<P className="flex gap-2 items-center">
+							</B1>
+							<B1 className="flex gap-2 items-center">
 								<CalendarDays className="!h-4" />
 								{GetJoinedDate(userData?.joined_at.toString() || "")}
-							</P>
+							</B1>
 						</span>
 
 						<span>
@@ -103,7 +103,9 @@ export default async function Profile({ params }: ProfilePageProps) {
 							<div className="flex flex-col gap-12 w-full">
 								<span className="flex items-end gap-6">
 									<H2>Ofertas.</H2>
-									<P className="text-muted line-clamp-2">{subscribedOffersCount} ofertas en total</P>
+									<B1 className="text-lightgrey line-clamp-2">
+										{subscribedOffersCount} ofertas en total
+									</B1>
 								</span>
 
 								<div className="flex flex-col gap-8 w-full">
@@ -120,9 +122,9 @@ export default async function Profile({ params }: ProfilePageProps) {
 							<div className="flex flex-col gap-12 w-full">
 								<span className="flex items-end gap-6">
 									<H2>Peticiones.</H2>
-									<P className="text-muted line-clamp-2">
+									<B1 className="text-lightgrey line-clamp-2">
 										{subscribedPetitionsCount} peticiones en total
-									</P>
+									</B1>
 								</span>
 
 								<div className="flex flex-col gap-8 w-full">
@@ -140,7 +142,7 @@ export default async function Profile({ params }: ProfilePageProps) {
 					postsContent={
 						<div>
 							<H2>Mis publicaciones</H2>
-							<P className="text-muted">Contenido de publicaciones aquí</P>
+							<B1 className="text-lightgrey">Contenido de publicaciones aquí</B1>
 						</div>
 					}
 				/>

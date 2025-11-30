@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avat
 import { Button } from "@/components/ui-custom/button";
 import { Separator } from "@/components/ui-custom/separator";
 import { Textarea } from "@/components/ui-custom/textarea";
-import { H3, P } from "@/components/ui-custom/typography";
+import { H3 } from "@/components/ui-custom/typography";
 import { PostToDatabase } from "@/lib/services/general";
 import { IComment, IUser } from "@/lib/services/types";
 import { Loader2, Plus } from "lucide-react";
@@ -114,7 +114,7 @@ export function CommentsSection({
 		<div className="space-y-6 mt-12">
 			<div className="flex items-center gap-2">
 				<H3>Comentarios</H3>
-				<div className="bg-muted px-2 py-0.5 rounded-full text-xs font-medium">{totalComments}</div>
+				<div className="bg-lightgrey px-2 py-0.5 rounded-full text-xs font-medium">{totalComments}</div>
 			</div>
 
 			<Separator />
@@ -154,7 +154,7 @@ export function CommentsSection({
 					comments.map((comment) => <CommentCard key={comment.id} comment={comment} />)
 				) : (
 					<div className="text-center py-12 ">
-						<P className="text-muted">No hay comentarios todavía. ¡Sé el primero en comentar!</P>
+						<B1 className="text-lightgrey">No hay comentarios todavía. ¡Sé el primero en comentar!</B1>
 					</div>
 				)}
 			</div>

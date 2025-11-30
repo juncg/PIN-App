@@ -2,9 +2,9 @@
 
 import * as SwitchPrimitive from "@radix-ui/react-switch";
 
-import { P } from "@/components/ui-custom/typography";
 import { cn } from "@/lib/utils";
 import { ComponentProps, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { B1 } from "./typography";
 
 type SwitchProps = ComponentProps<typeof SwitchPrimitive.Root> & {
 	innerTextUnchecked?: string;
@@ -58,7 +58,7 @@ export function Switch({
 					ref={thumbRefChecked}
 					className="inline-flex items-center justify-center w-auto min-w-[5rem] px-4 py-1"
 				>
-					<P className="font-bold">{innerTextChecked}</P>
+					<B1 className="font-bold">{innerTextChecked}</B1>
 				</span>
 			</span>
 
@@ -67,7 +67,7 @@ export function Switch({
 					ref={thumbRefUnchecked}
 					className="inline-flex items-center justify-center w-auto min-w-[5rem] px-4 py-1"
 				>
-					<P className="font-bold">{innerTextUnchecked}</P>
+					<B1 className="font-bold">{innerTextUnchecked}</B1>
 				</span>
 			</span>
 
@@ -88,13 +88,13 @@ export function Switch({
 					className={cn(
 						"pointer-events-none flex items-center justify-center h-full min-w-[5rem] px-4 py-1 rounded-[10px] border-[3px] border-black transition-all duration-200 data-[state=checked]:translate-x-[20%] data-[state=unchecked]:translate-x-0 data-[state=checked]:bg-chernobyl data-[state=unchecked]:bg-white"
 					)}
-					style={{ 
+					style={{
 						width: `${maxThumbWidth}px`,
-						willChange: 'transform',
-						transform: checked ? 'translateX(20%)' : 'translateX(0)'  // Explicit transform
+						willChange: "transform",
+						transform: checked ? "translateX(20%)" : "translateX(0)", // Explicit transform
 					}}
 				>
-					<P className="font-bold text-black">{checked ? innerTextChecked : innerTextUnchecked}</P>
+					<B1 className="font-bold text-black">{checked ? innerTextChecked : innerTextUnchecked}</B1>
 				</SwitchPrimitive.Thumb>
 			</SwitchPrimitive.Root>
 		</>

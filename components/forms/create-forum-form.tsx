@@ -187,7 +187,9 @@ export function CreateForumForm({ businesses, onSuccess }: CreateForumFormProps)
 							disabled={isSubmitting}
 						/>
 						{profilePicture.length > 0 && (
-							<p className="text-sm text-muted mt-1">Archivo seleccionado: {profilePicture[0].name}</p>
+							<p className="text-sm text-lightgrey mt-1">
+								Archivo seleccionado: {profilePicture[0].name}
+							</p>
 						)}
 					</FormField>
 
@@ -200,7 +202,7 @@ export function CreateForumForm({ businesses, onSuccess }: CreateForumFormProps)
 							disabled={isSubmitting}
 						/>
 						{banner.length > 0 && (
-							<p className="text-sm text-muted mt-1">Archivo seleccionado: {banner[0].name}</p>
+							<p className="text-sm text-lightgrey mt-1">Archivo seleccionado: {banner[0].name}</p>
 						)}
 					</FormField>
 

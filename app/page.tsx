@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui-custom/button";
-import { Icon } from "@/components/ui-custom/icon";
-import { Switch } from "@/components/ui-custom/switch";
 import { H1 } from "@/components/ui-custom/typography";
 import Link from "next/link";
 
@@ -12,10 +10,6 @@ export default function Home() {
 			<Button>
 				<Link href={"/home"}>Ir al inicio</Link>
 			</Button>
-
-			<Switch innerTextChecked="Apuntado." innerTextUnchecked="Apuntarme" />
-
-			<Icon svgPath="/icons/clock.svg" alt="Example Icon" />
 		</section>
 	);
 }

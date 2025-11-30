@@ -81,7 +81,7 @@ export function ProductReviewSection({
 						<UserReviewCard key={review.id} review={review} currentUserId={userId} productId={product.id} />
 					))
 				) : (
-					<p className="text-muted">
+					<p className="text-lightgrey">
 						{reviewFilter === "all"
 							? "No hay reseñas para este producto."
 							: `No hay reseñas con ${reviewFilter} estrellas.`}

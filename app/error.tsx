@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui-custom/button";
-import { H1, P } from "@/components/ui-custom/typography";
+import { B1, H1 } from "@/components/ui-custom/typography";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -19,7 +19,7 @@ export default function Error() {
 			{showSpecialImage && (
 				<div className="relative w-64 h-64 hover:animate-spin transition-transform duration-300 hover:rotate-360">
 					<Image
-						src="/jancarlo.png"
+						src="/jancarlo.jpg"
 						alt="Página no encontrada"
 						fill
 						className="object-contain"
@@ -29,13 +29,13 @@ export default function Error() {
 				</div>
 			)}
 
-			<div className="flex flex-col text-center">
+			<div className="flex flex-col text-center gap-4">
 				<H1>Algo ha ido mal</H1>
 
-				<P>Inténtalo de nuevo más tarde</P>
+				<B1>Inténtalo de nuevo más tarde</B1>
 
 				{showSpecialImage && (
-					<P className="text-sm text-muted mt-2">¡Felicidades! Encontraste la imagen secreta 🎉</P>
+					<B1 className="text-sm text-lightgrey mt-2">¡Felicidades! Encontraste la imagen secreta 🎉</B1>
 				)}
 			</div>
 

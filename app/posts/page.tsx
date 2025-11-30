@@ -1,11 +1,10 @@
-import { OrderSelect } from "@/components/select/order-select";
-import { ISearchParams } from "@/types";
-import { ChevronRight } from "lucide-react";
-import Link from "next/link";
-import { PostsServices } from "./page-services";
-import PostsSidebar from "@/components/sidebar/posts-filters";
 import { PostCardHorizontal } from "@/components/cards/post-card-horizontal";
 import { PostTypeFilter } from "@/components/filters/post-type-filter";
+import { OrderSelect } from "@/components/select/order-select";
+import PostsSidebar from "@/components/sidebar/posts-filters";
+import { ISearchParams } from "@/types";
+import Link from "next/link";
+import { PostsServices } from "./page-services";
 export default async function PostsPage({ searchParams }: { searchParams: Promise<ISearchParams> }) {
 	const { translator, clientTranslations, posts, postType } = await PostsServices(searchParams);
 	const params = await searchParams;
@@ -13,7 +12,7 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 	return (
 		<div className="flex min-h-screen flex-col">
 			<div className="container flex-1 px-4 py-6">
-				<div className="flex items-center text-sm text-muted-foreground">
+				<div className="flex items-center text-sm text-lightgrey-foreground">
 					<Link href="/home" className="hover:text-foreground transition-colors">
 						Inicio
 					</Link>
@@ -31,14 +30,14 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 							<PostTypeFilter />
 						</div>
 						<div className="mb-6 flex items-center justify-between">
-							<p className="text-sm font-medium text-muted-foreground">
+							<p className="text-sm font-medium text-lightgrey-foreground">
 								{posts.length} {posts.length === 1 ? "resultado" : "resultados"}
 							</p>
 							<OrderSelect translations={clientTranslations} defaultValue={params.orderBy || "newest"} />
 						</div>
 						<div className="space-y-6">
 							{posts.length === 0 ? (
-								<p className="text-center text-muted-foreground py-12">
+								<p className="text-center text-lightgrey-foreground py-12">
 									No se encontraron publicaciones
 								</p>
 							) : (

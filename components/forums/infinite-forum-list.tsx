@@ -5,7 +5,7 @@ import { IForum } from "@/lib/services/types";
 import { useCallback, useEffect, useState } from "react";
 import { ForumCard } from "../cards/forum-card";
 import { Skeleton } from "../ui-custom/skeleton";
-import { P } from "../ui-custom/typography";
+import { B1 } from "../ui-custom/typography";
 
 interface InfiniteForumListProps {
 	initialForums: IForum[];
@@ -77,7 +77,7 @@ export function InfiniteForumList({
 	});
 
 	if (forums.length === 0 && !isLoading) {
-		return <P className="text-muted">No se encontraron foros</P>;
+		return <B1 className="text-lightgrey">No se encontraron foros</B1>;
 	}
 
 	return (
@@ -100,7 +100,7 @@ export function InfiniteForumList({
 
 			{/* Message when limit has been reached */}
 			{!hasMore && forums.length > 0 && (
-				<P className="text-center text-muted py-4">No hay más foros para mostrar</P>
+				<B1 className="text-center text-lightgrey py-4">No hay más foros para mostrar</B1>
 			)}
 		</div>
 	);

@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui-custom/card";
 import { Separator } from "@/components/ui-custom/separator";
-import { H4, P } from "@/components/ui-custom/typography";
+import { H4 } from "@/components/ui-custom/typography";
 import { IBusiness, IForum, IOffer, IPetition, IProduct, IUser } from "@/lib/services/types";
 import { Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -66,13 +66,13 @@ export function SearchGeneralDropdown() {
 		<Card className="absolute top-full mt-2 w-full max-h-96 overflow-y-auto z-50 shadow-lg">
 			{isLoading ? (
 				<div className="flex items-center justify-center p-8">
-					<Loader2 className="h-6 w-6 animate-spin text-muted" />
+					<Loader2 className="h-6 w-6 animate-spin text-lightgrey" />
 				</div>
 			) : hasResults ? (
 				<div>
 					{results.offers.length > 0 && (
 						<div>
-							<div className="px-4 py-2 bg-muted/50">
+							<div className="px-4 py-2 bg-lightgrey/50">
 								<H4 className="text-sm font-semibold">Ofertas</H4>
 							</div>
 							<div className="divide-y">
@@ -86,7 +86,7 @@ export function SearchGeneralDropdown() {
 					{results.petitions.length > 0 && (
 						<div>
 							{results.offers.length > 0 && <Separator />}
-							<div className="px-4 py-2 bg-muted/50">
+							<div className="px-4 py-2 bg-lightgrey/50">
 								<H4 className="text-sm font-semibold">Peticiones</H4>
 							</div>
 							<div className="divide-y">
@@ -104,7 +104,7 @@ export function SearchGeneralDropdown() {
 					{results.forums.length > 0 && (
 						<div>
 							{(results.offers.length > 0 || results.petitions.length > 0) && <Separator />}
-							<div className="px-4 py-2 bg-muted/50">
+							<div className="px-4 py-2 bg-lightgrey/50">
 								<H4 className="text-sm font-semibold">Foros</H4>
 							</div>
 							<div className="divide-y">
@@ -120,7 +120,7 @@ export function SearchGeneralDropdown() {
 							{(results.offers.length > 0 ||
 								results.petitions.length > 0 ||
 								results.forums.length > 0) && <Separator />}
-							<div className="px-4 py-2 bg-muted/50">
+							<div className="px-4 py-2 bg-lightgrey/50">
 								<H4 className="text-sm font-semibold">Empresas</H4>
 							</div>
 							<div className="divide-y">
@@ -141,7 +141,7 @@ export function SearchGeneralDropdown() {
 								results.petitions.length > 0 ||
 								results.forums.length > 0 ||
 								results.businesses.length > 0) && <Separator />}
-							<div className="px-4 py-2 bg-muted/50">
+							<div className="px-4 py-2 bg-lightgrey/50">
 								<H4 className="text-sm font-semibold">Productos</H4>
 							</div>
 							<div className="divide-y">
@@ -163,7 +163,7 @@ export function SearchGeneralDropdown() {
 								results.forums.length > 0 ||
 								results.businesses.length > 0 ||
 								results.products.length > 0) && <Separator />}
-							<div className="px-4 py-2 bg-muted/50">
+							<div className="px-4 py-2 bg-lightgrey/50">
 								<H4 className="text-sm font-semibold">Usuarios</H4>
 							</div>
 							<div className="divide-y">
@@ -176,7 +176,7 @@ export function SearchGeneralDropdown() {
 				</div>
 			) : (
 				<div className="p-8 text-center">
-					<P className="text-muted">No se encontraron resultados</P>
+					<B1 className="text-lightgrey">No se encontraron resultados</B1>
 				</div>
 			)}
 		</Card>

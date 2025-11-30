@@ -69,18 +69,18 @@ export function Calendar({
 					"select-none font-medium",
 					captionLayout === "label"
 						? "text-sm"
-						: "rounded-md pl-2 pr-1 flex items-center gap-1 text-sm h-8 [&>svg]:text-muted [&>svg]:size-3.5",
+						: "rounded-md pl-2 pr-1 flex items-center gap-1 text-sm h-8 [&>svg]:text-lightgrey [&>svg]:size-3.5",
 					defaultClassNames.caption_label
 				),
 				table: "w-full border-collapse",
 				weekdays: cn("flex", defaultClassNames.weekdays),
 				weekday: cn(
-					"text-muted rounded-md flex-1 font-normal text-[0.8rem] select-none",
+					"text-lightgrey rounded-md flex-1 font-normal text-[0.8rem] select-none",
 					defaultClassNames.weekday
 				),
 				week: cn("flex w-full mt-2", defaultClassNames.week),
 				week_number_header: cn("select-none w-(--cell-size)", defaultClassNames.week_number_header),
-				week_number: cn("text-[0.8rem] select-none text-muted", defaultClassNames.week_number),
+				week_number: cn("text-[0.8rem] select-none text-lightgrey", defaultClassNames.week_number),
 				day: cn(
 					"relative w-full h-full p-0 text-center [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square select-none",
 					props.showWeekNumber
@@ -92,8 +92,8 @@ export function Calendar({
 				range_middle: cn("rounded-none", defaultClassNames.range_middle),
 				range_end: cn("rounded-r-md bg-hover", defaultClassNames.range_end),
 				today: cn("bg-hover text-hover rounded-md data-[selected=true]:rounded-none", defaultClassNames.today),
-				outside: cn("text-muted aria-selected:text-muted", defaultClassNames.outside),
-				disabled: cn("text-muted opacity-50", defaultClassNames.disabled),
+				outside: cn("text-lightgrey aria-selected:text-lightgrey", defaultClassNames.outside),
+				disabled: cn("text-lightgrey opacity-50", defaultClassNames.disabled),
 				hidden: cn("invisible", defaultClassNames.hidden),
 				...classNames,
 			}}

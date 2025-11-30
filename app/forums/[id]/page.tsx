@@ -1,9 +1,9 @@
 import { FollowButton } from "@/components/buttons/follow-button";
 import { SidebarForumCard } from "@/components/cards/sidebar-forum-card";
+import { InfinitePostGrid } from "@/components/posts/infinite-post-grid";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
 import { Button } from "@/components/ui-custom/button";
-import { InfinitePostGrid } from "@/components/posts/infinite-post-grid";
-import { H1, H2, P } from "@/components/ui-custom/typography";
+import { B1, H1, H2 } from "@/components/ui-custom/typography";
 import { getUserUuid } from "@/lib/services/user";
 import { TPost } from "@/types";
 import { Verified } from "lucide-react";
@@ -27,7 +27,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 		return (
 			<div className="flex flex-col items-center justify-center h-full gap-4">
 				<H1>Foro no encontrado</H1>
-				<P>El foro que buscas no existe o ha sido eliminado.</P>
+				<B1>El foro que buscas no existe o ha sido eliminado.</B1>
 			</div>
 		);
 	}
@@ -43,7 +43,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 		<div className="container mx-auto max-w-[1600px] px-4 md:px-6 py-6 grid grid-cols-1 lg:grid-cols-[20%_60%_20%] gap-6 lg:gap-8">
 			{/* Left Sidebar */}
 			<div className="hidden lg:block space-y-6">
-				<div className="flex items-center text-sm text-muted">
+				<div className="flex items-center text-sm text-lightgrey">
 					<Link href="/forums" className="hover:text-white transition-colors">
 						Foros
 					</Link>
@@ -122,8 +122,8 @@ export default async function ForumPage({ params }: ForumPageProps) {
 											<H1 className="text-3xl font-bold">{forumData.name}</H1>
 										</div>
 										{forumData.Business && (
-											<div className="flex items-center gap-1 text-muted">
-												<P className="font-medium">@{forumData.Business.name}</P>
+											<div className="flex items-center gap-1 text-lightgrey">
+												<B1 className="font-medium">@{forumData.Business.name}</B1>
 												{(forumData.Business.verification === "Official" ||
 													forumData.Business.verification === "Paid") && (
 													<Verified className="w-4 h-4 text-green-500" />
@@ -143,22 +143,24 @@ export default async function ForumPage({ params }: ForumPageProps) {
 
 								{forumData.description && (
 									<div>
-										<P className="text-muted text-sm leading-relaxed">{forumData.description}</P>
+										<B1 className="text-lightgrey text-sm leading-relaxed">
+											{forumData.description}
+										</B1>
 									</div>
 								)}
 
 								<div className="flex items-center gap-6 text-sm font-medium">
 									<div className="flex items-center gap-1">
 										<span className="text-white font-bold">{forumData.followers || 0}</span>
-										<span className="text-muted">seguidores</span>
+										<span className="text-lightgrey">seguidores</span>
 									</div>
 									<div className="flex items-center gap-1">
 										<span className="text-white font-bold">{counts.petitions}</span>
-										<span className="text-muted">peticiones activas</span>
+										<span className="text-lightgrey">peticiones activas</span>
 									</div>
 									<div className="flex items-center gap-1">
 										<span className="text-white font-bold">{counts.offers}</span>
-										<span className="text-muted">ofertas activas</span>
+										<span className="text-lightgrey">ofertas activas</span>
 									</div>
 								</div>
 							</div>
@@ -182,7 +184,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 							/>
 						) : (
 							<div className="p-8 text-center">
-								<P className="text-muted">No hay peticiones activas</P>
+								<B1 className="text-lightgrey">No hay peticiones activas</B1>
 							</div>
 						)}
 					</div>
@@ -202,7 +204,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 							/>
 						) : (
 							<div className="p-8 text-center">
-								<P className="text-muted">No hay ofertas activas</P>
+								<B1 className="text-lightgrey">No hay ofertas activas</B1>
 							</div>
 						)}
 					</div>
@@ -212,7 +214,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 			{/* Right Sidebar */}
 			<div className="hidden lg:block space-y-6">
 				<div className="flex items-center gap-3 mb-6">
-					<div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
+					<div className="h-10 w-10 rounded-full bg-lightgrey flex items-center justify-center">
 						<Avatar className="h-10 w-10 rounded-full">
 							<AvatarImage
 								src={forumData.Business?.profile_picture || "/placeholder.png"}
@@ -230,7 +232,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 				</div>
 
 				<div className="space-y-3">
-					<h3 className="text-sm font-medium text-muted">Más foros de la empresa.</h3>
+					<h3 className="text-sm font-medium text-lightgrey">Más foros de la empresa.</h3>
 					<div className="space-y-3">
 						{businessForums.map((forum) => (
 							<SidebarForumCard key={forum.id} forum={forum} />
@@ -239,7 +241,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 				</div>
 
 				<div className="space-y-3">
-					<h3 className="text-sm font-medium text-muted">Foros de productos similares.</h3>
+					<h3 className="text-sm font-medium text-lightgrey">Foros de productos similares.</h3>
 					<div className="space-y-3"></div>
 				</div>
 			</div>

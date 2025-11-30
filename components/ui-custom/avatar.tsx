@@ -29,7 +29,7 @@ export function AvatarFallback({ className, ...props }: ComponentProps<typeof Av
 	return (
 		<AvatarPrimitive.Fallback
 			data-slot="avatar-fallback"
-			className={cn("bg-muted flex size-full items-center justify-center", className)}
+			className={cn("bg-lightgrey flex size-full items-center justify-center", className)}
 			{...props}
 		/>
 	);

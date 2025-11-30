@@ -76,7 +76,7 @@ export function PetitionDetails({ petition, subscribedByUser, comments, currentU
 						</Avatar>
 						<div>
 							<div className="font-black">@{petition.User?.username}</div>
-							<div className="text-xs text-muted">{GetRelativeTime(petition.created_at)}</div>
+							<div className="text-xs text-lightgrey">{GetRelativeTime(petition.created_at)}</div>
 						</div>
 					</div>
 
@@ -92,7 +92,7 @@ export function PetitionDetails({ petition, subscribedByUser, comments, currentU
 						<div className="flex flex-col gap-2">
 							<Progress value={petitionCompletionPercentage} />
 						</div>
-						<div className="text-sm font-bold text-muted">
+						<div className="text-sm font-bold text-lightgrey">
 							{currentProgress >= petition.target_progress ? (
 								<span className="text-green-600">¡Objetivo alcanzado!</span>
 							) : (
@@ -105,13 +105,13 @@ export function PetitionDetails({ petition, subscribedByUser, comments, currentU
 
 					<Separator />
 
-					<div className="bg-muted rounded-2xl p-6 mb-6 border-3 border-black">
+					<div className="bg-lightgrey rounded-2xl p-6 mb-6 border-3 border-black">
 						<h3 className="font-black text-lg mb-3">Descripción</h3>
 						<p className="text-sm leading-relaxed mb-4">{petition.text}</p>
 					</div>
 				</div>
 			</div>
-			<div className="bg-muted rounded-2xl border-3  p-6">
+			<div className="bg-lightgrey rounded-2xl border-3  p-6">
 				<div className="flex items-center gap-4 mb-6">
 					<div className="flex -space-x-3">
 						{[...Array(Math.min(10, currentProgress))].map((_, i) => (

@@ -10,7 +10,7 @@ export function ProductImages({ images }: { images: string[] }) {
 
 	return (
 		<div className="space-y-4">
-			<div className="relative aspect-square bg-muted rounded-lg overflow-hidden">
+			<div className="relative aspect-square bg-lightgrey rounded-lg overflow-hidden">
 				<Image
 					src={images[selectedImage] || "/placeholder.png"}
 					alt="Product image"
@@ -41,7 +41,7 @@ export function ProductImages({ images }: { images: string[] }) {
 						key={index}
 						onClick={() => setSelectedImage(index)}
 						className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-colors ${
-							selectedImage === index ? "border-black" : "border-transparent hover:border-muted/50"
+							selectedImage === index ? "border-black" : "border-transparent hover:border-lightgrey/50"
 						}`}
 					>
 						<Image

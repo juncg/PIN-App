@@ -1,7 +1,7 @@
 "use client";
 
 import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import NextImage from "next/image";
 import * as React from "react";
 
 import { Button } from "@/components/ui-custom/button";
@@ -188,7 +188,7 @@ function CarouselPrevious({
 			onClick={scrollPrev}
 			{...props}
 		>
-			<ChevronLeft className="!w-8 !h-8" />
+			<NextImage src="/icons/keyboard_arrow_left.svg" alt="Previous" width={32} height={32} />
 			<span className="sr-only">Previous slide</span>
 		</Button>
 	);
@@ -218,7 +218,7 @@ function CarouselNext({
 			onClick={scrollNext}
 			{...props}
 		>
-			<ChevronRight className="!w-8 !h-8" />
+			<NextImage src="/icons/keyboard_arrow_right.svg" alt="Next" width={32} height={32} />
 			<span className="sr-only">Next slide</span>
 		</Button>
 	);

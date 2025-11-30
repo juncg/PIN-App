@@ -32,14 +32,14 @@ export function ProductCard({ props }: { props: IProductCard }) {
 
 				<div className="relative flex flex-1 flex-col p-4">
 					<div className="mb-1">
-						<p className="text-xs font-bold uppercase text-muted tracking-wider">
+						<p className="text-xs font-bold uppercase text-lightgrey tracking-wider">
 							{product.businesses?.[0]?.business?.name || "SIN NOMBRE"}
 						</p>
 					</div>
 
 					<h3 className="mb-2 text-lg font-bold leading-tight tracking-tight pr-6">{product.name}</h3>
 					{product.description && (
-						<p className="mb-4 text-xs text-muted line-clamp-2">{product.description}</p>
+						<p className="mb-4 text-xs text-lightgrey line-clamp-2">{product.description}</p>
 					)}
 
 					<div className="mt-auto flex items-end justify-between">

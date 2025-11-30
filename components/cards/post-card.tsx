@@ -1,21 +1,21 @@
 "use client";
 
 import { useUser } from "@/hooks/use-user";
-import { BASE_DOMAIN } from "@/lib/constants";
+import { BASE_DOMAIN, POST_ON_FIRE_COMPLETION_PERCENTAGE } from "@/lib/constants";
 import { IOffer, IPetition } from "@/lib/services/types";
 import { GetTimeRemaining } from "@/lib/services/utilities";
 import { cn } from "@/lib/utils";
-import { Timer, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LikeButton } from "../buttons/like-button";
 import { SubscribeButton } from "../buttons/subscribe-button";
 import { PopOutMedia } from "../floating-panels/pop-out-media";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui-custom/carousel";
-import React from "react";
+import { Icon } from "../ui-custom/icon";
 import { Progress } from "../ui-custom/progress";
+import { B1, B3, H4, S1 } from "../ui-custom/typography";
 
 export interface IPostCard {
 	className?: string;
@@ -30,7 +30,16 @@ export interface IPostCard {
 
 // i think memoizing this will help performance cause it prevents unnecessary re-renders
 export const PostCard = React.memo(function PostCard(props: IPostCard) {
-	const { post, className, images, likedByUser: likedByUserProp, onLikeChangeForParent, subscribedByUser: subscribedByUserProp, onSubscribeChangeForParent, userUuidProp } = props;
+	const {
+		post,
+		className,
+		images,
+		likedByUser: likedByUserProp,
+		onLikeChangeForParent,
+		subscribedByUser: subscribedByUserProp,
+		onSubscribeChangeForParent,
+		userUuidProp,
+	} = props;
 	const { userUuid: userUuidFromHook } = useUser();
 	const userUuid = userUuidProp || userUuidFromHook;
 	const [currentProgress, setCurrentProgress] = useState(post.current_progress);
@@ -68,121 +77,124 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 	const businessImage = post?.businesses?.[0]?.business.profile_picture || "/placeholder.png";
 
 	return (
-		<article
-			className={cn(
-				"group relative overflow-hidden rounded-2xl border bg-black text-white shadow-sm transition-all hover:shadow-md",
-				className
-			)}
-		>
-			<div className="relative w-full bg-muted">
-				<div className="absolute left-3 top-3 z-10">
-					<LikeButton
-						likes={post.likes}
-						likedByUser={likedByUser}
-						post_id={post.id}
-						typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
-						user_id={userUuid}
-						variant="icon"
-						onLikeChangeForParent={onLikeChangeForParent}
-					/>
-				</div>
+		<article className={cn("group relative z-0 rounded-2xl text-white transition-all", className)}>
+			<div className="relative h-full w-full overflow-hidden rounded-2xl p-[2px]">
+				{offerCompletionPercentage >= POST_ON_FIRE_COMPLETION_PERCENTAGE ? (
+					<div className="absolute inset-0 rounded-2xl bg-[linear-gradient(90deg,var(--chernobyl)_0%,var(--lightgrey)_20%,var(--chernobyl)_40%,var(--darkgrey)_60%,var(--white)_80%,var(--chernobyl)_100%)] bg-[length:600%_600%] animate-border-spin -z-10" />
+				) : (
+					<div className="absolute inset-0 rounded-2xl bg-cardborder -z-10" />
+				)}
+				<div className="h-full w-full rounded-2xl bg-darkmode">
+					<div className="relative w-full">
+						<div className="absolute left-3 top-3 z-10">
+							<LikeButton
+								likes={post.likes}
+								likedByUser={likedByUser}
+								post_id={post.id}
+								typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
+								user_id={userUuid}
+								variant="icon"
+								onLikeChangeForParent={onLikeChangeForParent}
+							/>
+						</div>
 
-				<Carousel className="w-full bg-black">
-					<CarouselContent>
-						{displayImages.map((image, index) => (
-							<CarouselItem key={index}>
-								<div
-									className="relative aspect-square w-full cursor-pointer overflow-hidden"
-									onClick={() => {
-										setStartIndex(index);
-										setIsDialogOpen(true);
-									}}
-								>
-									<Image
-										src={image}
-										alt={`${post.title} - imagen ${index + 1}`}
-										fill
-										sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-										className="object-cover rounded-2xl"
-										unoptimized
-									/>
-								</div>
-							</CarouselItem>
-						))}
-					</CarouselContent>
+						<Carousel className="w-full">
+							<CarouselContent>
+								{displayImages.map((image, index) => (
+									<CarouselItem key={index}>
+										<div
+											className="relative aspect-square w-full cursor-pointer overflow-hidden"
+											onClick={() => {
+												setStartIndex(index);
+												setIsDialogOpen(true);
+											}}
+										>
+											<Image
+												src={image}
+												alt={`${post.title} - imagen ${index + 1}`}
+												fill
+												sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+												className="object-cover rounded-2xl border-[3px] border-darkmode"
+												unoptimized
+											/>
+										</div>
+									</CarouselItem>
+								))}
+							</CarouselContent>
 
-					{displayImages.length > 1 && (
-						<>
-							<CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 text-muted hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-							<CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 text-muted hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-						</>
-					)}
-				</Carousel>
-			</div>
-
-			<div className="p-5 space-y-4">
-				<div className="flex items-start justify-between">
-					<Link
-						href={post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}
-						className="flex-1"
-					>
-						<h3 className="text-xl font-bold hover:underline">{post.title}</h3>
-						<p className="text-xs text-muted mt-1 line-clamp-2">{post.text}</p>
-					</Link>
-				</div>
-
-				<div className="space-y-2">
-					<div className="flex items-center justify-between text-xs text-muted">
-						<div className="flex items-center gap-1.5">
-							{post.type === "Offer" ? (
+							{displayImages.length > 1 && (
 								<>
-									<Timer className="h-4 w-4 text-black" />
-									<span className="text-sm text-black">
-										{GetTimeRemaining(post.target_completition_date)}
-									</span>
+									<CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 text-lightgrey hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+									<CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 text-lightgrey hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" />
 								</>
-							) : (
-								<div />
 							)}
-						</div>
-						<div className="flex items-center gap-1.5">
-							<Users className="h-5 w-5 text-black" />
-							<span className="text-base font-bold text-black">
-								{currentProgress}{" "}
-								{post.target_progress > 0 ? `de ${post.target_progress}` : "suscritos"}
-							</span>
-						</div>
+						</Carousel>
 					</div>
-					<Progress value={post.target_progress === 0 ? 100 : offerCompletionPercentage} />
-				</div>
 
-				<div className="flex items-center justify-between pt-2">
-					<div className="flex items-center gap-2">
-						<Avatar className="h-8 w-8 rounded-full hover">
-							<AvatarImage src={post.User?.profile_picture || businessImage} />
-							<AvatarFallback>{businessName[0]}</AvatarFallback>
-						</Avatar>
-						<div className="flex flex-col">
-							<span className="text-[10px] text-muted uppercase tracking-wider">Creador</span>
+					<div className="p-5 space-y-4">
+						<div className="flex items-start justify-between">
 							<Link
-								href={`/profile/${post?.User?.id}`}
-								className="text-xs font-medium hover:underline cursor-pointer"
+								href={post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}
+								className="flex-1"
 							>
-								@{post?.User?.username}
+								<H4 className="hover:underline">{post.title}</H4>
+								<B3 className="mt-1 line-clamp-2">{post.text}</B3>
 							</Link>
 						</div>
-					</div>
 
-					<SubscribeButton
-						post_id={post.id}
-						typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
-						subscribers={currentProgress}
-						subscribedByUser={subscribedByUser}
-						user_id={userUuid}
-						onSubscriptionChange={setCurrentProgress}
-						variant="switch"
-						onSubscribeChangeForParent={onSubscribeChangeForParent}
-					/>
+						<div className="space-y-2">
+							<div className="flex items-center justify-between">
+								<div>
+									{post.type === "Offer" && (
+										<div className="flex items-center gap-1.5">
+											<Icon svgName="clock" className="h-4 w-4" />
+											<B1>{GetTimeRemaining(post.target_completition_date)}</B1>
+										</div>
+									)}
+								</div>
+
+								<div className="flex items-center gap-1.5">
+									<S1>
+										{currentProgress}{" "}
+										{post.target_progress > 0 ? `de ${post.target_progress}` : "suscritos"}
+									</S1>
+
+									<Icon svgName="people_alt" className="h-5 w-5" />
+								</div>
+							</div>
+
+							<Progress value={post.target_progress === 0 ? 100 : offerCompletionPercentage} />
+						</div>
+
+						<div className="flex items-center justify-between pt-2">
+							<div className="flex items-center gap-2">
+								<Avatar className="h-8 w-8 rounded-full hover">
+									<AvatarImage src={post.User?.profile_picture || businessImage} />
+									<AvatarFallback>{businessName[0]}</AvatarFallback>
+								</Avatar>
+								<div className="flex flex-col">
+									<span className="text-[10px] text-lightgrey uppercase tracking-wider">Creador</span>
+									<Link
+										href={`/profile/${post?.User?.id}`}
+										className="text-xs font-medium hover:underline cursor-pointer"
+									>
+										@{post?.User?.username}
+									</Link>
+								</div>
+							</div>
+
+							<SubscribeButton
+								post_id={post.id}
+								typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
+								subscribers={currentProgress}
+								subscribedByUser={subscribedByUser}
+								user_id={userUuid}
+								onSubscriptionChange={setCurrentProgress}
+								variant="switch"
+								onSubscribeChangeForParent={onSubscribeChangeForParent}
+							/>
+						</div>
+					</div>
 				</div>
 			</div>
 

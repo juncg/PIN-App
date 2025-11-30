@@ -103,7 +103,7 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 							size="sm"
 							onClick={clearFilters}
 							disabled={isPending}
-							className="h-auto p-0 text-xs text-muted hover:text-white"
+							className="h-auto p-0 text-xs text-lightgrey hover:text-white"
 						>
 							Limpiar filtros
 						</Button>
@@ -154,7 +154,7 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 							disabled={isPending}
 						/>
 					</div>
-					<div className="mt-2 flex items-center justify-between text-sm text-muted">
+					<div className="mt-2 flex items-center justify-between text-sm text-lightgrey">
 						<span>{priceRange[0].toFixed(2)}€</span>
 						<span>{priceRange[1].toFixed(2)}€</span>
 					</div>
@@ -173,7 +173,7 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 								onCheckedChange={(checked) => {
 									setSelectedRating(checked ? rating : 0);
 								}}
-								className="h-5 w-5 rounded-sm border-muted/50 data-[state=checked]:bg-black data-[state=checked]:text-black"
+								className="h-5 w-5 rounded-sm border-lightgrey/50 data-[state=checked]:bg-black data-[state=checked]:text-black"
 							/>
 							<label
 								htmlFor={`rating-${rating}`}
@@ -185,12 +185,12 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 											key={i}
 											className={cn(
 												"h-4 w-4",
-												i < rating ? "fill-black text-black" : "fill-muted text-muted"
+												i < rating ? "fill-black text-black" : "fill-lightgrey text-lightgrey"
 											)}
 										/>
 									))}
 								</div>
-								{rating < 5 && <span className="text-muted ml-1 text-xs">y más</span>}
+								{rating < 5 && <span className="text-lightgrey ml-1 text-xs">y más</span>}
 							</label>
 						</div>
 					))}

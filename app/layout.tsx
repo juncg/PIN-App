@@ -1,6 +1,7 @@
 import { Header } from "@/components/header/header";
 import { ConditionalLayout } from "@/components/layout/layout-content";
 import { AppSidebar } from "@/components/sidebar/sidebar";
+import { SmoothScroll } from "@/components/ui-custom/smooth-scroll";
 import { Toaster } from "@/components/ui-custom/sonner";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
@@ -37,6 +38,7 @@ export default async function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={`${funnelSans.variable} ${funnelDisplay.variable} font-funnel-sans antialiased`}>
+				<SmoothScroll />
 				<ErrorBoundary errorComponent={Error}>
 					<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
 						<ConditionalLayout header={<Header />} sidebar={<AppSidebar />}>

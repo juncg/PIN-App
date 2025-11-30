@@ -114,7 +114,7 @@ export function PopOutMedia({ images, isOpen, onClose, startIndex }: PopOutMedia
 											</div>
 										) : (
 											// fallback skeleton while loading
-											<div className="w-[200px] h-[200px] bg-muted animate-pulse rounded" />
+											<div className="w-[200px] h-[200px] bg-lightgrey animate-pulse rounded" />
 										)}
 									</div>
 								</CarouselItem>

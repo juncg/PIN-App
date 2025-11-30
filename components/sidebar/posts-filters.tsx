@@ -117,7 +117,7 @@ export default function PostsFilters({}: PostsFiltersProps) {
 							disabled={isPending}
 						/>
 					</div>
-					<div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
+					<div className="mt-2 flex items-center justify-between text-sm text-lightgrey-foreground">
 						<span>{priceRange[0].toFixed(2)}€</span>
 						<span>{priceRange[1].toFixed(2)}€</span>
 					</div>

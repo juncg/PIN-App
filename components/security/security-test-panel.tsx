@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui-custom/badge";
 import { Button } from "@/components/ui-custom/button";
 import { Card, CardContent, CardHeader } from "@/components/ui-custom/card";
 import { Separator } from "@/components/ui-custom/separator";
-import { H3, P } from "@/components/ui-custom/typography";
+import { H3 } from "@/components/ui-custom/typography";
 import { useState } from "react";
 
 type TestResult = {
@@ -453,7 +453,7 @@ export function SecurityTestPanel() {
 		<Card className="max-w-4xl mx-auto">
 			<CardHeader>
 				<H3>Security Test Panel</H3>
-				<P className="text-muted">Test security vulnerabilities from end-user perspective</P>
+				<B1 className="text-lightgrey">Test security vulnerabilities from end-user perspective</B1>
 			</CardHeader>
 			<CardContent className="space-y-4">
 				<Button onClick={runSecurityTests} disabled={isRunning}>
@@ -472,10 +472,12 @@ export function SecurityTestPanel() {
 											<Badge className={getStatusColor(result.status)}>
 												{getStatusIcon(result.status)} {result.status}
 											</Badge>
-											<P className="font-semibold">{result.name}</P>
+											<B1 className="font-semibold">{result.name}</B1>
 										</div>
-										<P className="text-sm">{result.message}</P>
-										{result.details && <P className="text-xs text-muted mt-2">{result.details}</P>}
+										<B1 className="text-sm">{result.message}</B1>
+										{result.details && (
+											<B1 className="text-xs text-lightgrey mt-2">{result.details}</B1>
+										)}
 
 										{/* Sub-tests display */}
 										{result.subTests && result.subTests.length > 0 && (
@@ -503,17 +505,21 @@ export function SecurityTestPanel() {
 				)}
 
 				{results.length > 0 && (
-					<Card className="p-4 bg-muted">
-						<P className="font-semibold mb-2">Summary</P>
+					<Card className="p-4 bg-lightgrey">
+						<B1 className="font-semibold mb-2">Summary</B1>
 						<div className="flex gap-4">
-							<P className="text-muted">Passed: {results.filter((r) => r.status === "pass").length}</P>
-							<P className="text-muted">Failed: {results.filter((r) => r.status === "fail").length}</P>
-							<P className="text-muted">
+							<B1 className="text-lightgrey">
+								Passed: {results.filter((r) => r.status === "pass").length}
+							</B1>
+							<B1 className="text-lightgrey">
+								Failed: {results.filter((r) => r.status === "fail").length}
+							</B1>
+							<B1 className="text-lightgrey">
 								Warnings: {results.filter((r) => r.status === "warning").length}
-							</P>
-							<P className="text-muted">
+							</B1>
+							<B1 className="text-lightgrey">
 								Incomplete: {results.filter((r) => r.status === "incomplete").length}
-							</P>
+							</B1>
 						</div>
 					</Card>
 				)}

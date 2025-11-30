@@ -1,7 +1,6 @@
 import { PostCard } from "@/components/cards/post-card";
-import { ProductCard } from "@/components/cards/product-card";
 import { ProductCardHorizontal } from "@/components/cards/product-card-horizontal";
-import { H1 } from "@/components/ui-custom/typography";
+import { H2 } from "@/components/ui-custom/typography";
 import { IOffer, IPetition, IProduct } from "@/lib/services/types";
 import Link from "next/link";
 import { ISearchParams } from "../../types";
@@ -14,7 +13,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
 		<section className="flex flex-row justify-center gap-8">
 			<div className="flex flex-col items-baseline gap-8 w-[36%]">
 				<Link href={"/petitions"}>
-					<H1>{translator("petitions")}.</H1>
+					<H2>{translator("petitions")}.</H2>
 				</Link>
 
 				{petitions?.map((petition: IPetition) => (
@@ -24,7 +23,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
 
 			<div className="flex flex-col items-baseline gap-8 w-[36%] mr-12">
 				<Link href={"/offers"}>
-					<H1>{translator("offers")}.</H1>
+					<H2>{translator("offers")}.</H2>
 				</Link>
 
 				{offers?.map((offer: IOffer) => (
@@ -34,7 +33,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
 
 			<div className="flex flex-col items-baseline gap-7 w-[26%]">
 				<Link href={"/products"}>
-					<H1>{translator("products")}.</H1>
+					<H2>{translator("products")}.</H2>
 				</Link>
 
 				{products?.map((product: IProduct) => (

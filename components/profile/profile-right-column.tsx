@@ -6,7 +6,7 @@ import { BadgeCheck, UserCircle } from "lucide-react";
 import Link from "next/link";
 import { AvatarGroup } from "../ui-custom/avatar-group";
 import { Button } from "../ui-custom/button";
-import { H3, P } from "../ui-custom/typography";
+import { H3 } from "../ui-custom/typography";
 
 interface IProfileUserCompanyState {
 	className?: string;
@@ -61,28 +61,28 @@ export function ProfileRightColumn(props: IProfileUserCompanyState) {
 					{followingForums && followingForums.length >= 0 && (
 						<div className="flex flex-col gap-4">
 							<AvatarGroup avatarImages={forumsImages} shape="Squared" inclined />
-							<P className="text-muted">{followingForumsTotalCount} foros</P>
+							<B1 className="text-lightgrey">{followingForumsTotalCount} foros</B1>
 						</div>
 					)}
 
 					<div className="flex flex-col gap-4">
 						<AvatarGroup avatarImages={businessesImages} />
-						<P className="text-muted">{followingBusinessesTotalCount} empresas</P>
+						<B1 className="text-lightgrey">{followingBusinessesTotalCount} empresas</B1>
 					</div>
 				</div>
 
 				<div className="flex flex-col gap-4">
 					<AvatarGroup avatarImages={usersImages} />
-					<P className="text-muted">{followingUsersTotalCount} usuarios</P>
+					<B1 className="text-lightgrey">{followingUsersTotalCount} usuarios</B1>
 				</div>
 			</div>
 
 			<div className="flex flex-col gap-2">
 				<H3>Estado de la cuenta</H3>
 
-				<div className="flex gap-2 text-muted items-center">
+				<div className="flex gap-2 text-lightgrey items-center">
 					<UserCircle className="h-4" />
-					<P>{isBusiness ? "Usuario business" : "Usuario pobre"}</P>
+					<B1>{isBusiness ? "Usuario business" : "Usuario pobre"}</B1>
 				</div>
 			</div>
 

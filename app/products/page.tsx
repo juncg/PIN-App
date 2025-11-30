@@ -12,7 +12,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
 	return (
 		<div className="flex min-h-screen flex-col">
 			<div className="container flex-1 px-4 py-6">
-				<div className="mb-8 text-sm text-muted">
+				<div className="mb-8 text-sm text-lightgrey">
 					<span>Inicio</span> <span className="mx-2">/</span>{" "}
 					<span className="text-white font-medium">Productos</span>
 				</div>
@@ -24,7 +24,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
 
 					<main className="flex-1 min-w-0">
 						<div className="mb-6 flex items-center justify-between">
-							<p className="text-sm font-medium text-muted">
+							<p className="text-sm font-medium text-lightgrey">
 								Todos los productos ({products?.length || 0})
 							</p>
 							<OrderSelect translations={clientTranslations} defaultValue={params.orderBy || "newest"} />

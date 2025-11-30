@@ -11,7 +11,7 @@ export default function Page() {
 							<CardDescription>Check your email to confirm</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<p className="text-sm text-muted">
+							<p className="text-sm text-lightgrey">
 								You&apos;ve successfully signed up. Please check your email to confirm your account
 								before signing in.
 							</p>

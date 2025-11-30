@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui-custom/badge";
-import { H4, P } from "@/components/ui-custom/typography";
+import { H4 } from "@/components/ui-custom/typography";
 import { IBusiness, IForum, IOffer, IPetition, IProduct, IUser } from "@/lib/services/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -85,7 +85,7 @@ export function SearchGeneralDropdownItem({ item, type }: SearchGeneralDropdownI
 	return (
 		<Link href={href} className="block hover:bg-hover/50 transition-colors">
 			<div className="flex gap-4 p-4">
-				<div className="relative w-16 h-16 flex-shrink-0 rounded-md overflow-hidden bg-muted flex items-center justify-center">
+				<div className="relative w-16 h-16 flex-shrink-0 rounded-md overflow-hidden bg-lightgrey flex items-center justify-center">
 					<Image
 						src={image || "/placeholder.png"}
 						alt={title || ""}
@@ -97,7 +97,7 @@ export function SearchGeneralDropdownItem({ item, type }: SearchGeneralDropdownI
 
 				<div className="flex-1 min-w-0">
 					<H4 className="truncate mb-1">{title}</H4>
-					{subtitle && <P className="text-sm text-muted truncate">{subtitle}</P>}
+					{subtitle && <B1 className="text-sm text-lightgrey truncate">{subtitle}</B1>}
 
 					{tags && tags.length > 0 && (
 						<div className="flex gap-1 mt-2">

@@ -470,7 +470,7 @@ const MultipleSelector = ({
 							>
 								{option.label}
 								<button
-									className="text-muted/80 hover:text-white focus-visible:border-lightgrey focus-visible:ring-lightgrey/50 absolute -inset-y-px -right-px flex size-7 items-center justify-center rounded-r-md border border-transparent p-0 outline-hidden transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
+									className="text-lightgrey/80 hover:text-white focus-visible:border-lightgrey focus-visible:ring-lightgrey/50 absolute -inset-y-px -right-px flex size-7 items-center justify-center rounded-r-md border border-transparent p-0 outline-hidden transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
 									onKeyDown={(e) => {
 										if (e.key === "Enter") {
 											handleUnselect(option);
@@ -516,7 +516,7 @@ const MultipleSelector = ({
 						}}
 						placeholder={hidePlaceholderWhenSelected && selected.length !== 0 ? "" : placeholder}
 						className={cn(
-							"placeholder:text-muted/70 flex-1 bg-transparent outline-hidden disabled:cursor-not-allowed",
+							"placeholder:text-lightgrey/70 flex-1 bg-transparent outline-hidden disabled:cursor-not-allowed",
 							{
 								"w-full": hidePlaceholderWhenSelected,
 								"px-3 py-2": selected.length === 0,
@@ -532,7 +532,7 @@ const MultipleSelector = ({
 							onChange?.(selected.filter((s) => s.fixed));
 						}}
 						className={cn(
-							"text-muted/80 hover:text-white focus-visible:border-lightgrey focus-visible:ring-lightgrey/50 absolute top-0 right-0 flex size-9 items-center justify-center rounded-md border border-transparent transition-[color,box-shadow] outline-none focus-visible:ring-[3px]",
+							"text-lightgrey/80 hover:text-white focus-visible:border-lightgrey focus-visible:ring-lightgrey/50 absolute top-0 right-0 flex size-9 items-center justify-center rounded-md border border-transparent transition-[color,box-shadow] outline-none focus-visible:ring-[3px]",
 							(hideClearAllButton ||
 								disabled ||
 								selected.length < 1 ||

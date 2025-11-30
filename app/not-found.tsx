@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui-custom/button";
-import { H1, P } from "@/components/ui-custom/typography";
+import { H1 } from "@/components/ui-custom/typography";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -32,10 +32,10 @@ export default function NotFound() {
 			<div className="flex flex-col text-center">
 				<H1>404 | Ups, ha habido un error</H1>
 
-				<P>No hemos podido encontrar el recurso que estás buscando</P>
+				<B1>No hemos podido encontrar el recurso que estás buscando</B1>
 
 				{showSpecialImage && (
-					<P className="text-sm text-muted mt-2">¡Felicidades! Encontraste la imagen secreta 🎉</P>
+					<B1 className="text-sm text-lightgrey mt-2">¡Felicidades! Encontraste la imagen secreta 🎉</B1>
 				)}
 			</div>
 

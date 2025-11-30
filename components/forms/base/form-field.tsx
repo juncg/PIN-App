@@ -1,5 +1,5 @@
 import { Label } from "@/components/ui-custom/label";
-import { Small } from "@/components/ui-custom/typography";
+import { B5 } from "@/components/ui-custom/typography";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 
@@ -22,7 +22,7 @@ export function FormField({ children, required = false, errorMessage, className,
 				</Label>
 			)}
 			{children}
-			{errorMessage && <Small className="!text-destructive">{errorMessage}</Small>}
+			{errorMessage && <B5 className="!text-destructive">{errorMessage}</B5>}
 		</div>
 	);
 }

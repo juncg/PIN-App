@@ -2,10 +2,10 @@ import { IOffer, IPetition } from "@/lib/services/types";
 import { cn } from "@/lib/utils";
 import { Verified } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { Progress } from "../ui-custom/progress";
 import { Switch } from "../ui-custom/switch";
-import { H3, H4, P, Small } from "../ui-custom/typography";
-import Link from "next/link";
+import { B1, B5, H3, H4 } from "../ui-custom/typography";
 
 interface IPostCardHorizontalProps {
 	className?: string;
@@ -38,12 +38,12 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 							<H3 className="line-clamp-1">{post.title}.</H3>
 						</Link>
 
-						<P className="text-muted line-clamp-2">{post.text}</P>
+						<B1 className="text-lightgrey line-clamp-2">{post.text}</B1>
 					</div>
 
 					<div className="flex flex-col items-end">
 						<H3>120$</H3>
-						<P className="line-through text-muted">170$</P>
+						<B1 className="line-through text-lightgrey">170$</B1>
 					</div>
 				</div>
 
@@ -73,11 +73,11 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 							</figure>
 
 							<span>
-								<Small className="text-muted">Creador</Small>
+								<B5 className="text-lightgrey">Creador</B5>
 								<Link href={`/profile/${post?.User?.id}`} className="hover:underline">
-									<P className="flex items-center gap-2">
+									<B1 className="flex items-center gap-2">
 										@{post?.User?.username || "ejemplo"} <Verified className="h-4" />
-									</P>
+									</B1>
 								</Link>
 							</span>
 						</div>

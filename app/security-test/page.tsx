@@ -1,5 +1,5 @@
 import { SecurityTestPanel } from "@/components/security/security-test-panel";
-import { H1, P } from "@/components/ui-custom/typography";
+import { H1 } from "@/components/ui-custom/typography";
 import { redirect } from "next/navigation";
 
 export default function SecurityTestPage() {
@@ -11,13 +11,13 @@ export default function SecurityTestPage() {
 		<div className="container mx-auto px-4 py-8 space-y-8">
 			<div className="text-center space-y-2">
 				<H1>Security Vulnerability Testing</H1>
-				<P className="text-muted">Test common security vulnerabilities from end-user perspective</P>
+				<B1 className="text-lightgrey">Test common security vulnerabilities from end-user perspective</B1>
 			</div>
 
 			<SecurityTestPanel />
 
-			<div className="max-w-4xl mx-auto space-y-4 text-sm text-muted">
-				<P className="font-semibold">What This Tests:</P>
+			<div className="max-w-4xl mx-auto space-y-4 text-sm text-lightgrey">
+				<B1 className="font-semibold">What This Tests:</B1>
 				<ul className="list-disc list-inside space-y-2">
 					<li>Row Level Security (RLS) - Can users access data they shouldn't?</li>
 					<li>SQL Injection - Are inputs properly sanitized?</li>
@@ -26,7 +26,7 @@ export default function SecurityTestPage() {
 					<li>Access Control - Can users perform unauthorized actions?</li>
 				</ul>
 
-				<P className="font-semibold mt-4">⚠️ Important Notes:</P>
+				<B1 className="font-semibold mt-4">⚠️ Important Notes:</B1>
 				<ul className="list-disc list-inside space-y-2">
 					<li>This should ONLY be run in development/staging environments</li>
 					<li>All tests use the app's service layer (GetClient) - testing real user access</li>

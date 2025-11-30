@@ -87,12 +87,14 @@ export function UserReviewCard({ review, currentUserId, productId }: UserReviewC
 										<Star
 											key={i}
 											className={`h-4 w-4 ${
-												i < (review.stars ?? 0) ? "fill-amber-500 text-amber-500" : "text-muted"
+												i < (review.stars ?? 0)
+													? "fill-amber-500 text-amber-500"
+													: "text-lightgrey"
 											}`}
 										/>
 									))}
 								</div>
-								<span className="text-sm text-muted">{GetRelativeTime(review.created_at)}</span>
+								<span className="text-sm text-lightgrey">{GetRelativeTime(review.created_at)}</span>
 							</div>
 						</div>
 					</div>
@@ -108,7 +110,7 @@ export function UserReviewCard({ review, currentUserId, productId }: UserReviewC
 				</div>
 
 				<h4 className="font-semibold mb-2">{review.title}</h4>
-				<p className="text-muted mb-4">{review.content}</p>
+				<p className="text-lightgrey mb-4">{review.content}</p>
 
 				<Separator />
 

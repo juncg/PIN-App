@@ -238,16 +238,16 @@ Always use existing components from `components/ui-custom/`:
 -   `Card`, `CardHeader`, `CardContent` - Containers
 -   `Dialog`, `Sheet`, `Popover` - Overlays
 -   `Badge`, `Separator`, `Avatar` - UI elements
--   `H1`, `H2`, `H3`, `H4`, `P` - Typography from `typography.tsx`
+-   `H1`, `H2`, `H3`, `H4`, `B1` - Typography from `typography.tsx`
 
 ```typescript
 import { Button } from "@/components/ui-custom/button";
 import { Card } from "@/components/ui-custom/card";
-import { H1, P } from "@/components/ui-custom/typography";
+import { H1, B1 } from "@/components/ui-custom/typography";
 
 <Card className="p-6">
 	<H1>Title</H1>
-	<P className="text-muted">Description</P>
+	<B1 className="text-lightgrey">Description</B1>
 	<Button>Action</Button>
 </Card>;
 ```
@@ -485,13 +485,13 @@ import { Skeleton } from "@/components/ui-custom/skeleton";
 
 ```typescript
 import { Card } from "@/components/ui-custom/card";
-import { H3, P } from "@/components/ui-custom/typography";
+import { H3, B1 } from "@/components/ui-custom/typography";
 
 {
 	items.length === 0 ? (
 		<Card className="p-12 text-center">
 			<H3 className="mb-2">No items found</H3>
-			<P className="text-muted">Try creating a new item</P>
+			<B1 className="text-lightgrey">Try creating a new item</B1>
 		</Card>
 	) : (
 		<ItemsList items={items} />
@@ -607,7 +607,7 @@ export async function loadMoreExamples(page: number, pageSize: number) {
 
 // 3. Page component (app/example/[id]/page.tsx)
 import { ExampleService } from "./page-services";
-import { H1, P } from "@/components/ui-custom/typography";
+import { H1, B1 } from "@/components/ui-custom/typography";
 import { Card } from "@/components/ui-custom/card";
 
 interface ExamplePageProps {
@@ -622,7 +622,7 @@ export default async function ExamplePage({ params }: ExamplePageProps) {
 		return (
 			<Card className="p-12 text-center">
 				<H1>Not found</H1>
-				<P className="text-muted">Example does not exist</P>
+				<B1 className="text-lightgrey">Example does not exist</B1>
 			</Card>
 		);
 	}
@@ -630,7 +630,7 @@ export default async function ExamplePage({ params }: ExamplePageProps) {
 	return (
 		<div className="container mx-auto px-4 py-8">
 			<H1>{example.title}</H1>
-			<P>{example.description}</P>
+			<B1>{example.description}</B1>
 		</div>
 	);
 }
