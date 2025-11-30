@@ -14,6 +14,7 @@ export interface ILikeButton {
 	typeOfPost?: "Oferta" | "Petición" | "Review";
 	user_id: string | null;
 	variant?: "default" | "icon";
+	onLikeChangeForParent?: (liked: boolean) => void;
 }
 
 export function LikeButton(props: ILikeButton) {
@@ -43,6 +44,9 @@ export function LikeButton(props: ILikeButton) {
 
 		setLiked(newLikedState);
 		setLikes(newLikesCount);
+
+		// notify parent of like state change
+		if (props.onLikeChangeForParent) props.onLikeChangeForParent(newLikedState);
 
 		try {
 			await handleLikeAction(post_id, previousLiked, typeOfPost);

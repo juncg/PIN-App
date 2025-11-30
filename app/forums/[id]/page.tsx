@@ -1,4 +1,4 @@
-import { InfinitePostList } from "@/components/posts/infinite-post-list";
+import { InfinitePostGrid } from "@/components/posts/infinite-post-grid";
 import { H1, H2, P } from "@/components/ui-custom/typography";
 import { Button } from "@/components/ui/button";
 import { TPost } from "@/types";
@@ -175,12 +175,13 @@ export default async function ForumPage({ params }: ForumPageProps) {
 					<div className="space-y-6">
 						<H2 className="text-2xl font-bold">Peticiones.</H2>
 						{initialPetitions.length > 0 ? (
-							<InfinitePostList
+							<InfinitePostGrid
 								className="grid-cols-1 gap-6"
 								initialPosts={initialPetitions as TPost[]}
 								loadMoreAction={loadMorePetitions.bind(null, id)}
 								pageSize={10}
 								maxPosts={50}
+								maxColumns={1}
 							/>
 						) : (
 							<div className="p-8 text-center">
@@ -193,12 +194,14 @@ export default async function ForumPage({ params }: ForumPageProps) {
 					<div className="space-y-6">
 						<H2 className="text-2xl font-bold">Ofertas.</H2>
 						{initialOffers.length > 0 ? (
-							<InfinitePostList
+							<InfinitePostGrid
 								className="grid-cols-1 gap-6"
 								initialPosts={initialOffers as TPost[]}
 								loadMoreAction={loadMoreOffers.bind(null, id)}
 								pageSize={10}
 								maxPosts={50}
+								maxColumns={1}
+								userUuid={userUuid}
 							/>
 						) : (
 							<div className="p-8 text-center">

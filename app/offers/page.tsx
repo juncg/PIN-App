@@ -1,4 +1,4 @@
-import { InfinitePostList } from "@/components/posts/infinite-post-list";
+import { InfinitePostGrid } from "@/components/posts/infinite-post-grid";
 import { SearchInput } from "@/components/search/search";
 import { H1, P } from "@/components/ui-custom/typography";
 import { Button } from "@/components/ui/button";
@@ -34,12 +34,13 @@ export default async function Offers({ searchParams }: { searchParams: Promise<I
 
 			<SearchInput />
 
-			<InfinitePostList
+			<InfinitePostGrid
 				initialPosts={offers ?? []}
 				loadMoreAction={LoadMoreOffers}
 				searchParams={params}
 				pageSize={OFFERS_PAGE_SIZE}
 				maxPosts={OFFERS_MAX_POSTS}
+				userUuid={userUuid}
 			/>
 		</section>
 	);

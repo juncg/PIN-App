@@ -19,6 +19,7 @@ export interface ISubscribeButton {
 	onSubscriptionChange?: (newCount: number) => void;
 	fullWidth?: boolean;
 	variant?: "default" | "switch";
+	onSubscribeChangeForParent?: (subscribed: boolean) => void;
 }
 
 export function SubscribeButton(props: ISubscribeButton) {
@@ -54,6 +55,9 @@ export function SubscribeButton(props: ISubscribeButton) {
 		setSubscribed(newSubscribedState);
 		setSubscribers(newSubscribersCount);
 		onSubscriptionChange?.(newSubscribersCount);
+
+		// notify parent of like state change
+		if (props.onSubscribeChangeForParent) props.onSubscribeChangeForParent(newSubscribedState);
 
 		try {
 			const result = await handleSubscribeAction(post_id, typeOfPost);

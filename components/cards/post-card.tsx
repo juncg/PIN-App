@@ -15,16 +15,24 @@ import { PopOutMedia } from "../floating-panels/pop-out-media";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui-custom/carousel";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Progress } from "../ui/progress";
+import React from "react";
 
 export interface IPostCard {
 	className?: string;
 	post: IOffer | IPetition;
 	images?: string[];
+	likedByUser?: boolean;
+	onLikeChangeForParent?: (liked: boolean) => void;
+	subscribedByUser?: boolean;
+	onSubscribeChangeForParent?: (subscribed: boolean) => void;
+	userUuidProp?: string | null;
 }
 
-export function PostCard(props: IPostCard) {
-	const { post, className, images } = props;
-	const { userUuid } = useUser();
+// i think memoizing this will help performance cause it prevents unnecessary re-renders
+export const PostCard = React.memo(function PostCard(props: IPostCard) {
+	const { post, className, images, likedByUser: likedByUserProp, onLikeChangeForParent, subscribedByUser: subscribedByUserProp, onSubscribeChangeForParent, userUuidProp } = props;
+	const { userUuid: userUuidFromHook } = useUser();
+	const userUuid = userUuidProp || userUuidFromHook;
 	const [currentProgress, setCurrentProgress] = useState(post.current_progress);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [startIndex, setStartIndex] = useState(0);
@@ -33,15 +41,18 @@ export function PostCard(props: IPostCard) {
 		setCurrentProgress(post.current_progress);
 	}, [post.current_progress]);
 
-	const subscribedByUser =
+	const derivedSubscribedByUser =
 		post.type === "Offer"
 			? !!(post as IOffer).User_Offer?.some((u) => u.user_id === userUuid && u.subscribed)
 			: !!(post as IPetition).User_Petition?.some((u) => u.user_id === userUuid && u.subscribed);
 
-	const likedByUser =
+	const derivedLikedByUser =
 		post.type === "Offer"
 			? !!(post as IOffer).User_Offer?.some((u) => u.user_id === userUuid && u.liked)
 			: !!(post as IPetition).User_Petition?.some((u) => u.user_id === userUuid && u.liked);
+
+	const subscribedByUser = subscribedByUserProp !== undefined ? subscribedByUserProp : derivedSubscribedByUser;
+	const likedByUser = likedByUserProp !== undefined ? likedByUserProp : derivedLikedByUser;
 
 	const tags = (post as IOffer | IPetition).tags?.map((t) => t.Tag?.name).filter(Boolean) as string[] | undefined;
 
@@ -72,6 +83,7 @@ export function PostCard(props: IPostCard) {
 						typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
 						user_id={userUuid}
 						variant="icon"
+						onLikeChangeForParent={onLikeChangeForParent}
 					/>
 				</div>
 
@@ -169,6 +181,7 @@ export function PostCard(props: IPostCard) {
 						user_id={userUuid}
 						onSubscriptionChange={setCurrentProgress}
 						variant="switch"
+						onSubscribeChangeForParent={onSubscribeChangeForParent}
 					/>
 				</div>
 			</div>
@@ -181,4 +194,4 @@ export function PostCard(props: IPostCard) {
 			/>
 		</article>
 	);
-}
+});

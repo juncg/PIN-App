@@ -1,4 +1,4 @@
-import { InfinitePostList } from "@/components/posts/infinite-post-list";
+import { InfinitePostGrid } from "@/components/posts/infinite-post-grid";
 import { SearchInput } from "@/components/search/search";
 import { H1, P } from "@/components/ui-custom/typography";
 import { Button } from "@/components/ui/button";
@@ -32,12 +32,13 @@ export default async function Petitions({ searchParams }: { searchParams: Promis
 
 			<SearchInput />
 
-			<InfinitePostList
+			<InfinitePostGrid
 				initialPosts={petitions ?? []}
 				loadMoreAction={LoadMorePetitions}
 				searchParams={params}
 				pageSize={PETITIONS_PAGE_SIZE}
-				maxPosts={PETITIONS_MAX_POSTS}
+				//maxPosts={PETITIONS_MAX_POSTS}
+				userUuid={userUuid}
 			/>
 		</section>
 	);

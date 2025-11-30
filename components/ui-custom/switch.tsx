@@ -4,7 +4,7 @@ import * as SwitchPrimitive from "@radix-ui/react-switch";
 
 import { P } from "@/components/ui-custom/typography";
 import { cn } from "@/lib/utils";
-import { ComponentProps, useEffect, useRef, useState } from "react";
+import { ComponentProps, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 type SwitchProps = ComponentProps<typeof SwitchPrimitive.Root> & {
 	innerTextUnchecked?: string;
@@ -33,13 +33,15 @@ export function Switch({
 		}
 	}, [controlledChecked]);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		const wChecked = thumbRefChecked.current?.offsetWidth || 0;
 		const wUnchecked = thumbRefUnchecked.current?.offsetWidth || 0;
 		const max = Math.max(wChecked, wUnchecked);
 
-		if (max > 0) setMaxThumbWidth(max);
-	}, [innerTextChecked, innerTextUnchecked]);
+		if (max > 0 && Math.abs(max - maxThumbWidth) > 1) {
+			setMaxThumbWidth(max);
+		}
+	}, [innerTextChecked, innerTextUnchecked, maxThumbWidth]);
 
 	const handleChange = (next: boolean) => {
 		if (controlledChecked === undefined) {
@@ -72,7 +74,7 @@ export function Switch({
 			<SwitchPrimitive.Root
 				data-slot="switch"
 				className={cn(
-					"peer bg-primary-unchanged border-[3px] border-secondary-unchanged inline-flex h-auto min-h-[2.5rem] shrink-0 items-center rounded-[10px] transition-all disabled:cursor-not-allowed disabled:opacity-50",
+					"peer bg-primary-unchanged border-[3px] border-secondary-unchanged inline-flex h-auto min-h-[2.5rem] shrink-0 items-center rounded-[10px] disabled:cursor-not-allowed disabled:opacity-50",
 					className
 				)}
 				style={{ width: `${maxThumbWidth * 1.2 + 6}px` }} // Expande el switch un 30% + (borde derecho en px + borde izquierdo en px) para que el interior, el thumb, se desplace
@@ -84,9 +86,13 @@ export function Switch({
 				<SwitchPrimitive.Thumb
 					data-slot="switch-thumb"
 					className={cn(
-						"pointer-events-none flex items-center justify-center h-full min-w-[5rem] px-4 py-1 rounded-[10px] border-[3px] border-primary-unchanged transition-all duration-200 data-[state=checked]:translate-x-[20%] data-[state=unchecked]:translate-x-0 data-[state=checked]:bg-ternary data-[state=unchecked]:bg-secondary-unchanged"
+						"pointer-events-none flex items-center justify-center h-full min-w-[5rem] px-4 py-1 rounded-[10px] border-[3px] border-primary-unchanged transition-[transform,background-color] duration-200 data-[state=checked]:translate-x-[20%] data-[state=unchecked]:translate-x-0 data-[state=checked]:bg-ternary data-[state=unchecked]:bg-secondary-unchanged"
 					)}
-					style={{ width: `${maxThumbWidth}px` }}
+					style={{ 
+						width: `${maxThumbWidth}px`,
+						willChange: 'transform',
+						transform: checked ? 'translateX(20%)' : 'translateX(0)'  // Explicit transform
+					}}
 				>
 					<P className="font-bold text-primary-unchanged">
 						{checked ? innerTextChecked : innerTextUnchecked}
