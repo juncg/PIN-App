@@ -6,7 +6,7 @@ import { test, expect } from '@playwright/test';
 const offerName:string = 'offer' + (Math.random() * 100);
 
 test('test', async ({ page }) => {  
-  await page.goto('http://localhost:3000/?locale=en');
+  
   await page.getByRole('link', { name: 'Ir al inicio' }).click();
   await page.getByRole('link', { name: 'Iniciar sesión.' }).click();
   await page.getByRole('textbox', { name: 'Email' }).click();
