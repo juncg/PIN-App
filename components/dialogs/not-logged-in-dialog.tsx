@@ -1,19 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Button } from "../ui-custom/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui-custom/dialog";
 
 interface NotLoggedInDialogProps {
 	open: boolean;
-	onOpenChange: (open: boolean) => void;
+	onOpenChange?: (open: boolean) => void;
 	title?: string;
 	description?: string;
 }
 
 export function NotLoggedInDialog({
 	open,
-	onOpenChange,
+	onOpenChange = () => {},
 	title = "Accede a tu cuenta",
 	description = "Debes iniciar sesión para interactuar con las publicaciones.",
 }: NotLoggedInDialogProps) {

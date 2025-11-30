@@ -1,9 +1,9 @@
+import { ForumCard } from "@/components/cards/forum-card";
+import { CategoriesCarousel } from "@/components/carousel/categories-carousel";
 import { H2 } from "@/components/ui-custom/typography";
 import { getUserUuid } from "@/lib/services/user";
 import { ISearchParams } from "../../types";
 import { ForumsServices } from "./forums-services";
-import { ForumCard } from "@/components/cards/forum-card";
-import { CategoriesCarousel } from "@/components/carousel/categories-carousel";
 
 export default async function Forums({ searchParams }: { searchParams: Promise<ISearchParams> }) {
 	const { categories, hasSelectedCategories, recommendedForums, popularForums, trendingByCategory } =
@@ -13,9 +13,9 @@ export default async function Forums({ searchParams }: { searchParams: Promise<I
 
 	return (
 		<section className="max-w-7xl mx-auto space-y-8">
-			<div className="mb-8 text-sm text-muted-foreground">
+			<div className="mb-8 text-sm text-muted">
 				<span>Inicio</span> <span className="mx-2">/</span>{" "}
-				<span className="text-foreground font-medium">Foros</span>
+				<span className="text-white font-medium">Foros</span>
 			</div>
 
 			<CategoriesCarousel categories={categories} />
@@ -48,7 +48,7 @@ export default async function Forums({ searchParams }: { searchParams: Promise<I
 					<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 						{forums.length === 0 ? (
 							<div className="text-center col-span-full">
-								<p className="text-xl text-muted-foreground">No hay foros a mostrar.</p>
+								<p className="text-xl text-muted">No hay foros a mostrar.</p>
 							</div>
 						) : (
 							forums.map((forum) => <ForumCard key={forum.id} forum={forum} currentUserId={userUuid} />)

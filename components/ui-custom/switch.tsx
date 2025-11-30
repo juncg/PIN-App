@@ -94,9 +94,7 @@ export function Switch({
 						transform: checked ? 'translateX(20%)' : 'translateX(0)'  // Explicit transform
 					}}
 				>
-					<P className="font-bold text-primary-unchanged">
-						{checked ? innerTextChecked : innerTextUnchecked}
-					</P>
+					<P className="font-bold text-black">{checked ? innerTextChecked : innerTextUnchecked}</P>
 				</SwitchPrimitive.Thumb>
 			</SwitchPrimitive.Root>
 		</>

@@ -1,8 +1,8 @@
 "use client";
 
+import { Card } from "@/components/ui-custom/card";
+import { Separator } from "@/components/ui-custom/separator";
 import { H4, P } from "@/components/ui-custom/typography";
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { IBusiness, IForum, IOffer, IPetition, IProduct, IUser } from "@/lib/services/types";
 import { Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -66,7 +66,7 @@ export function SearchGeneralDropdown() {
 		<Card className="absolute top-full mt-2 w-full max-h-96 overflow-y-auto z-50 shadow-lg">
 			{isLoading ? (
 				<div className="flex items-center justify-center p-8">
-					<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+					<Loader2 className="h-6 w-6 animate-spin text-muted" />
 				</div>
 			) : hasResults ? (
 				<div>
@@ -176,7 +176,7 @@ export function SearchGeneralDropdown() {
 				</div>
 			) : (
 				<div className="p-8 text-center">
-					<P className="text-muted-foreground">No se encontraron resultados</P>
+					<P className="text-muted">No se encontraron resultados</P>
 				</div>
 			)}
 		</Card>

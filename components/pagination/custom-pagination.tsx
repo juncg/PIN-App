@@ -1,6 +1,6 @@
 import { ChevronFirstIcon, ChevronLastIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
-import { Pagination, PaginationContent, PaginationItem, PaginationLink } from "@/components/ui/pagination";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink } from "@/components/ui-custom/pagination";
 
 const pages = [1, 2, 3];
 

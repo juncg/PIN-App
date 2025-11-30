@@ -1,7 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui-custom/button";
 import { H1, P } from "@/components/ui-custom/typography";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -35,7 +35,7 @@ export default function Error() {
 				<P>Inténtalo de nuevo más tarde</P>
 
 				{showSpecialImage && (
-					<P className="text-sm text-muted-foreground mt-2">¡Felicidades! Encontraste la imagen secreta 🎉</P>
+					<P className="text-sm text-muted mt-2">¡Felicidades! Encontraste la imagen secreta 🎉</P>
 				)}
 			</div>
 

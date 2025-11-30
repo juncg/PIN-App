@@ -1,16 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Button } from "../ui/button";
-import { Label } from "../ui/label";
-import { Slider } from "../ui/slider";
 import { ICategory } from "@/lib/services/types";
-import { Checkbox } from "../ui/checkbox";
-import { Separator } from "../ui/separator";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useTransition } from "react";
-import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Star } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+import { Button } from "../ui-custom/button";
+import { Checkbox } from "../ui-custom/checkbox";
+import { Label } from "../ui-custom/label";
+import { Slider } from "../ui-custom/slider";
 
 interface ProductsFiltersProps {
 	categories: ICategory[];
@@ -105,7 +103,7 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 							size="sm"
 							onClick={clearFilters}
 							disabled={isPending}
-							className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground"
+							className="h-auto p-0 text-xs text-muted hover:text-white"
 						>
 							Limpiar filtros
 						</Button>
@@ -156,7 +154,7 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 							disabled={isPending}
 						/>
 					</div>
-					<div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
+					<div className="mt-2 flex items-center justify-between text-sm text-muted">
 						<span>{priceRange[0].toFixed(2)}€</span>
 						<span>{priceRange[1].toFixed(2)}€</span>
 					</div>
@@ -175,7 +173,7 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 								onCheckedChange={(checked) => {
 									setSelectedRating(checked ? rating : 0);
 								}}
-								className="h-5 w-5 rounded-sm border-muted-foreground/50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+								className="h-5 w-5 rounded-sm border-muted/50 data-[state=checked]:bg-black data-[state=checked]:text-black"
 							/>
 							<label
 								htmlFor={`rating-${rating}`}
@@ -187,14 +185,12 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 											key={i}
 											className={cn(
 												"h-4 w-4",
-												i < rating
-													? "fill-primary text-primary"
-													: "fill-muted text-muted-foreground"
+												i < rating ? "fill-black text-black" : "fill-muted text-muted"
 											)}
 										/>
 									))}
 								</div>
-								{rating < 5 && <span className="text-muted-foreground ml-1 text-xs">y más</span>}
+								{rating < 5 && <span className="text-muted ml-1 text-xs">y más</span>}
 							</label>
 						</div>
 					))}

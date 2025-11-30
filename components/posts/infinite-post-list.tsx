@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 import { TPost } from "@/types";
 import { useCallback, useEffect, useState } from "react";
 import { PostCard } from "../cards/post-card";
+import { Skeleton } from "../ui-custom/skeleton";
 import { P } from "../ui-custom/typography";
-import { Skeleton } from "../ui/skeleton";
 
 interface InfinitePostListProps {
 	className?: string;
@@ -80,7 +80,7 @@ export function InfinitePostList({
 	});
 
 	if (posts.length === 0 && !isLoading) {
-		return <P className="text-muted-foreground">No se encontraron posts</P>;
+		return <P className="text-muted">No se encontraron posts</P>;
 	}
 
 	return (
@@ -103,7 +103,7 @@ export function InfinitePostList({
 
 			{/* Message when limit has been reached */}
 			{!hasMore && posts.length > 0 && (
-				<P className="text-center text-muted-foreground py-4">No hay más posts para mostrar</P>
+				<P className="text-center text-muted py-4">No hay más posts para mostrar</P>
 			)}
 		</div>
 	);

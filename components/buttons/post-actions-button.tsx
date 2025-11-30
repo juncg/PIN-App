@@ -1,12 +1,3 @@
-import { MoreHorizontal, Trash, Pencil, Flag } from "lucide-react";
-import { Button } from "../ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -16,9 +7,17 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
+} from "@/components/ui-custom/alert-dialog";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui-custom/dropdown-menu";
+import { Flag, MoreHorizontal, Pencil, Trash } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
+import { Button } from "../ui-custom/button";
 
 interface PostActionsDropdownProps {
 	isOwner: boolean;
@@ -93,7 +92,7 @@ export function PostActionsDropdown({ isOwner, onEdit, onDelete, onReport }: Pos
 						<AlertDialogCancel>Cancelar</AlertDialogCancel>
 						<AlertDialogAction
 							onClick={handleDeleteConfirm}
-							className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+							className="bg-destructive text-destructive hover:bg-destructive/90"
 						>
 							Eliminar
 						</AlertDialogAction>

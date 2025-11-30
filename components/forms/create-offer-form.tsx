@@ -1,8 +1,8 @@
 "use client";
 
 import { SelectTags } from "@/components/select/select-tags";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui-custom/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui-custom/select";
 import { Tables } from "@/database.types";
 import { useUser } from "@/hooks/use-user";
 import { PostToDatabase } from "@/lib/services/general";
@@ -17,7 +17,7 @@ import { APIErrorHandler } from "../error-handlers/api-error-handler";
 import { DateInput } from "../ui-custom/date-input";
 import { Input } from "../ui-custom/input";
 import { Switch } from "../ui-custom/switch";
-import { Textarea } from "../ui/textarea";
+import { Textarea } from "../ui-custom/textarea";
 import FileDropzone from "./base/file-dropzone";
 import { FormField } from "./base/form-field";
 import { CreateOfferSchema, type TCreateOfferSchema } from "./schemas/offer";

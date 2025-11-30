@@ -1,15 +1,15 @@
 "use client";
 
+import { RatingDistribution } from "@/app/products/[id]/page-services";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui-custom/dialog";
 import { IProduct, IReview } from "@/lib/services/types";
+import { Plus, Star } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { ProductReviewsSummaryCard } from "../cards/product-reviews-summary-card";
 import { UserReviewCard } from "../cards/user-review-card";
-import { RatingDistribution } from "@/app/products/[id]/page-services";
-import { Button } from "../ui/button";
-import { useState } from "react";
-import { Star, Plus } from "lucide-react";
 import { ProductReviewForm } from "../forms/product-review-form";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useRouter } from "next/navigation";
+import { Button } from "../ui-custom/button";
 
 interface ProductReviewSectionProps {
 	product: IProduct;
@@ -81,7 +81,7 @@ export function ProductReviewSection({
 						<UserReviewCard key={review.id} review={review} currentUserId={userId} productId={product.id} />
 					))
 				) : (
-					<p className="text-muted-foreground">
+					<p className="text-muted">
 						{reviewFilter === "all"
 							? "No hay reseñas para este producto."
 							: `No hay reseñas con ${reviewFilter} estrellas.`}

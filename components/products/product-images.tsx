@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { Button } from "@/components/ui-custom/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 
 export function ProductImages({ images }: { images: string[] }) {
 	const [selectedImage, setSelectedImage] = useState(0);
@@ -21,7 +21,7 @@ export function ProductImages({ images }: { images: string[] }) {
 				<Button
 					variant="ghost"
 					size="icon"
-					className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
+					className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black"
 					onClick={() => setSelectedImage((prev) => (prev === 0 ? images.length - 1 : prev - 1))}
 				>
 					<ChevronLeft className="h-6 w-6" />
@@ -29,7 +29,7 @@ export function ProductImages({ images }: { images: string[] }) {
 				<Button
 					variant="ghost"
 					size="icon"
-					className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
+					className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black"
 					onClick={() => setSelectedImage((prev) => (prev === images.length - 1 ? 0 : prev + 1))}
 				>
 					<ChevronRight className="h-6 w-6" />
@@ -41,9 +41,7 @@ export function ProductImages({ images }: { images: string[] }) {
 						key={index}
 						onClick={() => setSelectedImage(index)}
 						className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-colors ${
-							selectedImage === index
-								? "border-primary"
-								: "border-transparent hover:border-muted-foreground/50"
+							selectedImage === index ? "border-black" : "border-transparent hover:border-muted/50"
 						}`}
 					>
 						<Image

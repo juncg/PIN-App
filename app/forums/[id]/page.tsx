@@ -1,15 +1,15 @@
-import { InfinitePostGrid } from "@/components/posts/infinite-post-grid";
-import { H1, H2, P } from "@/components/ui-custom/typography";
-import { Button } from "@/components/ui/button";
-import { TPost } from "@/types";
-import { ChevronRight, Verified } from "lucide-react";
-import Image from "next/image";
-import { ForumDetailsService, fetchForumPosts, loadMoreOffers, loadMorePetitions } from "./page-services";
 import { FollowButton } from "@/components/buttons/follow-button";
-import { getUserUuid } from "@/lib/services/user";
-import Link from "next/link";
 import { SidebarForumCard } from "@/components/cards/sidebar-forum-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
+import { Button } from "@/components/ui-custom/button";
+import { InfinitePostGrid } from "@/components/posts/infinite-post-grid";
+import { H1, H2, P } from "@/components/ui-custom/typography";
+import { getUserUuid } from "@/lib/services/user";
+import { TPost } from "@/types";
+import { Verified } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { ForumDetailsService, fetchForumPosts, loadMoreOffers, loadMorePetitions } from "./page-services";
 
 interface ForumPageProps {
 	params: Promise<{
@@ -43,12 +43,11 @@ export default async function ForumPage({ params }: ForumPageProps) {
 		<div className="container mx-auto max-w-[1600px] px-4 md:px-6 py-6 grid grid-cols-1 lg:grid-cols-[20%_60%_20%] gap-6 lg:gap-8">
 			{/* Left Sidebar */}
 			<div className="hidden lg:block space-y-6">
-				<div className="flex items-center text-sm text-muted-foreground">
-					<Link href="/forums" className="hover:text-foreground transition-colors">
+				<div className="flex items-center text-sm text-muted">
+					<Link href="/forums" className="hover:text-white transition-colors">
 						Foros
 					</Link>
-					<ChevronRight className="h-4 w-4 mx-1" />
-					<span className="text-foreground font-medium">Foro</span>
+					<span className="mx-2">/</span> <span className="text-white font-medium">Foro</span>
 				</div>
 
 				<div className="flex flex-wrap gap-2">
@@ -61,7 +60,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 								key={category.id}
 								variant="outline"
 								size="sm"
-								className="rounded-full px-4 hover:bg-accent hover:text-accent-foreground"
+								className="rounded-full px-4 hover:bg-hover hover:text-hover"
 							>
 								{category.name}
 							</Button>
@@ -70,7 +69,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 				</div>
 
 				<div className="space-y-3">
-					<h3 className="font-semibold text-foreground">Recomendado para ti.</h3>
+					<h3 className="font-semibold text-white">Recomendado para ti.</h3>
 					<div className="space-y-3">
 						{randomForums.map((forum) => (
 							<SidebarForumCard key={forum.id} forum={forum} />
@@ -79,7 +78,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 				</div>
 
 				<div className="space-y-3">
-					<h3 className="font-semibold text-foreground">Lo más popular.</h3>
+					<h3 className="font-semibold text-white">Lo más popular.</h3>
 					<div className="space-y-3 pointer-events-none">
 						{popularForums.map((forum) => (
 							<SidebarForumCard key={forum.id} forum={forum} />
@@ -106,7 +105,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 					<div className="px-4 relative">
 						<div className="flex flex-col md:flex-row gap-6 items-start">
 							{/* Profile Picture */}
-							<div className="relative w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden border-4 border-background -mt-12 md:-mt-16 bg-background shadow-lg shrink-0">
+							<div className="relative w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden border-4 border-black -mt-12 md:-mt-16 bg-black shadow-lg shrink-0">
 								<Image
 									src={profileImage}
 									alt={forumData.name || "Forum"}
@@ -123,7 +122,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 											<H1 className="text-3xl font-bold">{forumData.name}</H1>
 										</div>
 										{forumData.Business && (
-											<div className="flex items-center gap-1 text-muted-foreground">
+											<div className="flex items-center gap-1 text-muted">
 												<P className="font-medium">@{forumData.Business.name}</P>
 												{(forumData.Business.verification === "Official" ||
 													forumData.Business.verification === "Paid") && (
@@ -144,24 +143,22 @@ export default async function ForumPage({ params }: ForumPageProps) {
 
 								{forumData.description && (
 									<div>
-										<P className="text-muted-foreground text-sm leading-relaxed">
-											{forumData.description}
-										</P>
+										<P className="text-muted text-sm leading-relaxed">{forumData.description}</P>
 									</div>
 								)}
 
 								<div className="flex items-center gap-6 text-sm font-medium">
 									<div className="flex items-center gap-1">
-										<span className="text-foreground font-bold">{forumData.followers || 0}</span>
-										<span className="text-muted-foreground">seguidores</span>
+										<span className="text-white font-bold">{forumData.followers || 0}</span>
+										<span className="text-muted">seguidores</span>
 									</div>
 									<div className="flex items-center gap-1">
-										<span className="text-foreground font-bold">{counts.petitions}</span>
-										<span className="text-muted-foreground">peticiones activas</span>
+										<span className="text-white font-bold">{counts.petitions}</span>
+										<span className="text-muted">peticiones activas</span>
 									</div>
 									<div className="flex items-center gap-1">
-										<span className="text-foreground font-bold">{counts.offers}</span>
-										<span className="text-muted-foreground">ofertas activas</span>
+										<span className="text-white font-bold">{counts.offers}</span>
+										<span className="text-muted">ofertas activas</span>
 									</div>
 								</div>
 							</div>
@@ -185,7 +182,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 							/>
 						) : (
 							<div className="p-8 text-center">
-								<P className="text-muted-foreground">No hay peticiones activas</P>
+								<P className="text-muted">No hay peticiones activas</P>
 							</div>
 						)}
 					</div>
@@ -205,7 +202,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 							/>
 						) : (
 							<div className="p-8 text-center">
-								<P className="text-muted-foreground">No hay ofertas activas</P>
+								<P className="text-muted">No hay ofertas activas</P>
 							</div>
 						)}
 					</div>
@@ -222,18 +219,18 @@ export default async function ForumPage({ params }: ForumPageProps) {
 								alt={forumData.name || "Forum"}
 								className="object-cover"
 							/>
-							<AvatarFallback className="bg-transparent text-foreground font-bold">
+							<AvatarFallback className="bg-transparent text-white font-bold">
 								{forumData.name?.charAt(0).toUpperCase()}
 							</AvatarFallback>
 						</Avatar>
 					</div>
 					<div className="flex items-center gap-1.5">
-						<span className="font-bold text-xl text-foreground">{forumData.Business?.name}</span>
+						<span className="font-bold text-xl text-white">{forumData.Business?.name}</span>
 					</div>
 				</div>
 
 				<div className="space-y-3">
-					<h3 className="text-sm font-medium text-muted-foreground">Más foros de la empresa.</h3>
+					<h3 className="text-sm font-medium text-muted">Más foros de la empresa.</h3>
 					<div className="space-y-3">
 						{businessForums.map((forum) => (
 							<SidebarForumCard key={forum.id} forum={forum} />
@@ -242,7 +239,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 				</div>
 
 				<div className="space-y-3">
-					<h3 className="text-sm font-medium text-muted-foreground">Foros de productos similares.</h3>
+					<h3 className="text-sm font-medium text-muted">Foros de productos similares.</h3>
 					<div className="space-y-3"></div>
 				</div>
 			</div>

@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "../ui-custom/button";
 
 export function LogoutButton() {
 	const logout = async () => {
@@ -10,5 +10,5 @@ export function LogoutButton() {
 		window.location.href = "/auth/login";
 	};
 
-	return <Button onClick={logout}>Cerrar sesión</Button>;
+	return <Button onClick={logout}>Cerrar sesión.</Button>;
 }

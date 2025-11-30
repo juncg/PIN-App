@@ -1,13 +1,11 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
+import { Progress } from "@/components/ui-custom/progress";
+import { Separator } from "@/components/ui-custom/separator";
 import { IComment, IPetition, IUser } from "@/lib/services/types";
 import { GetRelativeTime } from "@/lib/services/utilities";
-import { ChevronLeft, ChevronRight, Users } from "lucide-react";
-import Image from "next/image";
+import { Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SubscribeButton } from "../buttons/subscribe-button";
 import { CommentsSection } from "../posts/comments-section";
@@ -56,13 +54,13 @@ export function PetitionDetails({ petition, subscribedByUser, comments, currentU
 							petition.tags.map((tagItem, index) => (
 								<span
 									key={index}
-									className="bg-primary text-black text-xs font-black px-3 py-1 rounded-full"
+									className="bg-black text-black text-xs font-black px-3 py-1 rounded-full"
 								>
 									{tagItem.Tag.name?.toUpperCase()}
 								</span>
 							))
 						) : (
-							<span className="bg-primary text-black text-xs font-black px-3 py-1 rounded-full">
+							<span className="bg-black text-black text-xs font-black px-3 py-1 rounded-full">
 								SIN ETIQUETAS
 							</span>
 						)}
@@ -72,13 +70,13 @@ export function PetitionDetails({ petition, subscribedByUser, comments, currentU
 					<div className="flex items-center gap-3 mb-6">
 						<Avatar className="w-10 h-10 border-2 border-black">
 							<AvatarImage src={petition.User?.profile_picture || undefined} />
-							<AvatarFallback className="bg-primary text-black font-bold">
+							<AvatarFallback className="bg-black text-black font-bold">
 								{petition.User?.username?.charAt(0).toLocaleUpperCase()}
 							</AvatarFallback>
 						</Avatar>
 						<div>
 							<div className="font-black">@{petition.User?.username}</div>
-							<div className="text-xs text-muted-foreground">{GetRelativeTime(petition.created_at)}</div>
+							<div className="text-xs text-muted">{GetRelativeTime(petition.created_at)}</div>
 						</div>
 					</div>
 
@@ -94,7 +92,7 @@ export function PetitionDetails({ petition, subscribedByUser, comments, currentU
 						<div className="flex flex-col gap-2">
 							<Progress value={petitionCompletionPercentage} />
 						</div>
-						<div className="text-sm font-bold text-muted-foreground">
+						<div className="text-sm font-bold text-muted">
 							{currentProgress >= petition.target_progress ? (
 								<span className="text-green-600">¡Objetivo alcanzado!</span>
 							) : (
@@ -117,14 +115,14 @@ export function PetitionDetails({ petition, subscribedByUser, comments, currentU
 				<div className="flex items-center gap-4 mb-6">
 					<div className="flex -space-x-3">
 						{[...Array(Math.min(10, currentProgress))].map((_, i) => (
-							<Avatar key={i} className="w-10 h-10 border-2 border-primary">
+							<Avatar key={i} className="w-10 h-10 border-2 border-black">
 								<AvatarFallback
 									className={`${
 										i % 3 === 0
-											? "bg-primary text-black"
+											? "bg-black text-black"
 											: i % 3 === 1
 											? "bg-white text-black"
-											: "bg-black text-primary border-2 border-primary"
+											: "bg-black text-black border-2 border-black"
 									} text-xs font-bold`}
 								>
 									U{i + 1}
@@ -132,7 +130,7 @@ export function PetitionDetails({ petition, subscribedByUser, comments, currentU
 							</Avatar>
 						))}
 						{currentProgress > 10 && (
-							<div className="w-10 h-10 border-2 border-primary rounded-full bg-white flex items-center justify-center">
+							<div className="w-10 h-10 border-2 border-black rounded-full bg-white flex items-center justify-center">
 								<span className="text-xs font-black">+{currentProgress - 10}</span>
 							</div>
 						)}

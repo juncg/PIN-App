@@ -1,10 +1,10 @@
 import { ProductImages } from "@/components/products/product-images";
 import { ProductReviewSection } from "@/components/products/product-review-section";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
+import { Button } from "@/components/ui-custom/button";
+import { Card } from "@/components/ui-custom/card";
+import { Separator } from "@/components/ui-custom/separator";
 import { H3 } from "@/components/ui-custom/typography";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { getUserUuid } from "@/lib/services/user";
 import { ISearchParams } from "@/types";
 import { ArrowRightIcon, Star } from "lucide-react";
@@ -41,7 +41,7 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 									<Star className="h-5 w-5 fill-amber-500 text-amber-500" />
 									<span className="font-semibold">{(product.rating || 0.0).toFixed(1)}</span>
 								</div>
-								<span className="text-muted-foreground">({numOfReviews} reseñas)</span>
+								<span className="text-muted">({numOfReviews} reseñas)</span>
 							</div>
 						</div>
 					</div>
@@ -50,16 +50,16 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 
 					<div>
 						<div className="flex items-baseline gap-3 mb-2">
-							<span className="text-4xl font-bold text-primary">{product.msrp}€</span>
+							<span className="text-4xl font-bold text-black">{product.msrp}€</span>
 						</div>
-						<p className="text-sm text-muted-foreground">Precio incluye IVA</p>
+						<p className="text-sm text-muted">Precio incluye IVA</p>
 					</div>
 
 					<Separator />
 
 					<div>
 						<h1 className="text-3xl font-bold mb-2">Descripción</h1>
-						<p className="text-muted-foreground">{product.description}</p>
+						<p className="text-muted">{product.description}</p>
 					</div>
 
 					<Separator />
@@ -90,7 +90,7 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 
 					<div>
 						<h1 className="text-3xl font-bold mb-2">Alguna vaina mas?</h1>
-						<p className="text-muted-foreground">
+						<p className="text-muted">
 							No se si tenemos que poner los tipicos botones de comprar y demas, asi que dejo este
 							apartado por ahora de bonus
 						</p>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@/hooks/use-user";
-import { Hand, Home, Settings, Shield, ShoppingBag, Tag, User, Users } from "lucide-react";
+import { Hand, Home, Settings, Shield, ShoppingBag, Tag, Timer, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -17,7 +17,7 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 	useSidebar,
-} from "@/components/ui/sidebar";
+} from "@/components/ui-custom/sidebar";
 
 const items = [
 	{
@@ -44,6 +44,11 @@ const items = [
 		title: "Foros",
 		url: "/forums",
 		icon: Users,
+	},
+	{
+		title: "Posts",
+		url: "/posts",
+		icon: Timer,
 	},
 ];
 
@@ -98,7 +103,7 @@ export function AppSidebar() {
 												href={item.url}
 												className={
 													isActive
-														? "bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
+														? "bg-black text-black hover:bg-black/90 font-semibold"
 														: ""
 												}
 											>
@@ -123,9 +128,7 @@ export function AppSidebar() {
 									<Link
 										href={item.url}
 										className={
-											isActive
-												? "bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
-												: ""
+											isActive ? "bg-black text-black hover:bg-black/90 font-semibold" : ""
 										}
 									>
 										<item.icon />

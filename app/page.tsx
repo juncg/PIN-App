@@ -1,7 +1,7 @@
-import { Icon } from "@/components/icons/icon";
+import { Button } from "@/components/ui-custom/button";
+import { Icon } from "@/components/ui-custom/icon";
 import { Switch } from "@/components/ui-custom/switch";
 import { H1 } from "@/components/ui-custom/typography";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function Home() {

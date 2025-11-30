@@ -1,15 +1,15 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuRadioGroup,
 	DropdownMenuRadioItem,
 	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui-custom/dropdown-menu";
 import { Globe } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Button } from "../ui-custom/button";
 
 const locales = [
 	{ code: "en", label: "English" },
@@ -34,8 +34,8 @@ export function LocaleSwitcher() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="ghost" size="sm" className="outline-none focus-visible:ring-0">
-					<Globe className="h-4 w-4" />
+				<Button variant="default" size="icon" className="outline-none focus-visible:ring-0">
+					<Globe />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">

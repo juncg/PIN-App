@@ -1,5 +1,5 @@
 import CreatePetitionForm from "@/components/forms/create-petition-form";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui-custom/card";
 import { GetFromDatabase } from "@/lib/services/general";
 import { IForum } from "@/lib/services/types";
 

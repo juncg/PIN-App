@@ -78,7 +78,7 @@ export default function FileDropzone({
 			<Label>{label}</Label>
 			<div
 				className={`relative flex flex-col items-center justify-center gap-3 rounded-lg border-2 p-6 transition-colors ${
-					isDragActive ? "border-primary bg-primary/5" : "border-dashed border-muted-foreground/40"
+					isDragActive ? "border-black bg-black/5" : "border-dashed border-muted/40"
 				}`}
 				onDrop={onDrop}
 				onDragOver={onDragOver}
@@ -87,7 +87,7 @@ export default function FileDropzone({
 				role="button"
 				aria-disabled={disabled}
 			>
-				<p className="text-center text-sm text-muted-foreground">
+				<p className="text-center text-sm text-muted">
 					Arrastra y suelta tus imágenes aquí, o haz clic para seleccionar (máx. {maxFiles})
 				</p>
 				<Input
@@ -105,7 +105,7 @@ export default function FileDropzone({
 			{value.length > 0 && (
 				<div className="grid grid-cols-3 gap-2 mt-2">
 					{value.map((file, idx) => (
-						<div key={idx} className="relative rounded overflow-hidden bg-muted-foreground/5">
+						<div key={idx} className="relative rounded overflow-hidden bg-muted/5">
 							<img src={previews[idx]} alt={file.name} className="h-24 w-full object-contain" />
 							<Button
 								type="button"

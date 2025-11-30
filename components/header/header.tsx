@@ -2,17 +2,18 @@ import { LocaleSwitcher } from "@/components/ui-custom/locale-switcher";
 import Link from "next/link";
 import { AuthButton } from "../auth/auth-buttons";
 import { SearchGeneral } from "../search/search-general/search-general";
-import { ThemeSwitcher } from "../ui-custom/theme-switcher";
-import { SidebarTrigger } from "../ui/sidebar";
+import { SidebarTrigger } from "../ui-custom/sidebar";
+import { H3 } from "../ui-custom/typography";
 
 export function Header() {
 	return (
-		<header className="sticky top-0 z-30 w-full flex border-b border-b-foreground/10 h-16 bg-background">
+		<header className="sticky top-0 z-30 w-full flex border-b-2 border-b-white bg-darkmode h-16">
 			<div className="w-full flex items-center px-4 md:px-6 relative">
-				<div className="flex items-center gap-2">
-					<SidebarTrigger />
-					<Link className="font-semibold text-lg" href={"/home"}>
-						Deal&Buy.
+				<div className="flex items-center gap-8">
+					<SidebarTrigger className="w-8 h-8" />
+
+					<Link className="flex items-center" href={"/home"}>
+						<H3>Deal&Buy.</H3>
 					</Link>
 				</div>
 

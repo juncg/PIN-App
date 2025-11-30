@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui-custom/button";
+import { Input } from "@/components/ui-custom/input";
+import { Textarea } from "@/components/ui-custom/textarea";
 import { useUser } from "@/hooks/use-user";
 import { PostToDatabase } from "@/lib/services/general";
 import { IBusiness, IBusinessEmployee } from "@/lib/services/types";

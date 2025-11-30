@@ -1,7 +1,7 @@
 import { InfinitePostGrid } from "@/components/posts/infinite-post-grid";
 import { SearchInput } from "@/components/search/search";
+import { Button } from "@/components/ui-custom/button";
 import { H1, P } from "@/components/ui-custom/typography";
-import { Button } from "@/components/ui/button";
 import { PETITIONS_MAX_POSTS, PETITIONS_PAGE_SIZE } from "@/lib/constants";
 import { getUserUuid } from "@/lib/services/user";
 import { Plus } from "lucide-react";
@@ -19,7 +19,7 @@ export default async function Petitions({ searchParams }: { searchParams: Promis
 			<div className="flex justify-between items-center">
 				<div className="justify-start">
 					<H1>{translator("petitions")}</H1>
-					<P className="text-muted-foreground">Aqui puedes ver las peticiones existentes</P>
+					<P className="text-muted">Aqui puedes ver las peticiones existentes</P>
 				</div>
 
 				<Link href={userUuid ? "/petitions/create" : "/auth/login"}>

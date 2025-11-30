@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui-custom/card";
 
 export default function Page() {
 	return (
@@ -11,7 +11,7 @@ export default function Page() {
 							<CardDescription>Check your email to confirm</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<p className="text-sm text-muted-foreground">
+							<p className="text-sm text-muted">
 								You&apos;ve successfully signed up. Please check your email to confirm your account
 								before signing in.
 							</p>

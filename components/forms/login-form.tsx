@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui-custom/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui-custom/card";
+import { Input } from "@/components/ui-custom/input";
+import { Label } from "@/components/ui-custom/label";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import Link from "next/link";

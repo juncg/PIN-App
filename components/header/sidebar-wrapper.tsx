@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { SidebarTrigger } from "../ui/sidebar";
+import { SidebarTrigger } from "../ui-custom/sidebar";
 
 export function SidebarWrapper() {
 	const currentRoute = usePathname();

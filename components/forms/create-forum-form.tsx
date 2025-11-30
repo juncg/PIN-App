@@ -1,24 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { type PostgrestError } from "@supabase/supabase-js";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
+import { Button } from "@/components/ui-custom/button";
+import { Card } from "@/components/ui-custom/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui-custom/select";
+import { Textarea } from "@/components/ui-custom/textarea";
 import { Tables } from "@/database.types";
 import { PostToDatabase } from "@/lib/services/general";
 import { compressImage, uploadImage } from "@/lib/services/media-upload";
-import { forumSchema, type ForumFormData } from "./schemas/forum";
-import { FormField } from "./base/form-field";
+import { IBusiness } from "@/lib/services/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type PostgrestError } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { APIErrorHandler } from "../error-handlers/api-error-handler";
 import { Input } from "../ui-custom/input";
 import FileDropzone from "./base/file-dropzone";
-import { APIErrorHandler } from "../error-handlers/api-error-handler";
-import { IBusiness } from "@/lib/services/types";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { FormField } from "./base/form-field";
+import { forumSchema, type ForumFormData } from "./schemas/forum";
 
 interface CreateForumFormProps {
 	businesses: IBusiness[];
@@ -187,9 +187,7 @@ export function CreateForumForm({ businesses, onSuccess }: CreateForumFormProps)
 							disabled={isSubmitting}
 						/>
 						{profilePicture.length > 0 && (
-							<p className="text-sm text-muted-foreground mt-1">
-								Archivo seleccionado: {profilePicture[0].name}
-							</p>
+							<p className="text-sm text-muted mt-1">Archivo seleccionado: {profilePicture[0].name}</p>
 						)}
 					</FormField>
 
@@ -202,7 +200,7 @@ export function CreateForumForm({ businesses, onSuccess }: CreateForumFormProps)
 							disabled={isSubmitting}
 						/>
 						{banner.length > 0 && (
-							<p className="text-sm text-muted-foreground mt-1">Archivo seleccionado: {banner[0].name}</p>
+							<p className="text-sm text-muted mt-1">Archivo seleccionado: {banner[0].name}</p>
 						)}
 					</FormField>
 

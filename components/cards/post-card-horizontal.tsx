@@ -14,8 +14,6 @@ interface IPostCardHorizontalProps {
 export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 	const { className, post } = props;
 
-	console.log(post);
-
 	const offerCompletionPercentage = parseFloat(
 		((post?.current_progress * 100) / (post?.target_progress ?? 1)).toFixed(2)
 	);
@@ -36,12 +34,12 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 				<div className="flex w-full justify-between gap-8">
 					<div>
 						<H3 className="line-clamp-2">{post.title}</H3>
-						<P className="text-muted-foreground line-clamp-2">{post.text}</P>
+						<P className="text-muted line-clamp-2">{post.text}</P>
 					</div>
 
 					<div className="flex flex-col items-end">
 						<H3>120$</H3>
-						<P className="line-through text-muted-foreground">170$</P>
+						<P className="line-through text-muted">170$</P>
 					</div>
 				</div>
 
@@ -71,7 +69,7 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 							</figure>
 
 							<span>
-								<Small className="text-muted-foreground">Creador</Small>
+								<Small className="text-muted">Creador</Small>
 								<P className="flex items-center gap-2">
 									@{post?.User?.username || "ejemplo"} <Verified className="h-4" />
 								</P>

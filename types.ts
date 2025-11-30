@@ -15,4 +15,5 @@ export interface ISearchParams {
 	maxPrice?: string;
 	categories?: string;
 	minRating?: string;
+	type?: "all" | "offer" | "petition";
 }

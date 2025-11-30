@@ -11,7 +11,7 @@ interface IAvatarGroup {
 
 export function AvatarGroup({ avatarImages, shape = "Rounded", inclined = false }: IAvatarGroup) {
 	return (
-		<div className="*:data-[slot=avatar]:ring-background flex -space-x-3 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
+		<div className="*:data-[slot=avatar]:ring-black flex -space-x-3 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
 			<Avatar
 				className={`${shape === "Rounded" && "rounded-full"} ${inclined && "rotate-[30deg] overflow-visible"}`}
 			>
@@ -53,7 +53,7 @@ export function AvatarGroup({ avatarImages, shape = "Rounded", inclined = false 
 			>
 				<AvatarImage className={`${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`} src="" />
 				<AvatarFallback
-					className={`border-[2px] border-primary bg-secondary ${
+					className={`border-[2px] border-black bg-black ${
 						shape === "Rounded" ? "rounded-full" : "rounded-[5px]"
 					}`}
 				>
