@@ -241,7 +241,7 @@ export function InfinitePostGrid({
 	}, [posts.length, maxColumns, measuredRowHeight, BUFFER_ROWS]);
 
 	if (posts.length === 0 && !isLoading) {
-		return <B1 className="text-lightgrey-foreground">No se encontraron posts</B1>;
+		return <B1 className="text-lightgrey">No se encontraron posts</B1>;
 	}
 
 	// calculate grid rows for proper spacing
@@ -318,7 +318,7 @@ export function InfinitePostGrid({
 			{/* Message when limit has been reached */}
 			{!hasMore && posts.length > 0 && posts.length >= maxPosts && maxPosts !== Infinity && (
 				<div className="text-center py-8 space-y-4">
-					<B1 className="text-lightgrey-foreground">
+					<B1 className="text-lightgrey">
 						Has cargado {posts.length} posts (batch {batchOffset + 1}). ¿Quieres ver más?
 					</B1>
 					<div className="flex justify-center gap-4">
@@ -410,7 +410,7 @@ export function InfinitePostGrid({
 
 			{!hasMore && posts.length > 0 && posts.length < maxPosts && (
 				<div className="text-center py-8 space-y-4">
-					<B1 className="text-lightgrey-foreground">No hay más posts para mostrar</B1>
+					<B1 className="text-lightgrey">No hay más posts para mostrar</B1>
 					{batchOffset > 0 && (
 						<button
 							onClick={() => {
