@@ -3,8 +3,9 @@ import { test, expect } from '@playwright/test';
 //npx playwright codegen --output=tests-playwright/create-subscribe-offer.spec.ts http://localhost:3000/?locale=en 
 // comando para hacer tests automaticos
 // para ejecutar ((headed para ver como lo hace)) npx playwright test --headed tests-playwright/create-subscribe-offer.spec.ts
+const offerName:string = 'offer' + (Math.random() * 100);
 
-test('test', async ({ page }) => {
+test('test', async ({ page }) => {  
   await page.goto('http://localhost:3000/?locale=en');
   await page.getByRole('link', { name: 'Ir al inicio' }).click();
   await page.getByRole('link', { name: 'Iniciar sesión.' }).click();
@@ -17,9 +18,10 @@ test('test', async ({ page }) => {
   await page.getByRole('link', { name: 'Ofertas', exact: true }).click();
   await page.getByRole('button', { name: 'Nueva Oferta' }).click();
   await page.getByRole('textbox', { name: 'Título *' }).click();
-  await page.getByRole('textbox', { name: 'Título *' }).fill('offer 1');
+
+  await page.getByRole('textbox', { name: 'Título *' }).fill(offerName);
   await page.getByRole('textbox', { name: 'Descripción *' }).click();
-  await page.getByRole('textbox', { name: 'Descripción *' }).fill('offer 1');
+  await page.getByRole('textbox', { name: 'Descripción *' }).fill(offerName);
   await page.getByRole('spinbutton', { name: 'Objetivo numérico *' }).click();
   await page.getByRole('spinbutton', { name: 'Objetivo numérico *' }).fill('150');
   await page.getByRole('spinbutton', { name: 'Precio Entrada *' }).click();
@@ -35,8 +37,8 @@ test('test', async ({ page }) => {
   await page.getByText('Título*Descripción*Objetivo').click();
   await page.getByRole('button', { name: 'Crear Oferta' }).click();
   await page.getByRole('textbox', { name: 'Búsqueda por nombre...' }).click();
-  await page.getByRole('textbox', { name: 'Búsqueda por nombre...' }).fill('offer 1');
-  await page.getByRole('link', { name: 'offer 1 offer' }).nth(1).click();
+  await page.getByRole('textbox', { name: 'Búsqueda por nombre...' }).fill(offerName);
+  await page.getByRole('link', { name: offerName }).nth(1).click();
   await page.getByRole('button', { name: 'Suscribirme' }).click();
   await page.getByRole('button', { name: 'Confirmar suscripción' }).click();
   await page.getByRole('textbox', { name: 'Escribe un comentario...' }).click();
