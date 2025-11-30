@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Progress } from "../ui-custom/progress";
 import { Switch } from "../ui-custom/switch";
 import { H3, H4, P, Small } from "../ui-custom/typography";
+import Link from "next/link";
 
 interface IPostCardHorizontalProps {
 	className?: string;
@@ -33,7 +34,10 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 			<div className="flex flex-col justify-between p-6 w-full">
 				<div className="flex w-full justify-between gap-8">
 					<div>
-						<H3 className="line-clamp-2">{post.title}</H3>
+						<Link href={`/posts/${post.id}`} className="hover:underline">
+							<H3 className="line-clamp-1">{post.title}.</H3>
+						</Link>
+
 						<P className="text-muted line-clamp-2">{post.text}</P>
 					</div>
 
@@ -70,9 +74,11 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 
 							<span>
 								<Small className="text-muted">Creador</Small>
-								<P className="flex items-center gap-2">
-									@{post?.User?.username || "ejemplo"} <Verified className="h-4" />
-								</P>
+								<Link href={`/profile/${post?.User?.id}`} className="hover:underline">
+									<P className="flex items-center gap-2">
+										@{post?.User?.username || "ejemplo"} <Verified className="h-4" />
+									</P>
+								</Link>
 							</span>
 						</div>
 

@@ -16,4 +16,5 @@ export interface ISearchParams {
 	categories?: string;
 	minRating?: string;
 	type?: "all" | "offer" | "petition";
+	creator?: "user" | "business" | "verified_business" | "followed";
 }

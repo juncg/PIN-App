@@ -3,6 +3,8 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { Button } from "../ui-custom/button";
+import { Infinity, Tag, Hand } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export function PostTypeFilter() {
 	const searchParams = useSearchParams();
@@ -29,31 +31,49 @@ export function PostTypeFilter() {
 	return (
 		<div className="flex gap-2">
 			<Button
-				variant={currentType === "all" ? "default" : "outline"}
+				variant="outline"
 				size="sm"
-				className="rounded-full px-6"
+				className={cn(
+					"rounded-full px-6 border-2",
+					currentType === "all"
+						? "bg-chernobyl border-chernobyl text-black hover:bg-chernobyl/90"
+						: "bg-black border-white text-white hover:bg-hover"
+				)}
 				onClick={() => updateTypeFilter("all")}
 				disabled={isPending}
 			>
 				Todo
+				<Infinity className="h-4 w-4" />
 			</Button>
 			<Button
-				variant={currentType === "offer" ? "default" : "outline"}
+				variant="outline"
 				size="sm"
-				className="rounded-full px-6"
+				className={cn(
+					"rounded-full px-6 border-2",
+					currentType === "offer"
+						? "bg-chernobyl border-chernobyl text-black hover:bg-chernobyl/90"
+						: "bg-black border-white text-white hover:bg-hover"
+				)}
 				onClick={() => updateTypeFilter("offer")}
 				disabled={isPending}
 			>
 				Ofertas
+				<Tag className="h-4 w-4" />
 			</Button>
 			<Button
-				variant={currentType === "petition" ? "default" : "outline"}
+				variant="outline"
 				size="sm"
-				className="rounded-full px-6"
+				className={cn(
+					"rounded-full px-6 border-2",
+					currentType === "petition"
+						? "bg-chernobyl border-chernobyl text-black hover:bg-chernobyl/90"
+						: "bg-black border-white text-white hover:bg-hover"
+				)}
 				onClick={() => updateTypeFilter("petition")}
 				disabled={isPending}
 			>
 				Peticiones
+				<Hand className=" h-4 w-4" />
 			</Button>
 		</div>
 	);

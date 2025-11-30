@@ -8,11 +8,15 @@ import { Slider } from "../ui-custom/slider";
 
 interface PostsFiltersProps {}
 
-const creatorOptions = [
-	{ id: "1", name: "Usuario" },
-	{ id: "2", name: "Empresa" },
-	{ id: "3", name: "Empresa verificada" },
-	{ id: "4", name: "Seguidos" },
+const creatorOptions: Array<{
+	id: string;
+	name: string;
+	value: "user" | "business" | "verified_business" | "followed";
+}> = [
+	{ id: "1", name: "Usuario", value: "user" },
+	{ id: "2", name: "Empresa", value: "business" },
+	{ id: "3", name: "Empresa verificada", value: "verified_business" },
+	{ id: "4", name: "Seguidos", value: "followed" },
 ];
 
 const categoriesOptions = [
@@ -27,11 +31,26 @@ export default function PostsFilters({}: PostsFiltersProps) {
 	const router = useRouter();
 	const pathname = usePathname();
 
+	const currentCreator = searchParams.get("creator") as "user" | "business" | "verified_business" | "followed" | null;
 	const minPrice = Number(searchParams.get("minPrice")) || 0;
 	const maxPrice = Number(searchParams.get("maxPrice")) || 10000;
 
 	const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
 	const [isPending, startTransition] = useTransition();
+
+	const updateCreatorFilter = (creator: "user" | "business" | "verified_business" | "followed" | null) => {
+		const params = new URLSearchParams(searchParams.toString());
+
+		if (creator) {
+			params.set("creator", creator);
+		} else {
+			params.delete("creator");
+		}
+
+		startTransition(() => {
+			router.push(`${pathname}?${params.toString()}`, { scroll: false });
+		});
+	};
 
 	const updatePriceFilters = () => {
 		const params = new URLSearchParams(searchParams.toString());
@@ -59,7 +78,14 @@ export default function PostsFilters({}: PostsFiltersProps) {
 				<h3 className="font-semibold text-foreground">Creador.</h3>
 				<div className="space-y-3">
 					{creatorOptions.map((option) => (
-						<Button key={option.id} variant="outline" size="sm" className="rounded-full px-4">
+						<Button
+							key={option.id}
+							variant={currentCreator === option.value ? "default" : "outline"}
+							size="sm"
+							className="rounded-full px-4 justify-start"
+							onClick={() => updateCreatorFilter(currentCreator === option.value ? null : option.value)}
+							disabled={isPending}
+						>
 							{option.name}
 						</Button>
 					))}
