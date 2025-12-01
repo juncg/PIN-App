@@ -3,7 +3,7 @@
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { cn } from "@/lib/utils";
 import { TPost } from "@/types";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { PostCard } from "../cards/post-card";
 import { B1 } from "../ui-custom/typography";
 
@@ -20,48 +20,29 @@ interface InfinitePostGridProps {
 	userUuid?: string | null;
 }
 
-function validateMaxPosts(maxPosts: number, pageSize: number): number {
-	if (maxPosts === Infinity) return Infinity;
-	
-	// check if maxPosts is smaller than pageSize
-	if (maxPosts < pageSize) {
-		console.error(`Logic error: maxPosts (${maxPosts}) is smaller than pageSize (${pageSize}). Setting maxPosts = pageSize.`);
-		return pageSize;
-	}
-	
-	// round up to nearest multiple of pageSize
-	const remainder = maxPosts % pageSize;
-	if (remainder === 0) {
-		return maxPosts;
-	} else {
-		const adjusted = maxPosts + (pageSize - remainder);
-		console.error(
-			`maxPosts (${maxPosts}) adjusted to ${adjusted} to be divisible by pageSize (${pageSize})`
-		);
-		return adjusted;
-	}
-}
-
 export function InfinitePostGrid({
 	className,
 	loadMoreAction,
 	searchParams,
 	pageSize = 5,
-	maxPosts = 100000,	// about 200mb at ~2kb a post
+	maxPosts = 10,
 	maxColumns = 3,
 	userUuid,
 }: InfinitePostGridProps) {
-	// only validate when maxPosts or pageSize actually change
-	const validatedMaxPosts = useMemo(() => {
-		return validateMaxPosts(maxPosts, pageSize);
-	}, [maxPosts, pageSize]);
+	// Validate and fix logic errors
+	const validatedMaxPosts = maxPosts < pageSize 
+		? (() => {
+				console.error(`Logic error: maxPosts (${maxPosts}) is smaller than pageSize (${pageSize}). Setting maxPosts = pageSize.`);
+				return pageSize;
+		  })()
+		: maxPosts;
 	
 	const [posts, setPosts] = useState<TPost[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [hasMore, setHasMore] = useState(true);
 	const [page, setPage] = useState(1);
 	
-	// track the starting page of the current batch
+	// NEW: Track the starting page of the current batch
 	const [batchStartPage, setBatchStartPage] = useState(0);
 	
 	const [likeStates, setLikeStates] = useState<Record<number, boolean>>({});
@@ -69,10 +50,10 @@ export function InfinitePostGrid({
 	const gridRef = useRef<HTMLDivElement>(null);
 	const measurementRef = useRef<HTMLDivElement>(null);
 	
-	// track if there are batches ahead (for showing forward button)
+	// Track if there are batches ahead (for showing forward button)
 	const [hasNextBatch, setHasNextBatch] = useState(false);
 
-	// load initial posts on mount and when search params change
+	// Load initial posts on mount and when search params change
 	useEffect(() => {
 		const loadInitialPosts = async () => {
 			setIsLoading(true);
@@ -88,7 +69,7 @@ export function InfinitePostGrid({
 				setPage(1);
 				setHasMore(initialPosts.length >= pageSize && initialPosts.length < validatedMaxPosts);
 				
-				// if we got a full page, there might be more
+				// If we got a full page, there might be more
 				if (initialPosts.length >= pageSize) {
 					setHasNextBatch(true);
 				}
@@ -137,21 +118,33 @@ export function InfinitePostGrid({
 				return;
 			}
 
+			// filter out duplicates by checking existing post IDs
 			let shouldContinueLoading = true;
+			let hasOverflow = false;
 			
 			setPosts((prev) => {
-				const remainingSlots = validatedMaxPosts !== Infinity ? validatedMaxPosts - prev.length : Infinity;
+				const existingIds = new Set(prev.map((p) => p.id));
+				const uniqueNewPosts = newPosts.filter((p) => !existingIds.has(p.id));
+
+				// only add posts up to maxPosts limit
+				const remainingSlots = validatedMaxPosts !== Infinity ? validatedMaxPosts - prev.length : uniqueNewPosts.length;
+				const postsToAdd = uniqueNewPosts.slice(0, remainingSlots);
 				
-				// DON'T slice - add all posts we got, even if it exceeds maxPosts slightly
-				// This ensures we don't lose posts when maxPosts isn't divisible by pageSize
-				const postsToAdd = remainingSlots !== Infinity && newPosts.length > remainingSlots
-					? newPosts.slice(0, remainingSlots)
-					: newPosts;
+				// Check if we have overflow (more posts available than we can show)
+				hasOverflow = uniqueNewPosts.length > remainingSlots;
 
 				const totalAfterAdd = prev.length + postsToAdd.length;
 
 				// determine if we should continue loading
 				if (validatedMaxPosts !== Infinity && totalAfterAdd >= validatedMaxPosts) {
+					// We've hit the maxPosts limit for this batch
+					// If we have overflow or backend returned full page, there's a next batch
+					if (hasOverflow || newPosts.length >= pageSize) {
+						shouldContinueLoading = false;
+					} else {
+						shouldContinueLoading = false;
+					}
+				} else if (uniqueNewPosts.length === 0) {
 					shouldContinueLoading = false;
 				} else if (newPosts.length < pageSize) {
 					// backend returned fewer posts than requested, we're at the end
@@ -161,8 +154,8 @@ export function InfinitePostGrid({
 				return [...prev, ...postsToAdd];
 			});
 
-			// if we got full page, there might be more
-			if (newPosts.length >= pageSize) {
+			// If we have overflow or got full page, there's a next batch
+			if (hasOverflow || newPosts.length >= pageSize) {
 				setHasNextBatch(true);
 			}
 			
@@ -297,9 +290,9 @@ export function InfinitePostGrid({
 		};
 	}, [posts.length, maxColumns, measuredRowHeight, BUFFER_ROWS]);
 
-	// helper function to load next batch, continues from where we left off
+	// Helper function to load next batch - continues from where we left off
 	const loadNextBatch = async () => {
-		// the next batch starts from the current page (where we left off)
+		// The next batch starts from the current page (where we left off)
 		const nextBatchStartPage = page;
 		
 		setBatchStartPage(nextBatchStartPage);
@@ -313,16 +306,41 @@ export function InfinitePostGrid({
 		window.scrollTo({ top: 0, behavior: "smooth" });
 
 		try {
-			// just load the first page of the new batch
-			const newPosts = await loadMoreAction(nextBatchStartPage, pageSize, searchParams?.postName || "");
+			let allPosts: TPost[] = [];
+			let currentPage = nextBatchStartPage;
 			
-			if (newPosts.length > 0) {
-				setPosts(newPosts);
-				setPage(nextBatchStartPage + 1);
-				// can load more if we got a full page and haven't hit maxPosts yet
-				setHasMore(newPosts.length >= pageSize && newPosts.length < validatedMaxPosts);
-				// mark that we might have a next batch if we got a full page
-				if (newPosts.length >= pageSize) {
+			// Keep loading until we have maxPosts or run out of posts
+			while (allPosts.length < validatedMaxPosts) {
+				const newPosts = await loadMoreAction(currentPage, pageSize, searchParams?.postName || "");
+				
+				if (newPosts.length === 0) {
+					break;
+				}
+				
+				// Filter out duplicates
+				const existingIds = new Set(allPosts.map((p) => p.id));
+				const uniqueNewPosts = newPosts.filter((p) => !existingIds.has(p.id));
+				
+				// Add posts up to maxPosts limit
+				const remainingSlots = validatedMaxPosts - allPosts.length;
+				const postsToAdd = uniqueNewPosts.slice(0, remainingSlots);
+				allPosts = [...allPosts, ...postsToAdd];
+				
+				// If we got fewer posts than requested, we've reached the end
+				if (newPosts.length < pageSize) {
+					break;
+				}
+				
+				currentPage++;
+			}
+			
+			if (allPosts.length > 0) {
+				setPosts(allPosts);
+				setPage(currentPage);
+				// If we loaded exactly maxPosts and got full pages, there might be more
+				setHasMore(allPosts.length < validatedMaxPosts);
+				// Mark that we might have a next batch if we loaded maxPosts
+				if (allPosts.length >= validatedMaxPosts) {
 					setHasNextBatch(true);
 				}
 			} else {
@@ -339,33 +357,57 @@ export function InfinitePostGrid({
 		}
 	};
 
-	// helper function to load previous batch
+	// Helper function to load previous batch - goes back to the start page of previous batch
 	const loadPrevBatch = async () => {
-		// calculate pages needed for a full batch
-		const pagesPerFullBatch = Math.ceil(validatedMaxPosts / pageSize);
+		// Calculate how many pages we loaded in the current batch
+		const pagesInCurrentBatch = page - batchStartPage;
 		
-		// go back by that many pages
-		const prevBatchStartPage = Math.max(0, batchStartPage - pagesPerFullBatch);
+		// The previous batch should start from one batch's worth of pages before current batch start
+		const prevBatchStartPage = Math.max(0, batchStartPage - pagesInCurrentBatch);
 
 		setBatchStartPage(prevBatchStartPage);
 		setPosts([]);
 		setPage(prevBatchStartPage);
 		setHasMore(true);
 		setIsLoading(true);
-		setHasNextBatch(true); // we know there's a next batch (the one we came from)
+		setHasNextBatch(true); // We know there's a next batch (the one we came from)
 
 		// scroll to top
 		window.scrollTo({ top: 0, behavior: "smooth" });
 
 		try {
-			// just load the first page of the previous batch
-			const newPosts = await loadMoreAction(prevBatchStartPage, pageSize, searchParams?.postName || "");
+			let allPosts: TPost[] = [];
+			let currentPage = prevBatchStartPage;
 			
-			if (newPosts.length > 0) {
-				setPosts(newPosts);
-				setPage(prevBatchStartPage + 1);
-				// can load more if we got a full page and haven't hit maxPosts yet
-				setHasMore(newPosts.length >= pageSize && newPosts.length < validatedMaxPosts);
+			// Keep loading until we have maxPosts or run out of posts
+			while (allPosts.length < validatedMaxPosts) {
+				const newPosts = await loadMoreAction(currentPage, pageSize, searchParams?.postName || "");
+				
+				if (newPosts.length === 0) {
+					break;
+				}
+				
+				// Filter out duplicates
+				const existingIds = new Set(allPosts.map((p) => p.id));
+				const uniqueNewPosts = newPosts.filter((p) => !existingIds.has(p.id));
+				
+				// Add posts up to maxPosts limit
+				const remainingSlots = validatedMaxPosts - allPosts.length;
+				const postsToAdd = uniqueNewPosts.slice(0, remainingSlots);
+				allPosts = [...allPosts, ...postsToAdd];
+				
+				// If we got fewer posts than requested, we've reached the end
+				if (newPosts.length < pageSize) {
+					break;
+				}
+				
+				currentPage++;
+			}
+			
+			if (allPosts.length > 0) {
+				setPosts(allPosts);
+				setPage(currentPage);
+				setHasMore(allPosts.length < validatedMaxPosts);
 			} else {
 				setPosts([]);
 				setHasMore(false);

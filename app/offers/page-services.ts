@@ -46,9 +46,7 @@ export async function OfferServices(searchParams: Promise<ISearchParams>) {
 	const params = await searchParams;
 	const translator = await getTranslations({ locale: params.locale || DEFAULT_LOCALE, namespace: "offers" });
 
-	const offers = await fetchOffers(0, OFFERS_PAGE_SIZE, params.postName || "");
-
-	return { translator, offers, isBusinessUser };
+	return { translator, isBusinessUser };
 }
 
 export async function LoadMoreOffers(page: number, pageSize: number, postName: string = "") {

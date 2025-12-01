@@ -2,7 +2,7 @@ import { InfinitePostGrid } from "@/components/posts/infinite-post-grid";
 import { SearchInput } from "@/components/search/search";
 import { Button } from "@/components/ui-custom/button";
 import { B1, H1 } from "@/components/ui-custom/typography";
-import { PETITIONS_PAGE_SIZE } from "@/lib/constants";
+import { PETITIONS_MAX_POSTS, PETITIONS_PAGE_SIZE } from "@/lib/constants";
 import { getUserUuid } from "@/lib/services/user";
 import { Plus } from "lucide-react";
 import Link from "next/link";
@@ -10,7 +10,7 @@ import { ISearchParams } from "../../types";
 import { LoadMorePetitions, PetitionServices } from "./page-services";
 
 export default async function Petitions({ searchParams }: { searchParams: Promise<ISearchParams> }) {
-	const { translator, petitions } = await PetitionServices(searchParams);
+	const { translator } = await PetitionServices(searchParams);
 	const userUuid = await getUserUuid();
 	const params = await searchParams;
 
@@ -33,11 +33,10 @@ export default async function Petitions({ searchParams }: { searchParams: Promis
 			<SearchInput />
 
 			<InfinitePostGrid
-				initialPosts={petitions ?? []}
 				loadMoreAction={LoadMorePetitions}
 				searchParams={params}
-				pageSize={PETITIONS_PAGE_SIZE}
-				//maxPosts={PETITIONS_MAX_POSTS}
+				pageSize={2}
+				maxPosts={8}
 				userUuid={userUuid}
 			/>
 		</section>

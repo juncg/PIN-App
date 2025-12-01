@@ -36,9 +36,7 @@ export async function PetitionServices(searchParams: Promise<ISearchParams>) {
 	const params = await searchParams;
 	const translator = await getTranslations({ locale: params.locale || DEFAULT_LOCALE, namespace: "petitions" });
 
-	const petitions = await fetchPetitions(0, PETITIONS_PAGE_SIZE, params.postName || "");
-
-	return { translator, petitions };
+	return { translator };
 }
 
 export async function LoadMorePetitions(page: number, pageSize: number, postName: string = "") {

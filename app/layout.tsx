@@ -38,7 +38,7 @@ export default async function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={`${funnelSans.variable} ${funnelDisplay.variable} font-funnel-sans antialiased`}>
-				<SmoothScroll />
+				{/*<SmoothScroll /> it is problematic for now*/}
 				<ErrorBoundary errorComponent={Error}>
 					<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
 						<ConditionalLayout header={<Header />} sidebar={<AppSidebar />}>

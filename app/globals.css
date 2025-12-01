@@ -29,15 +29,16 @@
 }
 
 /* SMOOTH SCROLLING */
+/* currently problematic with some components
 @layer utilities {
-	/* Hide scrollbar for Chrome, Safari and Opera */
+	/* Hide scrollbar for Chrome, Safari and Opera 
 	.no-scrollbar::-webkit-scrollbar {
 		display: none;
 	}
-	/* Hide scrollbar for IE, Edge and Firefox */
+	/* Hide scrollbar for IE, Edge and Firefox *
 	.no-scrollbar {
-		-ms-overflow-style: none; /* IE and Edge */
-		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none; /* IE and Edge *
+		scrollbar-width: none; /* Firefox *
 	}
 }
 
@@ -61,3 +62,4 @@ html.lenis body {
 .lenis.lenis-scrolling iframe {
 	pointer-events: none;
 }
+*/

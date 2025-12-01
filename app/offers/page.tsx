@@ -10,7 +10,7 @@ import { ISearchParams } from "../../types";
 import { LoadMoreOffers, OfferServices } from "./page-services";
 
 export default async function Offers({ searchParams }: { searchParams: Promise<ISearchParams> }) {
-	const { translator, offers, isBusinessUser } = await OfferServices(searchParams);
+	const { translator, isBusinessUser } = await OfferServices(searchParams);
 	const userUuid = await getUserUuid();
 	const params = await searchParams;
 
@@ -35,7 +35,6 @@ export default async function Offers({ searchParams }: { searchParams: Promise<I
 			<SearchInput />
 
 			<InfinitePostGrid
-				initialPosts={offers ?? []}
 				loadMoreAction={LoadMoreOffers}
 				searchParams={params}
 				pageSize={OFFERS_PAGE_SIZE}
