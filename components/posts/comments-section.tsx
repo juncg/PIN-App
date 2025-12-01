@@ -114,7 +114,7 @@ export function CommentsSection({
 		<div className="space-y-6 mt-12">
 			<div className="flex items-center gap-2">
 				<H3>Comentarios</H3>
-				<div className="bg-lightgrey px-2 py-0.5 rounded-full text-xs font-medium">{totalComments}</div>
+				<div className="bg-white px-2 py-0.5 rounded-full text-black text-xs font-medium">{totalComments}</div>
 			</div>
 
 			<Separator />
