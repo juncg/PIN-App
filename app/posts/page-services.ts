@@ -10,7 +10,9 @@ async function fetchOffers(
 	currentUserId?: string | null,
 	tagFilter?: string,
 	orderColumn: string = "created_at",
-	ascending: boolean = false
+	ascending: boolean = false,
+	followedUserIds?: string[],
+	followedForumIds?: number[]
 ) {
 	const filters: any[] = [{ method: "order", column: orderColumn, ascending }];
 
@@ -43,9 +45,20 @@ async function fetchOffers(
 			filters.push({ method: "in", column: "Forum.Business.verification", value: ["Official", "Paid"] });
 		}
 	} else if (creatorFilter === "followed" && currentUserId) {
-		// por ahora solo followed forums
-		select += `, Forum!inner(business_id, User_Forum!inner(user_id))`;
-		filters.push({ method: "eq", column: "Forum.User_Forum.user_id", value: currentUserId });
+		const orConditions: string[] = [];
+		if (followedUserIds && followedUserIds.length > 0) {
+			orConditions.push(`creator_id.in.(${followedUserIds.join(",")})`);
+		}
+		if (followedForumIds && followedForumIds.length > 0) {
+			orConditions.push(`forum_id.in.(${followedForumIds.join(",")})`);
+		}
+
+		if (orConditions.length > 0) {
+			filters.push({ method: "or", value: orConditions.join(",") });
+			select += `, Forum(*)`;
+		} else {
+			return [];
+		}
 	}
 
 	const { data: offers } = await GetFromDatabase<IOffer>({
@@ -66,7 +79,9 @@ async function fetchPetitions(
 	currentUserId?: string | null,
 	tagFilter?: string,
 	orderColumn: string = "created_at",
-	ascending: boolean = false
+	ascending: boolean = false,
+	followedUserIds?: string[],
+	followedForumIds?: number[]
 ) {
 	const filters: any[] = [{ method: "order", column: orderColumn, ascending }];
 
@@ -99,9 +114,20 @@ async function fetchPetitions(
 			filters.push({ method: "in", column: "Forum.Business.verification", value: ["Official", "Paid"] });
 		}
 	} else if (creatorFilter === "followed" && currentUserId) {
-		// por ahora solo followed forums
-		select += `, Forum!inner(business_id, User_Forum!inner(user_id))`;
-		filters.push({ method: "eq", column: "Forum.User_Forum.user_id", value: currentUserId });
+		const orConditions: string[] = [];
+		if (followedUserIds && followedUserIds.length > 0) {
+			orConditions.push(`creator_id.in.(${followedUserIds.join(",")})`);
+		}
+		if (followedForumIds && followedForumIds.length > 0) {
+			orConditions.push(`forum_id.in.(${followedForumIds.join(",")})`);
+		}
+
+		if (orConditions.length > 0) {
+			filters.push({ method: "or", value: orConditions.join(",") });
+			select += `, Forum(*)`;
+		} else {
+			return [];
+		}
 	}
 
 	const { data: petitions } = await GetFromDatabase<IPetition>({
@@ -158,14 +184,49 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 		rating_high_low: translator("rating_high_low"),
 	};
 
+	let followedUserIds: string[] = [];
+	let followedForumIds: number[] = [];
+
+	if (creatorFilter === "followed" && currentUserId) {
+		const { data: userFollows } = await GetFromDatabase({
+			tableName: "User_User",
+			select: "following_id",
+			filters: [{ method: "eq", column: "user_id", value: currentUserId }],
+		});
+		if (userFollows) followedUserIds = userFollows.map((u: any) => u.following_id);
+
+		const { data: forumFollows } = await GetFromDatabase({
+			tableName: "User_Forum",
+			select: "forum_id",
+			filters: [{ method: "eq", column: "user_id", value: currentUserId }],
+		});
+		if (forumFollows) followedForumIds = forumFollows.map((f: any) => f.forum_id);
+	}
+
 	const offers =
 		postType === "petition"
 			? []
-			: await fetchOffers(creatorFilter, currentUserId, tagFilter, orderColumn, ascending);
+			: await fetchOffers(
+					creatorFilter,
+					currentUserId,
+					tagFilter,
+					orderColumn,
+					ascending,
+					followedUserIds,
+					followedForumIds
+			  );
 	const petitions =
 		postType === "offer"
 			? []
-			: await fetchPetitions(creatorFilter, currentUserId, tagFilter, orderColumn, ascending);
+			: await fetchPetitions(
+					creatorFilter,
+					currentUserId,
+					tagFilter,
+					orderColumn,
+					ascending,
+					followedUserIds,
+					followedForumIds
+			  );
 
 	// Combine offers and petitions (already sorted by database)
 	const allPosts = [...offers, ...petitions].sort(

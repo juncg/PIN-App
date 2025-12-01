@@ -90,7 +90,7 @@ export default function PostsFilters({ popularTags }: PostsFiltersProps) {
 		<div className="space-y-8">
 			<div className="space-y-3">
 				<h3 className="font-semibold text-foreground">Creador.</h3>
-				<div className="space-y-3">
+				<div className="flex flex-wrap gap-2">
 					{creatorOptions.map((option) => (
 						<Button
 							key={option.id}
