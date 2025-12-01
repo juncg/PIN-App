@@ -1,11 +1,13 @@
 import { IOffer, IPetition } from "@/lib/services/types";
 import { cn } from "@/lib/utils";
-import { Verified } from "lucide-react";
+import { ClockIcon, Verified, Tag, Hand } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Progress } from "../ui-custom/progress";
 import { Switch } from "../ui-custom/switch";
-import { B1, B5, H3, H4 } from "../ui-custom/typography";
+import { B1, B5, H3, H4, S1 } from "../ui-custom/typography";
+import { PeopleAltIcon } from "../icons/icons";
+import { GetTimeRemaining } from "@/lib/services/utilities";
 
 interface IPostCardHorizontalProps {
 	className?: string;
@@ -29,12 +31,23 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 					className="object-cover"
 					unoptimized
 				/>
+
+				<div className="absolute bottom-3 left-3 rounded-full p-0">
+					{post.type === "Offer" ? (
+						<Tag className="h-5 w-5 text-primary" />
+					) : (
+						<Hand className="h-5 w-5 text-primary" />
+					)}
+				</div>
 			</figure>
 
 			<div className="flex flex-col justify-between p-6 w-full">
 				<div className="flex w-full justify-between gap-8">
 					<div>
-						<Link href={`/posts/${post.id}`} className="hover:underline">
+						<Link
+							href={post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}
+							className="hover:underline"
+						>
 							<H3 className="line-clamp-1">{post.title}.</H3>
 						</Link>
 
@@ -49,15 +62,27 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 
 				<div className="flex flex-col gap-4">
 					<div className="flex flex-col gap-2">
-						<Progress value={offerCompletionPercentage} />
-
 						<div className="flex justify-between">
-							<H4>
-								{post?.current_progress} / {post?.target_progress}
-							</H4>
+							<div>
+								{post.type === "Offer" && (
+									<div className="flex items-center gap-1.5">
+										<ClockIcon className="!h-4 !w-4" />
+										<B1>{GetTimeRemaining(post.target_completition_date)}</B1>
+									</div>
+								)}
+							</div>
 
-							<H4>{offerCompletionPercentage}%</H4>
+							<div className="flex items-center gap-1.5">
+								<S1>
+									{post.current_progress}{" "}
+									{post.target_progress > 0 ? `de ${post.target_progress}` : "suscritos"}
+								</S1>
+
+								<PeopleAltIcon className="!h-5 !w-5" />
+							</div>
 						</div>
+
+						<Progress value={offerCompletionPercentage} />
 					</div>
 
 					<div className="flex justify-between">
