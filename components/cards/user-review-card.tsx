@@ -5,7 +5,7 @@ import { useUser } from "@/hooks/use-user";
 import { DeleteFromDatabase, ExecuteRpcFunction } from "@/lib/services/general";
 import { IReview } from "@/lib/services/types";
 import { GetRelativeTime } from "@/lib/services/utilities";
-import { Star } from "lucide-react";
+import { Plus, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -26,6 +26,7 @@ export function UserReviewCard({ review, currentUserId, productId }: UserReviewC
 	const router = useRouter();
 	const { userUuid } = useUser();
 	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+	const [isReadMoreOpen, setIsReadMoreOpen] = useState(false);
 	const likedByUser =
 		review.User_Review?.some((userReview) => userReview.user_id === userUuid && userReview.liked) ?? false;
 	const isOwner = currentUserId ? review.creator_id === currentUserId : false;
@@ -66,7 +67,7 @@ export function UserReviewCard({ review, currentUserId, productId }: UserReviewC
 
 	return (
 		<>
-			<Card className="p-6">
+			<Card className="p-6 h-[240px] flex flex-col">
 				<div className="flex items-start justify-between mb-4">
 					<div className="flex items-center gap-3">
 						<Avatar className="h-12 w-12">
@@ -74,58 +75,107 @@ export function UserReviewCard({ review, currentUserId, productId }: UserReviewC
 							<AvatarFallback>{review.user?.username}</AvatarFallback>
 						</Avatar>
 						<div>
-							<div className="flex items-center gap-2 mb-1">
-								<span className="font-semibold ">
+							<div className="flex flex-col">
+								<span className="font-semibold text-lg">
 									{review.creator_id === userUuid
 										? "Tú"
 										: review.user?.name + " " + review.user?.surnames}
 								</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<div className="flex items-center gap-1">
-									{[...Array(5)].map((_, i) => (
-										<Star
-											key={i}
-											className={`h-4 w-4 ${
-												i < (review.stars ?? 0)
-													? "fill-amber-500 text-amber-500"
-													: "text-lightgrey"
-											}`}
-										/>
-									))}
-								</div>
 								<span className="text-sm text-lightgrey">{GetRelativeTime(review.created_at)}</span>
 							</div>
 						</div>
 					</div>
 
-					<PostActionsDropdown
-						isOwner={isOwner}
-						onEdit={() => setIsEditDialogOpen(true)}
-						onDelete={handleDeleteReview}
-						onReport={() => {
-							/* aqui no pasa nada */
-						}}
-					/>
-				</div>
-
-				<h4 className="font-semibold mb-2">{review.title}</h4>
-				<p className="text-lightgrey mb-4">{review.content}</p>
-
-				<Separator />
-
-				<div className="flex flex-row justify-between">
-					<div className="flex flex-row justify-start gap-6">
-						<LikeButton
-							likes={review.likes ?? 0}
-							likedByUser={likedByUser}
-							post_id={review.id}
-							typeOfPost={"Review"}
-							user_id={userUuid}
-						/>
+					<div className="flex items-center gap-1">
+						{[...Array(5)].map((_, i) => (
+							<Star
+								key={i}
+								className={`h-4 w-4 ${
+									i < (review.stars ?? 0) ? "fill-white text-white" : "text-zinc-700"
+								}`}
+							/>
+						))}
 					</div>
 				</div>
+
+				<p className="text-lightgrey mb-4 line-clamp-3 flex-1">{review.content}</p>
+
+				<div className="flex items-center justify-between mt-auto">
+					<button
+						onClick={() => setIsReadMoreOpen(true)}
+						className="text-sm text-white hover:underline flex items-center gap-1"
+					>
+						Leer más <Plus className="h-3 w-3" />
+					</button>
+
+					{isOwner && (
+						<PostActionsDropdown
+							isOwner={isOwner}
+							onEdit={() => setIsEditDialogOpen(true)}
+							onDelete={handleDeleteReview}
+							onReport={() => {
+								/* aqui no pasa nada */
+							}}
+						/>
+					)}
+				</div>
 			</Card>
+
+			<Dialog open={isReadMoreOpen} onOpenChange={setIsReadMoreOpen}>
+				<DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+					<DialogHeader>
+						<div className="flex items-center gap-3 mb-4">
+							<Avatar className="h-12 w-12">
+								<AvatarImage className="object-cover" src={review.user?.profile_picture || undefined} />
+								<AvatarFallback>{review.user?.username}</AvatarFallback>
+							</Avatar>
+							<div>
+								<div className="flex flex-col">
+									<span className="font-semibold text-lg">
+										{review.creator_id === userUuid
+											? "Tú"
+											: review.user?.name + " " + review.user?.surnames}
+									</span>
+									<div className="flex items-center gap-2">
+										<span className="text-sm text-lightgrey">
+											{GetRelativeTime(review.created_at)}
+										</span>
+										<div className="flex items-center gap-1 ml-2">
+											{[...Array(5)].map((_, i) => (
+												<Star
+													key={i}
+													className={`h-3 w-3 ${
+														i < (review.stars ?? 0)
+															? "fill-white text-white"
+															: "text-zinc-700"
+													}`}
+												/>
+											))}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</DialogHeader>
+
+					<div className="space-y-4">
+						<h4 className="font-semibold text-xl">{review.title}</h4>
+						<p className="text-lightgrey whitespace-pre-wrap">{review.content}</p>
+
+						<Separator />
+
+						<div className="flex flex-row justify-between items-center">
+							<LikeButton
+								likes={review.likes ?? 0}
+								likedByUser={likedByUser}
+								post_id={review.id}
+								typeOfPost={"Review"}
+								user_id={userUuid}
+							/>
+						</div>
+					</div>
+				</DialogContent>
+			</Dialog>
 
 			<Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
 				<DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
