@@ -5,7 +5,7 @@ import { Button } from "@/components/ui-custom/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui-custom/select";
 import { Tables } from "@/database.types";
 import { useUser } from "@/hooks/use-user";
-import { PostToDatabase } from "@/lib/services/general";
+import { ExecuteRpcFunction, PostToDatabase } from "@/lib/services/general";
 import { compressImage, uploadImage } from "@/lib/services/media-upload";
 import { IForum, IOffer } from "@/lib/services/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -125,6 +125,13 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 					return;
 				}
 			}
+
+			await ExecuteRpcFunction({
+				functionName: "update_tag_usage",
+				params: {
+					tag_ids: selectedTags,
+				},
+			});
 
 			router.push("/offers");
 		} catch (error) {

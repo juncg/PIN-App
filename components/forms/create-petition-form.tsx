@@ -5,7 +5,7 @@ import { Button } from "@/components/ui-custom/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui-custom/select";
 import { Tables } from "@/database.types";
 import { useUser } from "@/hooks/use-user";
-import { PostToDatabase } from "@/lib/services/general";
+import { PostToDatabase, ExecuteRpcFunction } from "@/lib/services/general";
 import { compressImage, uploadImage } from "@/lib/services/media-upload";
 import { IForum, IPetition } from "@/lib/services/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -115,6 +115,13 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 					return;
 				}
 			}
+
+			await ExecuteRpcFunction({
+				functionName: "update_tag_usage",
+				params: {
+					tag_ids: selectedTags,
+				},
+			});
 
 			router.push("/petitions");
 		} catch (error) {
