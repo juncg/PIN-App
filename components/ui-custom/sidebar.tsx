@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui-custom/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui-custom/tooltip";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { Icon } from "./icon";
+import { MenuIcon } from "../icons/icons";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -272,21 +272,21 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
 	const { toggleSidebar } = useSidebar();
 
 	return (
-		<Button
+		<button
 			data-sidebar="trigger"
 			data-slot="sidebar-trigger"
 			variant="ghost"
 			size="icon"
-			className={cn("size-7", className)}
+			className={cn("flex items-center hover:bg-hover !rounded-lg size-7 p-0.5", className)}
 			onClick={(event) => {
 				onClick?.(event);
 				toggleSidebar();
 			}}
 			{...props}
 		>
-			<Icon svgName="menu" className="p-0.5 hover:bg-hover rounded-lg" />
+			<MenuIcon />
 			<span className="sr-only">Toggle Sidebar</span>
-		</Button>
+		</button>
 	);
 }
 

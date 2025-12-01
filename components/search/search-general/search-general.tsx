@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@/components/ui-custom/icon";
+import { SearchIcon } from "@/components/icons/icons";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "../../ui-custom/input";
@@ -44,7 +44,7 @@ export function SearchGeneral() {
 	return (
 		<div className="absolute left-1/2 -translate-x-1/2">
 			<div className="relative">
-				<Icon svgName="search" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
+				<SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
 
 				<Input
 					type="search"

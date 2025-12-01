@@ -11,9 +11,10 @@ import React, { useEffect, useState } from "react";
 import { LikeButton } from "../buttons/like-button";
 import { SubscribeButton } from "../buttons/subscribe-button";
 import { PopOutMedia } from "../floating-panels/pop-out-media";
+import { ClockIcon, PeopleAltIcon, Shining2LineIcon } from "../icons/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
+import { Button } from "../ui-custom/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui-custom/carousel";
-import { Icon } from "../ui-custom/icon";
 import { Progress } from "../ui-custom/progress";
 import { B1, B3, H4, S1 } from "../ui-custom/typography";
 
@@ -101,6 +102,15 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 							/>
 						</div>
 
+						<div className="absolute right-3 top-3 z-10">
+							<Button
+								className="h-8 w-8 rounded-full p-0 bg-white text-darkmode transition hover:text-destructive"
+								size="icon"
+							>
+								<Shining2LineIcon className="text-black !w-5 !h-5" />
+							</Button>
+						</div>
+
 						<Carousel
 							className="w-full"
 							onSlideChange={(idx: number) => setCurrentIndex(idx)}
@@ -166,7 +176,7 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 								<div>
 									{post.type === "Offer" && (
 										<div className="flex items-center gap-1.5">
-											<Icon svgName="clock" className="h-4 w-4" />
+											<ClockIcon className="!h-4 !w-4" />
 											<B1>{GetTimeRemaining(post.target_completition_date)}</B1>
 										</div>
 									)}
@@ -178,7 +188,7 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 										{post.target_progress > 0 ? `de ${post.target_progress}` : "suscritos"}
 									</S1>
 
-									<Icon svgName="people_alt" className="h-5 w-5" />
+									<PeopleAltIcon className="!h-5 !w-5" />
 								</div>
 							</div>
 

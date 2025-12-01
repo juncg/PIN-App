@@ -1,9 +1,9 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { NotLoggedInDialog } from "../dialogs/not-logged-in-dialog";
+import { FavoriteBorderIcon, FavoriteIcon } from "../icons/icons";
 import { Button } from "../ui-custom/button";
 import { handleLikeAction } from "./like-button-actions";
 
@@ -63,11 +63,15 @@ export function LikeButton(props: ILikeButton) {
 				<Button
 					onClick={handleLike}
 					className={cn(
-						"h-8 w-8 rounded-full p-0 bg-white text-darkmode transition-colors hover:text-destructive",
+						"h-8 w-8 rounded-full p-0 bg-white text-darkmode hover:text-destructive transition",
 						liked ? "text-destructive" : "hover:text-destructive"
 					)}
 				>
-					<Heart className={cn("h-4 w-4", liked && "fill-current text-destructive")} />
+					{liked ? (
+						<FavoriteIcon className={cn("!h-5 !w-5 text-destructive")} />
+					) : (
+						<FavoriteBorderIcon className={cn("!h-5 !w-5")} />
+					)}
 				</Button>
 
 				<NotLoggedInDialog
@@ -82,7 +86,11 @@ export function LikeButton(props: ILikeButton) {
 	return (
 		<>
 			<Button variant="outline" className={cn("mt-4")} onClick={handleLike}>
-				<Heart className={cn("mr-2", liked && "fill-destructive text-destructive")} />
+				{liked ? (
+					<FavoriteIcon className={cn("mr-2 !h-5 !w-5 text-destructive")} />
+				) : (
+					<FavoriteBorderIcon className={cn("mr-2 !h-5 !w-5")} />
+				)}
 				{numberOfLikes || 0}
 			</Button>
 
