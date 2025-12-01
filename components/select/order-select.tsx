@@ -4,19 +4,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface OrderSelectProps {
-	translations: {
-		sort_by: string;
-		newest: string;
-		oldest: string;
-		price_low_high: string;
-		price_high_low: string;
-		rating_low_high: string;
-		rating_high_low: string;
-	};
+	options: {
+		value: string;
+		label: string;
+	}[];
+	placeholder: string;
 	defaultValue?: string;
 }
 
-export function OrderSelect({ translations, defaultValue = "newest" }: OrderSelectProps) {
+export function OrderSelect({ options, placeholder, defaultValue = "newest" }: OrderSelectProps) {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -29,16 +25,15 @@ export function OrderSelect({ translations, defaultValue = "newest" }: OrderSele
 
 	return (
 		<Select onValueChange={handleValueChange} defaultValue={defaultValue}>
-			<SelectTrigger className="w-auto min-w-[180px] max-w-[300px]">
-				<SelectValue placeholder={translations.sort_by} />
+			<SelectTrigger className="w-auto min-w-[120px] max-w-[300px] rounded-full border-white text-white bg-transparent">
+				<SelectValue placeholder={placeholder} />
 			</SelectTrigger>
 			<SelectContent>
-				<SelectItem value="newest">{translations.newest}</SelectItem>
-				<SelectItem value="oldest">{translations.oldest}</SelectItem>
-				<SelectItem value="price_low_high">{translations.price_low_high}</SelectItem>
-				<SelectItem value="price_high_low">{translations.price_high_low}</SelectItem>
-				<SelectItem value="rating_low_high">{translations.rating_low_high}</SelectItem>
-				<SelectItem value="rating_high_low">{translations.rating_high_low}</SelectItem>
+				{options.map((option) => (
+					<SelectItem key={option.value} value={option.value}>
+						{option.label}
+					</SelectItem>
+				))}
 			</SelectContent>
 		</Select>
 	);

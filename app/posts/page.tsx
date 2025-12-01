@@ -35,7 +35,14 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 							<p className="text-sm font-medium text-lightgrey-foreground">
 								{posts.length} {posts.length === 1 ? "resultado" : "resultados"}
 							</p>
-							<OrderSelect translations={clientTranslations} defaultValue={params.orderBy || "newest"} />
+							<OrderSelect
+								options={[
+									{ value: "newest", label: clientTranslations.newest },
+									{ value: "oldest", label: clientTranslations.oldest },
+								]}
+								placeholder={clientTranslations.sort_by}
+								defaultValue={params.orderBy || "newest"}
+							/>
 						</div>
 						<div className="space-y-6">
 							{posts.length === 0 ? (

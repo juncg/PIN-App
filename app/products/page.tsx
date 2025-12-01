@@ -27,7 +27,18 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
 							<p className="text-sm font-medium text-lightgrey">
 								Todos los productos ({products?.length || 0})
 							</p>
-							<OrderSelect translations={clientTranslations} defaultValue={params.orderBy || "newest"} />
+							<OrderSelect
+								options={[
+									{ value: "newest", label: clientTranslations.newest },
+									{ value: "oldest", label: clientTranslations.oldest },
+									{ value: "price_low_high", label: clientTranslations.price_low_high },
+									{ value: "price_high_low", label: clientTranslations.price_high_low },
+									{ value: "rating_low_high", label: clientTranslations.rating_low_high },
+									{ value: "rating_high_low", label: clientTranslations.rating_high_low },
+								]}
+								placeholder={clientTranslations.sort_by}
+								defaultValue={params.orderBy || "newest"}
+							/>
 						</div>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 							{products?.map((product: IProduct) => (

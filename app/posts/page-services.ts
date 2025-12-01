@@ -161,14 +161,6 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 			orderColumn = "created_at";
 			ascending = true;
 			break;
-		case "price_low_high":
-			orderColumn = "current_fee";
-			ascending = true;
-			break;
-		case "price_high_low":
-			orderColumn = "current_fee";
-			ascending = false;
-			break;
 		default:
 			orderColumn = "created_at";
 			ascending = false;
@@ -229,9 +221,11 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 			  );
 
 	// Combine offers and petitions (already sorted by database)
-	const allPosts = [...offers, ...petitions].sort(
-		(a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-	);
+	const allPosts = [...offers, ...petitions].sort((a, b) => {
+		const dateA = new Date(a.created_at).getTime();
+		const dateB = new Date(b.created_at).getTime();
+		return ascending ? dateA - dateB : dateB - dateA;
+	});
 
 	const popularTags = await GetFromDatabase<ITag>({
 		tableName: "Tag",
