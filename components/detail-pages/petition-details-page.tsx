@@ -60,7 +60,7 @@ export function PetitionDetails({ petition, subscribedByUser, comments, currentU
 								</span>
 							))
 						) : (
-							<span className="bg-black text-black text-xs font-black px-3 py-1 rounded-full">
+							<span className="bg-black text-white text-xs font-black px-3 py-1 rounded-full">
 								SIN ETIQUETAS
 							</span>
 						)}
@@ -70,7 +70,7 @@ export function PetitionDetails({ petition, subscribedByUser, comments, currentU
 					<div className="flex items-center gap-3 mb-6">
 						<Avatar className="w-10 h-10 border-2 border-black">
 							<AvatarImage src={petition.User?.profile_picture || undefined} />
-							<AvatarFallback className="bg-black text-black font-bold">
+							<AvatarFallback className="bg-black text-white font-bold">
 								{petition.User?.username?.charAt(0).toLocaleUpperCase()}
 							</AvatarFallback>
 						</Avatar>
@@ -105,9 +105,9 @@ export function PetitionDetails({ petition, subscribedByUser, comments, currentU
 
 					<Separator />
 
-					<div className="bg-lightgrey rounded-2xl p-6 mb-6 border-3 border-black">
-						<h3 className="font-black text-lg mb-3">Descripción</h3>
-						<p className="text-sm leading-relaxed mb-4">{petition.text}</p>
+					<div className="bg-white rounded-2xl p-6 mb-6 border-3 border-black">
+						<h3 className="font-black text-black text-lg mb-3">Descripción</h3>
+						<p className="text-sm text-black leading-relaxed mb-4">{petition.text}</p>
 					</div>
 				</div>
 			</div>
@@ -135,8 +135,8 @@ export function PetitionDetails({ petition, subscribedByUser, comments, currentU
 							</div>
 						)}
 					</div>
-					<div className="flex-1">
-						<div className="text-white font-black text-lg">
+					<div className="flex-1 ">
+						<div className="text-black font-black text-lg ">
 							{currentProgress} {currentProgress === 1 ? "usuario apuntado" : "usuarios apuntados"}
 						</div>
 					</div>
