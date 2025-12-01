@@ -1,28 +1,36 @@
 import { GetFromDatabase } from "@/lib/services/general";
-import { IProduct, ICategory, IOffer, IPetition } from "@/lib/services/types";
+import { IProduct, ICategory, IOffer, IPetition, ITag } from "@/lib/services/types";
 import { getTranslations } from "next-intl/server";
 import { ISearchParams } from "../../types";
 import { DEFAULT_LOCALE, OFFERS_PAGE_SIZE, PETITIONS_PAGE_SIZE } from "@/lib/constants";
 import { getUserUuid } from "@/lib/services/user";
 
 async function fetchOffers(
-	page: number = 0,
-	pageSize: number = OFFERS_PAGE_SIZE,
 	creatorFilter?: "user" | "business" | "verified_business" | "followed",
-	currentUserId?: string | null
+	currentUserId?: string | null,
+	tagFilter?: string,
+	orderColumn: string = "created_at",
+	ascending: boolean = false
 ) {
-	const from = page * pageSize;
-	const to = from + pageSize - 1;
-
-	const filters: any[] = [
-		{
-			method: "range",
-			from: from,
-			to: to,
-		},
-	];
+	const filters: any[] = [{ method: "order", column: orderColumn, ascending }];
 
 	let select = `*, User_Offer!left(liked, subscribed, user_id), tags:Offer_Tag(Tag(name)), User!Offer_creator_id_fkey(*)`;
+
+	if (tagFilter) {
+		const tagIds = tagFilter.split(",").map(Number);
+		const { data: offerTags } = await GetFromDatabase({
+			tableName: "Offer_Tag",
+			select: "offer_id",
+			filters: [{ method: "in", column: "tag_id", value: tagIds }],
+		});
+
+		if (offerTags && offerTags.length > 0) {
+			const uniqueOfferIds = [...new Set(offerTags.map((ot: any) => ot.offer_id))];
+			filters.push({ method: "in", column: "id", value: uniqueOfferIds });
+		} else {
+			return [];
+		}
+	}
 
 	if (creatorFilter === "user") {
 		select += `, Forum!inner(business_id)`;
@@ -54,23 +62,31 @@ async function fetchOffers(
 }
 
 async function fetchPetitions(
-	page: number = 0,
-	pageSize: number = PETITIONS_PAGE_SIZE,
 	creatorFilter?: "user" | "business" | "verified_business" | "followed",
-	currentUserId?: string | null
+	currentUserId?: string | null,
+	tagFilter?: string,
+	orderColumn: string = "created_at",
+	ascending: boolean = false
 ) {
-	const from = page * pageSize;
-	const to = from + pageSize - 1;
-
-	const filters: any[] = [
-		{
-			method: "range",
-			from: from,
-			to: to,
-		},
-	];
+	const filters: any[] = [{ method: "order", column: orderColumn, ascending }];
 
 	let select = `*, User_Petition!left(liked, subscribed, user_id), tags:Petition_Tag(Tag(name)), User!Petition_creator_id_fkey(*)`;
+
+	if (tagFilter) {
+		const tagIds = tagFilter.split(",").map(Number);
+		const { data: petitionTags } = await GetFromDatabase({
+			tableName: "Petition_Tag",
+			select: "petition_id",
+			filters: [{ method: "in", column: "tag_id", value: tagIds }],
+		});
+
+		if (petitionTags && petitionTags.length > 0) {
+			const uniquePetitionIds = [...new Set(petitionTags.map((pt: any) => pt.petition_id))];
+			filters.push({ method: "in", column: "id", value: uniquePetitionIds });
+		} else {
+			return [];
+		}
+	}
 
 	if (creatorFilter === "user") {
 		select += `, Forum!inner(business_id)`;
@@ -105,9 +121,32 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 	const params = await searchParams;
 	const postType = params.type || "all";
 	const creatorFilter = params.creator;
+	const tagFilter = params.tags;
 	const translator = await getTranslations({ locale: params.locale || DEFAULT_LOCALE, namespace: "products" });
 
 	const currentUserId = creatorFilter === "followed" ? await getUserUuid() : null;
+
+	const orderBy = params.orderBy || "newest";
+	let orderColumn = "created_at";
+	let ascending = false;
+
+	switch (orderBy) {
+		case "oldest":
+			orderColumn = "created_at";
+			ascending = true;
+			break;
+		case "price_low_high":
+			orderColumn = "current_fee";
+			ascending = true;
+			break;
+		case "price_high_low":
+			orderColumn = "current_fee";
+			ascending = false;
+			break;
+		default:
+			orderColumn = "created_at";
+			ascending = false;
+	}
 
 	const clientTranslations = {
 		sort_by: translator("sort_by"),
@@ -119,23 +158,43 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 		rating_high_low: translator("rating_high_low"),
 	};
 
-	const offers = postType === "petition" ? [] : await fetchOffers(0, OFFERS_PAGE_SIZE, creatorFilter, currentUserId);
+	const offers =
+		postType === "petition"
+			? []
+			: await fetchOffers(creatorFilter, currentUserId, tagFilter, orderColumn, ascending);
 	const petitions =
-		postType === "offer" ? [] : await fetchPetitions(0, PETITIONS_PAGE_SIZE, creatorFilter, currentUserId);
+		postType === "offer"
+			? []
+			: await fetchPetitions(creatorFilter, currentUserId, tagFilter, orderColumn, ascending);
 
+	// Combine offers and petitions (already sorted by database)
 	const allPosts = [...offers, ...petitions].sort(
 		(a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
 	);
 
-	return { translator, clientTranslations, posts: allPosts, postType };
-}
+	const popularTags = await GetFromDatabase<ITag>({
+		tableName: "Tag",
+		select: "*",
+		filters: [
+			{
+				method: "order",
+				column: "times_used",
+				ascending: false,
+			},
+			{
+				method: "range",
+				from: 0,
+				to: 9,
+			},
+		],
+	});
 
-export async function LoadMorePetitions(page: number, pageSize: number, postName: string = "") {
-	"use server";
-	return await fetchPetitions(page, pageSize);
-}
-
-export async function LoadMoreOffers(page: number, pageSize: number) {
-	"use server";
-	return await fetchOffers(page, pageSize);
+	return {
+		translator,
+		clientTranslations,
+		posts: allPosts,
+		postType,
+		popularTags: popularTags.data || [],
+		currentUserId,
+	};
 }

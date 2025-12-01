@@ -6,7 +6,9 @@ import { ISearchParams } from "@/types";
 import Link from "next/link";
 import { PostsServices } from "./page-services";
 export default async function PostsPage({ searchParams }: { searchParams: Promise<ISearchParams> }) {
-	const { translator, clientTranslations, posts, postType } = await PostsServices(searchParams);
+	const { translator, clientTranslations, posts, postType, popularTags, currentUserId } = await PostsServices(
+		searchParams
+	);
 	const params = await searchParams;
 
 	return (
@@ -22,7 +24,7 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 
 				<div className="flex gap-8 mt-6">
 					<aside className="w-64 shrink-0">
-						<PostsSidebar />
+						<PostsSidebar popularTags={popularTags} />
 					</aside>
 
 					<main className="flex-1 min-w-0">
