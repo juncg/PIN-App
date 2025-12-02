@@ -2,11 +2,23 @@
 
 import { IBusiness, IForum, IUser } from "@/lib/services/types";
 import { cn } from "@/lib/utils";
-import { BadgeCheck, UserCircle } from "lucide-react";
 import Link from "next/link";
+import {
+	AccountCircleIcon,
+	CheckCircleIcon,
+	FavoriteIcon,
+	HistoryIcon,
+	PackageIcon,
+	PaymentIcon,
+	SendIcon,
+	Shining2FillIcon,
+	VerifiedIcon,
+	WalletIcon,
+} from "../icons/icons";
 import { AvatarGroup } from "../ui-custom/avatar-group";
 import { Button } from "../ui-custom/button";
-import { B1, H3 } from "../ui-custom/typography";
+import { Separator } from "../ui-custom/separator";
+import { B1, H4 } from "../ui-custom/typography";
 
 interface IProfileUserCompanyState {
 	className?: string;
@@ -17,6 +29,7 @@ interface IProfileUserCompanyState {
 	followingUsersTotalCount?: number;
 	followingBusinesses?: IBusiness[];
 	followingBusinessesTotalCount?: number;
+	likedPostsCount?: number;
 	companies?: IBusiness[];
 }
 
@@ -30,6 +43,7 @@ export function ProfileRightColumn(props: IProfileUserCompanyState) {
 		followingBusinessesTotalCount,
 		followingUsers,
 		followingUsersTotalCount,
+		likedPostsCount,
 	} = props;
 
 	const isBusiness = (userData?.businesses?.length || 0) > 0;
@@ -53,9 +67,9 @@ export function ProfileRightColumn(props: IProfileUserCompanyState) {
 	];
 
 	return (
-		<section className={cn("flex flex-col border-[2px] rounded-[20px] p-8 gap-12", className)}>
+		<section className={cn("flex flex-col border-[2px] rounded-[20px] p-10 gap-12 border-cardborder", className)}>
 			<div className="flex flex-col gap-8">
-				<H3>Mis follows</H3>
+				<H4 className="font-funnel-sans">Mis follows.</H4>
 
 				<div className="flex justify-between">
 					{followingForums && followingForums.length >= 0 && (
@@ -77,22 +91,134 @@ export function ProfileRightColumn(props: IProfileUserCompanyState) {
 				</div>
 			</div>
 
-			<div className="flex flex-col gap-2">
-				<H3>Estado de la cuenta</H3>
+			<div className="-mx-10">
+				<Separator className="!h-[2px] bg-cardborder" />
+			</div>
 
-				<div className="flex gap-2 text-lightgrey items-center">
-					<UserCircle className="h-4" />
-					<B1>{isBusiness ? "Usuario business" : "Usuario pobre"}</B1>
+			<div className="flex flex-col gap-8">
+				<H4>Mis favoritos.</H4>
+
+				<div className="flex gap-2 items-center justify-between">
+					<div className="flex flex-col items-center gap-2">
+						<Button
+							variant="ghost"
+							size="icon"
+							className="hover:bg-transparent hover:text-white hover:scale-105 transition"
+						>
+							<FavoriteIcon className="!h-10 !w-10" />
+						</Button>
+
+						<B1>{likedPostsCount} posts</B1>
+					</div>
+
+					<div className="flex flex-col items-center gap-2">
+						<Button variant="chernobylOutline">
+							Hyper Like <Shining2FillIcon />
+						</Button>
+
+						<B1>¡Hypea tus posts favoritos!</B1>
+					</div>
 				</div>
 			</div>
 
-			{!isBusiness && (
-				<Link href="/upgrade-user">
-					<Button>
-						Registrar Empresa <BadgeCheck />
+			<div className="-mx-10">
+				<Separator className="!h-[2px] bg-cardborder" />
+			</div>
+
+			<div className="flex flex-col gap-8">
+				<H4 className="font-funnel-sans">Mis pedidos.</H4>
+
+				<div className="flex gap-8 justify-between">
+					<Button
+						className="!flex !flex-col gap-2 border-cardborder h-auto w-1/2 py-4 !rounded-2xl"
+						size="lg"
+						variant="outline"
+					>
+						<PaymentIcon className="!h-6 !w-6" />
+						<B1 className="text-center">Pendientes de pago</B1>
 					</Button>
-				</Link>
-			)}
+
+					<Button
+						className="!flex !flex-col gap-2 border-cardborder h-auto w-1/2 py-4 !rounded-2xl"
+						size="lg"
+						variant="outline"
+					>
+						<PackageIcon className="!h-6 !w-6" />
+						<B1 className="text-center">Pendientes de envío</B1>
+					</Button>
+				</div>
+
+				<div className="flex gap-8 justify-between">
+					<Button
+						className="!flex !flex-col gap-2 border-cardborder h-auto w-1/2 py-4 !rounded-2xl"
+						size="lg"
+						variant="outline"
+					>
+						<SendIcon className="!h-6 !w-6" />
+						<B1 className="text-center">En proceso de envío</B1>
+					</Button>
+
+					<Button
+						className="!flex !flex-col gap-2 border-cardborder h-auto w-1/2 py-4 !rounded-2xl"
+						size="lg"
+						variant="outline"
+					>
+						<CheckCircleIcon className="!h-6 !w-6" />
+						<B1 className="text-center">Pedidos completados</B1>
+					</Button>
+				</div>
+			</div>
+
+			<div className="-mx-10">
+				<Separator className="!h-[2px] bg-cardborder" />
+			</div>
+
+			<div className="flex flex-col gap-6">
+				<div className="flex flex-col gap-2">
+					<H4>Estado de la cuenta.</H4>
+
+					<div className="flex gap-2 text-lightgrey items-center">
+						<AccountCircleIcon className="!h-5 !w-5" />
+						<B1>{isBusiness ? "Usuario business" : "Usuario estándar"}</B1>
+					</div>
+				</div>
+
+				{!isBusiness && (
+					<Button variant="outline" className="rounded-lg">
+						<Link href="/upgrade-user" className="flex items-center gap-2">
+							Mejorar a Business <VerifiedIcon />
+						</Link>
+					</Button>
+				)}
+			</div>
+
+			<div className="-mx-10">
+				<Separator className="!h-[2px] bg-cardborder" />
+			</div>
+
+			<div className="flex flex-col gap-8">
+				<H4 className="font-funnel-sans">Mis pagos.</H4>
+
+				<div className="flex gap-8 justify-between">
+					<Button
+						className="!flex !flex-col gap-2 border-cardborder h-auto w-1/2 py-4 !rounded-2xl"
+						size="lg"
+						variant="outline"
+					>
+						<WalletIcon className="!h-6 !w-6" />
+						<B1 className="text-center">Cuentas y tarjetas</B1>
+					</Button>
+
+					<Button
+						className="!flex !flex-col gap-2 border-cardborder h-auto w-1/2 py-4 !rounded-2xl"
+						size="lg"
+						variant="outline"
+					>
+						<HistoryIcon className="!h-6 !w-6" />
+						<B1 className="text-center">Historial de transacciones</B1>
+					</Button>
+				</div>
+			</div>
 		</section>
 	);
 }

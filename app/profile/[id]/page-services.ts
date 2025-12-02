@@ -144,6 +144,9 @@ export async function ProfileServices(uuid: number) {
 		followedByUser = (isFollowingData && isFollowingData.length > 0) || false;
 	}
 
+	// Get total liked posts count
+	const likedPostsCount = await getLikedPostsCount(uuid);
+
 	return {
 		userData,
 		followingForums,
@@ -157,5 +160,51 @@ export async function ProfileServices(uuid: number) {
 		subscribedPetitions,
 		subscribedPetitionsCount,
 		followedByUser,
+		likedPostsCount,
 	};
+}
+
+/**
+ * Get the total number of posts (offers, petitions, and reviews) that the user has liked
+ */
+export async function getLikedPostsCount(userId: string | number): Promise<number> {
+	if (!userId) return 0;
+
+	const { supabase } = await GetServiceClient();
+	let totalLikes = 0;
+
+	// Count liked offers
+	const { count: offersCount, error: offersError } = await supabase
+		.from("User_Offer")
+		.select("*", { count: "exact", head: true })
+		.eq("user_id", userId)
+		.eq("liked", true);
+
+	if (!offersError && typeof offersCount === "number") {
+		totalLikes += offersCount;
+	}
+
+	// Count liked petitions
+	const { count: petitionsCount, error: petitionsError } = await supabase
+		.from("User_Petition")
+		.select("*", { count: "exact", head: true })
+		.eq("user_id", userId)
+		.eq("liked", true);
+
+	if (!petitionsError && typeof petitionsCount === "number") {
+		totalLikes += petitionsCount;
+	}
+
+	// Count liked reviews
+	const { count: reviewsCount, error: reviewsError } = await supabase
+		.from("User_Review")
+		.select("*", { count: "exact", head: true })
+		.eq("user_id", userId)
+		.eq("liked", true);
+
+	if (!reviewsError && typeof reviewsCount === "number") {
+		totalLikes += reviewsCount;
+	}
+
+	return totalLikes;
 }

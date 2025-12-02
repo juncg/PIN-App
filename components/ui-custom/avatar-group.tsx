@@ -11,41 +11,32 @@ interface IAvatarGroup {
 
 export function AvatarGroup({ avatarImages, shape = "Rounded", inclined = false }: IAvatarGroup) {
 	return (
-		<div className="*:data-[slot=avatar]:ring-black flex -space-x-3 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
+		<div className="*:data-[slot=avatar]:ring-white flex -space-x-4 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
 			<Avatar
 				className={`${shape === "Rounded" && "rounded-full"} ${inclined && "rotate-[30deg] overflow-visible"}`}
 			>
 				<AvatarImage
-					className={`${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`}
+					className={`border-[2px] border-darkmode ${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`}
 					src={avatarImages?.[0] || "/placeholder.png"}
 				/>
-				<AvatarFallback className={`${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`}>
-					AA
-				</AvatarFallback>
 			</Avatar>
 
 			<Avatar
 				className={`${shape === "Rounded" && "rounded-full"} ${inclined && "rotate-[30deg] overflow-visible"}`}
 			>
 				<AvatarImage
-					className={`${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`}
+					className={`border-[2px] border-darkmode ${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`}
 					src={avatarImages?.[1] || "/placeholder.png"}
 				/>
-				<AvatarFallback className={`${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`}>
-					AA
-				</AvatarFallback>
 			</Avatar>
 
 			<Avatar
 				className={`${shape === "Rounded" && "rounded-full"} ${inclined && "rotate-[30deg] overflow-visible"}`}
 			>
 				<AvatarImage
-					className={`${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`}
+					className={`border-[2px] border-darkmode ${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`}
 					src={avatarImages?.[2] || "/placeholder.png"}
 				/>
-				<AvatarFallback className={`${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`}>
-					AA
-				</AvatarFallback>
 			</Avatar>
 
 			<Avatar
@@ -53,7 +44,7 @@ export function AvatarGroup({ avatarImages, shape = "Rounded", inclined = false 
 			>
 				<AvatarImage className={`${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`} src="" />
 				<AvatarFallback
-					className={`border-[2px] border-black bg-black ${
+					className={`border-[2px] border-white bg-darkmode ${
 						shape === "Rounded" ? "rounded-full" : "rounded-[5px]"
 					}`}
 				>

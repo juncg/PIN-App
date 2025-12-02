@@ -29,6 +29,7 @@ export default async function Profile({ params }: ProfilePageProps) {
 		followingBusinessesCount,
 		followingUsers,
 		followingUsersCount,
+		likedPostsCount,
 		subscribedOffers,
 		subscribedOffersCount,
 		subscribedPetitions,
@@ -157,6 +158,7 @@ export default async function Profile({ params }: ProfilePageProps) {
 				followingForumsTotalCount={followingForumsCount}
 				followingUsers={followingUsers}
 				followingUsersTotalCount={followingUsersCount}
+				likedPostsCount={likedPostsCount}
 			/>
 		</section>
 	);

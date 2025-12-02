@@ -10,7 +10,6 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { LikeButton } from "../buttons/like-button";
 import { SubscribeButton } from "../buttons/subscribe-button";
-import { PopOutMedia } from "../floating-panels/pop-out-media";
 import { ClockIcon, PeopleAltIcon, Shining2LineIcon } from "../icons/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
 import { Button } from "../ui-custom/button";
@@ -134,14 +133,22 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 												setIsDialogOpen(true);
 											}}
 										>
-											<Image
-												src={image}
-												alt={`${post.title} - imagen ${index + 1}`}
-												fill
-												sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-												className="object-cover rounded-2xl border-[3px] border-darkmode"
-												unoptimized
-											/>
+											<Link
+												href={
+													post.type === "Petition"
+														? `/petitions/${post.id}`
+														: `/offers/${post.id}`
+												}
+											>
+												<Image
+													src={image}
+													alt={`${post.title} - imagen ${index + 1}`}
+													fill
+													sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+													className="object-cover rounded-2xl border-[3px] border-darkmode"
+													unoptimized
+												/>
+											</Link>
 										</div>
 									</CarouselItem>
 								))}
@@ -226,13 +233,6 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 					</div>
 				</div>
 			</div>
-
-			<PopOutMedia
-				images={displayImages}
-				isOpen={isDialogOpen}
-				onClose={() => setIsDialogOpen(false)}
-				startIndex={startIndex}
-			/>
 		</article>
 	);
 });
