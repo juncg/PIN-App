@@ -67,10 +67,10 @@ export function UserReviewCard({ review, currentUserId, productId }: UserReviewC
 
 	return (
 		<>
-			<Card className="p-6 h-[240px] flex flex-col">
+			<Card className="p-6 h-[240px] w-full max-w-md flex flex-col">
 				<div className="flex items-start justify-between mb-4">
 					<div className="flex items-center gap-3">
-						<Avatar className="h-12 w-12">
+						<Avatar className="h-12 w-12 rounded-full">
 							<AvatarImage className="object-cover" src={review.user?.profile_picture || undefined} />
 							<AvatarFallback>{review.user?.username}</AvatarFallback>
 						</Avatar>
@@ -79,7 +79,7 @@ export function UserReviewCard({ review, currentUserId, productId }: UserReviewC
 								<span className="font-semibold text-lg">
 									{review.creator_id === userUuid
 										? "Tú"
-										: review.user?.name + " " + review.user?.surnames}
+										: review.user?.name + " " + review.user?.surnames?.split(" ")[0]}
 								</span>
 								<span className="text-sm text-lightgrey">{GetRelativeTime(review.created_at)}</span>
 							</div>

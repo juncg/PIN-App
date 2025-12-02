@@ -26,12 +26,7 @@ interface ProductReviewSectionProps {
 	userId: string;
 }
 
-export function ProductReviewSection({
-	product,
-	numOfReviews,
-	productReviews,
-	userId,
-}: ProductReviewSectionProps) {
+export function ProductReviewSection({ product, numOfReviews, productReviews, userId }: ProductReviewSectionProps) {
 	const router = useRouter();
 	const [isCreateReviewOpen, setIsCreateReviewOpen] = useState(false);
 
@@ -60,13 +55,9 @@ export function ProductReviewSection({
 					>
 						<CarouselContent>
 							{productReviews.map((review) => (
-								<CarouselItem key={review.id} className="md:basis-1/2 lg:basis-1/3">
+								<CarouselItem key={review.id} className="md:basis-1/2 lg:basis-2/5">
 									<div className="p-1 h-full">
-										<UserReviewCard
-											review={review}
-											currentUserId={userId}
-											productId={product.id}
-										/>
+										<UserReviewCard review={review} currentUserId={userId} productId={product.id} />
 									</div>
 								</CarouselItem>
 							))}
