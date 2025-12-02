@@ -16,19 +16,15 @@ export function ProfileAltenatingButtons({ subscriptionsContent, postsContent }:
 
 	return (
 		<>
-			<div className="flex w-full gap-4">
+			<div className="flex w-full border-b-[2px]">
 				<Button
-					variant={selected === "Subscriptions" ? "secondary" : "default"}
-					className="w-full"
+					variant="ghost"
+					className="w-full justify-start p-4 h-full"
 					onClick={() => setSelected("Subscriptions")}
 				>
 					Mis suscripciones <SquareCheckBigIcon />
 				</Button>
-				<Button
-					variant={selected === "Posts" ? "secondary" : "default"}
-					className="w-full"
-					onClick={() => setSelected("Posts")}
-				>
+				<Button variant="ghost" className="w-full" onClick={() => setSelected("Posts")}>
 					Mis publicaciones <Newspaper />
 				</Button>
 			</div>
