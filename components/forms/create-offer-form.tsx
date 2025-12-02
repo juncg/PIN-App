@@ -169,7 +169,7 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 						/>
 					</FormField>
 
-					<FormField label="Precio Entrada" errorMessage={errors.fee?.message || ""} htmlFor="fee" required>
+					<FormField label="Cuota" errorMessage={errors.fee?.message || ""} htmlFor="fee" required>
 						<Input
 							id="fee"
 							type="number"
