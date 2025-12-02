@@ -16,7 +16,11 @@ export function ProductImages({ images, thumbnailPosition = "bottom" }: ProductI
 	const [selectedImage, setSelectedImage] = useState(0);
 
 	// Embla setup
-	const [emblaRef, embla] = useEmblaCarousel({ loop: true });
+	const [emblaRef, embla] = useEmblaCarousel({
+		loop: images.length > 1,
+		watchDrag: images.length > 1, // ✅ disables drag when only 1 image
+	});
+
 
 	// When the slide changes (user drags), update state
 	const onSelect = useCallback(() => {
@@ -60,25 +64,47 @@ export function ProductImages({ images, thumbnailPosition = "bottom" }: ProductI
 				</div>
 			</div>
 
-			{/* Arrows */}
-			<Button
-				variant="ghost"
-				size="icon"
-				className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black"
-				onClick={handlePrev}
-			>
-				<ChevronLeft className="h-6 w-6" />
-			</Button>
-			<Button
-				variant="ghost"
-				size="icon"
-				className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black"
-				onClick={handleNext}
-			>
-				<ChevronRight className="h-6 w-6" />
-			</Button>
+			{/* 🔥 ONLY show arrows if >1 image */}
+			{images.length > 1 && (
+				<>
+					<Button
+						variant="ghost"
+						size="icon"
+						className="
+						absolute left-3 top-1/2 -translate-y-1/2 
+						bg-black
+						hover:bg-white
+						text-white shadow-lg
+						h-10 w-10 rounded-full
+						flex items-center justify-center
+						transition
+					"
+						onClick={handlePrev}
+					>
+						<ChevronLeft className="h-6 w-6" />
+					</Button>
+
+					<Button
+						variant="ghost"
+						size="icon"
+						className="
+						absolute right-3 top-1/2 -translate-y-1/2 
+						bg-black
+						hover:bg-white 
+						text-white shadow-lg
+						h-10 w-10 rounded-full
+						flex items-center justify-center
+						transition
+					"
+						onClick={handleNext}
+					>
+						<ChevronRight className="h-6 w-6 text-black-500" />
+					</Button>
+				</>
+			)}
 		</div>
 	);
+
 
 	// ===============================
 	// THUMBNAILS
