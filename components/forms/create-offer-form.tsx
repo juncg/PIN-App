@@ -5,19 +5,24 @@ import { Button } from "@/components/ui-custom/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui-custom/select";
 import { Tables } from "@/database.types";
 import { useUser } from "@/hooks/use-user";
-import { ExecuteRpcFunction, PostToDatabase } from "@/lib/services/general";
+import { ExecuteRpcFunction, GetFromDatabase, PostToDatabase } from "@/lib/services/general";
 import { compressImage, uploadImage } from "@/lib/services/media-upload";
-import { IForum, IOffer } from "@/lib/services/types";
+import { IForum, IOffer, IProduct } from "@/lib/services/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type PostgrestError } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { APIErrorHandler } from "../error-handlers/api-error-handler";
 import { DateInput } from "../ui-custom/date-input";
 import { Input } from "../ui-custom/input";
 import { Switch } from "../ui-custom/switch";
 import { Textarea } from "../ui-custom/textarea";
+import { Checkbox } from "../ui-custom/checkbox";
+import { Label } from "../ui-custom/label";
+import { Card, CardContent } from "../ui-custom/card";
+import { B1, H3 } from "../ui-custom/typography";
 import FileDropzone from "./base/file-dropzone";
 import { FormField } from "./base/form-field";
 import { CreateOfferSchema, type TCreateOfferSchema } from "./schemas/offer";
@@ -32,6 +37,10 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 	const [selectedTags, setSelectedTags] = useState<number[]>([]);
 	const [apiError, setApiError] = useState<PostgrestError | null>(null);
 	const [images, setImages] = useState<File[]>([]);
+	const [availableProducts, setAvailableProducts] = useState<IProduct[]>([]);
+	const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
+	const [totalMsrp, setTotalMsrp] = useState<number>(0);
+	const [isLoadingProducts, setIsLoadingProducts] = useState(false);
 	const { userUuid } = useUser();
 	const router = useRouter();
 
@@ -54,16 +63,93 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 			fee: undefined,
 			forum_id: undefined,
 			state: "Posted",
+			product_ids: [],
+			reduced_price: null,
 		},
 	});
 
 	const forumId = watch("forum_id");
 	const allowComments = watch("comment_locked_state") === "Unlocked";
+	const reducedPrice = watch("reduced_price");
 
 	useEffect(() => {
 		const defaultDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
 		setValue("target_completition_date", defaultDate.toISOString());
 	}, [setValue]);
+
+	useEffect(() => {
+		if (!userUuid) return;
+
+		async function loadUserProducts() {
+			setIsLoadingProducts(true);
+			try {
+				const { data: userBusinesses } = await GetFromDatabase<Tables<"User_Business">>({
+					tableName: "User_Business",
+					select: "business_id",
+					filters: [{ method: "eq", column: "user_id", value: userUuid }],
+				});
+
+				const { data: employeeBusinesses } = await GetFromDatabase<Tables<"Business_Employee">>({
+					tableName: "Business_Employee",
+					select: "business_id",
+					filters: [{ method: "eq", column: "user_id", value: userUuid }],
+				});
+
+				const businessIds = [
+					...(userBusinesses?.map((ub) => ub.business_id) || []),
+					...(employeeBusinesses?.map((eb) => eb.business_id) || []),
+				];
+
+				if (businessIds.length === 0) {
+					setAvailableProducts([]);
+					return;
+				}
+
+				const { data: productBusinessRelations } = await GetFromDatabase<Tables<"Product_Business">>({
+					tableName: "Product_Business",
+					select: "product_id",
+					filters: [{ method: "in", column: "business_id", value: businessIds }],
+				});
+
+				const productIds = productBusinessRelations?.map((pb) => pb.product_id) || [];
+
+				if (productIds.length === 0) {
+					setAvailableProducts([]);
+					return;
+				}
+
+				const { data: products } = await GetFromDatabase<IProduct>({
+					tableName: "Product",
+					select: "*",
+					filters: [{ method: "in", column: "id", value: productIds }],
+				});
+
+				setAvailableProducts(products || []);
+			} catch (error) {
+				console.error("Error loading products:", error);
+				toast.error("Error al cargar productos");
+			} finally {
+				setIsLoadingProducts(false);
+			}
+		}
+
+		loadUserProducts();
+	}, [userUuid]);
+
+	useEffect(() => {
+		const total = availableProducts
+			.filter((product) => selectedProducts.includes(product.id))
+			.reduce((sum, product) => sum + (product.msrp || 0), 0);
+		setTotalMsrp(total);
+		setValue("product_ids", selectedProducts);
+	}, [selectedProducts, availableProducts, setValue]);
+
+	// Manejar cambio de producto seleccionado
+	const handleProductToggle = (productId: number) => {
+		setSelectedProducts((prev) =>
+			prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId]
+		);
+	};
 
 	async function handleOfferCreation(data: TCreateOfferSchema) {
 		setIsSubmitting(true);
@@ -77,6 +163,14 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 		}
 
 		try {
+			if (selectedProducts.length > 0 && data.reduced_price) {
+				if (data.reduced_price >= totalMsrp) {
+					toast.error("El precio reducido debe ser menor que el precio total de los productos");
+					setIsSubmitting(false);
+					return;
+				}
+			}
+
 			const newOffer: Omit<Tables<"Offer">, "id"> = {
 				title: data.title,
 				text: data.text,
@@ -92,6 +186,7 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 				superlikes: 0,
 				state: data.state ?? "Posted",
 				images: uploadedUrls || null,
+				reduced_price: data.reduced_price || null,
 			};
 
 			const response = await PostToDatabase<IOffer>({
@@ -122,6 +217,24 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 				if (tagResp.error) {
 					setIsSubmitting(false);
 					setApiError(tagResp.error);
+					return;
+				}
+			}
+
+			if (offerId && selectedProducts.length > 0) {
+				const productRelations = selectedProducts.map((productId) => ({
+					offer_id: offerId,
+					product_id: productId,
+				}));
+
+				const productResp = await PostToDatabase({
+					tableName: "Offer_Product",
+					contentJson: productRelations,
+				});
+
+				if (productResp.error) {
+					setIsSubmitting(false);
+					setApiError(productResp.error);
 					return;
 				}
 			}
@@ -250,6 +363,81 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 						placeholder="Selecciona los tags para la petición"
 						disabled={isSubmitting}
 					/>
+				</FormField>
+
+				<FormField label="Productos asociados" htmlFor="products">
+					{isLoadingProducts ? (
+						<B1 className="text-lightgrey">Cargando productos...</B1>
+					) : availableProducts.length === 0 ? (
+						<Card className="p-6">
+							<B1 className="text-lightgrey text-center">No tienes productos disponibles.</B1>
+						</Card>
+					) : (
+						<div className="space-y-4">
+							<Card className="p-4 border-input">
+								<CardContent className="p-0 space-y-3">
+									{availableProducts.map((product) => (
+										<div key={product.id} className="flex items-center space-x-3">
+											<Checkbox
+												id={`product-${product.id}`}
+												checked={selectedProducts.includes(product.id)}
+												onCheckedChange={() => handleProductToggle(product.id)}
+												disabled={isSubmitting}
+												className="bg-primary border border-white"
+											/>
+											<Label htmlFor={`product-${product.id}`} className="flex-1 cursor-pointer">
+												<div className="flex justify-between items-center">
+													<span>{product.name}</span>
+													<span className="font-semibold">
+														{product.msrp?.toFixed(2) || "0.00"}€
+													</span>
+												</div>
+												{product.description && (
+													<B1 className="text-lightgrey text-sm">{product.description}</B1>
+												)}
+											</Label>
+										</div>
+									))}
+								</CardContent>
+							</Card>
+
+							{selectedProducts.length > 0 && (
+								<Card className="p-4 bg-primary/5 border border-input">
+									<div className="flex justify-between items-center mb-3">
+										<H3>Precio total:</H3>
+										<H3 className="text-primary">{totalMsrp.toFixed(2)}€</H3>
+									</div>
+
+									<FormField
+										label="Precio reducido de la oferta"
+										errorMessage={errors.reduced_price?.message || ""}
+										htmlFor="reduced_price"
+										required
+									>
+										<Input
+											id="reduced_price"
+											type="number"
+											step="0.01"
+											min="0"
+											max={totalMsrp}
+											{...register("reduced_price", { valueAsNumber: true })}
+											disabled={isSubmitting}
+											placeholder={`Debe ser menor a ${totalMsrp.toFixed(2)}€`}
+										/>
+									</FormField>
+
+									{reducedPrice !== null && reducedPrice !== undefined && totalMsrp > 0 && (
+										<div className="mt-3 text-center">
+											<B1 className="text-primary font-semibold">
+												Descuento: {(((totalMsrp - reducedPrice) / totalMsrp) * 100).toFixed(1)}
+												%
+											</B1>
+										</div>
+									)}
+								</Card>
+							)}
+						</div>
+					)}
 				</FormField>
 
 				<FileDropzone value={images} onChange={setImages} maxFiles={5} disabled={isSubmitting} />

@@ -82,6 +82,7 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 				superlikes: 0,
 				state: data.state ?? "Posted",
 				images: uploadedUrls.length > 0 ? uploadedUrls : null,
+				reduced_price: null,
 			};
 
 			const response = await PostToDatabase<IPetition>({

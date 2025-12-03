@@ -1,28 +1,56 @@
+"use client";
+
+import { useUser } from "@/hooks/use-user";
 import { IOffer, IPetition } from "@/lib/services/types";
+import { GetTimeRemaining } from "@/lib/services/utilities";
 import { cn } from "@/lib/utils";
-import { ClockIcon, Verified, Tag, Hand } from "lucide-react";
+import { Hand, Tag, Verified } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { SubscribeButton } from "../buttons/subscribe-button";
+import { ClockIcon, PeopleAltIcon } from "../icons/icons";
 import { Progress } from "../ui-custom/progress";
-import { Switch } from "../ui-custom/switch";
-import { B1, B5, H3, H4, S1 } from "../ui-custom/typography";
-import { PeopleAltIcon } from "../icons/icons";
-import { GetTimeRemaining } from "@/lib/services/utilities";
+import { B1, B5, H3, S1 } from "../ui-custom/typography";
 
 interface IPostCardHorizontalProps {
 	className?: string;
 	post: IOffer | IPetition;
+	subscribedByUser?: boolean;
+	onSubscribeChangeForParent?: (subscribed: boolean) => void;
+	userUuidProp?: string | null;
 }
 
 export function PostCardHorizontal(props: IPostCardHorizontalProps) {
-	const { className, post } = props;
+	const {
+		className,
+		post,
+		subscribedByUser: subscribedByUserProp,
+		onSubscribeChangeForParent,
+		userUuidProp,
+	} = props;
+	const { userUuid: userUuidFromHook } = useUser();
+	const userUuid = userUuidProp || userUuidFromHook;
+
+	const [currentProgress, setCurrentProgress] = useState(post.current_progress);
+
+	useEffect(() => {
+		setCurrentProgress(post.current_progress);
+	}, [post.current_progress]);
 
 	const offerCompletionPercentage = parseFloat(
-		((post?.current_progress * 100) / (post?.target_progress ?? 1)).toFixed(2)
+		((currentProgress * 100) / (post?.target_progress ?? 1)).toFixed(2)
 	);
 
 	const originalPrice = post.products?.reduce((total, product) => total + (product.Product.msrp || 0), 0) || 0;
 	const discountPercentage = originalPrice > 0 ? Math.round(100 - (post.reduced_price! * 100) / originalPrice) : 0;
+
+	const derivedSubscribedByUser =
+		post.type === "Offer"
+			? !!(post as IOffer).User_Offer?.some((u) => u.user_id === userUuid && u.subscribed)
+			: !!(post as IPetition).User_Petition?.some((u) => u.user_id === userUuid && u.subscribed);
+
+	const subscribedByUser = subscribedByUserProp !== undefined ? subscribedByUserProp : derivedSubscribedByUser;
 
 	return (
 		<article className={cn(className, "flex border-[2px] rounded-[20px] w-full")}>
@@ -81,7 +109,7 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 
 							<div className="flex items-center gap-1.5">
 								<S1>
-									{post.current_progress}{" "}
+									{currentProgress}{" "}
 									{post.target_progress > 0 ? `de ${post.target_progress}` : "suscritos"}
 								</S1>
 
@@ -114,7 +142,16 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 							</span>
 						</div>
 
-						<Switch checked innerTextChecked="Apuntado." disabled />
+						<SubscribeButton
+							post_id={post.id}
+							typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
+							subscribers={currentProgress}
+							subscribedByUser={subscribedByUser}
+							user_id={userUuid}
+							onSubscriptionChange={setCurrentProgress}
+							variant="switch"
+							onSubscribeChangeForParent={onSubscribeChangeForParent}
+						/>
 					</div>
 				</div>
 			</div>
