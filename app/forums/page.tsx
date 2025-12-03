@@ -4,6 +4,7 @@ import { H2 } from "@/components/ui-custom/typography";
 import { getUserUuid } from "@/lib/services/user";
 import { ISearchParams } from "../../types";
 import { ForumsServices } from "./forums-services";
+import Link from "next/link";
 
 export default async function Forums({ searchParams }: { searchParams: Promise<ISearchParams> }) {
 	const { categories, hasSelectedCategories, recommendedForums, popularForums, trendingByCategory } =
@@ -14,8 +15,10 @@ export default async function Forums({ searchParams }: { searchParams: Promise<I
 	return (
 		<section className="max-w-7xl mx-auto space-y-8">
 			<div className="mb-8 text-sm text-lightgrey">
-				<span>Inicio</span> <span className="mx-2">/</span>{" "}
-				<span className="text-white font-medium">Foros</span>
+				<Link href="/home" className="hover:underline">
+					Inicio
+				</Link>
+				<span className="mx-2">/</span> <span className="text-white font-medium">Foros</span>
 			</div>
 
 			<CategoriesCarousel categories={categories} />
