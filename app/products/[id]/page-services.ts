@@ -62,6 +62,21 @@ export async function ProductDetailsServices(id: number) {
 		filters: [{ method: "eq", column: "product_id", value: id }],
 	});
 
+	const { data: businessProducts } = await GetFromDatabase<IProduct>({
+		tableName: "Product",
+		select: "*, businesses:Product_Business!inner(business:Business(*))",
+		filters: [
+			{ method: "neq", column: "id", value: id },
+			{
+				method: "eq",
+				column: "Product_Business.business_id",
+				value: product?.[0]?.businesses?.[0]?.business?.id || 0,
+			},
+			{ method: "order", column: "created_at", ascending: false },
+			{ method: "limit", value: 5 },
+		],
+	});
+
 	return {
 		product: product?.[0] || null,
 		numOfReviews: numOfReviews || 0,
@@ -71,5 +86,6 @@ export async function ProductDetailsServices(id: number) {
 		relatedPetitions: relatedPetitions || [],
 		numOfRelatedOffers: numOfRelatedOffers?.length || 0,
 		numOfRelatedPetitions: numOfRelatedPetitions?.length || 0,
+		businessProducts: businessProducts || [],
 	};
 }

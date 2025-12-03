@@ -1,18 +1,22 @@
 import { ProductImages } from "@/components/products/product-images";
 import { ProductReviewSection } from "@/components/products/product-review-section";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
-import { Badge } from "@/components/ui-custom/badge";
 import { Button } from "@/components/ui-custom/button";
-import { Card } from "@/components/ui-custom/card";
-import { Separator } from "@/components/ui-custom/separator";
-import { B1, B2, H1, H2, H3 } from "@/components/ui-custom/typography";
+import { B1, B2, H1, H2, H3, S1 } from "@/components/ui-custom/typography";
 import { getUserUuid } from "@/lib/services/user";
 import { ISearchParams } from "@/types";
-import { ArrowRightIcon, ArrowUpRight, CheckCircle2, Star } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, Star } from "lucide-react";
 import Link from "next/link";
 import { ProductDetailsServices } from "./page-services";
 import { ProductCardHorizontal } from "@/components/cards/product-card-horizontal";
 import { PostCardHorizontal } from "@/components/cards/post-card-horizontal";
+import { ProductCard } from "@/components/cards/product-card";
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "@/components/ui-custom/carousel";
 
 interface ProductPageProps {
 	params: Promise<{
@@ -32,11 +36,9 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 		relatedPetitions,
 		numOfRelatedOffers,
 		numOfRelatedPetitions,
+		businessProducts,
 	} = await ProductDetailsServices(id);
 	const userUuid = await getUserUuid();
-
-	console.log("relatedPetitions", relatedPetitions);
-	console.log("relatedOffers", relatedOffers);
 
 	if (!product) {
 		return <div>Loading...</div>;
@@ -181,6 +183,34 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 					numOfReviews={numOfReviews}
 					userId={userUuid || ""}
 				/>
+			</div>
+
+			<div className="py-8">
+				<div className="mb-6">
+					<S1>Más productos de la empresa.</S1>
+				</div>
+
+				{businessProducts && businessProducts.length > 0 ? (
+					<Carousel
+						opts={{
+							align: "start",
+							loop: true,
+						}}
+						className="w-full"
+					>
+						<CarouselContent className="-ml-2 md:-ml-4">
+							{businessProducts.map((product) => (
+								<CarouselItem key={product.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/5">
+									<ProductCard props={{ product }} />
+								</CarouselItem>
+							))}
+						</CarouselContent>
+						<CarouselPrevious className="left-0" />
+						<CarouselNext className="right-0" />
+					</Carousel>
+				) : (
+					<B1 className="text-lightgrey">No hay más productos de esta empresa.</B1>
+				)}
 			</div>
 		</div>
 	);

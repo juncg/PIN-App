@@ -1,6 +1,5 @@
 "use client";
 
-import { RatingDistribution } from "@/app/products/[id]/page-services";
 import {
 	Carousel,
 	CarouselContent,
@@ -17,10 +16,10 @@ import { ProductReviewsSummaryCard } from "../cards/product-reviews-summary-card
 import { UserReviewCard } from "../cards/user-review-card";
 import { ProductReviewForm } from "../forms/product-review-form";
 import { Button } from "../ui-custom/button";
+import { S1 } from "../ui-custom/typography";
 
 interface ProductReviewSectionProps {
 	product: IProduct;
-	ratingDistribution?: RatingDistribution[];
 	numOfReviews: number;
 	productReviews?: IReview[];
 	userId: string;
@@ -38,7 +37,7 @@ export function ProductReviewSection({ product, numOfReviews, productReviews, us
 	return (
 		<div className="space-y-6">
 			<div className="flex items-center justify-between">
-				<h3 className="text-xl font-semibold">Reviews ({numOfReviews})</h3>
+				<S1>Reviews ({numOfReviews})</S1>
 				<Button onClick={() => setIsCreateReviewOpen(true)}>
 					<Plus className="h-4 w-4 mr-1" />
 					Crear reseña
