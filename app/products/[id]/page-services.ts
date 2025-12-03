@@ -36,16 +36,16 @@ export async function ProductDetailsServices(id: number) {
 		tableName: "Offer",
 		select: "*, forum:Forum!inner(Business(*))",
 		filters: [
-			{ method: "eq", column: "product_id", value: id },
+			{ method: "contains", column: "product_ids", value: [id] },
 			{ method: "order", column: "created_at", ascending: false },
 		],
 	});
 
-	const { data: relatedPetitions } = await GetFromDatabase<IOffer>({
+	const { data: relatedPetitions } = await GetFromDatabase<IPetition>({
 		tableName: "Petition",
 		select: "*, forum:Forum!inner(Business(*))",
 		filters: [
-			{ method: "eq", column: "product_id", value: id },
+			{ method: "contains", column: "product_ids", value: [id] },
 			{ method: "order", column: "created_at", ascending: false },
 		],
 	});
@@ -53,13 +53,13 @@ export async function ProductDetailsServices(id: number) {
 	const { data: numOfRelatedOffers } = await GetFromDatabase<IOffer>({
 		tableName: "Offer",
 		select: "id",
-		filters: [{ method: "eq", column: "product_id", value: id }],
+		filters: [{ method: "contains", column: "product_ids", value: [id] }],
 	});
 
-	const { data: numOfRelatedPetitions } = await GetFromDatabase<IOffer>({
+	const { data: numOfRelatedPetitions } = await GetFromDatabase<IPetition>({
 		tableName: "Petition",
 		select: "id",
-		filters: [{ method: "eq", column: "product_id", value: id }],
+		filters: [{ method: "contains", column: "product_ids", value: [id] }],
 	});
 
 	const { data: businessProducts } = await GetFromDatabase<IProduct>({
