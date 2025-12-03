@@ -21,6 +21,9 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 		((post?.current_progress * 100) / (post?.target_progress ?? 1)).toFixed(2)
 	);
 
+	const originalPrice = post.products?.reduce((total, product) => total + (product.Product.msrp || 0), 0) || 0;
+	const discountPercentage = originalPrice > 0 ? Math.round(100 - (post.reduced_price! * 100) / originalPrice) : 0;
+
 	return (
 		<article className={cn(className, "flex border-[2px] rounded-[20px] w-full")}>
 			<figure className="relative w-60 h-60 rounded-[20px] overflow-hidden shrink-0">
@@ -53,11 +56,15 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 
 						<B1 className="text-lightgrey line-clamp-2">{post.text}</B1>
 					</div>
-
-					<div className="flex flex-col items-end">
-						<H3>120$</H3>
-						<B1 className="line-through text-lightgrey">170$</B1>
-					</div>
+					{post.products && post.products.length > 0 && (
+						<div className="flex flex-col items-end">
+							<H3>{post.reduced_price ?? 0}€</H3>
+							<div className="flex gap-2 items-center">
+								<B5 className="text-chernobyl md:line-clamp-1">-{discountPercentage}%</B5>
+								<B1 className="line-through text-lightgrey">{originalPrice}€</B1>
+							</div>
+						</div>
+					)}
 				</div>
 
 				<div className="flex flex-col gap-4">
