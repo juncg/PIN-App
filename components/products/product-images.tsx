@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";
+import WheelGestures from "embla-carousel-wheel-gestures";
 
 interface ProductImagesProps {
 	images: string[];
@@ -19,7 +20,10 @@ export function ProductImages({ images, thumbnailPosition = "bottom" }: ProductI
 	const [emblaRef, embla] = useEmblaCarousel({
 		loop: images.length > 1,
 		watchDrag: images.length > 1, // ✅ disables drag when only 1 image
-	});
+	},
+		[WheelGestures()]
+
+	);
 
 
 	// When the slide changes (user drags), update state
