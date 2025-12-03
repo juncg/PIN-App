@@ -366,7 +366,7 @@ export type Database = {
           id: number
           images: string[] | null
           likes: number
-          product_id: number | null
+          product_ids: number[] | null
           reduced_price: number | null
           state: Database["public"]["Enums"]["Post_State"]
           superlikes: number
@@ -385,7 +385,7 @@ export type Database = {
           id?: number
           images?: string[] | null
           likes?: number
-          product_id?: number | null
+          product_ids?: number[] | null
           reduced_price?: number | null
           state?: Database["public"]["Enums"]["Post_State"]
           superlikes?: number
@@ -404,7 +404,7 @@ export type Database = {
           id?: number
           images?: string[] | null
           likes?: number
-          product_id?: number | null
+          product_ids?: number[] | null
           reduced_price?: number | null
           state?: Database["public"]["Enums"]["Post_State"]
           superlikes?: number
@@ -426,13 +426,6 @@ export type Database = {
             columns: ["forum_id"]
             isOneToOne: false
             referencedRelation: "Forum"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Offer_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "Product"
             referencedColumns: ["id"]
           },
         ]
@@ -507,7 +500,7 @@ export type Database = {
           id: number
           images: string[] | null
           likes: number
-          product_id: number | null
+          product_ids: number[] | null
           reduced_price: number | null
           state: Database["public"]["Enums"]["Post_State"]
           superlikes: number
@@ -524,7 +517,7 @@ export type Database = {
           id?: number
           images?: string[] | null
           likes?: number
-          product_id?: number | null
+          product_ids?: number[] | null
           reduced_price?: number | null
           state?: Database["public"]["Enums"]["Post_State"]
           superlikes?: number
@@ -541,7 +534,7 @@ export type Database = {
           id?: number
           images?: string[] | null
           likes?: number
-          product_id?: number | null
+          product_ids?: number[] | null
           reduced_price?: number | null
           state?: Database["public"]["Enums"]["Post_State"]
           superlikes?: number
@@ -562,13 +555,6 @@ export type Database = {
             columns: ["forum_id"]
             isOneToOne: false
             referencedRelation: "Forum"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Petition_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "Product"
             referencedColumns: ["id"]
           },
         ]
