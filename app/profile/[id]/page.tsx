@@ -1,16 +1,16 @@
 import { FollowButton } from "@/components/buttons/follow-button";
 import { AltenatingButtons, SlidingButtonProps } from "@/components/buttons/sliding-buttons";
-import { PostCardHorizontal } from "@/components/cards/post-card-horizontal";
 import { CalendarIcon, CheckBoxIcon, LocationIcon, PeopleAlt2Icon, TextSnippetIcon } from "@/components/icons/icons";
+import { ProfilePostsList } from "@/components/profile/profile-posts-list";
 import { ProfileRightColumn } from "@/components/profile/profile-right-column";
+import { ProfileSubscriptionsList } from "@/components/profile/profile-subscriptions-list";
 import { Button } from "@/components/ui-custom/button";
 import { B1, H2, H5DisplayBold } from "@/components/ui-custom/typography";
-import { IOffer, IPetition } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
 import { GetJoinedDate } from "@/lib/services/utilities";
 import { ISearchParams } from "@/types";
 import Image from "next/image";
-import { ProfileServices } from "./page-services";
+import { ProfileServices, getUserPosts } from "./page-services";
 
 interface ProfilePageProps {
 	params: Promise<{
@@ -36,59 +36,36 @@ export default async function Profile({ params }: ProfilePageProps) {
 		subscribedPetitionsCount,
 		followedByUser,
 	} = await ProfileServices(id);
+
+	// Get user's created posts
+	const { offers, petitions, allPosts, offersCount, petitionsCount, totalCount } = await getUserPosts(id);
+
 	const currentUserId = await getUserUuid();
 	const isCurrentUser = currentUserId === userData?.id;
 
 	const slidingButtonsContent: SlidingButtonProps[] = [
 		{
 			content: (
-				<>
-					<div className="flex flex-col gap-12 w-full">
-						<span className="flex items-end gap-6">
-							<H2>Ofertas.</H2>
-							<B1 className="text-lightgrey line-clamp-2">{subscribedOffersCount} ofertas en total</B1>
-						</span>
-
-						<div className="flex flex-col gap-8 w-full">
-							{subscribedOffers.map((offer: IOffer) => {
-								return <PostCardHorizontal key={offer.id} post={offer} />;
-							})}
-						</div>
-
-						<div className="mx-auto">
-							<Button>Mostrar más</Button>
-						</div>
-					</div>
-
-					<div className="flex flex-col gap-12 w-full">
-						<span className="flex items-end gap-6">
-							<H2>Peticiones.</H2>
-							<B1 className="text-lightgrey line-clamp-2">
-								{subscribedPetitionsCount} peticiones en total
-							</B1>
-						</span>
-
-						<div className="flex flex-col gap-8 w-full">
-							{subscribedPetitions.map((petition: IPetition) => {
-								return <PostCardHorizontal key={petition.id} post={petition} />;
-							})}
-						</div>
-
-						<div className="mx-auto">
-							<Button>Mostrar más</Button>
-						</div>
-					</div>
-				</>
+				<ProfileSubscriptionsList
+					subscribedOffers={subscribedOffers}
+					subscribedPetitions={subscribedPetitions}
+					subscribedOffersCount={subscribedOffersCount}
+					subscribedPetitionsCount={subscribedPetitionsCount}
+				/>
 			),
 			displayName: "Mis suscripciones",
 			displayIcon: <CheckBoxIcon />,
 		},
 		{
 			content: (
-				<div>
-					<H2>Mis publicaciones</H2>
-					<B1 className="text-lightgrey">Contenido de publicaciones aquí</B1>
-				</div>
+				<ProfilePostsList
+					offers={offers}
+					petitions={petitions}
+					allPosts={allPosts}
+					offersCount={offersCount}
+					petitionsCount={petitionsCount}
+					totalCount={totalCount}
+				/>
 			),
 			displayName: "Mis publicaciones",
 			displayIcon: <TextSnippetIcon />,

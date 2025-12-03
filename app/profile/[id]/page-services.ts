@@ -1,5 +1,5 @@
 import { GetFromDatabase, GetServiceClient } from "@/lib/services/general";
-import { IUser } from "@/lib/services/types";
+import { IOffer, IPetition, IUser } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
 
 export async function ProfileServices(uuid: number) {
@@ -161,6 +161,69 @@ export async function ProfileServices(uuid: number) {
 		subscribedPetitionsCount,
 		followedByUser,
 		likedPostsCount,
+	};
+}
+
+/**
+ * Fetch user's created offers
+ */
+async function fetchUserOffers(userId: string | number) {
+	const { data: offers } = await GetFromDatabase<IOffer>({
+		tableName: "Offer",
+		select: `*, User_Offer!left(liked, subscribed, user_id), tags:Offer_Tag(Tag(name)), User!Offer_creator_id_fkey(*)`,
+		filters: [
+			{ method: "eq", column: "creator_id", value: userId },
+			{ method: "order", column: "created_at", ascending: false },
+		],
+	});
+
+	offers?.map((offer: IOffer) => {
+		offer.type = "Offer";
+	});
+
+	return offers || [];
+}
+
+/**
+ * Fetch user's created petitions
+ */
+async function fetchUserPetitions(userId: string | number) {
+	const { data: petitions } = await GetFromDatabase<IPetition>({
+		tableName: "Petition",
+		select: `*, User_Petition!left(liked, subscribed, user_id), tags:Petition_Tag(Tag(name)), User!Petition_creator_id_fkey(*)`,
+		filters: [
+			{ method: "eq", column: "creator_id", value: userId },
+			{ method: "order", column: "created_at", ascending: false },
+		],
+	});
+
+	petitions?.map((petition: IPetition) => {
+		petition.type = "Petition";
+	});
+
+	return petitions || [];
+}
+
+/**
+ * Get user's posts (offers and petitions) for "Mis publicaciones" section
+ */
+export async function getUserPosts(userId: string | number) {
+	const offers = await fetchUserOffers(userId);
+	const petitions = await fetchUserPetitions(userId);
+
+	const allPosts = [...offers, ...petitions].sort((a, b) => {
+		const dateA = new Date(a.created_at).getTime();
+		const dateB = new Date(b.created_at).getTime();
+		return dateB - dateA;
+	});
+
+	return {
+		offers,
+		petitions,
+		allPosts,
+		offersCount: offers.length,
+		petitionsCount: petitions.length,
+		totalCount: allPosts.length,
 	};
 }
 
