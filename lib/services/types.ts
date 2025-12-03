@@ -43,6 +43,7 @@ export type IProduct = Tables<"Product"> & {
 	businesses?: {
 		business: Tables<"Business">;
 	}[];
+	Review_Product?: Tables<"Review_Product">[];
 };
 
 export type IBusinessUser = Tables<"User_Business"> & {
