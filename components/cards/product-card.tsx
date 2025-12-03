@@ -18,7 +18,7 @@ export function ProductCard({ props }: { props: IProductCard }) {
 			<article className="flex flex-col h-full overflow-hidden rounded-xl border bg-primary text-white shadow-sm transition-all hover:shadow-md">
 				<div className="relative aspect-square w-full overflow-hidden bg-black">
 					<Image
-						className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 rounded-xl"
+						className="h-full w-full object-cover rounded-xl"
 						src={product.images?.[0] || "/placeholder.png"}
 						alt={product.name}
 						fill
