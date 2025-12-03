@@ -5,7 +5,7 @@ const PostStateSchema = z.enum(["Draft", "Posted"]);
 
 export const ReviewSchema = z.object({
 	id: z.number(),
-	title: z.string().min(1, "El título es requerido"),
+	title: z.string(),
 	content: z.string().min(1, "El contenido es requerido"),
 	stars: z.number().min(1, "La calificación debe ser al menos 1").max(5, "La calificación no puede ser más de 5"),
 	creator_id: z.string(),
@@ -19,7 +19,6 @@ export const ReviewSchema = z.object({
 });
 
 export const CreateReviewSchema = z.object({
-	title: z.string().min(1, "El título es requerido").max(100, "El título no puede exceder 100 caracteres"),
 	content: z
 		.string()
 		.min(10, "El contenido debe tener al menos 10 caracteres")

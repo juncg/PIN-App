@@ -47,7 +47,6 @@ export function ProductReviewForm({
 		mode: "onBlur",
 		reValidateMode: "onChange",
 		defaultValues: {
-			title: existingReview?.title || "",
 			content: existingReview?.content || "",
 			stars: existingReview?.stars || 0,
 		},
@@ -58,7 +57,6 @@ export function ProductReviewForm({
 	useEffect(() => {
 		if (existingReview) {
 			reset({
-				title: existingReview.title || "",
 				content: existingReview.content || "",
 				stars: existingReview.stars,
 			});
@@ -74,7 +72,7 @@ export function ProductReviewForm({
 				const { error } = await PutToDatabase({
 					tableName: "Review",
 					contentJson: {
-						title: data.title.trim(),
+						title: "",
 						content: data.content.trim(),
 						stars: data.stars,
 						edited_at: new Date().toISOString(),
@@ -95,7 +93,7 @@ export function ProductReviewForm({
 					comment_locked_state: "Unlocked",
 					likes: 0,
 					superlikes: 0,
-					title: data.title.trim(),
+					title: "",
 					content: data.content.trim(),
 					stars: data.stars,
 					creator_id: userUuid,
@@ -182,24 +180,12 @@ export function ProductReviewForm({
 							>
 								<Star
 									className={`w-6 h-6 ${
-										star <= (hoveredRating || rating)
-											? "fill-yellow-400 text-yellow-400"
-											: "text-gray-300"
+										star <= (hoveredRating || rating) ? "fill-white" : "text-gray-300"
 									}`}
 								/>
 							</button>
 						))}
 					</div>
-				</FormField>
-
-				<FormField label="Título" errorMessage={errors.title?.message || ""} htmlFor="title" required>
-					<Input
-						id="title"
-						type="text"
-						placeholder="Resume tu experiencia"
-						{...register("title")}
-						disabled={isSubmitting}
-					/>
 				</FormField>
 
 				<FormField label="Contenido" errorMessage={errors.content?.message || ""} htmlFor="content" required>

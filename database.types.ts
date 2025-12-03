@@ -43,6 +43,7 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          followers: number
           id: number
           name: string | null
           owner_id: string
@@ -52,6 +53,7 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
+          followers?: number
           id?: number
           name?: string | null
           owner_id: string
@@ -61,6 +63,7 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
+          followers?: number
           id?: number
           name?: string | null
           owner_id?: string
@@ -115,16 +118,19 @@ export type Database = {
           created_at: string
           id: number
           name: string | null
+          times_used: number
         }
         Insert: {
           created_at?: string
           id?: number
           name?: string | null
+          times_used?: number
         }
         Update: {
           created_at?: string
           id?: number
           name?: string | null
+          times_used?: number
         }
         Relationships: []
       }
@@ -289,6 +295,36 @@ export type Database = {
           },
         ]
       }
+      Forum_Category: {
+        Row: {
+          category_id: number
+          forum_id: number
+        }
+        Insert: {
+          category_id: number
+          forum_id: number
+        }
+        Update: {
+          category_id?: number
+          forum_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forum_category_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "Category"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "forum_category_forum_id_fkey"
+            columns: ["forum_id"]
+            isOneToOne: false
+            referencedRelation: "Forum"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Forum_Tag: {
         Row: {
           forum_id: number
@@ -330,6 +366,8 @@ export type Database = {
           id: number
           images: string[] | null
           likes: number
+          product_id: number | null
+          reduced_price: number | null
           state: Database["public"]["Enums"]["Post_State"]
           superlikes: number
           target_completition_date: string
@@ -347,6 +385,8 @@ export type Database = {
           id?: number
           images?: string[] | null
           likes?: number
+          product_id?: number | null
+          reduced_price?: number | null
           state?: Database["public"]["Enums"]["Post_State"]
           superlikes?: number
           target_completition_date: string
@@ -364,6 +404,8 @@ export type Database = {
           id?: number
           images?: string[] | null
           likes?: number
+          product_id?: number | null
+          reduced_price?: number | null
           state?: Database["public"]["Enums"]["Post_State"]
           superlikes?: number
           target_completition_date?: string
@@ -384,6 +426,13 @@ export type Database = {
             columns: ["forum_id"]
             isOneToOne: false
             referencedRelation: "Forum"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Offer_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "Product"
             referencedColumns: ["id"]
           },
         ]
@@ -857,19 +906,19 @@ export type Database = {
           created_at: string
           id: number
           name: string | null
-          times_used: number | null
+          times_used: number
         }
         Insert: {
           created_at?: string
           id?: number
           name?: string | null
-          times_used?: number | null
+          times_used?: number
         }
         Update: {
           created_at?: string
           id?: number
           name?: string | null
-          times_used?: number | null
+          times_used?: number
         }
         Relationships: []
       }
@@ -1179,6 +1228,15 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      toggle_follow: {
+        Args: {
+          follower_user_uuid: string
+          target_id_int?: number
+          target_id_uuid?: string
+          target_type: string
+        }
+        Returns: Json
+      }
       toggle_like: {
         Args: { given_user_id: string; post_id: number; target_table: string }
         Returns: {
@@ -1196,6 +1254,21 @@ export type Database = {
       update_product_rating: {
         Args: { p_product_id: number }
         Returns: undefined
+      }
+      update_tag_usage: {
+        Args: { tag_ids: number[] }
+        Returns: {
+          created_at: string
+          id: number
+          name: string | null
+          times_used: number
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "Tag"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
     }
     Enums: {
