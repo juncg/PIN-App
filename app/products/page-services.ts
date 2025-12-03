@@ -56,7 +56,7 @@ export async function ProductServices(searchParams: Promise<ISearchParams>) {
 		filters.push({ method: "gte", column: "rating", value: minRating });
 	}
 
-	let selectQuery = "*, businesses:Product_Business!inner(business:Business(*))";
+	let selectQuery = "*, businesses:Product_Business!inner(business:Business(*)), Review_Product(review_id)";
 
 	if (params.categories) {
 		const categoryIds = params.categories.split(",").map(Number);

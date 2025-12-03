@@ -6,6 +6,7 @@ export type IOffer = Tables<"Offer"> & {
 	tags?: { Tag: ITag }[];
 	User_Offer?: Tables<"User_Offer">[];
 	User?: Tables<"User">;
+	products?: { Product: IProduct }[];
 };
 
 export type IPetition = Tables<"Petition"> & {
@@ -14,6 +15,7 @@ export type IPetition = Tables<"Petition"> & {
 	tags?: { Tag: ITag }[];
 	User_Petition?: Tables<"User_Petition">[];
 	User: Tables<"User">;
+	products?: { Product: IProduct }[];
 };
 
 export type IBusiness = Tables<"Business"> & {
@@ -43,6 +45,7 @@ export type IProduct = Tables<"Product"> & {
 	businesses?: {
 		business: Tables<"Business">;
 	}[];
+	Review_Product?: Tables<"Review_Product">[];
 };
 
 export type IBusinessUser = Tables<"User_Business"> & {

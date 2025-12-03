@@ -185,7 +185,7 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 											key={i}
 											className={cn(
 												"h-4 w-4",
-												i < rating ? "fill-black text-black" : "fill-lightgrey text-lightgrey"
+												i < rating ? "fill-white text-white" : " text-lightgrey"
 											)}
 										/>
 									))}

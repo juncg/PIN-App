@@ -14,12 +14,11 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 	return (
 		<div className="flex min-h-screen flex-col">
 			<div className="container flex-1 px-4 py-6">
-				<div className="flex items-center text-sm text-lightgrey-foreground">
-					<Link href="/home" className="hover:text-foreground transition-colors">
+				<div className="mb-8 text-sm text-lightgrey">
+					<Link href="/home" className="hover:underline">
 						Inicio
 					</Link>
-					<span className="mx-2">/</span>{" "}
-					<span className="text-foreground font-medium">Ofertas y peticiones</span>
+					<span className="mx-2">/</span> <span className="text-white font-medium">Ofertas y peticiones</span>
 				</div>
 
 				<div className="flex gap-8 mt-6">

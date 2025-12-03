@@ -38,6 +38,15 @@ export const ArrowUpwardIcon = (props: IconProps) => (
 	</svg>
 );
 
+export const CalendarIcon = (props: IconProps) => (
+	<svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path
+			d="M6 9H4V11H6V9ZM10 9H8V11H10V9ZM14 9H12V11H14V9ZM16 2H15V0H13V2H5V0H3V2H2C0.89 2 0.00999999 2.9 0.00999999 4L0 18C0 19.1 0.89 20 2 20H16C17.1 20 18 19.1 18 18V4C18 2.9 17.1 2 16 2ZM16 18H2V7H16V18Z"
+			fill="currentColor"
+		/>
+	</svg>
+);
+
 export const CheckBoxIcon = (props: IconProps) => (
 	<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
 		<path
@@ -183,6 +192,26 @@ export const LocalOfferIcon = (props: IconProps) => (
 			d="M22.83 12.99L11.83 2H2V11.83L12.99 22.82L22.83 12.99ZM5.5 7C4.67 7 4 6.33 4 5.5C4 4.67 4.67 4 5.5 4C6.33 4 7 4.67 7 5.5C7 6.33 6.33 7 5.5 7Z"
 			fill="currentColor"
 		/>
+	</svg>
+);
+
+export const LocationIcon = (props: IconProps) => (
+	<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<g clipPath="url(#clip0_722_11901)">
+			<path
+				d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM7 9C7 6.24 9.24 4 12 4C14.76 4 17 6.24 17 9C17 11.88 14.12 16.19 12 18.88C9.92 16.21 7 11.85 7 9Z"
+				fill="currentColor"
+			/>
+			<path
+				d="M12 11.5C13.3807 11.5 14.5 10.3807 14.5 9C14.5 7.61929 13.3807 6.5 12 6.5C10.6193 6.5 9.5 7.61929 9.5 9C9.5 10.3807 10.6193 11.5 12 11.5Z"
+				fill="currentColor"
+			/>
+		</g>
+		<defs>
+			<clipPath id="clip0_722_11901">
+				<rect width="24" height="24" fill="currentColor" />
+			</clipPath>
+		</defs>
 	</svg>
 );
 

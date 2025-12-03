@@ -11,6 +11,8 @@ export const buttonVariants = cva(
 			variant: {
 				default: "bg-white text-black rounded-full hover:scale-105 transition border-[2px] border-white",
 				outline: "bg-transparent text-white rounded-full hover:scale-105 transition border-[2px] border-white",
+				outlineSquared:
+					"bg-hover text-white rounded-lg hover:scale-105 transition border-[2px] border-cardborder",
 				ghost: "hover:bg-hover hover:text-hover",
 				chernobyl:
 					"bg-transparent text-black hover:scale-105 transition bg-[linear-gradient(160deg,var(--chernobyl)_0%,var(--lightgrey)_80%)]",

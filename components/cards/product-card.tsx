@@ -15,10 +15,10 @@ export function ProductCard({ props }: { props: IProductCard }) {
 
 	return (
 		<Link href={`/products/${product.id}`} className={cn("group block h-full", className)}>
-			<article className="flex flex-col h-full overflow-hidden rounded-xl border bg-black text-white shadow-sm transition-all hover:shadow-md">
+			<article className="flex flex-col h-full overflow-hidden rounded-xl border bg-primary text-white shadow-sm transition-all hover:shadow-md">
 				<div className="relative aspect-square w-full overflow-hidden bg-black">
 					<Image
-						className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 rounded-xl"
+						className="h-full w-full object-cover rounded-xl"
 						src={product.images?.[0] || "/placeholder.png"}
 						alt={product.name}
 						fill
@@ -44,8 +44,9 @@ export function ProductCard({ props }: { props: IProductCard }) {
 
 					<div className="mt-auto flex items-end justify-between">
 						<div className="flex items-center gap-1">
-							<Star className="h-4 w-4 fill-black text-black" />
+							<Star className="h-4 w-4 fill-white" />
 							<span className="text-sm font-semibold">{product.rating?.toFixed(1)}</span>
+							<span className="text-sm text-lightgrey">({product.Review_Product?.length} reviews)</span>
 						</div>
 						<div className="text-xl font-bold">{product.msrp?.toFixed(2)}€</div>
 					</div>

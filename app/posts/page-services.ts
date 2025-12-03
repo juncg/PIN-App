@@ -16,7 +16,7 @@ async function fetchOffers(
 ) {
 	const filters: any[] = [{ method: "order", column: orderColumn, ascending }];
 
-	let select = `*, User_Offer!left(liked, subscribed, user_id), tags:Offer_Tag(Tag(name)), User!Offer_creator_id_fkey(*)`;
+	let select = `*, User_Offer!left(liked, subscribed, user_id), tags:Offer_Tag(Tag(name)), User!Offer_creator_id_fkey(*), products:Offer_Product(Product(*))`;
 
 	if (tagFilter) {
 		const tagIds = tagFilter.split(",").map(Number);
@@ -85,7 +85,7 @@ async function fetchPetitions(
 ) {
 	const filters: any[] = [{ method: "order", column: orderColumn, ascending }];
 
-	let select = `*, User_Petition!left(liked, subscribed, user_id), tags:Petition_Tag(Tag(name)), User!Petition_creator_id_fkey(*)`;
+	let select = `*, User_Petition!left(liked, subscribed, user_id), tags:Petition_Tag(Tag(name)), User!Petition_creator_id_fkey(*), products:Petition_Product(Product(*))`;
 
 	if (tagFilter) {
 		const tagIds = tagFilter.split(",").map(Number);
@@ -220,7 +220,6 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 					followedForumIds
 			  );
 
-	// Combine offers and petitions (already sorted by database)
 	const allPosts = [...offers, ...petitions].sort((a, b) => {
 		const dateA = new Date(a.created_at).getTime();
 		const dateB = new Date(b.created_at).getTime();
@@ -243,6 +242,8 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 			},
 		],
 	});
+
+	console.log("posts: ", allPosts);
 
 	return {
 		translator,

@@ -5,6 +5,7 @@ import { IForum } from "@/lib/services/types";
 import Link from "next/link";
 import { FollowButton } from "../buttons/follow-button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
+import { VerifiedIcon } from "../icons/icons";
 
 export interface IForumCard {
 	className?: string;
@@ -27,11 +28,18 @@ export function ForumCard({ className, forum, currentUserId }: IForumCard) {
 							<AvatarFallback className="rounded-xl">{forum.name?.[0]}</AvatarFallback>
 						</Avatar>
 						<div>
-							<div className="flex flex-col items-start gap-0.5">
+							<div className="flex flex-col items-start">
 								<Link href={`/forums/${forum.id}`} className="text-s font-bold hover:underline">
 									{forum.name}
 								</Link>
-								<span className="text-xs text-lightgrey">{forum.Business?.name}</span>
+								<div>
+									<span className="text-xs text-lightgrey">{forum.Business?.name}</span>
+									<div className="inline-block ml-1 text-lightgrey">
+										{forum.Business?.verification != "Unverified" && (
+											<VerifiedIcon className="inline-block w-3 h-3 text-chernobyl" />
+										)}
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

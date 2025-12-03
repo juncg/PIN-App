@@ -34,32 +34,32 @@ export async function ProductDetailsServices(id: number) {
 
 	const { data: relatedOffers } = await GetFromDatabase<IOffer>({
 		tableName: "Offer",
-		select: "*, forum:Forum!inner(Business(*))",
+		select: "*, forum:Forum!inner(Business(*)), Offer_Product!inner(product_id)",
 		filters: [
-			{ method: "eq", column: "product_id", value: id },
+			{ method: "eq", column: "Offer_Product.product_id", value: id },
 			{ method: "order", column: "created_at", ascending: false },
 		],
 	});
 
-	const { data: relatedPetitions } = await GetFromDatabase<IOffer>({
+	const { data: relatedPetitions } = await GetFromDatabase<IPetition>({
 		tableName: "Petition",
-		select: "*, forum:Forum!inner(Business(*))",
+		select: "*, forum:Forum!inner(Business(*)), Petition_Product!inner(product_id)",
 		filters: [
-			{ method: "eq", column: "product_id", value: id },
+			{ method: "eq", column: "Petition_Product.product_id", value: id },
 			{ method: "order", column: "created_at", ascending: false },
 		],
 	});
 
 	const { data: numOfRelatedOffers } = await GetFromDatabase<IOffer>({
 		tableName: "Offer",
-		select: "id",
-		filters: [{ method: "eq", column: "product_id", value: id }],
+		select: "id, Offer_Product!inner(product_id)",
+		filters: [{ method: "eq", column: "Offer_Product.product_id", value: id }],
 	});
 
-	const { data: numOfRelatedPetitions } = await GetFromDatabase<IOffer>({
+	const { data: numOfRelatedPetitions } = await GetFromDatabase<IPetition>({
 		tableName: "Petition",
-		select: "id",
-		filters: [{ method: "eq", column: "product_id", value: id }],
+		select: "id, Petition_Product!inner(product_id)",
+		filters: [{ method: "eq", column: "Petition_Product.product_id", value: id }],
 	});
 
 	const { data: businessProducts } = await GetFromDatabase<IProduct>({

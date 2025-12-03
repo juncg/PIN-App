@@ -366,7 +366,6 @@ export type Database = {
           id: number
           images: string[] | null
           likes: number
-          product_ids: number[] | null
           reduced_price: number | null
           state: Database["public"]["Enums"]["Post_State"]
           superlikes: number
@@ -385,7 +384,6 @@ export type Database = {
           id?: number
           images?: string[] | null
           likes?: number
-          product_ids?: number[] | null
           reduced_price?: number | null
           state?: Database["public"]["Enums"]["Post_State"]
           superlikes?: number
@@ -404,7 +402,6 @@ export type Database = {
           id?: number
           images?: string[] | null
           likes?: number
-          product_ids?: number[] | null
           reduced_price?: number | null
           state?: Database["public"]["Enums"]["Post_State"]
           superlikes?: number
@@ -500,7 +497,6 @@ export type Database = {
           id: number
           images: string[] | null
           likes: number
-          product_ids: number[] | null
           reduced_price: number | null
           state: Database["public"]["Enums"]["Post_State"]
           superlikes: number
@@ -517,7 +513,6 @@ export type Database = {
           id?: number
           images?: string[] | null
           likes?: number
-          product_ids?: number[] | null
           reduced_price?: number | null
           state?: Database["public"]["Enums"]["Post_State"]
           superlikes?: number
@@ -534,7 +529,6 @@ export type Database = {
           id?: number
           images?: string[] | null
           likes?: number
-          product_ids?: number[] | null
           reduced_price?: number | null
           state?: Database["public"]["Enums"]["Post_State"]
           superlikes?: number
