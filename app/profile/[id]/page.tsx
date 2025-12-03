@@ -1,7 +1,7 @@
 import { FollowButton } from "@/components/buttons/follow-button";
+import { AltenatingButtons, SlidingButtonProps } from "@/components/buttons/sliding-buttons";
 import { PostCardHorizontal } from "@/components/cards/post-card-horizontal";
 import { CheckBoxIcon, TextSnippetIcon } from "@/components/icons/icons";
-import { AltenatingButtons, SlidingButtonProps } from "@/components/profile/alternating-buttons";
 import { ProfileRightColumn } from "@/components/profile/profile-right-column";
 import { Button } from "@/components/ui-custom/button";
 import { B1, H1, H2, H4 } from "@/components/ui-custom/typography";
