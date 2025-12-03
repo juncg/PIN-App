@@ -1,42 +1,5 @@
 import { GetFromDatabase } from "@/lib/services/general";
-import { IProduct, IReview } from "@/lib/services/types";
-import { getTranslations } from "next-intl/server";
-import { DEFAULT_LOCALE } from "@/lib/constants";
-import { ExecuteRpcFunction } from "@/lib/services/general";
-
-export interface RatingDistribution {
-	stars: number;
-	count: number;
-	percentage: number;
-}
-
-function createDefaultDistribution(): RatingDistribution[] {
-	return [
-		{ stars: 5, count: 0, percentage: 0 },
-		{ stars: 4, count: 0, percentage: 0 },
-		{ stars: 3, count: 0, percentage: 0 },
-		{ stars: 2, count: 0, percentage: 0 },
-		{ stars: 1, count: 0, percentage: 0 },
-	];
-}
-
-async function GetProductRatingDistribution(productId: number): Promise<RatingDistribution[]> {
-	const { data, error } = await ExecuteRpcFunction<RatingDistribution>({
-		functionName: "get_product_rating_distribution",
-		params: {
-			product_id_input: productId,
-		},
-	});
-
-	if (error || !data) {
-		return createDefaultDistribution();
-	}
-
-	return data.map((item) => ({
-		...item,
-		percentage: parseFloat(item.percentage as any),
-	}));
-}
+import { IProduct, IReview, IOffer, IPetition } from "@/lib/services/types";
 
 export async function ProductDetailsServices(id: number) {
 	const { data: product } = await GetFromDatabase<IProduct>({
@@ -57,14 +20,56 @@ export async function ProductDetailsServices(id: number) {
 		],
 	});
 
-	const ratingDistribution = await GetProductRatingDistribution(id);
+	const numOfReviews = productReviews?.length || 0;
 
-	const numOfReviews = ratingDistribution.reduce((total, item) => total + item.count, 0);
+	const { data: relatedProducts } = await GetFromDatabase<IProduct>({
+		tableName: "Product",
+		select: "*, businesses:Product_Business!inner(business:Business(*))",
+		filters: [
+			{ method: "neq", column: "id", value: id },
+			{ method: "order", column: "created_at", ascending: false },
+			{ method: "limit", value: 5 },
+		],
+	});
+
+	const { data: relatedOffers } = await GetFromDatabase<IOffer>({
+		tableName: "Offer",
+		select: "*, forum:Forum!inner(Business(*))",
+		filters: [
+			{ method: "eq", column: "product_id", value: id },
+			{ method: "order", column: "created_at", ascending: false },
+		],
+	});
+
+	const { data: relatedPetitions } = await GetFromDatabase<IOffer>({
+		tableName: "Petition",
+		select: "*, forum:Forum!inner(Business(*))",
+		filters: [
+			{ method: "eq", column: "product_id", value: id },
+			{ method: "order", column: "created_at", ascending: false },
+		],
+	});
+
+	const { data: numOfRelatedOffers } = await GetFromDatabase<IOffer>({
+		tableName: "Offer",
+		select: "id",
+		filters: [{ method: "eq", column: "product_id", value: id }],
+	});
+
+	const { data: numOfRelatedPetitions } = await GetFromDatabase<IOffer>({
+		tableName: "Petition",
+		select: "id",
+		filters: [{ method: "eq", column: "product_id", value: id }],
+	});
 
 	return {
 		product: product?.[0] || null,
-		ratingDistribution,
 		numOfReviews: numOfReviews || 0,
 		productReviews: productReviews || [],
+		relatedProducts: relatedProducts || [],
+		relatedOffers: relatedOffers || [],
+		relatedPetitions: relatedPetitions || [],
+		numOfRelatedOffers: numOfRelatedOffers?.length || 0,
+		numOfRelatedPetitions: numOfRelatedPetitions?.length || 0,
 	};
 }
