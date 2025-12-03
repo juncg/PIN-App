@@ -6,7 +6,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -15,4 +15,5 @@ jobs:
         with:
           node-version: "22.x"
 
+      - run: npm ci
       - run: npm test
