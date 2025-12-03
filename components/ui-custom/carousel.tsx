@@ -6,6 +6,8 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
+import WheelGestures from "embla-carousel-wheel-gestures";
+
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -58,7 +60,7 @@ function Carousel({
 			...opts,
 			axis: orientation === "horizontal" ? "x" : "y",
 		},
-		plugins
+		[WheelGestures()]
 	);
 	const [canScrollPrev, setCanScrollPrev] = React.useState(false);
 	const [canScrollNext, setCanScrollNext] = React.useState(false);
