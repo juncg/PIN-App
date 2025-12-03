@@ -6,10 +6,11 @@ import { Progress } from "@/components/ui-custom/progress";
 import { Separator } from "@/components/ui-custom/separator";
 import { IComment, IOffer, IUser } from "@/lib/services/types";
 import { GetRelativeTime } from "@/lib/services/utilities";
-import { Users } from "lucide-react";
+import { MessageCircle, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CommentsSection } from "../posts/comments-section";
 import { ProductImages } from "../products/product-images";
+import { AltenatingButtons, SlidingButtonProps } from "@/components/buttons/sliding-buttons";
 
 interface OfferDetailsProps {
 	offer: IOffer;
@@ -37,6 +38,24 @@ export function OfferDetails({ offer, subscribedByUser, currentUser, comments }:
 	const displayImages: string[] = offer.images?.filter((img) => img && img.trim() !== "")?.length
 		? offer.images.filter((img) => img && img.trim() !== "")
 		: ["/placeholder.png"];
+
+	const slidingButtonsContent: SlidingButtonProps[] = [
+		{
+			content: <div className="p-6"></div>,
+			displayName: "Descripción",
+			displayIcon: null,
+		},
+		{
+			content: <div className="p-6"></div>,
+			displayName: "Detalles",
+			displayIcon: null,
+		},
+		{
+			content: <div className="p-6"></div>,
+			displayName: "Especificaciones",
+			displayIcon: null,
+		},
+	];
 
 	return (
 		<div className="container mx-auto px-4 py-8">
@@ -99,14 +118,14 @@ export function OfferDetails({ offer, subscribedByUser, currentUser, comments }:
 					</div>
 
 					<Separator />
-
-					<div className="bg-lightgrey rounded-2xl p-6 mb-6 border-3 border-black">
-						<h3 className="font-black text-lg mb-3">Descripción</h3>
-						<p className="text-sm leading-relaxed mb-4">{offer.text}</p>
-					</div>
 				</div>
 			</div>
-			<div className="bg-lightgrey rounded-2xl border-3 p-6">
+
+			<AltenatingButtons
+			 	buttonsContent={slidingButtonsContent}
+				textSize="text-xl" />
+
+			<div className="bg-lightgrey rounded-2xl border-3 p-6 mt-8">
 				<div className="flex items-center gap-4 mb-6">
 					<div className="flex -space-x-3">
 						{[...Array(Math.min(10, currentProgress))].map((_, i) => (
@@ -147,7 +166,8 @@ export function OfferDetails({ offer, subscribedByUser, currentUser, comments }:
 					fullWidth={true}
 				/>
 			</div>
-			<CommentsSection postType="Offer" postId={offer.id} currentUser={currentUser} comments={comments} />{" "}
+
+			<CommentsSection postType="Offer" postId={offer.id} currentUser={currentUser} comments={comments} />
 		</div>
 	);
 }
