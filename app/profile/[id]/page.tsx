@@ -1,6 +1,7 @@
 import { FollowButton } from "@/components/buttons/follow-button";
 import { PostCardHorizontal } from "@/components/cards/post-card-horizontal";
-import { ProfileAltenatingButtons } from "@/components/profile/profile-alternating-buttons";
+import { CheckBoxIcon, TextSnippetIcon } from "@/components/icons/icons";
+import { AltenatingButtons, SlidingButtonProps } from "@/components/profile/alternating-buttons";
 import { ProfileRightColumn } from "@/components/profile/profile-right-column";
 import { Button } from "@/components/ui-custom/button";
 import { B1, H1, H2, H4 } from "@/components/ui-custom/typography";
@@ -38,6 +39,62 @@ export default async function Profile({ params }: ProfilePageProps) {
 	} = await ProfileServices(id);
 	const currentUserId = await getUserUuid();
 	const isCurrentUser = currentUserId === userData?.id;
+
+	const slidingButtonsContent: SlidingButtonProps[] = [
+		{
+			content: (
+				<>
+					<div className="flex flex-col gap-12 w-full">
+						<span className="flex items-end gap-6">
+							<H2>Ofertas.</H2>
+							<B1 className="text-lightgrey line-clamp-2">{subscribedOffersCount} ofertas en total</B1>
+						</span>
+
+						<div className="flex flex-col gap-8 w-full">
+							{subscribedOffers.map((offer: IOffer) => {
+								return <PostCardHorizontal key={offer.id} post={offer} />;
+							})}
+						</div>
+
+						<div className="mx-auto">
+							<Button>Mostrar más</Button>
+						</div>
+					</div>
+
+					<div className="flex flex-col gap-12 w-full">
+						<span className="flex items-end gap-6">
+							<H2>Peticiones.</H2>
+							<B1 className="text-lightgrey line-clamp-2">
+								{subscribedPetitionsCount} peticiones en total
+							</B1>
+						</span>
+
+						<div className="flex flex-col gap-8 w-full">
+							{subscribedPetitions.map((petition: IPetition) => {
+								return <PostCardHorizontal key={petition.id} post={petition} />;
+							})}
+						</div>
+
+						<div className="mx-auto">
+							<Button>Mostrar más</Button>
+						</div>
+					</div>
+				</>
+			),
+			displayName: "Mis suscripciones",
+			displayIcon: <CheckBoxIcon />,
+		},
+		{
+			content: (
+				<div>
+					<H2>Mis publicaciones</H2>
+					<B1 className="text-lightgrey">Contenido de publicaciones aquí</B1>
+				</div>
+			),
+			displayName: "Mis publicaciones",
+			displayIcon: <TextSnippetIcon />,
+		},
+	];
 
 	return (
 		<section className="flex flex-row justify-center items-start gap-16">
@@ -98,55 +155,7 @@ export default async function Profile({ params }: ProfilePageProps) {
 					</div>
 				</div>
 
-				<ProfileAltenatingButtons
-					subscriptionsContent={
-						<>
-							<div className="flex flex-col gap-12 w-full">
-								<span className="flex items-end gap-6">
-									<H2>Ofertas.</H2>
-									<B1 className="text-lightgrey line-clamp-2">
-										{subscribedOffersCount} ofertas en total
-									</B1>
-								</span>
-
-								<div className="flex flex-col gap-8 w-full">
-									{subscribedOffers.map((offer: IOffer) => {
-										return <PostCardHorizontal key={offer.id} post={offer} />;
-									})}
-								</div>
-
-								<div className="mx-auto">
-									<Button>Mostrar más</Button>
-								</div>
-							</div>
-
-							<div className="flex flex-col gap-12 w-full">
-								<span className="flex items-end gap-6">
-									<H2>Peticiones.</H2>
-									<B1 className="text-lightgrey line-clamp-2">
-										{subscribedPetitionsCount} peticiones en total
-									</B1>
-								</span>
-
-								<div className="flex flex-col gap-8 w-full">
-									{subscribedPetitions.map((petition: IPetition) => {
-										return <PostCardHorizontal key={petition.id} post={petition} />;
-									})}
-								</div>
-
-								<div className="mx-auto">
-									<Button>Mostrar más</Button>
-								</div>
-							</div>
-						</>
-					}
-					postsContent={
-						<div>
-							<H2>Mis publicaciones</H2>
-							<B1 className="text-lightgrey">Contenido de publicaciones aquí</B1>
-						</div>
-					}
-				/>
+				<AltenatingButtons buttonsContent={slidingButtonsContent} />
 			</div>
 
 			<ProfileRightColumn

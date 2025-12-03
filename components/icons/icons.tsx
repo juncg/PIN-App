@@ -38,6 +38,15 @@ export const ArrowUpwardIcon = (props: IconProps) => (
 	</svg>
 );
 
+export const CheckBoxIcon = (props: IconProps) => (
+	<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path
+			d="M15.6685 0H1.95857C0.881356 0 0 0.9 0 2V16C0 17.1 0.881356 18 1.95857 18H15.6685C16.7458 18 17.6271 17.1 17.6271 16V2C17.6271 0.9 16.7458 0 15.6685 0ZM15.6685 16H1.95857V2H15.6685V16ZM14.6795 6L13.2987 4.58L6.8452 11.17L4.31864 8.6L2.92806 10.01L6.8452 14L14.6795 6Z"
+			fill="currentColor"
+		/>
+	</svg>
+);
+
 export const CheckCircleIcon = (props: IconProps) => (
 	<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path
@@ -316,6 +325,15 @@ export const Shining2LineIcon = (props: IconProps) => (
 	<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path
 			d="M16 8L23.5 12L16 16L12 23.5L8 16L0.5 12L8 8L12 0.5L16 8ZM19.25 12L14.5217 9.47826L12 4.75L9.47826 9.47826L4.75 12L9.47826 14.5217L12 19.25L14.5217 14.5217L19.25 12Z"
+			fill="currentColor"
+		/>
+	</svg>
+);
+
+export const TextSnippetIcon = (props: IconProps) => (
+	<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path
+			d="M11.17 2L16 6.83V16H2V2H11.17ZM11.17 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V6.83C18 6.3 17.79 5.79 17.41 5.42L12.58 0.59C12.21 0.21 11.7 0 11.17 0ZM4 12H14V14H4V12ZM4 8H14V10H4V8ZM4 4H11V6H4V4Z"
 			fill="currentColor"
 		/>
 	</svg>
