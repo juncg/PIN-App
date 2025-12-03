@@ -1,15 +1,14 @@
 import { FollowButton } from "@/components/buttons/follow-button";
 import { AltenatingButtons, SlidingButtonProps } from "@/components/buttons/sliding-buttons";
 import { PostCardHorizontal } from "@/components/cards/post-card-horizontal";
-import { CheckBoxIcon, TextSnippetIcon } from "@/components/icons/icons";
+import { CalendarIcon, CheckBoxIcon, LocationIcon, PeopleAlt2Icon, TextSnippetIcon } from "@/components/icons/icons";
 import { ProfileRightColumn } from "@/components/profile/profile-right-column";
 import { Button } from "@/components/ui-custom/button";
-import { B1, H1, H2, H4 } from "@/components/ui-custom/typography";
+import { B1, H2, H5DisplayBold } from "@/components/ui-custom/typography";
 import { IOffer, IPetition } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
 import { GetJoinedDate } from "@/lib/services/utilities";
 import { ISearchParams } from "@/types";
-import { CalendarDays, MapPin, Users } from "lucide-react";
 import Image from "next/image";
 import { ProfileServices } from "./page-services";
 
@@ -98,47 +97,61 @@ export default async function Profile({ params }: ProfilePageProps) {
 
 	return (
 		<section className="flex flex-row justify-center items-start gap-16">
-			<div className="flex flex-col gap-10 items-start w-full">
+			<div className="flex flex-col gap-6 items-start w-full">
+				<div className="relative w-full">
+					<figure className="relative w-full h-[200px] rounded-b-lg overflow-hidden -mt-8">
+						<Image
+							src={userData?.banner || "/placeholder.png"}
+							alt="Profile banner"
+							fill
+							className="object-cover"
+							unoptimized
+						/>
+					</figure>
+
+					<figure className="absolute -bottom-[100px] left-8 w-[140px] h-[140px] rounded-full overflow-hidden border-[2px] border-darkmode">
+						<Image
+							src={userData?.profile_picture || "/placeholder.png"}
+							alt="User profile picture"
+							fill
+							className="object-cover"
+							unoptimized
+						/>
+					</figure>
+				</div>
+
 				<div className="flex gap-16 w-full">
-					<div className="flex flex-col gap-10 w-2/3">
+					<div className="flex flex-col gap-10">
 						<span className="flex gap-8 items-center">
-							<figure className="relative w-[140px] h-[140px] rounded-full overflow-hidden">
-								<Image
-									src={userData?.profile_picture || "/placeholder.png"}
-									alt={"User profile picture"}
-									fill
-									className="object-cover"
-									unoptimized
-								/>
-							</figure>
-
-							<span className="flex flex-col gap-2">
-								<H1 className="font-funnel-sans">
+							<span className="flex flex-col gap-2 ml-[200px]">
+								<H2 className="font-funnel-sans">
 									{userData?.name} {userData?.surnames}.
-								</H1>
+								</H2>
 
-								<H4 className="text-lightgrey">@{userData?.username}</H4>
+								<H5DisplayBold className="!text-lightgrey">@{userData?.username}</H5DisplayBold>
 							</span>
 						</span>
 
 						<B1>{userData?.bio}</B1>
-					</div>
 
-					<div className="flex flex-col gap-12 mt-8 w-1/3">
-						<span className="flex flex-col gap-4 text-lightgrey">
+						<span className="flex flex-row gap-4 text-lightgrey">
 							<B1 className="flex gap-2 items-center">
-								<MapPin className="!h-4" /> Ubicación: Ejemplo
+								<PeopleAlt2Icon className="!h-4" />
+								{userData?.followers} {userData?.followers === 1 ? "seguidor" : "seguidores"}
 							</B1>
+
 							<B1 className="flex gap-2 items-center">
-								<Users className="!h-4" />
-								Seguidores: {userData?.followers}
+								<LocationIcon className="!h-4" /> Ubicación: Ejemplo
 							</B1>
+
 							<B1 className="flex gap-2 items-center">
-								<CalendarDays className="!h-4" />
+								<CalendarIcon className="!h-4" />
 								{GetJoinedDate(userData?.joined_at.toString() || "")}
 							</B1>
 						</span>
+					</div>
 
+					<div className="flex flex-col gap-12 mt-8 w-1/3">
 						<span>
 							{!isCurrentUser ? (
 								<FollowButton
@@ -149,7 +162,9 @@ export default async function Profile({ params }: ProfilePageProps) {
 									currentUserId={currentUserId}
 								/>
 							) : (
-								<Button className="bg-black text-black">Editar perfil</Button>
+								<Button variant="outlineSquared" size="lg">
+									Editar perfil
+								</Button>
 							)}
 						</span>
 					</div>

@@ -80,7 +80,9 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 	const businessImage = post?.businesses?.[0]?.business.profile_picture || "/placeholder.png";
 
 	return (
-		<article className={cn("group relative z-0 rounded-2xl text-white transition-all", className)}>
+		<article
+			className={cn("group relative z-0 rounded-2xl text-white flex justify-between transition-all", className)}
+		>
 			<div className="relative h-full w-full overflow-hidden rounded-2xl p-[2px]">
 				{offerCompletionPercentage >= POST_ON_FIRE_COMPLETION_PERCENTAGE ? (
 					<div className="absolute inset-0 rounded-2xl bg-[linear-gradient(90deg,var(--chernobyl)_0%,var(--lightgrey)_20%,var(--chernobyl)_40%,var(--darkgrey)_60%,var(--white)_80%,var(--chernobyl)_100%)] bg-[length:600%_600%] animate-border-spin -z-10" />
