@@ -26,6 +26,7 @@ import { B1, H3 } from "../ui-custom/typography";
 import FileDropzone from "./base/file-dropzone";
 import { FormField } from "./base/form-field";
 import { CreateOfferSchema, type TCreateOfferSchema } from "./schemas/offer";
+import { ProductSelector } from "./product-selector";
 
 interface OfferFormProps {
 	forums: IForum[];
@@ -37,10 +38,8 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 	const [selectedTags, setSelectedTags] = useState<number[]>([]);
 	const [apiError, setApiError] = useState<PostgrestError | null>(null);
 	const [images, setImages] = useState<File[]>([]);
-	const [availableProducts, setAvailableProducts] = useState<IProduct[]>([]);
-	const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
+	const [selectedProductsList, setSelectedProductsList] = useState<IProduct[]>([]);
 	const [totalMsrp, setTotalMsrp] = useState<number>(0);
-	const [isLoadingProducts, setIsLoadingProducts] = useState(false);
 	const { userUuid } = useUser();
 	const router = useRouter();
 
@@ -78,78 +77,13 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 	}, [setValue]);
 
 	useEffect(() => {
-		if (!userUuid) return;
-
-		async function loadUserProducts() {
-			setIsLoadingProducts(true);
-			try {
-				const { data: userBusinesses } = await GetFromDatabase<Tables<"User_Business">>({
-					tableName: "User_Business",
-					select: "business_id",
-					filters: [{ method: "eq", column: "user_id", value: userUuid }],
-				});
-
-				const { data: employeeBusinesses } = await GetFromDatabase<Tables<"Business_Employee">>({
-					tableName: "Business_Employee",
-					select: "business_id",
-					filters: [{ method: "eq", column: "user_id", value: userUuid }],
-				});
-
-				const businessIds = [
-					...(userBusinesses?.map((ub) => ub.business_id) || []),
-					...(employeeBusinesses?.map((eb) => eb.business_id) || []),
-				];
-
-				if (businessIds.length === 0) {
-					setAvailableProducts([]);
-					return;
-				}
-
-				const { data: productBusinessRelations } = await GetFromDatabase<Tables<"Product_Business">>({
-					tableName: "Product_Business",
-					select: "product_id",
-					filters: [{ method: "in", column: "business_id", value: businessIds }],
-				});
-
-				const productIds = productBusinessRelations?.map((pb) => pb.product_id) || [];
-
-				if (productIds.length === 0) {
-					setAvailableProducts([]);
-					return;
-				}
-
-				const { data: products } = await GetFromDatabase<IProduct>({
-					tableName: "Product",
-					select: "*",
-					filters: [{ method: "in", column: "id", value: productIds }],
-				});
-
-				setAvailableProducts(products || []);
-			} catch (error) {
-				console.error("Error loading products:", error);
-				toast.error("Error al cargar productos");
-			} finally {
-				setIsLoadingProducts(false);
-			}
-		}
-
-		loadUserProducts();
-	}, [userUuid]);
-
-	useEffect(() => {
-		const total = availableProducts
-			.filter((product) => selectedProducts.includes(product.id))
-			.reduce((sum, product) => sum + (product.msrp || 0), 0);
+		const total = selectedProductsList.reduce((sum, product) => sum + (product.msrp || 0), 0);
 		setTotalMsrp(total);
-		setValue("product_ids", selectedProducts);
-	}, [selectedProducts, availableProducts, setValue]);
-
-	// Manejar cambio de producto seleccionado
-	const handleProductToggle = (productId: number) => {
-		setSelectedProducts((prev) =>
-			prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId]
+		setValue(
+			"product_ids",
+			selectedProductsList.map((p) => p.id)
 		);
-	};
+	}, [selectedProductsList, setValue]);
 
 	async function handleOfferCreation(data: TCreateOfferSchema) {
 		setIsSubmitting(true);
@@ -163,7 +97,7 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 		}
 
 		try {
-			if (selectedProducts.length > 0 && data.reduced_price) {
+			if (selectedProductsList.length > 0 && data.reduced_price) {
 				if (data.reduced_price >= totalMsrp) {
 					toast.error("El precio reducido debe ser menor que el precio total de los productos");
 					setIsSubmitting(false);
@@ -221,10 +155,10 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 				}
 			}
 
-			if (offerId && selectedProducts.length > 0) {
-				const productRelations = selectedProducts.map((productId) => ({
+			if (offerId && selectedProductsList.length > 0) {
+				const productRelations = selectedProductsList.map((product) => ({
 					offer_id: offerId,
-					product_id: productId,
+					product_id: product.id,
 				}));
 
 				const productResp = await PostToDatabase({
@@ -365,78 +299,47 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 					/>
 				</FormField>
 
-				<FormField label="Productos asociados" htmlFor="products">
-					{isLoadingProducts ? (
-						<B1 className="text-lightgrey">Cargando productos...</B1>
-					) : availableProducts.length === 0 ? (
-						<Card className="p-6">
-							<B1 className="text-lightgrey text-center">No tienes productos disponibles.</B1>
-						</Card>
-					) : (
-						<div className="space-y-4">
-							<Card className="p-4 border-input">
-								<CardContent className="p-0 space-y-3">
-									{availableProducts.map((product) => (
-										<div key={product.id} className="flex items-center space-x-3">
-											<Checkbox
-												id={`product-${product.id}`}
-												checked={selectedProducts.includes(product.id)}
-												onCheckedChange={() => handleProductToggle(product.id)}
-												disabled={isSubmitting}
-												className="bg-primary border border-white"
-											/>
-											<Label htmlFor={`product-${product.id}`} className="flex-1 cursor-pointer">
-												<div className="flex justify-between items-center">
-													<span>{product.name}</span>
-													<span className="font-semibold">
-														{product.msrp?.toFixed(2) || "0.00"}€
-													</span>
-												</div>
-												{product.description && (
-													<B1 className="text-lightgrey text-sm">{product.description}</B1>
-												)}
-											</Label>
-										</div>
-									))}
-								</CardContent>
-							</Card>
+				<FormField label="Productos asociados" htmlFor="products" required>
+					<ProductSelector
+						selectedProducts={selectedProductsList}
+						onProductsChange={setSelectedProductsList}
+						restrictToUserBusinesses={true}
+						userUuid={userUuid}
+					/>
 
-							{selectedProducts.length > 0 && (
-								<Card className="p-4 bg-primary/5 border border-input">
-									<div className="flex justify-between items-center mb-3">
-										<H3>Precio total:</H3>
-										<H3 className="text-primary">{totalMsrp.toFixed(2)}€</H3>
-									</div>
+					{selectedProductsList.length > 0 && (
+						<Card className="p-4 bg-primary/5 border border-input mt-4">
+							<div className="flex justify-between items-center mb-3">
+								<H3>Precio total:</H3>
+								<H3 className="text-primary">{totalMsrp.toFixed(2)}€</H3>
+							</div>
 
-									<FormField
-										label="Precio reducido de la oferta"
-										errorMessage={errors.reduced_price?.message || ""}
-										htmlFor="reduced_price"
-										required
-									>
-										<Input
-											id="reduced_price"
-											type="number"
-											step="0.01"
-											min="0"
-											max={totalMsrp}
-											{...register("reduced_price", { valueAsNumber: true })}
-											disabled={isSubmitting}
-											placeholder={`Debe ser menor a ${totalMsrp.toFixed(2)}€`}
-										/>
-									</FormField>
+							<FormField
+								label="Precio reducido de la oferta"
+								errorMessage={errors.reduced_price?.message || ""}
+								htmlFor="reduced_price"
+								required
+							>
+								<Input
+									id="reduced_price"
+									type="number"
+									step="0.01"
+									min="0"
+									max={totalMsrp}
+									{...register("reduced_price", { valueAsNumber: true })}
+									disabled={isSubmitting}
+									placeholder={`Debe ser menor a ${totalMsrp.toFixed(2)}€`}
+								/>
+							</FormField>
 
-									{reducedPrice !== null && reducedPrice !== undefined && totalMsrp > 0 && (
-										<div className="mt-3 text-center">
-											<B1 className="text-primary font-semibold">
-												Descuento: {(((totalMsrp - reducedPrice) / totalMsrp) * 100).toFixed(1)}
-												%
-											</B1>
-										</div>
-									)}
-								</Card>
+							{reducedPrice !== null && reducedPrice !== undefined && totalMsrp > 0 && (
+								<div className="mt-3 text-center">
+									<B1 className="text-primary font-semibold">
+										Descuento: {(((totalMsrp - reducedPrice) / totalMsrp) * 100).toFixed(1)}%
+									</B1>
+								</div>
 							)}
-						</div>
+						</Card>
 					)}
 				</FormField>
 
