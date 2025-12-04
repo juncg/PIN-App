@@ -17,6 +17,7 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui-custom/carousel";
+import { AltenatingButtons, SlidingButtonProps } from "@/components/buttons/sliding-buttons";
 
 interface ProductPageProps {
 	params: Promise<{
@@ -39,6 +40,23 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 		businessProducts,
 	} = await ProductDetailsServices(id);
 	const userUuid = await getUserUuid();
+
+	const loremIpsumDesc =
+		"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero totam ratione accusamus sunt iusto ad animi, quia incidunt cum, explicabo alias molestias itaque, nesciunt beatae dolorem autem harum sapiente laboriosam.";
+	const slidingButtonsContent: SlidingButtonProps[] = [
+		{
+			content: <div>{loremIpsumDesc}</div>,
+			displayName: "Descripción",
+		},
+		{
+			content: <div>{loremIpsumDesc}</div>,
+			displayName: "Detalles",
+		},
+		{
+			content: <div>{loremIpsumDesc}</div>,
+			displayName: "Especificaciones",
+		},
+	];
 
 	if (!product) {
 		return <div>Loading...</div>;
@@ -72,7 +90,6 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 						<H1 className="text-3xl font-bold mb-2">{product.name}.</H1>
 					</div>
 
-					{/* Rating */}
 					<div className="flex items-center gap-2">
 						{[...Array(5)].map((_, i) => (
 							<Star
@@ -111,17 +128,7 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 			<div className="flex flex-row justify-center gap-8 py-8">
 				<div className="flex flex-col items-baseline gap-8 w-[70%]">
 					<div>
-						<H3>trozo de descripcion bla bla</H3>
-						<div className="mt-4">
-							<B1 className="text-lightgrey">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-								incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-								exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-								dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-								Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-								mollit anim id est laborum.
-							</B1>
-						</div>
+						<AltenatingButtons buttonsContent={slidingButtonsContent} />
 					</div>
 
 					<div>

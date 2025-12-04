@@ -116,13 +116,13 @@ export function SubscribeButton(props: ISubscribeButton) {
 					checked={subscribed}
 					onCheckedChange={() => handleSubscribe()}
 					disabled={isDisabled}
-					innerTextChecked="Suscrito"
-					innerTextUnchecked="Suscribirse"
+					innerTextChecked="Suscrito."
+					innerTextUnchecked="Suscribirse."
 					className={cn(fullWidth && "w-full")}
 				/>
 			) : (
 				<Button onClick={handleSubscribe} disabled={isDisabled} className={cn(fullWidth && "w-full")}>
-					<span>{subscribed ? "Desuscribirme" : "Suscribirme"}</span>
+					<span>{subscribed ? "Desuscribirme." : "Suscribirse."}</span>
 				</Button>
 			)}
 
