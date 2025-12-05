@@ -5,10 +5,11 @@ import PostsSidebar from "@/components/sidebar/posts-filters";
 import { ISearchParams } from "@/types";
 import Link from "next/link";
 import { PostsServices } from "./page-services";
+import { CreatePostFab } from "@/components/buttons/create-post-fab";
+
 export default async function PostsPage({ searchParams }: { searchParams: Promise<ISearchParams> }) {
-	const { translator, clientTranslations, posts, postType, popularTags, currentUserId } = await PostsServices(
-		searchParams
-	);
+	const { translator, clientTranslations, posts, postType, popularTags, currentUserId, isBusinessUser } =
+		await PostsServices(searchParams);
 	const params = await searchParams;
 
 	return (
@@ -55,6 +56,7 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 					</main>
 				</div>
 			</div>
+			{currentUserId && <CreatePostFab isBusinessUser={isBusinessUser} />}
 		</div>
 	);
 }

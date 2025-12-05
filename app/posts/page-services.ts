@@ -148,9 +148,8 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 	const postType = params.type || "all";
 	const creatorFilter = params.creator;
 	const tagFilter = params.tags;
+	const currentUserId = await getUserUuid();
 	const translator = await getTranslations({ locale: params.locale || DEFAULT_LOCALE, namespace: "products" });
-
-	const currentUserId = creatorFilter === "followed" ? await getUserUuid() : null;
 
 	const orderBy = params.orderBy || "newest";
 	let orderColumn = "created_at";
@@ -243,7 +242,15 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 		],
 	});
 
-	console.log("posts: ", allPosts);
+	const userBusinesses = await GetFromDatabase<{ business_id: number }>({
+		tableName: "User_Business",
+		select: "business_id",
+		filters: [{ method: "eq", column: "user_id", value: currentUserId }],
+	});
+
+	const isBusinessUser = userBusinesses.data !== null && userBusinesses.data.length > 0;
+
+	console.log("currentUserId:", currentUserId, "isBusinessUser:", isBusinessUser);
 
 	return {
 		translator,
@@ -252,5 +259,6 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 		postType,
 		popularTags: popularTags.data || [],
 		currentUserId,
+		isBusinessUser,
 	};
 }
