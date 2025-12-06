@@ -8,7 +8,7 @@ import { GetRelativeTime } from "@/lib/services/utilities";
 import { Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SubscribeButton } from "../buttons/subscribe-button";
-import { CommentsSection } from "../posts/comments-section";
+import { CommentsSection } from "../comments/comments-section";
 import { ProductImages } from "../products/product-images";
 
 interface PetitionDetailsProps {

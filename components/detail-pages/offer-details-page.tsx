@@ -8,7 +8,7 @@ import { IComment, IOffer, IUser } from "@/lib/services/types";
 import { GetRelativeTime } from "@/lib/services/utilities";
 import { MessageCircle, Users } from "lucide-react";
 import { useEffect, useState } from "react";
-import { CommentsSection } from "../posts/comments-section";
+import { CommentsSection } from "../comments/comments-section";
 import { ProductImages } from "../products/product-images";
 import { AltenatingButtons, SlidingButtonProps } from "@/components/buttons/sliding-buttons";
 

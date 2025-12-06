@@ -1,32 +1,36 @@
 import { OfferDetailsService } from "./page-services";
 import { OfferDetails } from "@/components/detail-pages/offer-details-page";
 import { getUserUuid } from "@/lib/services/user";
-import { ISearchParams } from "@/types";
 
 interface OfferPageProps {
-	params: Promise<{
-		id: number;
-	}>;
-	searchParams: Promise<ISearchParams>;
+    params: Promise<{ id: string }>;
 }
 
 export default async function OfferPage({ params }: OfferPageProps) {
-	const { id } = await params;
-	const userUuid = await getUserUuid();
-	const { offer, comments, currentUser } = await OfferDetailsService(id, userUuid || "");
+    const { id } = await params;
+    const offerId = parseInt(id);
+    const userUuid = await getUserUuid();
 
-	if (!offer || offer.length === 0) {
-		return <div>Oferta no encontrada</div>;
-	}
+    const { offer, comments, currentUser, businessOffers } = await OfferDetailsService(
+        offerId,
+        userUuid || ""
+    );
 
-	const subscribedByUser = offer[0].User_Offer?.some((u) => u.user_id === userUuid && u.subscribed);
+    if (!offer) {
+        return <div>Offer not found</div>;
+    }
 
-	return (
-		<OfferDetails
-			offer={offer[0]}
-			subscribedByUser={subscribedByUser ?? false}
-			currentUser={currentUser}
-			comments={comments}
-		/>
-	);
+    const subscribedByUser = offer.User_Offer?.some(
+        (u) => u.user_id === userUuid && u.subscribed
+    );
+
+    return (
+        <OfferDetails
+            offer={offer}
+            comments={comments}
+            currentUser={currentUser}
+            businessOffers={businessOffers}
+            subscribedByUser={subscribedByUser}
+        />
+    );
 }

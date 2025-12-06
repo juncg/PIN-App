@@ -67,8 +67,15 @@ export type IReview = Tables<"Review"> & {
 export type ICategory = Tables<"Category">;
 
 export type IComment = Tables<"Comment"> & {
-	user?: Tables<"User">;
+	user?: IUser;
 	replies?: IComment[];
+	replyCount?: number;
+	Comment_Post?: {
+		offer_id: number | null;
+		petition_id: number | null;
+		referenced_comment_id: number | null;
+		review_id: number | null;
+	}[];
 };
 
 export type ITag = Tables<"Tag">;
