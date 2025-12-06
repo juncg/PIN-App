@@ -101,7 +101,7 @@ export function AppSidebar() {
 	];
 
 	return (
-		<Sidebar className="!border-r-[2px]" collapsible="icon">
+		<Sidebar className="!border-none" collapsible="icon">
 			<SidebarContent className="m-1.5">
 				<SidebarGroup>
 					<SidebarGroupContent>
