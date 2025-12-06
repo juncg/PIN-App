@@ -5,10 +5,10 @@ import { OrderSelect } from "@/components/select/order-select";
 import { ISearchParams } from "@/types";
 import Link from "next/link";
 import { PostsServices } from "./page-services";
+import { CreatePostFab } from "@/components/buttons/create-post-fab";
+
 export default async function PostsPage({ searchParams }: { searchParams: Promise<ISearchParams> }) {
-	const { translator, clientTranslations, posts, postType, popularTags, currentUserId } = await PostsServices(
-		searchParams
-	);
+	const { clientTranslations, posts, popularTags, currentUserId, isBusinessUser } = await PostsServices(searchParams);
 	const params = await searchParams;
 
 	return (
@@ -38,6 +38,8 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 								options={[
 									{ value: "newest", label: clientTranslations.newest },
 									{ value: "oldest", label: clientTranslations.oldest },
+									{ value: "price_low_high", label: clientTranslations.price_low_high },
+									{ value: "price_high_low", label: clientTranslations.price_high_low },
 								]}
 								placeholder={clientTranslations.sort_by}
 								defaultValue={params.orderBy || "newest"}
@@ -55,6 +57,7 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 					</main>
 				</div>
 			</div>
+			{currentUserId && <CreatePostFab isBusinessUser={isBusinessUser} />}
 		</div>
 	);
 }

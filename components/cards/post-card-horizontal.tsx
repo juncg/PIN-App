@@ -22,13 +22,7 @@ interface IPostCardHorizontalProps {
 }
 
 export function PostCardHorizontal(props: IPostCardHorizontalProps) {
-	const {
-		className,
-		post,
-		subscribedByUser: subscribedByUserProp,
-		onSubscribeChangeForParent,
-		userUuidProp,
-	} = props;
+	const { className, post, subscribedByUser: subscribedByUserProp, onSubscribeChangeForParent, userUuidProp } = props;
 	const { userUuid: userUuidFromHook } = useUser();
 	const userUuid = userUuidProp || userUuidFromHook;
 
@@ -38,9 +32,7 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 		setCurrentProgress(post.current_progress);
 	}, [post.current_progress]);
 
-	const offerCompletionPercentage = parseFloat(
-		((currentProgress * 100) / (post?.target_progress ?? 1)).toFixed(2)
-	);
+	const offerCompletionPercentage = parseFloat(((currentProgress * 100) / (post?.target_progress ?? 1)).toFixed(2));
 
 	const originalPrice = post.products?.reduce((total, product) => total + (product.Product.msrp || 0), 0) || 0;
 	const discountPercentage = originalPrice > 0 ? Math.round(100 - (post.reduced_price! * 100) / originalPrice) : 0;
@@ -51,6 +43,7 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 			: !!(post as IPetition).User_Petition?.some((u) => u.user_id === userUuid && u.subscribed);
 
 	const subscribedByUser = subscribedByUserProp !== undefined ? subscribedByUserProp : derivedSubscribedByUser;
+	const hasFinished = post.type === "Offer" ? new Date(post.target_completition_date) <= new Date() : false;
 
 	return (
 		<article className={cn(className, "flex border-[2px] rounded-[20px] w-full")}>
@@ -151,6 +144,7 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 							onSubscriptionChange={setCurrentProgress}
 							variant="switch"
 							onSubscribeChangeForParent={onSubscribeChangeForParent}
+							offerHasFinished={hasFinished}
 						/>
 					</div>
 				</div>
