@@ -10,7 +10,7 @@ export async function PetitionDetailsService(id: number, userUuid: string) {
 		filters: [{ method: "eq", column: "id", value: id }],
 	});
 
-	const { comments, error } = await fetchTopLevelComments(id, "Petition");
+	const { comments, error } = await fetchTopLevelComments(id, "petition");
 
 	const currentUser =
 		userUuid && userUuid.trim() !== ""
