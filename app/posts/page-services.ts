@@ -12,9 +12,23 @@ async function fetchOffers(
 	orderColumn: string = "created_at",
 	ascending: boolean = false,
 	followedUserIds?: string[],
-	followedForumIds?: number[]
+	followedForumIds?: number[],
+	minPrice?: number | null,
+	maxPrice?: number | null
 ) {
 	const filters: any[] = [{ method: "order", column: orderColumn, ascending }];
+
+	if (minPrice !== undefined && minPrice !== null && minPrice > 0) {
+		filters.push({ method: "gte", column: "reduced_price", value: minPrice });
+	}
+
+	if (maxPrice !== undefined && maxPrice !== null && maxPrice < 10000) {
+		filters.push({ method: "lte", column: "reduced_price", value: maxPrice });
+	}
+
+	if (orderColumn === "reduced_price") {
+		filters.push({ method: "not", column: "reduced_price", operator: "is", value: null });
+	}
 
 	let select = `*, User_Offer!left(liked, subscribed, user_id), tags:Offer_Tag(Tag(name)), User!Offer_creator_id_fkey(*), products:Offer_Product(Product(*))`;
 
@@ -39,7 +53,7 @@ async function fetchOffers(
 		filters.push({ method: "is", column: "Forum.business_id", value: null });
 	} else if (creatorFilter === "business" || creatorFilter === "verified_business") {
 		select += `, Forum!inner(business_id, Business!inner(*))`;
-		filters.push({ method: "not.is", column: "Forum.business_id", value: null });
+		filters.push({ method: "not", column: "Forum.business_id", operator: "is", value: null });
 
 		if (creatorFilter === "verified_business") {
 			filters.push({ method: "in", column: "Forum.Business.verification", value: ["Official", "Paid"] });
@@ -81,9 +95,23 @@ async function fetchPetitions(
 	orderColumn: string = "created_at",
 	ascending: boolean = false,
 	followedUserIds?: string[],
-	followedForumIds?: number[]
+	followedForumIds?: number[],
+	minPrice?: number | null,
+	maxPrice?: number | null
 ) {
 	const filters: any[] = [{ method: "order", column: orderColumn, ascending }];
+
+	if (minPrice !== undefined && minPrice !== null && minPrice > 0) {
+		filters.push({ method: "gte", column: "reduced_price", value: minPrice });
+	}
+
+	if (maxPrice !== undefined && maxPrice !== null && maxPrice < 10000) {
+		filters.push({ method: "lte", column: "reduced_price", value: maxPrice });
+	}
+
+	if (orderColumn === "reduced_price") {
+		filters.push({ method: "not", column: "reduced_price", operator: "is", value: null });
+	}
 
 	let select = `*, User_Petition!left(liked, subscribed, user_id), tags:Petition_Tag(Tag(name)), User!Petition_creator_id_fkey(*), products:Petition_Product(Product(*))`;
 
@@ -108,7 +136,7 @@ async function fetchPetitions(
 		filters.push({ method: "is", column: "Forum.business_id", value: null });
 	} else if (creatorFilter === "business" || creatorFilter === "verified_business") {
 		select += `, Forum!inner(business_id, Business!inner(*))`;
-		filters.push({ method: "not.is", column: "Forum.business_id", value: null });
+		filters.push({ method: "not", column: "Forum.business_id", operator: "is", value: null });
 
 		if (creatorFilter === "verified_business") {
 			filters.push({ method: "in", column: "Forum.Business.verification", value: ["Official", "Paid"] });
@@ -148,6 +176,8 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 	const postType = params.type || "all";
 	const creatorFilter = params.creator;
 	const tagFilter = params.tags;
+	const minPrice = params.minPrice ? Number(params.minPrice) : null;
+	const maxPrice = params.maxPrice ? Number(params.maxPrice) : null;
 	const currentUserId = await getUserUuid();
 	const translator = await getTranslations({ locale: params.locale || DEFAULT_LOCALE, namespace: "products" });
 
@@ -159,6 +189,14 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 		case "oldest":
 			orderColumn = "created_at";
 			ascending = true;
+			break;
+		case "price_low_high":
+			orderColumn = "reduced_price";
+			ascending = true;
+			break;
+		case "price_high_low":
+			orderColumn = "reduced_price";
+			ascending = false;
 			break;
 		default:
 			orderColumn = "created_at";
@@ -204,7 +242,9 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 					orderColumn,
 					ascending,
 					followedUserIds,
-					followedForumIds
+					followedForumIds,
+					minPrice,
+					maxPrice
 			  );
 	const petitions =
 		postType === "offer"
@@ -216,10 +256,17 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 					orderColumn,
 					ascending,
 					followedUserIds,
-					followedForumIds
+					followedForumIds,
+					minPrice,
+					maxPrice
 			  );
 
 	const allPosts = [...offers, ...petitions].sort((a, b) => {
+		if (orderColumn === "reduced_price") {
+			const priceA = a.reduced_price || 0;
+			const priceB = b.reduced_price || 0;
+			return ascending ? priceA - priceB : priceB - priceA;
+		}
 		const dateA = new Date(a.created_at).getTime();
 		const dateB = new Date(b.created_at).getTime();
 		return ascending ? dateA - dateB : dateB - dateA;
@@ -249,8 +296,6 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 	});
 
 	const isBusinessUser = userBusinesses.data !== null && userBusinesses.data.length > 0;
-
-	console.log("currentUserId:", currentUserId, "isBusinessUser:", isBusinessUser);
 
 	return {
 		translator,

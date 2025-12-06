@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, FileText, Tag } from "lucide-react";
+import { Plus, Hand, Tag } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui-custom/button";
 import { cn } from "@/lib/utils";
@@ -41,7 +41,7 @@ export function CreatePostFab({ isBusinessUser }: CreatePostFabProps) {
 						className="bg-hover border border-cardborder text-white hover:bg-white hover:text-black hover:border-white shadow-xl hover:shadow-2xl transition-all duration-200 gap-2 min-w-[180px]"
 						onClick={() => setIsOpen(false)}
 					>
-						<FileText className="h-5 w-5" />
+						<Hand className="h-5 w-5" />
 						Crear petición
 					</Button>
 				</Link>
