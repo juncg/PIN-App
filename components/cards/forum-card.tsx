@@ -18,6 +18,8 @@ export function ForumCard({ className, forum, currentUserId }: IForumCard) {
 	const { userUuid } = useUser();
 
 	const followedByUser = forum.User_Forum?.some((u) => u.user_id === userUuid && u.forum_id === forum.id);
+	const activeOffersCount = forum.Offer?.length || 0;
+	const petitionsCount = forum.Petition?.length || 0;
 
 	return (
 		<div
@@ -61,10 +63,10 @@ export function ForumCard({ className, forum, currentUserId }: IForumCard) {
 			<div className="mt-6 flex items-end justify-between">
 				<div className="space-y-1 text-sm">
 					<div className="text-lightgrey">
-						<span className="font-medium">X peticiones</span>
+						<span className="font-medium">{petitionsCount} peticiones</span>
 					</div>
 					<div className="text-lightgrey">
-						<span className="font-medium">X ofertas activas</span>
+						<span className="font-medium">{activeOffersCount} ofertas activas</span>
 					</div>
 				</div>
 				<FollowButton

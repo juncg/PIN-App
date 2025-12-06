@@ -8,24 +8,31 @@ import { ISearchParams } from "../../types";
 async function fetchForumsByCategory(categoryId: number, limit: number = 4) {
 	const { data: forums } = await GetFromDatabase<IForum>({
 		tableName: "Forum",
-		select: "*, User_Forum!left(forum_id, user_id), Business(*), Forum_Category!inner(category_id)",
-		filters: [
-			{ method: "eq", column: "Forum_Category.category_id", value: categoryId },
-			{ method: "range", from: 0, to: limit - 1 },
-		],
+		select: `
+            *, 
+            User_Forum!left(forum_id, user_id), 
+            Business(*), 
+            Forum_Category!inner(category_id),
+            Offer!left(id, state),
+            Petition!left(id)
+        `,
+		filters: [{ method: "eq", column: "Forum_Category.category_id", value: categoryId }],
 	});
 
 	return forums || [];
 }
 
-async function fetchRecommendedForums(limit: number = 6) {
+async function fetchRecommendedForums(limit: number = 7) {
 	const { data: forums } = await GetFromDatabase<IForum>({
 		tableName: "Forum",
-		select: "*, User_Forum!left(forum_id, user_id), Business(*)",
-		filters: [
-			{ method: "order", column: "created_at", ascending: false },
-			{ method: "range", from: 0, to: limit - 1 },
-		],
+		select: `
+            *, 
+            User_Forum!left(forum_id, user_id), 
+            Business(*),
+            Offer!left(id, state),
+            Petition!left(id)
+        `,
+		filters: [{ method: "order", column: "created_at", ascending: false }],
 	});
 
 	return forums || [];
@@ -34,11 +41,14 @@ async function fetchRecommendedForums(limit: number = 6) {
 async function fetchPopularForums(limit: number = 6) {
 	const { data: forums } = await GetFromDatabase<IForum>({
 		tableName: "Forum",
-		select: "*, User_Forum!left(forum_id, user_id), Business(*)",
-		filters: [
-			{ method: "order", column: "followers", ascending: false },
-			{ method: "range", from: 0, to: limit - 1 },
-		],
+		select: `
+            *, 
+            User_Forum!left(forum_id, user_id), 
+            Business(*),
+            Offer!left(id, state),
+            Petition!left(id, state)
+        `,
+		filters: [{ method: "order", column: "followers", ascending: false }],
 	});
 
 	return forums || [];

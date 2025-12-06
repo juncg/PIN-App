@@ -5,7 +5,7 @@ import { OrderSelect } from "@/components/select/order-select";
 import { ISearchParams } from "@/types";
 import Link from "next/link";
 import { PostsServices } from "./page-services";
-import { CreatePostFab } from "@/components/buttons/create-post-fab";
+import { CreateFab } from "@/components/buttons/create-floating-action-button";
 
 export default async function PostsPage({ searchParams }: { searchParams: Promise<ISearchParams> }) {
 	const { clientTranslations, posts, popularTags, currentUserId, isBusinessUser } = await PostsServices(searchParams);
@@ -57,7 +57,7 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 					</main>
 				</div>
 			</div>
-			{currentUserId && <CreatePostFab isBusinessUser={isBusinessUser} />}
+			{currentUserId && <CreateFab isBusinessUser={isBusinessUser} enabledOptions={["offer", "petition"]} />}
 		</div>
 	);
 }

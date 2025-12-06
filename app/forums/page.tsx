@@ -5,9 +5,9 @@ import { getUserUuid } from "@/lib/services/user";
 import { ISearchParams } from "../../types";
 import { ForumsServices } from "./forums-services";
 import Link from "next/link";
-
+import { CreateFab } from "@/components/buttons/create-floating-action-button";
 export default async function Forums({ searchParams }: { searchParams: Promise<ISearchParams> }) {
-	const { categories, hasSelectedCategories, recommendedForums, popularForums, trendingByCategory } =
+	const { categories, hasSelectedCategories, recommendedForums, popularForums, trendingByCategory, isBusinessUser } =
 		await ForumsServices(searchParams);
 
 	const userUuid = await getUserUuid();
@@ -59,6 +59,8 @@ export default async function Forums({ searchParams }: { searchParams: Promise<I
 					</div>
 				</div>
 			))}
+
+			{isBusinessUser && <CreateFab isBusinessUser={true} enabledOptions={["forum"]} />}
 		</section>
 	);
 }
