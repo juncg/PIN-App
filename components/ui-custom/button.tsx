@@ -10,6 +10,7 @@ export const buttonVariants = cva(
 		variants: {
 			variant: {
 				default: "bg-white text-black rounded-full hover:scale-105 transition border-[2px] border-white",
+				defaultSquared: "bg-white text-black rounded-lg hover:scale-105 transition border-[2px] border-white",
 				outline: "bg-transparent text-white rounded-full hover:scale-105 transition border-[2px] border-white",
 				outlineSquared:
 					"bg-hover text-white rounded-lg hover:scale-105 transition border-[2px] border-cardborder",
