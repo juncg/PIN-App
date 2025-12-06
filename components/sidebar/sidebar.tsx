@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@/hooks/use-user";
-import { Hand, Home, Settings, Shield, ShoppingBag, Tag, Timer, User, Users } from "lucide-react";
+import { Shield } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -12,43 +12,63 @@ import {
 	SidebarFooter,
 	SidebarGroup,
 	SidebarGroupContent,
-	SidebarGroupLabel,
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui-custom/sidebar";
+import {
+	ChatBubblesFilledIcon,
+	ChatBubblesIcon,
+	DealBuyLogoIcon,
+	FrameFilledIcon,
+	FrameIcon,
+	HomeFilledIcon,
+	HomeIcon,
+	PersonCircleFilledIcon,
+	PersonCircleOutlineIcon,
+	Settings3FilledIcon,
+	Settings3Icon,
+	ShoppingBagFilledIcon,
+	ShoppingBagIcon,
+} from "../icons/icons";
 
 const items = [
 	{
 		title: "Inicio",
 		url: "/home",
-		icon: Home,
+		icon: HomeIcon,
+		iconFilled: HomeFilledIcon,
 	},
 	{
 		title: "Ofertas",
 		url: "/offers",
-		icon: Tag,
+		icon: DealBuyLogoIcon,
+		iconFilled: DealBuyLogoIcon,
 	},
 	{
 		title: "Peticiones",
 		url: "/petitions",
-		icon: Hand,
+		icon: DealBuyLogoIcon,
+		iconFilled: DealBuyLogoIcon,
 	},
 	{
 		title: "Productos",
 		url: "/products",
-		icon: ShoppingBag,
+		icon: ShoppingBagIcon,
+		iconFilled: ShoppingBagFilledIcon,
 	},
 	{
 		title: "Foros",
 		url: "/forums",
-		icon: Users,
+		icon: FrameIcon,
+		iconFilled: FrameFilledIcon,
 	},
 	{
 		title: "Posts",
 		url: "/posts",
-		icon: Timer,
+		icon: ChatBubblesIcon,
+		iconFilled: ChatBubblesFilledIcon,
 	},
 ];
 
@@ -76,26 +96,28 @@ export function AppSidebar() {
 
 	const settingsItems = [
 		{
-			title: "Perfil",
-			url: userUuid ? `/profile/${userUuid}` : "/profile",
-			icon: User,
+			title: "Ajustes",
+			url: "/settings",
+			icon: Settings3Icon,
+			iconFilled: Settings3FilledIcon,
 		},
 		{
-			title: "Configuración",
-			url: "/settings",
-			icon: Settings,
+			title: "Perfil",
+			url: userUuid ? `/profile/${userUuid}` : "/profile",
+			icon: PersonCircleOutlineIcon,
+			iconFilled: PersonCircleFilledIcon,
 		},
 	];
 
 	return (
-		<Sidebar>
-			<SidebarContent>
+		<Sidebar className="border-none" collapsible="icon">
+			<SidebarContent className="m-1.5">
 				<SidebarGroup>
-					<SidebarGroupLabel>Deal&Buy</SidebarGroupLabel>
 					<SidebarGroupContent>
-						<SidebarMenu>
+						<SidebarMenu className="gap-2">
 							{items.map((item) => {
 								const isActive = pathname === item.url;
+								const IconComponent = isActive ? item.iconFilled : item.icon;
 								return (
 									<SidebarMenuItem key={item.title}>
 										<SidebarMenuButton asChild isActive={isActive}>
@@ -107,7 +129,9 @@ export function AppSidebar() {
 														: ""
 												}
 											>
-												<item.icon />
+												<IconComponent
+													className={`!h-5 !w-5 ${isActive && "!text-chernobyl"}`}
+												/>
 												<span>{item.title}</span>
 											</Link>
 										</SidebarMenuButton>
@@ -118,10 +142,11 @@ export function AppSidebar() {
 					</SidebarGroupContent>
 				</SidebarGroup>
 			</SidebarContent>
-			<SidebarFooter>
-				<SidebarMenu>
+			<SidebarFooter className="m-1.5">
+				<SidebarMenu className="gap-2">
 					{settingsItems.map((item) => {
 						const isActive = pathname === item.url || pathname.startsWith(`/profile/${userUuid}`);
+						const IconComponent = isActive ? item.iconFilled : item.icon;
 						return (
 							<SidebarMenuItem key={item.title}>
 								<SidebarMenuButton asChild isActive={isActive}>
@@ -131,7 +156,7 @@ export function AppSidebar() {
 											isActive ? "bg-black text-black hover:bg-black/90 font-semibold" : ""
 										}
 									>
-										<item.icon />
+										<IconComponent className={`!h-5 !w-5 ${isActive && "!text-chernobyl"}`} />
 										<span>{item.title}</span>
 									</Link>
 								</SidebarMenuButton>

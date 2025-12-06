@@ -2,7 +2,7 @@
 
 import { PostCardHorizontal } from "@/components/cards/post-card-horizontal";
 import { ProfilePostFilter } from "@/components/filters/profile-post-filter";
-import { B1 } from "@/components/ui-custom/typography";
+import { B1, H2 } from "@/components/ui-custom/typography";
 import { IOffer, IPetition } from "@/lib/services/types";
 import { useState } from "react";
 
@@ -26,7 +26,9 @@ export function ProfilePostsList({
 	totalCount,
 }: ProfilePostsListProps) {
 	const [filteredPosts, setFilteredPosts] = useState<TPost[]>(allPosts);
-	const [currentType, setCurrentType] = useState<"all" | "offer" | "petition">("all");
+	const [currentFilter, setCurrentFilter] = useState<
+		"all" | "offer" | "petition" | "on-fire" | "active" | "completed" | "expired"
+	>("all");
 
 	const handleFilterChange = (
 		status: "all" | "offer" | "petition" | "on-fire" | "active" | "completed" | "expired"
@@ -43,16 +45,40 @@ export function ProfilePostsList({
 		}
 
 		setFilteredPosts(posts);
+		setCurrentFilter(status);
 	};
 
 	const getResultCount = () => {
-		if (currentType === "all") return totalCount;
-		if (currentType === "offer") return offersCount;
+		if (currentFilter === "all") return totalCount;
+		if (currentFilter === "offer") return offersCount;
 		return petitionsCount;
 	};
 
 	return (
 		<div className="flex flex-col gap-6 w-full overflow-hidden">
+			<div className="flex items-center justify-between">
+				<span className="flex items-end gap-6">
+					<H2>
+						{currentFilter === "all"
+							? "Todas las publicaciones"
+							: currentFilter === "offer"
+							? "Ofertas"
+							: "Peticiones"}
+						.
+					</H2>
+
+					<B1 className="text-lightgrey line-clamp-2">
+						{getResultCount()}{" "}
+						{currentFilter === "all"
+							? "suscripciones"
+							: currentFilter === "offer"
+							? "ofertas"
+							: "peticiones"}{" "}
+						en total
+					</B1>
+				</span>
+			</div>
+
 			<div className="w-full overflow-x-auto">
 				<ProfilePostFilter onFilterChange={handleFilterChange} />
 			</div>

@@ -1,7 +1,7 @@
 import { PostCardHorizontal } from "@/components/cards/post-card-horizontal";
 import { PostTypeFilter } from "@/components/filters/post-type-filter";
+import PostsSidebar from "@/components/filters/posts-filters";
 import { OrderSelect } from "@/components/select/order-select";
-import PostsSidebar from "@/components/sidebar/posts-filters";
 import { ISearchParams } from "@/types";
 import Link from "next/link";
 import { PostsServices } from "./page-services";
