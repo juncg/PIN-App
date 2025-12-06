@@ -234,7 +234,6 @@ export function CommentCard({
 							setNewComment={setReplyText}
 							isSubmitting={isSubmitting}
 							handleSubmit={handleReplySubmit}
-							placeholder={`Responder a @${comment.user?.username}...`}
 						/>
 					</div>
 				)}

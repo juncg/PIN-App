@@ -6,7 +6,7 @@ import { IComment } from "@/lib/services/types";
 
 type PostType = "offer" | "petition";
 
-// Fetch top-level comments with reply counts only
+// fetch top-level comments with reply counts
 export async function fetchTopLevelComments(
     postId: number,
     postType: PostType
@@ -34,7 +34,7 @@ export async function fetchTopLevelComments(
         return { comments: [], error };
     }
 
-    // Get reply counts for each top-level comment
+    // get reply counts for each top-level comment
     const commentsWithCounts = await Promise.all(
         comments.map(async (comment) => {
             const { data: replyCount } = await GetFromDatabase({
@@ -48,7 +48,7 @@ export async function fetchTopLevelComments(
             return {
                 ...comment,
                 replyCount: replyCount?.length || 0,
-                replies: [], // Empty initially
+                replies: [], // empty initially
             };
         })
     );
@@ -56,7 +56,7 @@ export async function fetchTopLevelComments(
     return { comments: commentsWithCounts, error: null };
 }
 
-// Fetch replies for a specific comment (called when user clicks "Show replies")
+// fetch replies for a specific comment
 export async function fetchCommentReplies(
     commentId: number
 ): Promise<{ replies: IComment[]; error: any }> {
@@ -77,7 +77,7 @@ export async function fetchCommentReplies(
         return { replies: [], error };
     }
 
-    // Get reply counts for nested replies too
+    // get reply counts for nested replies too
     const repliesWithCounts = await Promise.all(
         replies.map(async (reply) => {
             const { data: replyCount } = await GetFromDatabase({
