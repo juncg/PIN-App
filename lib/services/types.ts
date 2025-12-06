@@ -40,6 +40,8 @@ export type IForum = Tables<"Forum"> & {
 		Tag: ITag;
 	}[];
 	User_Forum?: Tables<"User_Forum">[];
+	Offer?: Pick<Tables<"Offer">, "id" | "state">[];
+	Petition?: Pick<Tables<"Petition">, "id" | "state">[];
 };
 
 export type IProduct = Tables<"Product"> & {
