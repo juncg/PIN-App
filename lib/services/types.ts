@@ -7,6 +7,7 @@ export type IOffer = Tables<"Offer"> & {
 	User_Offer?: Tables<"User_Offer">[];
 	User?: Tables<"User">;
 	products?: { Product: IProduct }[];
+	stars?: number;
 };
 
 export type IPetition = Tables<"Petition"> & {

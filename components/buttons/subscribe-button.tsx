@@ -21,6 +21,7 @@ export interface ISubscribeButton {
 	variant?: "default" | "switch";
 	onSubscribeChangeForParent?: (subscribed: boolean) => void;
 	offerHasFinished?: boolean;
+	disabled?: boolean;
 }
 
 export function SubscribeButton(props: ISubscribeButton) {
@@ -34,6 +35,7 @@ export function SubscribeButton(props: ISubscribeButton) {
 		fullWidth = false,
 		variant = "default",
 		offerHasFinished,
+		disabled = false,
 	} = props;
 	const [numberOfSubscribers, setSubscribers] = useState<number>(subscribers);
 	const [subscribed, setSubscribed] = useState<boolean>(subscribedByUser);
@@ -109,7 +111,7 @@ export function SubscribeButton(props: ISubscribeButton) {
 		await performSubscribeToggle();
 	};
 
-	const isDisabled = (typeOfPost === "Oferta" && subscribed) || offerHasFinished;
+	const isDisabled = (typeOfPost === "Oferta" && subscribed) || offerHasFinished || disabled;
 
 	return (
 		<>
