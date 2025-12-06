@@ -10,9 +10,10 @@ type ItemType = "offer" | "petition" | "forum" | "business" | "product" | "user"
 interface SearchGeneralDropdownItemProps {
 	item: SearchItem;
 	type: ItemType;
+	onClose?: () => void;
 }
 
-export function SearchGeneralDropdownItem({ item, type }: SearchGeneralDropdownItemProps) {
+export function SearchGeneralDropdownItem({ item, type, onClose }: SearchGeneralDropdownItemProps) {
 	const getItemData = () => {
 		switch (type) {
 			case "offer": {
@@ -83,7 +84,7 @@ export function SearchGeneralDropdownItem({ item, type }: SearchGeneralDropdownI
 	const { href, title, subtitle, tags, image } = getItemData();
 
 	return (
-		<Link href={href} className="block hover:bg-hover/50 transition-colors">
+		<Link href={href} className="block hover:bg-hover/50 transition-colors" onClick={onClose}>
 			<div className="flex gap-4 p-4">
 				<div className="relative w-16 h-16 flex-shrink-0 rounded-md overflow-hidden bg-lightgrey flex items-center justify-center">
 					<Image

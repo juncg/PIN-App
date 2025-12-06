@@ -1,6 +1,7 @@
 "use client";
 
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
+import { useUser } from "@/hooks/use-user";
 import { IForum } from "@/lib/services/types";
 import { useCallback, useEffect, useState } from "react";
 import { ForumCard } from "../cards/forum-card";
@@ -25,6 +26,7 @@ export function InfiniteForumList({
 	pageSize = 5,
 	maxForums = 50,
 }: InfiniteForumListProps) {
+	const { userUuid } = useUser();
 	const [forums, setForums] = useState<IForum[]>(initialForums);
 	const [isLoading, setIsLoading] = useState(false);
 	const [hasMore, setHasMore] = useState(initialForums.length >= pageSize);
@@ -84,7 +86,7 @@ export function InfiniteForumList({
 		<div className="space-y-4">
 			<div className="grid gap-4">
 				{forums.map((forum) => (
-					<ForumCard key={forum.id} className="w-full" forum={forum} />
+					<ForumCard key={forum.id} className="w-full" forum={forum} currentUserId={userUuid} />
 				))}
 			</div>
 

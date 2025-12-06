@@ -5,7 +5,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avat
 import { Button } from "@/components/ui-custom/button";
 import { B1, H1, H2 } from "@/components/ui-custom/typography";
 import { getUserUuid } from "@/lib/services/user";
-import { TPost } from "@/types";
 import { Verified } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -180,7 +179,6 @@ export default async function ForumPage({ params }: ForumPageProps) {
 							{initialPetitions.length > 0 ? (
 								<InfinitePostGrid
 									className="grid-cols-1 gap-6"
-									initialPosts={initialPetitions as TPost[]}
 									loadMoreAction={loadMorePetitions.bind(null, id)}
 									pageSize={10}
 									maxPosts={50}
@@ -199,7 +197,6 @@ export default async function ForumPage({ params }: ForumPageProps) {
 							{initialOffers.length > 0 ? (
 								<InfinitePostGrid
 									className="grid-cols-1 gap-6"
-									initialPosts={initialOffers as TPost[]}
 									loadMoreAction={loadMoreOffers.bind(null, id)}
 									pageSize={10}
 									maxPosts={50}

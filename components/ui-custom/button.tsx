@@ -18,6 +18,7 @@ export const buttonVariants = cva(
 					"bg-transparent text-black hover:scale-105 transition bg-[linear-gradient(160deg,var(--chernobyl)_0%,var(--lightgrey)_80%)]",
 				chernobylOutline:
 					"bg-transparent text-chernobyl hover:scale-105 transition border-[2px] border-chernobyl",
+				destructive: "bg-destructive text-white hover:scale-105 transition",
 			},
 			size: {
 				default: "h-9 px-7 py-3.5",

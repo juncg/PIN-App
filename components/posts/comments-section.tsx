@@ -64,17 +64,18 @@ export function CommentsSection({
 				contentJson: [commentData],
 			});
 
-			if (error || !response) {
+			if (error || !response || response.length === 0) {
 				console.log("Error al publicar comentario:", error);
 				toast.error("Error al publicar comentario");
 				return;
 			}
 
+			const createdComment = response[0] as unknown as IComment;
 			const { error: postError } = await PostToDatabase({
 				tableName: "Comment_Post",
 				contentJson: [
 					{
-						comment_id: response[0].id,
+						comment_id: createdComment.id,
 						offer_id: postType === "Offer" ? postId : null,
 						petition_id: postType === "Petition" ? postId : null,
 						referenced_comment_id: null,
@@ -90,11 +91,10 @@ export function CommentsSection({
 			}
 
 			const newCommentWithUser: IComment = {
-				...response[0],
+				...createdComment,
 				user: currentUser || undefined,
 				replies: [],
 			};
-
 			setComments((prevComments) => [newCommentWithUser, ...prevComments]);
 
 			toast.success("Comentario publicado");

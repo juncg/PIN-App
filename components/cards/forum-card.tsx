@@ -2,10 +2,11 @@
 
 import { useUser } from "@/hooks/use-user";
 import { IForum } from "@/lib/services/types";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { FollowButton } from "../buttons/follow-button";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
 import { VerifiedIcon } from "../icons/icons";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
 
 export interface IForumCard {
 	className?: string;
@@ -19,7 +20,12 @@ export function ForumCard({ className, forum, currentUserId }: IForumCard) {
 	const followedByUser = forum.User_Forum?.some((u) => u.user_id === userUuid && u.forum_id === forum.id);
 
 	return (
-		<div className="rounded-xl border bg-black text-white p-6 flex flex-col justify-between h-full hover:border-lightgrey transition-colors shadow-sm">
+		<div
+			className={cn(
+				"rounded-xl border bg-black text-white p-6 flex flex-col justify-between h-full hover:border-lightgrey transition-colors shadow-sm",
+				className
+			)}
+		>
 			<div className="space-y-4">
 				<div className="flex items-start justify-between">
 					<div className="flex items-center gap-3">

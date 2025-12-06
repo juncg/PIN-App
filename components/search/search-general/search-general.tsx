@@ -10,11 +10,14 @@ export function SearchGeneral() {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const [searchQuery, setSearchQuery] = useState<string>(searchParams.get("search") ?? "");
+	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
 
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const value = e.target.value;
 		setSearchQuery(value);
+		setIsOpen(true);
 
 		if (debounceTimerRef.current) {
 			clearTimeout(debounceTimerRef.current);
@@ -34,6 +37,19 @@ export function SearchGeneral() {
 	}
 
 	useEffect(() => {
+		function handleClickOutside(event: MouseEvent) {
+			if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+				setIsOpen(false);
+			}
+		}
+
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, []);
+
+	useEffect(() => {
 		return () => {
 			if (debounceTimerRef.current) {
 				clearTimeout(debounceTimerRef.current);
@@ -41,8 +57,12 @@ export function SearchGeneral() {
 		};
 	}, []);
 
+	const handleClose = () => {
+		setIsOpen(false);
+	};
+
 	return (
-		<div className="absolute left-1/2 -translate-x-1/2">
+		<div className="absolute left-1/2 -translate-x-1/2" ref={containerRef}>
 			<div className="relative">
 				<SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
 
@@ -52,9 +72,10 @@ export function SearchGeneral() {
 					className="pl-9 w-96 border-2 border-cardborder"
 					onChange={handleChange}
 					value={searchQuery}
+					onFocus={() => searchQuery && setIsOpen(true)}
 				/>
 
-				<SearchGeneralDropdown />
+				<SearchGeneralDropdown isOpen={isOpen} onClose={handleClose} />
 			</div>
 		</div>
 	);
