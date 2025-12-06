@@ -55,38 +55,34 @@ export function ProfilePostsList({
 	};
 
 	return (
-		<div className="flex flex-col gap-6 w-full overflow-hidden">
-			<div className="flex items-center justify-between">
-				<span className="flex items-end gap-6">
-					<H2>
-						{currentFilter === "all"
-							? "Todas las publicaciones"
-							: currentFilter === "offer"
-							? "Ofertas"
-							: "Peticiones"}
-						.
-					</H2>
+		<div className="flex flex-col gap-12 w-full overflow-hidden">
+			<div className="flex flex-col gap-6">
+				<div className="flex items-center justify-between">
+					<span className="flex items-end gap-6">
+						<H2>
+							{currentFilter === "all"
+								? "Todas las publicaciones"
+								: currentFilter === "offer"
+								? "Ofertas"
+								: "Peticiones"}
+							.
+						</H2>
 
-					<B1 className="text-lightgrey line-clamp-2">
-						{getResultCount()}{" "}
-						{currentFilter === "all"
-							? "suscripciones"
-							: currentFilter === "offer"
-							? "ofertas"
-							: "peticiones"}{" "}
-						en total
-					</B1>
-				</span>
-			</div>
+						<B1 className="text-lightgrey line-clamp-2">
+							{getResultCount()}{" "}
+							{currentFilter === "all"
+								? "suscripciones"
+								: currentFilter === "offer"
+								? "ofertas"
+								: "peticiones"}{" "}
+							en total
+						</B1>
+					</span>
+				</div>
 
-			<div className="w-full overflow-x-auto">
-				<ProfilePostFilter onFilterChange={handleFilterChange} />
-			</div>
-
-			<div className="flex items-center justify-between">
-				<B1 className="text-lightgrey-foreground">
-					{getResultCount()} {getResultCount() === 1 ? "resultado" : "resultados"}
-				</B1>
+				<div className="w-full overflow-x-auto">
+					<ProfilePostFilter onFilterChange={handleFilterChange} />
+				</div>
 			</div>
 
 			<div className="space-y-6">

@@ -7,7 +7,7 @@ export const DEFAULT_LOCALE = "en";
 export const SUPPORTED_LOCALES = ["en", "es"];
 
 // Environment variables
-export const { BASE_DOMAIN } = process.env;
+export const { BASE_DOMAIN, NEXT_PUBLIC_DEBUG_MODE } = process.env;
 export const DEBUG = process.env.NEXT_PUBLIC_DEBUG_MODE === "true" || false;
 
 // Pagination

@@ -1,7 +1,6 @@
 "use client";
 
 import { useUser } from "@/hooks/use-user";
-import { Shield } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -72,14 +71,6 @@ const items = [
 	},
 ];
 
-if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
-	items.push({
-		title: "Security Tests",
-		url: "/security-test",
-		icon: Shield,
-	});
-}
-
 export function AppSidebar() {
 	const pathname = usePathname();
 	const { setOpenMobile, setOpen } = useSidebar();
@@ -110,7 +101,7 @@ export function AppSidebar() {
 	];
 
 	return (
-		<Sidebar className="border-none" collapsible="icon">
+		<Sidebar className="!border-r-[2px]" collapsible="icon">
 			<SidebarContent className="m-1.5">
 				<SidebarGroup>
 					<SidebarGroupContent>
@@ -145,7 +136,10 @@ export function AppSidebar() {
 			<SidebarFooter className="m-1.5">
 				<SidebarMenu className="gap-2">
 					{settingsItems.map((item) => {
-						const isActive = pathname === item.url || pathname.startsWith(`/profile/${userUuid}`);
+						const isActive =
+							item.title === "Perfil"
+								? pathname === item.url || pathname.startsWith(`/profile/${userUuid}`)
+								: pathname === item.url;
 						const IconComponent = isActive ? item.iconFilled : item.icon;
 						return (
 							<SidebarMenuItem key={item.title}>

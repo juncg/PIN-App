@@ -7,7 +7,7 @@ import { H3 } from "../ui-custom/typography";
 
 export function Header() {
 	return (
-		<header className="sticky top-0 z-30 w-full flex bg-darkmode h-16">
+		<header className="sticky top-0 z-30 w-full flex bg-darkmode h-16 !border-b-[2px]">
 			<div className="w-full flex items-center px-4 md:px-5 relative">
 				<div className="flex items-center gap-6">
 					<SidebarTrigger className="w-10 h-10" />
