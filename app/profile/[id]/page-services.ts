@@ -15,7 +15,6 @@ export async function ProfileServices(uuid: number) {
 		: null;
 
 	const userData = user?.data?.[0];
-	console.log("User Data fetched in services: ", userData);
 
 	const { data: followingForumsRaw } = await GetFromDatabase<any>({
 		tableName: "User_Forum",

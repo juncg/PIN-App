@@ -149,21 +149,7 @@ function Sidebar({
 	variant?: "sidebar" | "floating" | "inset";
 	collapsible?: "offcanvas" | "icon" | "none";
 }) {
-	const { isMobile, state, openMobile, setOpenMobile, setOpen } = useSidebar();
-	const [showOverlay, setShowOverlay] = React.useState(false);
-	const [mountOverlay, setMountOverlay] = React.useState(false);
-
-	React.useEffect(() => {
-		if (!isMobile && state === "expanded" && collapsible === "offcanvas") {
-			setMountOverlay(true);
-			const timer = setTimeout(() => setShowOverlay(true), 10);
-			return () => clearTimeout(timer);
-		} else {
-			setShowOverlay(false);
-			const timer = setTimeout(() => setMountOverlay(false), 300);
-			return () => clearTimeout(timer);
-		}
-	}, [isMobile, state, collapsible]);
+	const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
 
 	if (collapsible === "none") {
 		return (
@@ -204,22 +190,6 @@ function Sidebar({
 
 	return (
 		<>
-			{/* Overlay para cerrar la sidebar al hacer clic fuera */}
-			{mountOverlay && collapsible === "offcanvas" && (
-				<div
-					className={cn(
-						"fixed inset-0 z-40 bg-black/0 backdrop-blur-none transition-all duration-300 ease-in-out md:block",
-						showOverlay && "bg-black/50"
-					)}
-					onClick={(e) => {
-						e.preventDefault();
-						e.stopPropagation();
-						setOpen(false);
-					}}
-					aria-hidden="true"
-				/>
-			)}
-
 			<div
 				className="group peer text-white hidden md:block"
 				data-state={state}
@@ -232,9 +202,9 @@ function Sidebar({
 				<div
 					data-slot="sidebar-gap"
 					className={cn(
-						"relative bg-transparent transition-[width] duration-200 ease-linear",
-						state === "expanded" ? "w-[var(--sidebar-width-icon)]" : "w-[var(--sidebar-width)]",
-						"group-data-[collapsible=offcanvas]:w-0",
+						"relative bg-transparent transition-[width] duration-300 ease-in-out",
+						state === "expanded" ? "w-[var(--sidebar-width)]" : "w-0",
+						"group-data-[collapsible=icon]:w-[var(--sidebar-width-icon)]",
 						"group-data-[side=right]:rotate-180",
 						variant === "floating" || variant === "inset"
 							? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]"
@@ -245,9 +215,7 @@ function Sidebar({
 					data-slot="sidebar-container"
 					className={cn(
 						"fixed top-16 bottom-0 z-50 hidden w-[var(--sidebar-width)] transition-[left,right,width] duration-300 ease-in-out md:flex",
-						side === "left"
-							? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
-							: "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
+						side === "left" ? "left-0" : "right-0",
 						// Adjust the padding for floating and inset variants.
 						variant === "floating" || variant === "inset"
 							? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]"
@@ -259,7 +227,7 @@ function Sidebar({
 					<div
 						data-sidebar="sidebar"
 						data-slot="sidebar-inner"
-						className="bg-darkmode group-data-[variant=floating]:border-cardborder flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm"
+						className="bg-darkmode group-data-[variant=floating]:border-cardborder flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm relative"
 					>
 						{children}
 					</div>

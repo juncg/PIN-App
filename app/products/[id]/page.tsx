@@ -4,7 +4,7 @@ import { Button } from "@/components/ui-custom/button";
 import { B1, B2, H1, H2, H3, S1 } from "@/components/ui-custom/typography";
 import { getUserUuid } from "@/lib/services/user";
 import { ISearchParams } from "@/types";
-import { ArrowUpRight, CheckCircle2, Star } from "lucide-react";
+import { ArrowUpRight, Star } from "lucide-react";
 import Link from "next/link";
 import { ProductDetailsServices } from "./page-services";
 import { ProductCardHorizontal } from "@/components/cards/product-card-horizontal";
@@ -18,6 +18,7 @@ import {
 	CarouselPrevious,
 } from "@/components/ui-custom/carousel";
 import { AltenatingButtons, SlidingButtonProps } from "@/components/buttons/sliding-buttons";
+import { VerifiedIcon } from "@/components/icons/icons";
 
 interface ProductPageProps {
 	params: Promise<{
@@ -64,7 +65,7 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 
 	return (
 		<div className="container mx-auto px-4 py-8">
-			<div className="grid lg:grid-cols-[750px_1fr] gap-8 mb-12">
+			<div className="grid lg:grid-cols-[600px_1fr] gap-8 mb-12">
 				<div>
 					<ProductImages images={product.images || []} thumbnailPosition="left" />
 				</div>
@@ -83,7 +84,9 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 								{product.businesses?.[0]?.business?.name?.toLocaleUpperCase() || "Tienda sin nombre"}
 							</span>
 						</Link>
-						<CheckCircle2 className="h-4 w-4" />
+						{product.businesses?.[0]?.business?.verification !== "Unverified" && (
+							<VerifiedIcon className="h-4 w-4 text-chernobyl" />
+						)}
 					</div>
 
 					<div>

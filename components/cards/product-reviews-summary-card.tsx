@@ -1,17 +1,16 @@
-import { RatingDistribution } from "@/app/products/[id]/page-services";
+//import { RatingDistribution } from "@/app/products/[id]/page-services";
 import { Star } from "lucide-react";
 import { Card } from "../ui-custom/card";
-import { Progress } from "../ui-custom/progress";
 
 interface ProductReviewsSummaryCardProps {
 	rating: number | null;
-	ratingDistribution?: RatingDistribution[];
+	//ratingDistribution?: RatingDistribution[];
 	numOfReviews: number;
 }
 
 export function ProductReviewsSummaryCard({
 	rating,
-	ratingDistribution,
+	//ratingDistribution,
 	numOfReviews,
 }: ProductReviewsSummaryCardProps) {
 	return (
@@ -32,7 +31,7 @@ export function ProductReviewsSummaryCard({
 					<p className="text-sm text-lightgrey">Basado en {numOfReviews} reseñas</p>
 				</div>
 
-				<div className="space-y-2">
+				{/*<div className="space-y-2">
 					{ratingDistribution?.map((dist) => (
 						<div key={dist.stars} className="flex items-center gap-3">
 							<div className="flex items-center gap-1 w-16">
@@ -43,7 +42,7 @@ export function ProductReviewsSummaryCard({
 							<span className="text-sm text-lightgrey w-12 text-right">{dist.count}</span>
 						</div>
 					))}
-				</div>
+				</div>*/}
 			</div>
 		</Card>
 	);

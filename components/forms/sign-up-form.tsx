@@ -1,14 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui-custom/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui-custom/card";
 import { Input } from "@/components/ui-custom/input";
 import { Label } from "@/components/ui-custom/label";
 import { GetFromDatabase, PostToDatabase } from "@/lib/services/general";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { B1, H1 } from "../ui-custom/typography";
 
 export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
 	const [name, setName] = useState("");
@@ -97,104 +98,148 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 	};
 
 	return (
-		<div className={cn("flex flex-col gap-6", className)} {...props}>
-			<Card>
-				<CardHeader>
-					<CardTitle className="text-2xl">Registrarse</CardTitle>
-					<CardDescription>Crear una cuenta nueva</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<form onSubmit={handleSignUp}>
-						<div className="grid grid-cols-2 gap-6 items-end">
-							<div className="grid gap-2">
-								<Label htmlFor="name">Nombre</Label>
-								<Input
-									id="name"
-									type="text"
-									required
-									value={name}
-									onChange={(e) => setName(e.target.value)}
-								/>
-							</div>
-							<div className="grid gap-2">
-								<Label htmlFor="surnames">Apellidos</Label>
-								<Input
-									id="surnames"
-									type="text"
-									required
-									value={surnames}
-									onChange={(e) => setSurnames(e.target.value)}
-								/>
-							</div>
-							<div className="grid gap-2">
-								<Label htmlFor="username">Username</Label>
-								<Input
-									id="username"
-									type="text"
-									required
-									value={username}
-									onChange={(e) => setUsername(e.target.value)}
-								/>
-							</div>
-							<div className="grid gap-2">
-								<Label htmlFor="email">Email</Label>
-								<Input
-									id="email"
-									type="email"
-									placeholder="m@example.com"
-									required
-									value={email}
-									onChange={(e) => setEmail(e.target.value)}
-								/>
-							</div>
-							<div className="grid gap-2">
-								<div className="flex items-center">
-									<Label htmlFor="password">Contraseña</Label>
-								</div>
-								<Input
-									id="password"
-									type="password"
-									required
-									value={password}
-									onChange={(e) => setPassword(e.target.value)}
-								/>
-							</div>
-							<div className="grid gap-2">
-								<div className="flex items-center">
-									<Label htmlFor="repeat-password">Repetir contraseña</Label>
-								</div>
-								<Input
-									id="repeat-password"
-									type="password"
-									required
-									value={repeatPassword}
-									onChange={(e) => setRepeatPassword(e.target.value)}
-								/>
-							</div>
-							<div className="grid gap-2">
-								<Label htmlFor="birth-date">Fecha de nacimiento</Label>
-								<Input
-									id="birth-date"
-									type="date"
-									required
-									value={birthDate}
-									onChange={(e) => setBirthDate(e.target.value)}
-								/>
-							</div>
-							{error && <p className="text-sm text-red-500">{error}</p>}
-							<Button type="submit" className="w-full" disabled={isLoading}>
-								{isLoading ? "Creando tu cuenta" : "Registrarse"}
-							</Button>
+		<div
+			className={cn(
+				"border-[2px] bg-darkmode flex flex-col md:flex-row items-center justify-between gap-6 md:gap-16 rounded-xl p-10 md:p-12",
+				className
+			)}
+			{...props}
+		>
+			<div className="flex items-center justify-center">
+				<Image
+					src="/dealbuy-logo-dark.svg"
+					alt="Logo Deal&Buy"
+					width={300}
+					height={300}
+					className="h-52 w-52"
+				/>
+			</div>
+
+			<div className="bg-white border-t-[2px] md:border-t-0 md:border-r-[2px] w-full md:w-auto h-[2px] md:h-[600px]" />
+
+			<div className="flex flex-col gap-4 md:w-2/3">
+				<form onSubmit={handleSignUp} className="flex flex-col gap-6">
+					<span className="flex flex-col gap-2">
+						<H1 className="text-white">Registrarse</H1>
+
+						<B1 className="text-white">Crea una cuenta nueva para acceder a la plataforma</B1>
+					</span>
+
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div className="grid gap-2">
+							<Label htmlFor="name" className="text-white">
+								Nombre
+							</Label>
+							<Input
+								id="name"
+								type="text"
+								required
+								value={name}
+								onChange={(e) => setName(e.target.value)}
+								className="bg-darkmode text-white border-white/20"
+							/>
 						</div>
-						<div className="mt-4 text-center text-sm">
-							¿Ya tienes una cuenta?{" "}
-							<Link href="/auth/login" className="underline underline-offset-4">
-								Iniciar sesión
-							</Link>
+
+						<div className="grid gap-2">
+							<Label htmlFor="surnames" className="text-white">
+								Apellidos
+							</Label>
+							<Input
+								id="surnames"
+								type="text"
+								required
+								value={surnames}
+								onChange={(e) => setSurnames(e.target.value)}
+								className="bg-darkmode text-white border-white/20"
+							/>
 						</div>
-					</form>
-				</CardContent>
-			</Card>
+
+						<div className="grid gap-2">
+							<Label htmlFor="username" className="text-white">
+								Nombre de usuario
+							</Label>
+							<Input
+								id="username"
+								type="text"
+								required
+								value={username}
+								onChange={(e) => setUsername(e.target.value)}
+								className="bg-darkmode text-white border-white/20"
+							/>
+						</div>
+
+						<div className="grid gap-2">
+							<Label htmlFor="email" className="text-white">
+								Email
+							</Label>
+							<Input
+								id="email"
+								type="email"
+								placeholder="correo@ejemplo.com"
+								required
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+								className="bg-darkmode text-white border-white/20"
+							/>
+						</div>
+
+						<div className="grid gap-2">
+							<Label htmlFor="password" className="text-white">
+								Contraseña
+							</Label>
+							<Input
+								id="password"
+								type="password"
+								required
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+								className="bg-darkmode text-white border-white/20"
+							/>
+						</div>
+
+						<div className="grid gap-2">
+							<Label htmlFor="repeat-password" className="text-white">
+								Repetir contraseña
+							</Label>
+							<Input
+								id="repeat-password"
+								type="password"
+								required
+								value={repeatPassword}
+								onChange={(e) => setRepeatPassword(e.target.value)}
+								className="bg-darkmode text-white border-white/20"
+							/>
+						</div>
+
+						<div className="grid gap-2 md:col-span-2">
+							<Label htmlFor="birth-date" className="text-white">
+								Fecha de nacimiento
+							</Label>
+							<Input
+								id="birth-date"
+								type="date"
+								required
+								value={birthDate}
+								onChange={(e) => setBirthDate(e.target.value)}
+								className="bg-darkmode text-white border-white/20"
+							/>
+						</div>
+					</div>
+
+					{error && <p className="text-sm text-destructive">{error}</p>}
+
+					<Button variant="defaultSquared" type="submit" className="w-full mt-2" disabled={isLoading}>
+						{isLoading ? "Creando tu cuenta..." : "Registrarse"}
+					</Button>
+
+					<div className="text-center text-sm text-white">
+						¿Ya tienes una cuenta?{" "}
+						<Link href="/auth/login" className="underline underline-offset-4">
+							Iniciar sesión
+						</Link>
+					</div>
+				</form>
+			</div>
 		</div>
 	);
 }

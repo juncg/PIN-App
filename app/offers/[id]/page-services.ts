@@ -9,7 +9,6 @@ export async function OfferDetailsService(id: number, userUuid: string) {
         filters: [{ method: "eq", column: "id", value: id }],
     });
 
-    // Fetch top-level comments with reply counts
     const { comments } = await fetchTopLevelComments(id, "offer");
 
     const currentUser =
@@ -21,12 +20,21 @@ export async function OfferDetailsService(id: number, userUuid: string) {
               })
             : null;
 
-    const businessOffers = []; // Add your business logic if needed
+	// Obtener ofertas de la misma empresa
+	const businessId = offer?.[0]?.User?.id;
+	let businessOffers: IOffer[] = [];
+	
+	if (businessId) {
+		const { data } = await GetFromDatabase<IOffer>({
+			tableName: "Offer",
+			select: `*, User!Offer_creator_id_fkey(*), User_Offer!left(liked, subscribed, user_id), tags:Offer_Tag(Tag(name))`,
+			filters: [
+				{ method: "eq", column: "creator_id", value: businessId },
+				{ method: "limit", to: 4 }
+			],
+		});
+		businessOffers = data || [];
+	}
 
-    return { 
-        offer: offer?.[0] || null, 
-        comments, 
-        currentUser: currentUser?.data?.[0] || null, 
-        businessOffers 
-    };
+	return { offer, comments, currentUser: currentUser?.data?.[0] || null, businessOffers };
 }

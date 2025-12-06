@@ -83,7 +83,7 @@ export function CreateForumForm({ businesses, onSuccess }: CreateForumFormProps)
 				followers: 0,
 			};
 
-			const response = await PostToDatabase({
+			const response = await PostToDatabase<Tables<"Forum">>({
 				tableName: "Forum",
 				contentJson: [newForum],
 			});

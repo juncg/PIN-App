@@ -7,6 +7,7 @@ export type IOffer = Tables<"Offer"> & {
 	User_Offer?: Tables<"User_Offer">[];
 	User?: Tables<"User">;
 	products?: { Product: IProduct }[];
+	stars?: number;
 };
 
 export type IPetition = Tables<"Petition"> & {
@@ -39,6 +40,8 @@ export type IForum = Tables<"Forum"> & {
 		Tag: ITag;
 	}[];
 	User_Forum?: Tables<"User_Forum">[];
+	Offer?: Pick<Tables<"Offer">, "id" | "state">[];
+	Petition?: Pick<Tables<"Petition">, "id" | "state">[];
 };
 
 export type IProduct = Tables<"Product"> & {

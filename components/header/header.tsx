@@ -1,6 +1,7 @@
 import { LocaleSwitcher } from "@/components/ui-custom/locale-switcher";
 import Link from "next/link";
-import { AuthButton } from "../auth/auth-buttons";
+import { Suspense } from "react";
+import { AuthButtons } from "../auth/auth-buttons";
 import { SearchGeneral } from "../search/search-general/search-general";
 import { SidebarTrigger } from "../ui-custom/sidebar";
 import { H3 } from "../ui-custom/typography";
@@ -19,11 +20,15 @@ export function Header() {
 					</Link>
 				</div>
 
-				<SearchGeneral />
+				<Suspense fallback={<div className="w-8 h-8" />}>
+					<SearchGeneral />
+				</Suspense>
 
 				<div className="flex gap-2 md:gap-4 items-center ml-auto">
-					<AuthButton />
-					<LocaleSwitcher />
+					<AuthButtons />
+					<Suspense fallback={<div className="w-8 h-8" />}>
+						<LocaleSwitcher />
+					</Suspense>
 				</div>
 			</div>
 		</header>

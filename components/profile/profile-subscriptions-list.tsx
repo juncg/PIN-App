@@ -66,30 +66,32 @@ export function ProfileSubscriptionsList({
 
 	return (
 		<div className="flex flex-col gap-12 w-full">
-			<div className="flex items-center justify-between">
-				<span className="flex items-end gap-6">
-					<H2>
-						{currentFilter === "all"
-							? "Todas las suscripciones"
-							: currentFilter === "offer"
-							? "Ofertas"
-							: "Peticiones"}
-						.
-					</H2>
-					<B1 className="text-lightgrey line-clamp-2">
-						{getResultCount()}{" "}
-						{currentFilter === "all"
-							? "suscripciones"
-							: currentFilter === "offer"
-							? "ofertas"
-							: "peticiones"}{" "}
-						en total
-					</B1>
-				</span>
-			</div>
+			<div className="flex flex-col gap-6">
+				<div className="flex items-center justify-between">
+					<span className="flex items-end gap-6">
+						<H2>
+							{currentFilter === "all"
+								? "Todas las suscripciones"
+								: currentFilter === "offer"
+								? "Ofertas"
+								: "Peticiones"}
+							.
+						</H2>
+						<B1 className="text-lightgrey line-clamp-2">
+							{getResultCount()}{" "}
+							{currentFilter === "all"
+								? "suscripciones"
+								: currentFilter === "offer"
+								? "ofertas"
+								: "peticiones"}{" "}
+							en total
+						</B1>
+					</span>
+				</div>
 
-			<div className="w-full overflow-x-auto">
-				<ProfilePostFilter onFilterChange={handleFilterChange} />
+				<div className="w-full overflow-x-auto">
+					<ProfilePostFilter onFilterChange={handleFilterChange} />
+				</div>
 			</div>
 
 			<div className="flex flex-col gap-12 w-full">
