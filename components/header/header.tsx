@@ -2,11 +2,16 @@ import { LocaleSwitcher } from "@/components/ui-custom/locale-switcher";
 import Link from "next/link";
 import { Suspense } from "react";
 import { AuthButtons } from "../auth/auth-buttons";
+import { NotificationsMenu } from "../notifications/notifications-menu";
 import { SearchGeneral } from "../search/search-general/search-general";
 import { SidebarTrigger } from "../ui-custom/sidebar";
 import { H3 } from "../ui-custom/typography";
 
-export function Header() {
+import { getNotificationsForUser } from "@/lib/services/notifications";
+
+export async function Header() {
+	const { data: notifications } = await getNotificationsForUser();
+
 	return (
 		<header className="sticky top-0 z-30 w-full flex bg-darkmode h-16">
 			<div className="w-full flex items-center px-4 md:px-5 relative">
@@ -26,6 +31,7 @@ export function Header() {
 
 				<div className="flex gap-2 md:gap-4 items-center ml-auto">
 					<AuthButtons />
+					<NotificationsMenu notifications={notifications || []} />
 					<Suspense fallback={<div className="w-8 h-8" />}>
 						<LocaleSwitcher />
 					</Suspense>

@@ -103,6 +103,7 @@ export function OfferDetails({
 								setIsLiked(liked);
 								setLikes(liked ? likes + 1 : likes - 1);
 							}}
+							postCreatorId={offer.creator_id || ""}
 						/>
 						<ShareComponent
 							url={typeof window !== "undefined" ? window.location.href.split("?")[0] : ""}

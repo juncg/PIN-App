@@ -15,10 +15,11 @@ export interface ILikeButton {
 	user_id: string | null;
 	variant?: "default" | "icon" | "withtext";
 	onLikeChangeForParent?: (liked: boolean) => void;
+	postCreatorId?: string;
 }
 
 export function LikeButton(props: ILikeButton) {
-	const { likes, likedByUser, post_id, typeOfPost, user_id, variant = "default" } = props;
+	const { likes, likedByUser, post_id, typeOfPost, user_id, variant = "default", postCreatorId } = props;
 	const [numberOfLikes, setLikes] = useState<number>(likes);
 	const [liked, setLiked] = useState<boolean>(likedByUser);
 	const [showLoginDialog, setShowLoginDialog] = useState(false);
@@ -49,7 +50,7 @@ export function LikeButton(props: ILikeButton) {
 		if (props.onLikeChangeForParent) props.onLikeChangeForParent(newLikedState);
 
 		try {
-			await handleLikeAction(post_id, previousLiked, typeOfPost);
+			await handleLikeAction(post_id, previousLiked, typeOfPost, postCreatorId);
 		} catch (error) {
 			setLiked(previousLiked);
 			setLikes(previousLikes);

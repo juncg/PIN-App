@@ -92,7 +92,6 @@ export function PetitionDetails({
 		},
 	];
 
-	// Determine target link: try petition.businesses first, then fallback to first product's business
 	let businessLink = "";
 	if (petition.businesses && petition.businesses.length > 0) {
 		businessLink = `/businesses/${petition.businesses[0].business.id}`;
@@ -120,6 +119,7 @@ export function PetitionDetails({
 								setIsLiked(liked);
 								setLikes(liked ? likes + 1 : likes - 1);
 							}}
+							postCreatorId={petition.User?.id}
 						/>
 						<ShareComponent
 							url={typeof window !== "undefined" ? window.location.href.split("?")[0] : ""}
