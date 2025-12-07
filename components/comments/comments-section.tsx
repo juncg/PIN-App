@@ -91,9 +91,8 @@ export function CommentsSection({
                 return;
             }
 
-            // Explicitly construct the new comment with all required IComment fields
             const newCommentWithUser: IComment = {
-                // Database fields
+                // table fields
                 id: insertedId,
                 text: commentData.text,
                 created_at: commentData.created_at,
@@ -103,7 +102,7 @@ export function CommentsSection({
                 superlikes: commentData.superlikes,
                 comment_locked_state: commentData.comment_locked_state,
                 state: commentData.state,
-                // Extended fields
+                // extended fields
                 user: currentUser,
                 replies: [],
                 replyCount: 0,
