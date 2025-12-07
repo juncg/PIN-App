@@ -13,7 +13,7 @@ export interface ILikeButton {
 	post_id: number;
 	typeOfPost?: "Oferta" | "Petición" | "Review";
 	user_id: string | null;
-	variant?: "default" | "icon";
+	variant?: "default" | "icon" | "withtext";
 	onLikeChangeForParent?: (liked: boolean) => void;
 }
 
@@ -56,6 +56,33 @@ export function LikeButton(props: ILikeButton) {
 			console.error("Error al actualizar like:", error);
 		}
 	};
+
+	if (variant === "withtext") {
+		return (
+			<>
+				<Button
+					onClick={handleLike}
+					variant="ghost"
+					className={cn(
+						"flex items-center gap-2 px-4 py-2 rounded-full transition-all bg-transparent hover:bg-transparent border-none"
+					)}
+				>
+					{liked ? (
+						<FavoriteIcon className="!h-5 !w-5 text-destructive" />
+					) : (
+						<FavoriteBorderIcon className="!h-5 !w-5" />
+					)}
+					<span className="font-medium">Me gusta</span>
+				</Button>
+
+				<NotLoggedInDialog
+					open={showLoginDialog}
+					onOpenChange={setShowLoginDialog}
+					description="Debes iniciar sesión para darle like a esta publicación."
+				/>
+			</>
+		);
+	}
 
 	if (variant === "icon") {
 		return (
