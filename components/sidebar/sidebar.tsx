@@ -40,14 +40,8 @@ const items = [
 		iconFilled: HomeFilledIcon,
 	},
 	{
-		title: "Ofertas",
-		url: "/offers",
-		icon: DealBuyLogoIcon,
-		iconFilled: DealBuyLogoIcon,
-	},
-	{
-		title: "Peticiones",
-		url: "/petitions",
+		title: "Ofertas y peticiones",
+		url: "/posts",
 		icon: DealBuyLogoIcon,
 		iconFilled: DealBuyLogoIcon,
 	},
@@ -64,8 +58,8 @@ const items = [
 		iconFilled: FrameFilledIcon,
 	},
 	{
-		title: "Posts",
-		url: "/posts",
+		title: "Feed",
+		url: "/feed",
 		icon: ChatBubblesIcon,
 		iconFilled: ChatBubblesFilledIcon,
 	},
