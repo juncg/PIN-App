@@ -17,6 +17,11 @@ import {
 	useSidebar,
 } from "@/components/ui-custom/sidebar";
 import {
+	entrySidebarAnimation,
+	handleSidebarElementMouseEnterAnimation,
+	handleSidebarElementMouseLeaveAnimation,
+} from "../animations/sidebar";
+import {
 	ChatBubblesFilledIcon,
 	ChatBubblesIcon,
 	DealBuyLogoIcon,
@@ -67,17 +72,12 @@ const items = [
 
 export function AppSidebar() {
 	const pathname = usePathname();
-	const { setOpenMobile, setOpen } = useSidebar();
+	const { setOpenMobile, setOpen, open } = useSidebar();
 	const { userUuid } = useUser();
 	const prevPathnameRef = useRef(pathname);
-
-	useEffect(() => {
-		if (prevPathnameRef.current !== pathname) {
-			setOpenMobile(false);
-			setOpen(false);
-			prevPathnameRef.current = pathname;
-		}
-	}, [pathname, setOpenMobile, setOpen]);
+	const menuItemsRef = useRef<(HTMLLIElement | null)[]>([]);
+	const footerItemsRef = useRef<(HTMLLIElement | null)[]>([]);
+	const sidebarRef = useRef<HTMLDivElement>(null);
 
 	const settingsItems = [
 		{
@@ -94,20 +94,37 @@ export function AppSidebar() {
 		},
 	];
 
+	useEffect(() => {
+		if (prevPathnameRef.current !== pathname) {
+			setOpenMobile(false);
+			setOpen(false);
+			prevPathnameRef.current = pathname;
+		}
+	}, [pathname, setOpenMobile, setOpen]);
+
+	entrySidebarAnimation(menuItemsRef, footerItemsRef, sidebarRef);
+
 	return (
-		<Sidebar className="!border-none" collapsible="icon">
+		<Sidebar className="!border-none" collapsible="icon" ref={sidebarRef}>
 			<SidebarContent className="m-1.5">
 				<SidebarGroup>
 					<SidebarGroupContent>
 						<SidebarMenu className="gap-2">
-							{items.map((item) => {
+							{items.map((item, index) => {
 								const isActive = pathname === item.url;
 								const IconComponent = isActive ? item.iconFilled : item.icon;
 								return (
-									<SidebarMenuItem key={item.title}>
+									<SidebarMenuItem
+										key={item.title}
+										ref={(el) => {
+											menuItemsRef.current[index] = el;
+										}}
+									>
 										<SidebarMenuButton asChild isActive={isActive}>
 											<Link
 												href={item.url}
+												onMouseEnter={handleSidebarElementMouseEnterAnimation}
+												onMouseLeave={handleSidebarElementMouseLeaveAnimation}
 												className={
 													isActive
 														? "bg-black text-black hover:bg-black/90 font-semibold"
@@ -129,17 +146,24 @@ export function AppSidebar() {
 			</SidebarContent>
 			<SidebarFooter className="m-1.5">
 				<SidebarMenu className="gap-2">
-					{settingsItems.map((item) => {
+					{settingsItems.map((item, index) => {
 						const isActive =
 							item.title === "Perfil"
 								? pathname === item.url || pathname.startsWith(`/profile/${userUuid}`)
 								: pathname === item.url;
 						const IconComponent = isActive ? item.iconFilled : item.icon;
 						return (
-							<SidebarMenuItem key={item.title}>
+							<SidebarMenuItem
+								key={item.title}
+								ref={(el) => {
+									footerItemsRef.current[index] = el;
+								}}
+							>
 								<SidebarMenuButton asChild isActive={isActive}>
 									<Link
 										href={item.url}
+										onMouseEnter={handleSidebarElementMouseEnterAnimation}
+										onMouseLeave={handleSidebarElementMouseLeaveAnimation}
 										className={
 											isActive ? "bg-black text-black hover:bg-black/90 font-semibold" : ""
 										}

@@ -25,7 +25,7 @@ export function OrderSelect({ options, placeholder, defaultValue = "newest" }: O
 
 	return (
 		<Select onValueChange={handleValueChange} defaultValue={defaultValue}>
-			<SelectTrigger className="w-auto min-w-[120px] max-w-[300px] rounded-full border-white text-white bg-transparent">
+			<SelectTrigger className="w-auto min-w-[120px] max-w-[300px] rounded-full border-white">
 				<SelectValue placeholder={placeholder} />
 			</SelectTrigger>
 			<SelectContent>

@@ -1,11 +1,10 @@
+import { CreateFab } from "@/components/buttons/create-floating-action-button";
 import { ForumCard } from "@/components/cards/forum-card";
 import { CategoriesCarousel } from "@/components/carousel/categories-carousel";
 import { H2 } from "@/components/ui-custom/typography";
 import { getUserUuid } from "@/lib/services/user";
 import { ISearchParams } from "../../types";
 import { ForumsServices } from "./forums-services";
-import Link from "next/link";
-import { CreateFab } from "@/components/buttons/create-floating-action-button";
 export default async function Forums({ searchParams }: { searchParams: Promise<ISearchParams> }) {
 	const { categories, hasSelectedCategories, recommendedForums, popularForums, trendingByCategory, isBusinessUser } =
 		await ForumsServices(searchParams);
@@ -13,14 +12,7 @@ export default async function Forums({ searchParams }: { searchParams: Promise<I
 	const userUuid = await getUserUuid();
 
 	return (
-		<section className="max-w-7xl mx-auto space-y-8">
-			<div className="mb-8 text-sm text-lightgrey">
-				<Link href="/home" className="hover:underline">
-					Inicio
-				</Link>
-				<span className="mx-2">/</span> <span className="text-white font-medium">Foros</span>
-			</div>
-
+		<section className="mx-auto space-y-8">
 			<CategoriesCarousel categories={categories} />
 
 			{!hasSelectedCategories && (

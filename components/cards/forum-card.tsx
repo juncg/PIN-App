@@ -24,14 +24,14 @@ export function ForumCard({ className, forum, currentUserId }: IForumCard) {
 	return (
 		<div
 			className={cn(
-				"rounded-xl border bg-black text-white p-6 flex flex-col justify-between h-full hover:border-lightgrey transition-colors shadow-sm",
+				"rounded-xl border-[2px] border-cardborder bg-darkmode text-white p-6 flex flex-col justify-between h-full transition-colors shadow-sm",
 				className
 			)}
 		>
 			<div className="space-y-4">
 				<div className="flex items-start justify-between">
 					<div className="flex items-center gap-3">
-						<Avatar className="h-12 w-12 border rounded-xl">
+						<Avatar className="h-12 w-12 rounded-xl">
 							<AvatarImage src={forum.profile_picture || "/placeholder.png"} />
 							<AvatarFallback className="rounded-xl">{forum.name?.[0]}</AvatarFallback>
 						</Avatar>

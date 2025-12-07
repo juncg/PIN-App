@@ -11,7 +11,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
 
 	return (
 		<section className="flex flex-row justify-center gap-8">
-			<div className="flex flex-col items-baseline gap-8 w-[36%]">
+			<div className="flex flex-col items-baseline gap-8 max-w-[36%]">
 				<Link href={"/petitions"}>
 					<H2>{translator("petitions")}.</H2>
 				</Link>
@@ -21,7 +21,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
 				))}
 			</div>
 
-			<div className="flex flex-col items-baseline gap-8 w-[36%] mr-12">
+			<div className="flex flex-col items-baseline gap-8 max-w-[36%] mr-12">
 				<Link href={"/offers"}>
 					<H2>{translator("offers")}.</H2>
 				</Link>
@@ -31,7 +31,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
 				))}
 			</div>
 
-			<div className="flex flex-col items-baseline gap-7 w-[26%]">
+			<div className="flex flex-col items-baseline gap-7 max-w-[26%]">
 				<Link href={"/products"}>
 					<H2>{translator("products")}.</H2>
 				</Link>

@@ -1,11 +1,10 @@
+import { CreateFab } from "@/components/buttons/create-floating-action-button";
 import { PostCardHorizontal } from "@/components/cards/post-card-horizontal";
 import { PostTypeFilter } from "@/components/filters/post-type-filter";
 import PostsSidebar from "@/components/filters/posts-filters";
 import { OrderSelect } from "@/components/select/order-select";
 import { ISearchParams } from "@/types";
-import Link from "next/link";
 import { PostsServices } from "./page-services";
-import { CreateFab } from "@/components/buttons/create-floating-action-button";
 
 export default async function PostsPage({ searchParams }: { searchParams: Promise<ISearchParams> }) {
 	const { clientTranslations, posts, popularTags, currentUserId, isBusinessUser } = await PostsServices(searchParams);
@@ -14,13 +13,6 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 	return (
 		<div className="flex min-h-screen flex-col">
 			<div className="container flex-1 px-4 py-6">
-				<div className="mb-8 text-sm text-lightgrey">
-					<Link href="/home" className="hover:underline">
-						Inicio
-					</Link>
-					<span className="mx-2">/</span> <span className="text-white font-medium">Ofertas y peticiones</span>
-				</div>
-
 				<div className="flex gap-8 mt-6">
 					<aside className="w-64 shrink-0">
 						<PostsSidebar popularTags={popularTags} />
