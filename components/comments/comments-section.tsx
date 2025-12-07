@@ -12,148 +12,164 @@ import { CommentCard } from "../cards/comment-card";
 import { CommentBox } from "./comment-box";
 
 interface CommentsSectionProps {
-	postId: number;
-	postType: "Petition" | "Offer";
-	comments?: IComment[];
-	currentUser?: IUser | null;
+    postId: number;
+    postType: "Petition" | "Offer";
+    comments?: IComment[];
+    currentUser?: IUser | null;
 }
 
 export function CommentsSection({
-	postId,
-	postType,
-	comments: initialComments = [],
-	currentUser,
+    postId,
+    postType,
+    comments: initialComments = [],
+    currentUser,
 }: CommentsSectionProps) {
-	const [comments, setComments] = useState<IComment[]>(initialComments);
-	const [newComment, setNewComment] = useState("");
-	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [showLoginDialog, setShowLoginDialog] = useState(false);
+    const [comments, setComments] = useState<IComment[]>(initialComments);
+    const [newComment, setNewComment] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showLoginDialog, setShowLoginDialog] = useState(false);
 
-	useEffect(() => {
-		setComments(initialComments);
-	}, [initialComments]);
+    useEffect(() => {
+        setComments(initialComments);
+    }, [initialComments]);
 
-	const handleSubmit = async () => {
-		if (!currentUser) {
-			setShowLoginDialog(true);
-			return;
-		}
+    const handleSubmit = async () => {
+        if (!currentUser) {
+            setShowLoginDialog(true);
+            return;
+        }
 
-		if (!newComment.trim()) {
-			toast.error("El comentario no puede estar vacío");
-			return;
-		}
+        if (!newComment.trim()) {
+            toast.error("El comentario no puede estar vacío");
+            return;
+        }
 
-		setIsSubmitting(true);
-		try {
-			const commentData: Omit<IComment, "id"> = {
-				text: newComment,
-				created_at: new Date().toISOString(),
-				creator_id: currentUser.id,
-				forum_id: null,
-				likes: 0,
-				superlikes: 0,
-				comment_locked_state: "Unlocked",
-				state: "Posted",
-			};
+        setIsSubmitting(true);
+        try {
+            const commentData: Omit<IComment, "id"> = {
+                text: newComment,
+                created_at: new Date().toISOString(),
+                creator_id: currentUser.id,
+                forum_id: null,
+                likes: 0,
+                superlikes: 0,
+                comment_locked_state: "Unlocked",
+                state: "Posted",
+            };
 
-			const { data: response, error } = await PostToDatabase({
-				tableName: "Comment",
-				contentJson: [commentData],
-			});
+            const { data: response, error } = await PostToDatabase({
+                tableName: "Comment",
+                contentJson: [commentData],
+            });
 
-			if (error || !response) {
-				console.log("Error al publicar comentario:", error);
-				toast.error("Error al publicar comentario");
-				return;
-			}
+            if (error || !response) {
+                console.log("Error al publicar comentario:", error);
+                toast.error("Error al publicar comentario");
+                return;
+            }
 
-			const { error: postError } = await PostToDatabase({
-				tableName: "Comment_Post",
-				contentJson: [
-					{
-						comment_id: response[0].id,
-						offer_id: postType === "Offer" ? postId : null,
-						petition_id: postType === "Petition" ? postId : null,
-						referenced_comment_id: null,
-						review_id: null,
-					},
-				],
-			});
+            // Extract the inserted ID
+            const insertedId = (response[0] as any).id as number;
 
-			if (postError) {
-				console.log("Error al vincular comentario:", postError);
-				toast.error("Error al publicar comentario");
-				return;
-			}
+            const { error: postError } = await PostToDatabase({
+                tableName: "Comment_Post",
+                contentJson: [
+                    {
+                        comment_id: insertedId,
+                        offer_id: postType === "Offer" ? postId : null,
+                        petition_id: postType === "Petition" ? postId : null,
+                        referenced_comment_id: null,
+                        referenced_user_id: null,
+                        review_id: null,
+                    },
+                ],
+            });
 
-			const newCommentWithUser: IComment = {
-				...response[0],
-				user: currentUser || undefined,
-				replies: [],
-			};
+            if (postError) {
+                console.log("Error al vincular comentario:", postError);
+                toast.error("Error al publicar comentario");
+                return;
+            }
 
-			setComments((prevComments) => [newCommentWithUser, ...prevComments]);
+            // Explicitly construct the new comment with all required IComment fields
+            const newCommentWithUser: IComment = {
+                // Database fields
+                id: insertedId,
+                text: commentData.text,
+                created_at: commentData.created_at,
+                creator_id: commentData.creator_id,
+                forum_id: commentData.forum_id,
+                likes: commentData.likes,
+                superlikes: commentData.superlikes,
+                comment_locked_state: commentData.comment_locked_state,
+                state: commentData.state,
+                // Extended fields
+                user: currentUser,
+                replies: [],
+                replyCount: 0,
+            };
 
-			toast.success("Comentario publicado");
-			setNewComment("");
-		} catch (error) {
-			toast.error("Error al publicar comentario");
-		} finally {
-			setIsSubmitting(false);
-		}
-	};
+            setComments((prevComments) => [newCommentWithUser, ...prevComments]);
 
-	const totalComments = comments.reduce((acc, comment) => {
-		return acc + 1 + (comment.replies?.length || 0);
-	}, 0);
+            toast.success("Comentario publicado");
+            setNewComment("");
+        } catch (error) {
+            toast.error("Error al publicar comentario");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
-	return (
-		<div className="space-y-6 mt-12">
-			<div className="flex items-center gap-2">
-				<H3>Comentarios</H3>
-				<div className="bg-white px-2 py-0.5 rounded-full text-black text-xs font-medium">{totalComments}</div>
-			</div>
+    const totalComments = comments.reduce((acc, comment) => {
+        return acc + 1 + (comment.replyCount || 0);
+    }, 0);
 
-			<Separator />
+    return (
+        <div className="space-y-6 mt-12">
+            <div className="flex items-center gap-2">
+                <H3>Comentarios</H3>
+                <div className="bg-white px-2 py-0.5 rounded-full text-black text-xs font-medium">{totalComments}</div>
+            </div>
 
-			<div className="flex gap-4">
-				<Avatar className="flex-shrink-0">
-					<AvatarImage className="object-cover" src={currentUser?.profile_picture || undefined} />
-					<AvatarFallback>{currentUser?.name?.[0].toUpperCase() || "U"}</AvatarFallback>
-				</Avatar>
-				
-				<CommentBox
-					currentUser={currentUser}
-					newComment={newComment}
-					setNewComment={setNewComment}
-					isSubmitting={isSubmitting}
-					handleSubmit={handleSubmit}
-				/>
-			</div>
+            <Separator />
 
-			<div className="space-y-6">
-				{comments.length > 0 ? (
-					comments.map((comment) => (
-						<CommentCard
-							key={comment.id}
-							comment={comment}
-							currentUser={currentUser}
-							postId={postId}
-						/>
-					))
-				) : (
-					<div className="text-center py-12 ">
-						<B1 className="text-lightgrey">No hay comentarios todavía. ¡Sé el primero en comentar!</B1>
-					</div>
-				)}
-			</div>
+            <div className="flex gap-4">
+                <Avatar className="flex-shrink-0">
+                    <AvatarImage className="object-cover" src={currentUser?.profile_picture || undefined} />
+                    <AvatarFallback>{currentUser?.name?.[0].toUpperCase() || "U"}</AvatarFallback>
+                </Avatar>
+                
+                <CommentBox
+                    currentUser={currentUser}
+                    newComment={newComment}
+                    setNewComment={setNewComment}
+                    isSubmitting={isSubmitting}
+                    handleSubmit={handleSubmit}
+                />
+            </div>
 
-			<NotLoggedInDialog
-				open={showLoginDialog}
-				onOpenChange={setShowLoginDialog}
-				description="Necesitas iniciar sesión para publicar un comentario."
-			/>
-		</div>
-	);
+            <div className="space-y-6">
+                {comments.length > 0 ? (
+                    comments.map((comment) => (
+                        <CommentCard
+                            key={comment.id}
+                            comment={comment}
+                            currentUser={currentUser}
+                            postId={postId}
+                        />
+                    ))
+                ) : (
+                    <div className="text-center py-12 ">
+                        <B1 className="text-lightgrey">No hay comentarios todavía. ¡Sé el primero en comentar!</B1>
+                    </div>
+                )}
+            </div>
+
+            <NotLoggedInDialog
+                open={showLoginDialog}
+                onOpenChange={setShowLoginDialog}
+                description="Necesitas iniciar sesión para publicar un comentario."
+            />
+        </div>
+    );
 }

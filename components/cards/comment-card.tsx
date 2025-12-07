@@ -35,6 +35,7 @@ export function CommentCard({
 	const [showReplies, setShowReplies] = useState(false);
 	const [isLoadingReplies, setIsLoadingReplies] = useState(false);
 	const [replyCount, setReplyCount] = useState(comment.replyCount || 0);
+	const [hasLoadedFromDb, setHasLoadedFromDb] = useState(false);
 
 	const isTopLevel = level === 0;
 	const parentCommentId = parentComment?.id || comment.id;
@@ -53,7 +54,8 @@ export function CommentCard({
 			return;
 		}
 
-		if (replies.length === 0 && isTopLevel) {
+		// fetch from database if we haven't loaded yet
+		if (isTopLevel && !hasLoadedFromDb) {
 			setIsLoadingReplies(true);
 			try {
 				const { replies: fetchedReplies, error } = await fetchCommentReplies(comment.id);
@@ -63,7 +65,9 @@ export function CommentCard({
 					return;
 				}
 
+				// replace replies completely with DB data
 				setReplies(fetchedReplies);
+				setHasLoadedFromDb(true);
 				setShowReplies(true);
 			} catch (error) {
 				toast.error("Error al cargar respuestas");
@@ -72,6 +76,7 @@ export function CommentCard({
 				setIsLoadingReplies(false);
 			}
 		} else {
+			// already loaded, just toggle visibility
 			setShowReplies(true);
 		}
 	};
@@ -111,9 +116,11 @@ export function CommentCard({
 				return;
 			}
 
+			const insertedId = (response[0] as any).id as number;
+
 			if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
 				console.log("Creating Comment_Post with:", {
-					comment_id: response[0].id,
+					comment_id: insertedId,
 					referenced_comment_id: parentCommentId,
 					referenced_user_id: comment.user?.id,
 				});
@@ -123,7 +130,7 @@ export function CommentCard({
 				tableName: "Comment_Post",
 				contentJson: [
 					{
-						comment_id: response[0].id,
+						comment_id: insertedId,
 						offer_id: null,
 						petition_id: null,
 						referenced_comment_id: parentCommentId,
@@ -140,18 +147,53 @@ export function CommentCard({
 			}
 
 			const newReply: IComment = {
-				...response[0],
+				// table fields
+				id: insertedId,
+				text: replyData.text,
+				created_at: replyData.created_at,
+				creator_id: replyData.creator_id,
+				forum_id: replyData.forum_id,
+				likes: replyData.likes,
+				superlikes: replyData.superlikes,
+				comment_locked_state: replyData.comment_locked_state,
+				state: replyData.state,
+				// extended fields
 				user: currentUser,
 				referencedUser: comment.user,
 				replies: [],
 				replyCount: 0,
 			};
 
-			console.log("New reply created with referencedUser:", newReply.referencedUser?.username);
-
 			if (isTopLevel) {
-				setReplies((prev) => [newReply, ...prev]);
+				// increment reply count
 				setReplyCount((prev) => prev + 1);
+
+				if (showReplies && hasLoadedFromDb) {
+					setReplies((prev) => [newReply, ...prev]);
+				}
+
+				// auto-open replies
+				if (!showReplies) {
+					// if not loaded from database yet, fetch all replies now
+					if (!hasLoadedFromDb) {
+						setIsLoadingReplies(true);
+						try {
+							const { replies: fetchedReplies, error: fetchError } = await fetchCommentReplies(
+								comment.id
+							);
+
+							if (!fetchError && fetchedReplies) {
+								setReplies(fetchedReplies);
+								setHasLoadedFromDb(true);
+							}
+						} catch (error) {
+							console.error("Error fetching replies:", error);
+						} finally {
+							setIsLoadingReplies(false);
+						}
+					}
+					setShowReplies(true);
+				}
 			}
 
 			if (onReplyAdded) {
@@ -161,10 +203,6 @@ export function CommentCard({
 			toast.success("Respuesta publicada");
 			setReplyText("");
 			setShowReplyForm(false);
-
-			if (isTopLevel) {
-				setShowReplies(true);
-			}
 		} catch (error) {
 			console.error("Error in handleReplySubmit:", error);
 			toast.error("Error al publicar respuesta");

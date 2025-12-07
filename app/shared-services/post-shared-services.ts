@@ -5,6 +5,12 @@ import { IComment, IUser } from "@/lib/services/types";
 
 type PostType = "offer" | "petition";
 
+interface CommentPostData {
+    comment_id: number;
+    referenced_comment_id: number | null;
+    referenced_user_id: string | null;
+}
+
 // fetch top-level comments with reply counts
 export async function fetchTopLevelComments(
     postId: number,
@@ -60,7 +66,7 @@ export async function fetchCommentReplies(
     commentId: number
 ): Promise<{ replies: IComment[]; error: any }> {
     // first, get Comment_Post records with referenced_user_id
-    const { data: commentPosts, error: commentPostError } = await GetFromDatabase({
+    const { data: commentPosts, error: commentPostError } = await GetFromDatabase<CommentPostData>({
         tableName: "Comment_Post",
         select: "comment_id, referenced_comment_id, referenced_user_id",
         filters: [
@@ -74,7 +80,7 @@ export async function fetchCommentReplies(
     }
 
     // get all comment IDs
-    const commentIds = commentPosts.map((cp: any) => cp.comment_id);
+    const commentIds = commentPosts.map((cp) => cp.comment_id);
 
     // fetch the actual comments
     const { data: replies, error } = await GetFromDatabase<IComment>({
@@ -97,17 +103,17 @@ export async function fetchCommentReplies(
     // match replies with their referenced_user_id from Comment_Post
     const repliesWithReferencedUsers = await Promise.all(
         replies.map(async (reply) => {
-            const commentPost = commentPosts.find((cp: any) => cp.comment_id === reply.id);
+            const commentPost = commentPosts.find((cp) => cp.comment_id === reply.id);
             const referencedUserId = commentPost?.referenced_user_id;
-            
-			if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
-            	console.log("Reply ID:", reply.id, "Referenced User ID:", referencedUserId);
-			}
-            
+
+            if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
+                console.log("Reply ID:", reply.id, "Referenced User ID:", referencedUserId);
+            }
+
             if (!referencedUserId) {
                 return {
                     ...reply,
-                    referencedUser: null,
+                    referencedUser: undefined, // ← Changed from null to undefined
                     replyCount: 0,
                     replies: [],
                 };
@@ -124,25 +130,28 @@ export async function fetchCommentReplies(
                 console.error("Error fetching referenced user:", userError);
             }
 
-			if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
-            	console.log("Fetched referenced user:", users?.[0]?.username);
-			}
+            if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
+                console.log("Fetched referenced user:", users?.[0]?.username);
+            }
 
             return {
                 ...reply,
-                referencedUser: users?.[0] || null,
+                referencedUser: users?.[0] || undefined,
                 replyCount: 0,
                 replies: [],
             };
         })
     );
 
-	if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
-		console.log("Replies with referenced users:", repliesWithReferencedUsers.map(r => ({
-			id: r.id,
-			referencedUser: r.referencedUser?.username
-		})));
-	}
+    if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
+        console.log(
+            "Replies with referenced users:",
+            repliesWithReferencedUsers.map((r) => ({
+                id: r.id,
+                referencedUser: r.referencedUser?.username,
+            }))
+        );
+    }
 
     return { replies: repliesWithReferencedUsers, error: null };
 }
