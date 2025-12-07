@@ -77,8 +77,10 @@ export type IComment = Tables<"Comment"> & {
 		offer_id: number | null;
 		petition_id: number | null;
 		referenced_comment_id: number | null;
+		referenced_user_id: string | null;
 		review_id: number | null;
 	}[];
+	referencedUser?: IUser;
 };
 
 export type ITag = Tables<"Tag">;
