@@ -100,7 +100,9 @@ export async function fetchCommentReplies(
             const commentPost = commentPosts.find((cp: any) => cp.comment_id === reply.id);
             const referencedUserId = commentPost?.referenced_user_id;
             
-            console.log("Reply ID:", reply.id, "Referenced User ID:", referencedUserId);
+			if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
+            	console.log("Reply ID:", reply.id, "Referenced User ID:", referencedUserId);
+			}
             
             if (!referencedUserId) {
                 return {
@@ -122,7 +124,9 @@ export async function fetchCommentReplies(
                 console.error("Error fetching referenced user:", userError);
             }
 
-            console.log("Fetched referenced user:", users?.[0]?.username);
+			if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
+            	console.log("Fetched referenced user:", users?.[0]?.username);
+			}
 
             return {
                 ...reply,
@@ -133,10 +137,12 @@ export async function fetchCommentReplies(
         })
     );
 
-    console.log("Replies with referenced users:", repliesWithReferencedUsers.map(r => ({
-        id: r.id,
-        referencedUser: r.referencedUser?.username
-    })));
+	if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
+		console.log("Replies with referenced users:", repliesWithReferencedUsers.map(r => ({
+			id: r.id,
+			referencedUser: r.referencedUser?.username
+		})));
+	}
 
     return { replies: repliesWithReferencedUsers, error: null };
 }

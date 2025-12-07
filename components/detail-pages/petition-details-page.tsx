@@ -37,7 +37,9 @@ export function PetitionDetails({ petition, subscribedByUser, comments, currentU
 		setIsSubscribed(!isSubscribed);
 	};
 
-	console.log("Comments en PetitionDetails:", comments);
+	if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
+		console.log("Comments en PetitionDetails:", comments);
+	}
 
 	const displayImages: string[] = petition.images?.filter((img) => img && img.trim() !== "")?.length
 		? petition.images.filter((img) => img && img.trim() !== "")
