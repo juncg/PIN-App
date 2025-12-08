@@ -8,9 +8,11 @@ import { SidebarTrigger } from "../ui-custom/sidebar";
 import { H3 } from "../ui-custom/typography";
 
 import { getNotificationsForUser } from "@/lib/services/notifications";
+import { getUserUuid } from "@/lib/services/user";
 
 export async function Header() {
 	const { data: notifications } = await getNotificationsForUser();
+	const userId = await getUserUuid();
 
 	return (
 		<header className="sticky top-0 z-30 w-full flex bg-darkmode h-16">
@@ -31,7 +33,7 @@ export async function Header() {
 
 				<div className="flex gap-2 md:gap-4 items-center ml-auto">
 					<AuthButtons />
-					<NotificationsMenu notifications={notifications || []} />
+					<NotificationsMenu notifications={notifications || []} userId={userId} />
 					<Suspense fallback={<div className="w-8 h-8" />}>
 						<LocaleSwitcher />
 					</Suspense>

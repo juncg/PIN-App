@@ -2,25 +2,12 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
 import { INotification } from "@/lib/services/types";
-import { Bell } from "lucide-react";
+import { Bell, Heart } from "lucide-react";
 import Link from "next/link";
 import { GetRelativeTime } from "@/lib/services/utilities";
 
 interface NotificationItemProps {
 	notification: INotification;
-}
-
-function timeAgo(date: string) {
-	const now = new Date();
-	const diff = now.getTime() - new Date(date).getTime();
-	const minutes = Math.floor(diff / 60000);
-	const hours = Math.floor(minutes / 60);
-	const days = Math.floor(hours / 24);
-
-	if (days > 0) return `hace ${days} día${days > 1 ? "s" : ""}`;
-	if (hours > 0) return `hace ${hours} hora${hours > 1 ? "s" : ""}`;
-	if (minutes > 0) return `hace ${minutes} minuto${minutes > 1 ? "s" : ""}`;
-	return "ahora mismo";
 }
 
 export function NotificationItem({ notification }: NotificationItemProps) {
@@ -31,12 +18,19 @@ export function NotificationItem({ notification }: NotificationItemProps) {
 				!notification.is_read ? "bg-muted/20" : ""
 			}`}
 		>
-			<div className="mt-1 shrink-0">
+			<div className="mt-1 shrink-0 relative">
 				{notification.sender ? (
-					<Avatar className="h-10 w-10 rounded-full">
-						<AvatarImage src={notification.sender.profile_picture || ""} />
-						<AvatarFallback>{notification.sender.name?.[0]?.toUpperCase() || "U"}</AvatarFallback>
-					</Avatar>
+					<>
+						<Avatar className="h-10 w-10 rounded-full">
+							<AvatarImage src={notification.sender.profile_picture || ""} />
+							<AvatarFallback>{notification.sender.name?.[0]?.toUpperCase() || "U"}</AvatarFallback>
+						</Avatar>
+						{notification.type === "Like" && (
+							<div className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-600">
+								<Heart className="h-2.5 w-2.5 text-white fill-white" />
+							</div>
+						)}
+					</>
 				) : (
 					<div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
 						<Bell className="h-5 w-5" />

@@ -8,12 +8,16 @@ import { Bell } from "lucide-react";
 import { Button } from "../ui-custom/button";
 import { NotificationItem } from "./notification-item";
 
+import { useNewNotificationsIndicator } from "@/hooks/use-new-notification";
+
 interface NotificationsMenuProps {
 	notifications: INotification[];
+	userId: string | null;
 }
 
-export function NotificationsMenu({ notifications }: NotificationsMenuProps) {
+export function NotificationsMenu({ notifications, userId }: NotificationsMenuProps) {
 	const router = useRouter();
+	const hasNewNotification = useNewNotificationsIndicator(userId);
 
 	const handleOpenChange = async (open: boolean) => {
 		if (open) {
@@ -30,7 +34,7 @@ export function NotificationsMenu({ notifications }: NotificationsMenuProps) {
 			<DropdownMenuTrigger asChild>
 				<Button variant="default" size="icon" className="outline-none focus-visible:ring-0 relative">
 					<Bell className="h-5 w-5" />
-					{notifications.some((n) => !n.is_read) && (
+					{(notifications.some((n) => !n.is_read) || hasNewNotification) && (
 						<span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-600 border border-background" />
 					)}
 				</Button>
