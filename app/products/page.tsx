@@ -15,10 +15,12 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
 			<div className="container flex-1 px-4 py-6">
 				<div className="flex gap-8">
 					<aside className="w-64 shrink-0">
-						<ProductsFilters categories={categories ?? []} />
+						<div className="fixed top-35.5 w-64 pr-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
+							<ProductsFilters categories={categories ?? []} />
+						</div>
 					</aside>
 
-					<main className="flex-1 min-w-0">
+					<main className="flex-1 min-w-0 ml-0">
 						<div className="mb-6 flex items-center justify-between">
 							<B3>Todos los productos ({products?.length || 0})</B3>
 
