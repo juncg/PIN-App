@@ -20,7 +20,6 @@ export function AnimatedLikeButton({ liked, onClick, className }: AnimatedLikeBu
 		if (liked && buttonRef.current && iconRef.current && particlesRef.current) {
 			const tl = gsap.timeline();
 
-			// Animación del icono principal
 			tl.to(iconRef.current, {
 				scale: 1.3,
 				duration: 0.2,
@@ -43,7 +42,6 @@ export function AnimatedLikeButton({ liked, onClick, className }: AnimatedLikeBu
 					0
 				);
 
-			// Animación de partículas
 			const particles = particlesRef.current.children;
 			Array.from(particles).forEach((particle, index) => {
 				const angle = (360 / particles.length) * index;
