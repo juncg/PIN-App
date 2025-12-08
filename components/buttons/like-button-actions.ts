@@ -93,6 +93,7 @@ export async function handleLikeAction(
 							type: "Like",
 							message: notificationMessage,
 							linkTo: linkTo,
+							senderId: user_id,
 						});
 
 						if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {

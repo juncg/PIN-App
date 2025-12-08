@@ -94,6 +94,7 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 								user_id={userUuid}
 								variant="icon"
 								onLikeChangeForParent={onLikeChangeForParent}
+								postCreatorId={post.creator_id as string}
 							/>
 						</div>
 
