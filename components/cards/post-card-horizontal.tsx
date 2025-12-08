@@ -46,8 +46,8 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 	const hasFinished = post.type === "Offer" ? new Date(post.target_completition_date) <= new Date() : false;
 
 	return (
-		<article className={cn(className, "flex border-[2px] rounded-[20px] w-full")}>
-			<figure className="relative w-60 h-60 rounded-[20px] overflow-hidden shrink-0">
+		<article className={cn(className, "flex border-[2px] rounded-2xl w-full")}>
+			<figure className="relative w-60 h-60 rounded-xl border-[3px] border-darkmode overflow-hidden shrink-0">
 				<Image
 					src={post?.images?.[0] || "/placeholder.png"}
 					alt={"Post picture"}
@@ -65,9 +65,9 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 				</div>
 			</figure>
 
-			<div className="flex flex-col justify-between p-6 w-full">
+			<div className="flex flex-col justify-between p-6 w-full min-w-0">
 				<div className="flex w-full justify-between gap-8">
-					<div>
+					<div className="flex flex-col min-w-0">
 						<Link
 							href={post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}
 							className="hover:underline"
@@ -77,8 +77,9 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 
 						<B1 className="text-lightgrey line-clamp-2">{post.text}</B1>
 					</div>
+
 					{post.products && post.products.length > 0 && (
-						<div className="flex flex-col items-end">
+						<div className="flex flex-col items-end shrink-0">
 							<H3>{post.reduced_price ?? 0}€</H3>
 							<div className="flex gap-2 items-center">
 								<B5 className="text-chernobyl md:line-clamp-1">-{discountPercentage}%</B5>

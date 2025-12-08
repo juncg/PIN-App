@@ -11,14 +11,14 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 	const params = await searchParams;
 
 	return (
-		<div className="flex min-h-screen flex-col">
-			<div className="container flex-1 px-4 py-6">
-				<div className="flex gap-8 mt-6">
-					<aside className="w-64 shrink-0">
+		<div className="flex min-h-screen flex-col w-full">
+			<div className="flex-1 w-full">
+				<div className="flex gap-8 mt-6 w-full">
+					<aside className="w-80 shrink-0">
 						<PostsSidebar popularTags={popularTags} />
 					</aside>
 
-					<main className="flex-1 min-w-0">
+					<main className="flex-1 min-w-0 pr-4">
 						<div className="mb-6">
 							<PostTypeFilter />
 						</div>

@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { AnimatedLikeButton } from "../animations/like-button";
 import { NotLoggedInDialog } from "../dialogs/not-logged-in-dialog";
 import { FavoriteBorderIcon, FavoriteIcon } from "../icons/icons";
 import { Button } from "../ui-custom/button";
@@ -88,19 +89,11 @@ export function LikeButton(props: ILikeButton) {
 	if (variant === "icon") {
 		return (
 			<>
-				<Button
+				<AnimatedLikeButton
+					liked={liked}
 					onClick={handleLike}
-					className={cn(
-						"h-8 w-8 rounded-full p-0 bg-white text-darkmode hover:text-destructive transition",
-						liked ? "text-destructive" : "hover:text-destructive"
-					)}
-				>
-					{liked ? (
-						<FavoriteIcon className={cn("!h-5 !w-5 text-destructive")} />
-					) : (
-						<FavoriteBorderIcon className={cn("!h-5 !w-5")} />
-					)}
-				</Button>
+					className={cn("bg-white text-darkmode hover:text-destructive transition")}
+				/>
 
 				<NotLoggedInDialog
 					open={showLoginDialog}
@@ -113,12 +106,8 @@ export function LikeButton(props: ILikeButton) {
 
 	return (
 		<>
-			<Button variant="outline" className={cn("mt-4")} onClick={handleLike}>
-				{liked ? (
-					<FavoriteIcon className={cn("mr-2 !h-5 !w-5 text-destructive")} />
-				) : (
-					<FavoriteBorderIcon className={cn("mr-2 !h-5 !w-5")} />
-				)}
+			<Button variant="outline" className={cn("mt-4 gap-2")} onClick={handleLike}>
+				<AnimatedLikeButton liked={liked} onClick={() => {}} className="h-5 w-5 p-0 bg-transparent" />
 				{numberOfLikes || 0}
 			</Button>
 
