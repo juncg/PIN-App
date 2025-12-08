@@ -1,6 +1,7 @@
 "use server";
 
 import { ExecuteRpcFunction } from "@/lib/services/general";
+import { createNotification } from "@/lib/services/notifications";
 import { getUserUuid } from "@/lib/services/user";
 
 interface ToggleFollowResult {
@@ -53,6 +54,16 @@ export async function handleFollowAction(entityId: number | string, entityType: 
 				entityType,
 				isFollowing: result.is_following,
 				followersCount: result.new_followers_count,
+			});
+		}
+
+		if (result.is_following && entityType === "User") {
+			await createNotification({
+				recipientId: entityId as string,
+				type: "Follow",
+				message: "ha empezado a seguirte.",
+				linkTo: `/profile/${user_id}`,
+				senderId: user_id,
 			});
 		}
 
