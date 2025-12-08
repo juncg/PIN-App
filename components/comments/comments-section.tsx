@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avat
 import { Separator } from "@/components/ui-custom/separator";
 import { B1, H3 } from "@/components/ui-custom/typography";
 import { PostToDatabase } from "@/lib/services/general";
+import { createNotification } from "@/lib/services/notifications";
 import { IComment, IUser } from "@/lib/services/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -16,6 +17,7 @@ interface CommentsSectionProps {
 	postType: "Petition" | "Offer";
 	comments?: IComment[];
 	currentUser?: IUser | null;
+	postCreatorId: string;
 }
 
 export function CommentsSection({
@@ -23,6 +25,7 @@ export function CommentsSection({
 	postType,
 	comments: initialComments = [],
 	currentUser,
+	postCreatorId,
 }: CommentsSectionProps) {
 	const [comments, setComments] = useState<IComment[]>(initialComments);
 	const [newComment, setNewComment] = useState("");
@@ -89,6 +92,22 @@ export function CommentsSection({
 				console.log("Error al vincular comentario:", postError);
 				toast.error("Error al publicar comentario");
 				return;
+			}
+
+			if (postCreatorId && postCreatorId !== currentUser.id) {
+				try {
+					const linkTo = postType === "Offer" ? `/offers/${postId}` : `/petitions/${postId}`;
+					const message = postType === "Offer" ? "ha comentado en tu oferta" : "ha comentado en tu peticion";
+					await createNotification({
+						recipientId: postCreatorId,
+						type: "New_comment",
+						message: message,
+						linkTo: linkTo,
+						senderId: currentUser.id,
+					});
+				} catch (notificationError) {
+					console.error("Error sending notification:", notificationError);
+				}
 			}
 
 			const newCommentWithUser: IComment = {

@@ -230,7 +230,13 @@ export function OfferDetails({
 				<div></div>
 			</div>
 
-			<CommentsSection postType="Offer" postId={offer.id} currentUser={currentUser} comments={comments} />
+			<CommentsSection
+				postType="Offer"
+				postId={offer.id}
+				currentUser={currentUser}
+				comments={comments}
+				postCreatorId={offer.creator_id || ""}
+			/>
 
 			<div className="py-8">
 				{businessProducts && businessProducts.length > 0 ? (

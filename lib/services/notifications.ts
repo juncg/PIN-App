@@ -51,3 +51,26 @@ export async function getNotificationsForUser() {
 
 	return result;
 }
+
+export async function markAllAsRead() {
+    const userId = await getUserUuid();
+    if (!userId) {
+        return { success: false, error: "Usuario no autenticado" };
+    }
+
+    try {
+        const { error } = await PutToDatabase({
+            tableName: "Notification",
+            contentJson: { is_read: true },
+            filters: [
+                { method: "eq", column: "user_id", value: userId },
+                { method: "eq", column: "is_read", value: false },
+            ],
+        });
+
+        return { success: !error };
+    } catch (error) {
+        console.error("Error al marcar todas como leídas:", error);
+        return { success: false, error: "Error en la base de datos" };
+    }
+}

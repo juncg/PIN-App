@@ -2,6 +2,8 @@
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui-custom/dropdown-menu";
 import { INotification } from "@/lib/services/types";
+import { markAllAsRead } from "@/lib/services/notifications";
+import { useRouter } from "next/navigation";
 import { Bell } from "lucide-react";
 import { Button } from "../ui-custom/button";
 import { NotificationItem } from "./notification-item";
@@ -11,8 +13,20 @@ interface NotificationsMenuProps {
 }
 
 export function NotificationsMenu({ notifications }: NotificationsMenuProps) {
+	const router = useRouter();
+
+	const handleOpenChange = async (open: boolean) => {
+		if (open) {
+			const hasUnread = notifications.some((n) => !n.is_read);
+			if (hasUnread) {
+				await markAllAsRead();
+				router.refresh();
+			}
+		}
+	};
+
 	return (
-		<DropdownMenu>
+		<DropdownMenu onOpenChange={handleOpenChange}>
 			<DropdownMenuTrigger asChild>
 				<Button variant="default" size="icon" className="outline-none focus-visible:ring-0 relative">
 					<Bell className="h-5 w-5" />

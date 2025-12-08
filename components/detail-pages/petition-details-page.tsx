@@ -209,7 +209,13 @@ export function PetitionDetails({
 				<div></div>
 			</div>
 
-			<CommentsSection postType="Petition" postId={petition.id} currentUser={currentUser} comments={comments} />
+			<CommentsSection
+				postType="Petition"
+				postId={petition.id}
+				currentUser={currentUser}
+				comments={comments}
+				postCreatorId={petition.creator_id || ""}
+			/>
 
 			<div className="py-8">
 				{hasProducts && businessProducts && businessProducts.length > 0 ? (
