@@ -25,6 +25,7 @@ import { Checkbox } from "../ui-custom/checkbox";
 import { Card, CardContent } from "../ui-custom/card";
 import { ShareComponent } from "../share-post/share";
 import { ProductCard } from "../cards/product-card";
+import { OfferWarning } from "./offer-warning";
 
 interface OfferDetailsProps {
 	offer: IOffer;
@@ -138,39 +139,7 @@ export function OfferDetails({
 						<ArrowUpRight className="h-4 w-4" />
 					</div>
 
-					<Card className="border-border bg-transparent">
-						<CardContent className="p-4 space-y-3">
-							<p className="text-sm text-lightgrey">
-								Al inscribirte en la oferta se realizará un{" "}
-								<span className="font-bold text-white">cargo anticipado de {offer.fee}€</span> como
-								garantía de participación.
-							</p>
-							<ul className="text-sm text-lightgrey space-y-2 list-disc ml-4">
-								<li className="pl-2">
-									Si la oferta caduca y no se lleva a cabo, se te reembolsarán los {offer.fee}
-									€.
-								</li>
-								<li className="pl-2">
-									Si la oferta se completa, estos {offer.fee}€ se descontarán del importe total a
-									pagar. Sin embargo, si cancelas tu participación una vez completada la oferta, no se
-									devolverán los {offer.fee}€.
-								</li>
-							</ul>
-							<div className="flex items-start gap-2 pt-1">
-								<Checkbox
-									id="accept-conditions"
-									checked={acceptedConditions}
-									onCheckedChange={(checked) => setAcceptedConditions(!!checked)}
-								/>
-								<label
-									htmlFor="accept-conditions"
-									className="text-sm text-white cursor-pointer select-none"
-								>
-									Acepto estas condiciones
-								</label>
-							</div>
-						</CardContent>
-					</Card>
+					<OfferWarning fee={offer.fee} acceptedConditions={acceptedConditions} setAcceptedConditions={setAcceptedConditions} />
 
 					<div className="space-y-2">
 						<div className="flex items-center justify-between">

@@ -9,6 +9,7 @@ import { Button } from "../ui-custom/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui-custom/dialog";
 import { Switch } from "../ui-custom/switch";
 import { handleSubscribeAction } from "./subscribe-button-actions";
+import { OfferWarning } from "../detail-pages/offer-warning";
 
 export interface ISubscribeButton {
 	post_id: number;
@@ -140,7 +141,7 @@ export function SubscribeButton(props: ISubscribeButton) {
 						<DialogDescription>
 							Una vez que te suscribas a esta oferta, no podrás desuscribirte a menos que la oferta sea
 							cancelada o eliminada.
-						</DialogDescription>
+						</DialogDescription>						
 					</DialogHeader>
 					<DialogFooter>
 						<Button variant="outline" onClick={() => setShowDialog(false)}>
