@@ -7,19 +7,15 @@
 		"products": "Productos",
 		"view_product": "Ver producto"
 	},
-
 	"businesses": {
 		"businesses": "Empresas"
 	},
-
 	"offers": {
 		"offers": "Ofertas"
 	},
-
 	"petitions": {
 		"petitions": "Peticiones"
 	},
-
 	"products": {
 		"products": "Productos",
 		"showing_x_products": "Mostrando {count} productos",
@@ -33,9 +29,9 @@
 		"rating_high_low": "Calificación: de mayor a menor",
 		"rating_low_high": "Calificación: de menor a mayor"
 	},
-
 	"forums": {
 		"forum": "Foro",
-		"forums": "Foros"
+		"forums": "Foros",
+		"recommended": "Recomendado para ti."
 	}
 }

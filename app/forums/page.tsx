@@ -5,8 +5,9 @@ import { H2 } from "@/components/ui-custom/typography";
 import { getUserUuid } from "@/lib/services/user";
 import { ISearchParams } from "../../types";
 import { ForumsServices } from "./forums-services";
+
 export default async function Forums({ searchParams }: { searchParams: Promise<ISearchParams> }) {
-	const { categories, hasSelectedCategories, recommendedForums, popularForums, trendingByCategory, isBusinessUser } =
+	const { translator, categories, hasSelectedCategories, recommendedForums, popularForums, trendingByCategory, isBusinessUser } =
 		await ForumsServices(searchParams);
 
 	const userUuid = await getUserUuid();
@@ -18,7 +19,7 @@ export default async function Forums({ searchParams }: { searchParams: Promise<I
 			{!hasSelectedCategories && (
 				<>
 					<div className="space-y-6">
-						<H2 className="text-2xl font-bold">Recomendado para ti.</H2>
+						<H2 className="text-2xl font-bold">{translator("recommended")}</H2>
 						<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 							{recommendedForums.map((forum) => (
 								<ForumCard key={forum.id} forum={forum} currentUserId={userUuid} />
