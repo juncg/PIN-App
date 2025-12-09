@@ -1,19 +1,17 @@
-import { createClient } from "@/lib/supabase/server";
+"use client";
+
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "../ui-custom/button";
 import { LogoutButton } from "./logout-button";
 
-interface AuthButtonsProps {
+interface AuthButtonsClientProps {
 	className?: string;
+	isAuthenticated?: boolean;
 }
 
-export async function AuthButtons({ className }: AuthButtonsProps) {
-	const supabase = await createClient();
-	const { data } = await supabase.auth.getClaims();
-	const user = data?.claims;
-
-	return user ? (
+export function AuthButtonsClient({ className, isAuthenticated = false }: AuthButtonsClientProps) {
+	return isAuthenticated ? (
 		<div className={cn("flex items-center gap-4", className)}>
 			<LogoutButton />
 		</div>

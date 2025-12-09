@@ -1,19 +1,23 @@
+"use client";
+
 import { LocaleSwitcher } from "@/components/ui-custom/locale-switcher";
 import Link from "next/link";
 import { Suspense } from "react";
-import { AuthButtons } from "../auth/auth-buttons";
+import { AuthButtonsClient } from "../auth/auth-buttons";
 import { NotificationsMenu } from "../notifications/notifications-menu";
 import { SearchGeneral } from "../search/search-general/search-general";
 import { SidebarTrigger } from "../ui-custom/sidebar";
 import { H3 } from "../ui-custom/typography";
 
-import { getNotificationsForUser } from "@/lib/services/notifications";
-import { getUserUuid } from "@/lib/services/user";
+import type { INotification } from "@/lib/services/types";
 
-export async function Header() {
-	const { data: notifications } = await getNotificationsForUser();
-	const userId = await getUserUuid();
+interface HeaderClientProps {
+	notifications?: INotification[];
+	userId?: string;
+	isAuthenticated?: boolean;
+}
 
+export function HeaderClient({ notifications = [], userId, isAuthenticated = false }: HeaderClientProps) {
 	return (
 		<header className="sticky top-0 z-30 w-full flex bg-darkmode h-16">
 			<div className="w-full flex items-center px-4 md:px-5 relative">
@@ -32,8 +36,8 @@ export async function Header() {
 				</Suspense>
 
 				<div className="flex gap-2 md:gap-4 items-center ml-auto">
-					<AuthButtons />
-					<NotificationsMenu notifications={notifications || []} userId={userId} />
+					<AuthButtonsClient isAuthenticated={isAuthenticated} />
+					<NotificationsMenu notifications={notifications} userId={userId || null} />
 					<Suspense fallback={<div className="w-8 h-8" />}>
 						<LocaleSwitcher />
 					</Suspense>

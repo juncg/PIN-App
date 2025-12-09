@@ -1,4 +1,4 @@
-import { AuthButtons } from "@/components/auth/auth-buttons";
+import { AuthButtons } from "@/components/auth/auth-buttons-server";
 import { H1, H4 } from "@/components/ui-custom/typography";
 import Image from "next/image";
 

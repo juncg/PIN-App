@@ -16,7 +16,7 @@ export function ConditionalLayout({ children, header, sidebar }: ConditionalLayo
 
 	if (isAuthPage) {
 		return (
-			<div className="flex flex-col min-h-screen w-full">
+			<div className="flex flex-col min-h-screen w-full text-white">
 				<main className="flex-1 overflow-auto w-full">
 					<div className="max-w-7xl mx-auto">{children}</div>
 				</main>
@@ -26,7 +26,7 @@ export function ConditionalLayout({ children, header, sidebar }: ConditionalLayo
 
 	return (
 		<SidebarProvider>
-			<div className="flex flex-col min-h-screen w-full">
+			<div className="flex flex-col min-h-screen w-full text-white">
 				{header}
 
 				<div className="flex flex-1 relative overflow-hidden">

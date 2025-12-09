@@ -9,7 +9,7 @@ Next.js 16+ platform connecting users/businesses through petitions and offers. T
 
 ## Core Rules
 
-✅ **DO**: Server components by default • Use service layer (`lib/services/general.ts`) • Types from `lib/services/types.ts` • UI from `components/ui-custom/` • `"use server"` for actions • `cn()` for classes • Next.js `Image` • Translations  
+✅ **DO**: Server components by default • Use service layer (`lib/services/general.ts`) • Types from `lib/services/types.ts` • UI from `components/ui-custom/` • `"use server"` for actions • `cn()` for classes • Next.js `Image` • Translations • If a component from /ui-custom is modified, ALWAYS update the corresponding test story
 ❌ **DON'T**: Direct Supabase queries • `"use client"` unnecessarily • Hardcoded text • `<img>` tags • Query `Business_Offer`/`Business_Petition` (don't exist)
 
 ## Database Pattern
