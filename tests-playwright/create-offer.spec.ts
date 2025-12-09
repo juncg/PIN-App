@@ -1,0 +1,44 @@
+import { test, expect } from '@playwright/test';
+
+const offerName:string = 'offer' + (Math.random() * 100);
+
+test('test', async ({ page }) => {
+  await page.goto('http://localhost:3000/home?locale=es');
+  await page.getByRole('link', { name: 'Iniciar sesión.' }).click();
+  await page.getByRole('textbox', { name: 'Email' }).click();
+  await page.getByRole('textbox', { name: 'Email' }).fill('josepgb04@gmail.com');
+  await page.getByRole('textbox', { name: 'Contraseña' }).click();
+  await page.getByRole('textbox', { name: 'Contraseña' }).fill('0123456');
+  await page.getByRole('button', { name: 'Iniciar sesión' }).click();
+  await page.getByRole('link').filter({ hasText: 'Ofertas y peticiones' }).click();
+  await page.locator('button:has(svg.lucide-plus)').click();
+  await page.getByRole('button', { name: 'Crear oferta' }).click();
+  await page.getByRole('textbox', { name: 'Título *' }).click();
+  await page.getByRole('textbox', { name: 'Título *' }).fill(offerName);
+  await page.getByRole('textbox', { name: 'Descripción *' }).click();
+  await page.getByRole('textbox', { name: 'Descripción *' }).fill('123');
+  await page.getByRole('combobox', { name: 'Foro asociado *' }).click();
+  await page.getByText('Foro EcoVida').click();
+  await page.getByRole('switch', { name: 'Permitir comentarios *' }).click();
+  await page.getByRole('switch', { name: 'Permitir comentarios *' }).click();
+  await page.getByRole('switch', { name: 'Permitir comentarios *' }).click();
+  await page.getByRole('switch', { name: 'Permitir comentarios *' }).click();
+  await page.getByRole('button', { name: 'Siguiente' }).click();
+  await page.getByRole('spinbutton', { name: 'Objetivo numérico *' }).click();
+  await page.getByRole('spinbutton', { name: 'Objetivo numérico *' }).fill('123');
+  await page.getByRole('spinbutton', { name: 'Cuota *' }).click();
+  await page.getByRole('spinbutton', { name: 'Cuota *' }).fill('123');
+  await page.getByRole('button', { name: 'Fecha límite del objetivo *' }).click();
+  await page.getByLabel('Choose the Year').selectOption('2031');
+  await page.getByRole('button', { name: 'Wednesday, December 24th,' }).click();
+  await page.getByPlaceholder('Selecciona los tags para la').click();
+  await page.getByRole('option', { name: 'Novedad' }).click();
+  await page.locator('div').filter({ hasText: 'Información bá' }).nth(5).click();
+  await page.getByRole('button', { name: 'Siguiente' }).click();
+  await page.getByRole('searchbox', { name: 'Buscar productos...' }).click();
+  await page.getByText('Aceite de Oliva Virgen Extra10.25€').click();
+  await page.getByRole('spinbutton', { name: 'Precio reducido de la oferta *' }).click();
+  await page.getByRole('spinbutton', { name: 'Precio reducido de la oferta *' }).fill('10.11');
+  await page.getByRole('button', { name: 'Crear Oferta' }).click();
+  await page.getByRole('link', { name: 'cambiar.' }).click();
+});
