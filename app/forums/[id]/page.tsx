@@ -40,17 +40,6 @@ export default async function ForumPage({ params }: ForumPageProps) {
 
 	return (
 		<div className="max-w-7xl mx-auto space-y-8">
-			<div className="mb-8 text-sm text-lightgrey">
-				<Link href="/home" className="hover:underline">
-					Inicio
-				</Link>
-				<span className="mx-2">/</span>
-				<Link href="/forums" className="hover:underline">
-					Foros
-				</Link>{" "}
-				<span className="mx-2">/</span>
-				<span className="text-white font-medium">Foro</span>
-			</div>
 			<div className="container mx-auto max-w-[1600px] px-4 md:px-6 py-6 grid grid-cols-1 lg:grid-cols-[20%_60%_20%] gap-6 lg:gap-8">
 				<div className="hidden lg:block space-y-6">
 					<div className="flex flex-wrap gap-2">
