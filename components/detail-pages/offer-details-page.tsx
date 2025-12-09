@@ -6,168 +6,212 @@ import { Progress } from "@/components/ui-custom/progress";
 import { Separator } from "@/components/ui-custom/separator";
 import { IComment, IOffer, IUser } from "@/lib/services/types";
 import { GetRelativeTime } from "@/lib/services/utilities";
-import { MessageCircle, Users } from "lucide-react";
+import {Users, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CommentsSection } from "../posts/comments-section";
 import { ProductImages } from "../products/product-images";
 import { AltenatingButtons, SlidingButtonProps } from "@/components/buttons/sliding-buttons";
 
 interface OfferDetailsProps {
-	offer: IOffer;
-	subscribedByUser: boolean;
-	currentUser: IUser | null;
-	comments?: IComment[];
+    offer: IOffer;
+    subscribedByUser: boolean;
+    currentUser: IUser | null;
+    comments?: IComment[];
 }
 
 export function OfferDetails({ offer, subscribedByUser, currentUser, comments }: OfferDetailsProps) {
-	const [currentProgress, setCurrentProgress] = useState(offer.current_progress);
-	const [isSubscribed, setIsSubscribed] = useState(subscribedByUser);
+    const [currentProgress, setCurrentProgress] = useState(offer.current_progress);
+    const [isSubscribed, setIsSubscribed] = useState(subscribedByUser);
 
-	useEffect(() => {
-		setCurrentProgress(offer.current_progress);
-		setIsSubscribed(subscribedByUser);
-	}, [offer.current_progress, subscribedByUser]);
+    useEffect(() => {
+        setCurrentProgress(offer.current_progress);
+        setIsSubscribed(subscribedByUser);
+    }, [offer.current_progress, subscribedByUser]);
 
-	const offerCompletionPercentage = parseFloat(((currentProgress * 100) / (offer?.target_progress ?? 1)).toFixed(2));
+    const offerCompletionPercentage = parseFloat(((currentProgress * 100) / (offer?.target_progress ?? 1)).toFixed(2));
 
-	const handleSubscriptionChange = (newProgress: number) => {
-		setCurrentProgress(newProgress);
-		setIsSubscribed(!isSubscribed);
-	};
+    const handleSubscriptionChange = (newProgress: number) => {
+        setCurrentProgress(newProgress);
+        setIsSubscribed(!isSubscribed);
+    };
 
-	const displayImages: string[] = offer.images?.filter((img) => img && img.trim() !== "")?.length
-		? offer.images.filter((img) => img && img.trim() !== "")
-		: ["/placeholder.png"];
+    const displayImages: string[] = offer.images?.filter((img) => img && img.trim() !== "")?.length
+        ? offer.images.filter((img) => img && img.trim() !== "")
+        : ["/placeholder.png"];
 
-	const slidingButtonsContent: SlidingButtonProps[] = [
-		{
-			content: <div className="p-6"></div>,
-			displayName: "Descripción",
-			displayIcon: null,
-		},
-		{
-			content: <div className="p-6"></div>,
-			displayName: "Detalles",
-			displayIcon: null,
-		},
-		{
-			content: <div className="p-6"></div>,
-			displayName: "Especificaciones",
-			displayIcon: null,
-		},
-	];
+    const slidingButtonsContent: SlidingButtonProps[] = [
+        {
+            content: <div className="p-6"></div>,
+            displayName: "Descripción",
+            displayIcon: null,
+        },
+        {
+            content: <div className="p-6"></div>,
+            displayName: "Detalles",
+            displayIcon: null,
+        },
+        {
+            content: <div className="p-6"></div>,
+            displayName: "Especificaciones",
+            displayIcon: null,
+        },
+    ];
 
-	return (
-		<div className="container mx-auto px-4 py-8">
-			<div className="grid lg:grid-cols-2 gap-8 mb-12">
-				<ProductImages images={displayImages} />
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <div className="grid lg:grid-cols-2 gap-8 mb-12">
+                <ProductImages images={displayImages} />
 
-				<div className="space-y-6">
-					<div className="flex flex-wrap gap-2 mb-3">
-						{offer.tags && offer.tags.length > 0 ? (
-							offer.tags.map((tagItem, index) => (
-								<span
-									key={index}
-									className="bg-black text-black text-xs font-black px-3 py-1 rounded-full"
-								>
-									{tagItem.Tag.name?.toUpperCase()}
-								</span>
-							))
-						) : (
-							<span className="bg-black text-black text-xs font-black px-3 py-1 rounded-full">
-								SIN ETIQUETAS
-							</span>
-						)}
-					</div>
-					<h1 className="text-4xl font-black mb-4">{offer.title}</h1>
+                <div className="space-y-6">
+                    <div className="flex flex-wrap gap-2 mb-3">
+                        {offer.tags && offer.tags.length > 0 ? (
+                            offer.tags.map((tagItem, index) => (
+                                <span
+                                    key={index}
+                                    className="bg-black text-black text-xs font-black px-3 py-1 rounded-full"
+                                >
+                                    {tagItem.Tag.name?.toUpperCase()}
+                                </span>
+                            ))
+                        ) : (
+                            <span className="bg-black text-black text-xs font-black px-3 py-1 rounded-full">
+                                SIN ETIQUETAS
+                            </span>
+                        )}
+                    </div>
+                    <h1 className="text-4xl font-black mb-4">{offer.title}</h1>
 
-					<div className="flex items-center gap-3 mb-6">
-						<Avatar className="w-10 h-10 border-2 border-black">
-							<AvatarImage src={offer.User?.profile_picture || undefined} />
-							<AvatarFallback className="bg-black text-black font-bold">
-								{offer.User?.username?.charAt(0).toLocaleUpperCase()}
-							</AvatarFallback>
-						</Avatar>
-						<div>
-							<div className="font-black">@{offer.User?.username}</div>
-							<div className="text-xs text-lightgrey">{GetRelativeTime(offer.created_at)}</div>
-						</div>
-					</div>
+                    {/* Sistema de valoración por estrellas */}
+                    <div className="flex items-center gap-2 mb-4">
+                        {[...Array(5)].map((_, i) => (
+                            <Star
+                                key={i}
+                                className={`h-5 w-5 ${
+                                    i < Math.floor(offer.rating ?? 0)
+                                        ? "fill-white text-white"
+                                        : "text-zinc-700"
+                                }`}
+                            />
+                        ))}
+                        <span className="text-sm font-bold ml-1">
+                            {offer.rating?.toFixed(1) ?? "0.0"}
+                        </span>
+                        <span className="text-sm text-lightgrey">
+                            ({offer.Review_Offer?.length ?? 0}{" "}
+                            {offer.Review_Offer?.length === 1 ? "valoración" : "valoraciones"})
+                        </span>
+                    </div>
 
-					<Separator />
+                    {/* Descuento y Precio */}
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="flex items-center gap-2">
+                            {offer.reduced_price !== null && offer.reduced_price < offer.fee ? (
+                                <>
+                                    <span className="text-lg font-black text-[#C4FF33]">
+                                        -{Math.round(((offer.fee - offer.reduced_price) / offer.fee) * 100)}%
+                                    </span>
+                                    <span className="text-4xl font-black text-white">
+                                        {offer.reduced_price.toFixed(2)}€
+                                    </span>
+                                    <span className="text-xl font-bold text-lightgrey line-through">
+                                        {offer.fee.toFixed(2)}€
+                                    </span>
+                                </>
+                            ) : (
+                                <span className="text-4xl font-black text-white">
+                                    {offer.fee.toFixed(2)}€
+                                </span>
+                            )}
+                        </div>
+                    </div>
 
-					<div className="mb-6">
-						<div className="flex items-center justify-between mb-3">
-							<span className="text-lg font-black">Progreso del objetivo</span>
-							<span className="text-lg font-black">
-								{currentProgress} de {offer.target_progress} <Users className="w-5 h-5 inline" />
-							</span>
-						</div>
-						<div className="flex flex-col gap-2">
-							<Progress value={offerCompletionPercentage} />
-						</div>
-						<div className="text-sm font-bold text-lightgrey">
-							{currentProgress >= offer.target_progress ? (
-								<span className="text-green-600">¡Objetivo alcanzado!</span>
-							) : (
-								`¡Solo faltan ${
-									offer.target_progress - currentProgress
-								} usuarios más para desbloquear esta oferta!`
-							)}
-						</div>
-					</div>
+                    <div className="flex items-center gap-3 mb-6">
+                        <Avatar className="w-10 h-10 border-2 border-black">
+                            <AvatarImage src={offer.User?.profile_picture || undefined} />
+                            <AvatarFallback className="bg-black text-black font-bold">
+                                {offer.User?.username?.charAt(0).toLocaleUpperCase()}
+                            </AvatarFallback>
+                        </Avatar>
+                        <div>
+                            <div className="font-black">@{offer.User?.username}</div>
+                            <div className="text-xs text-lightgrey">{GetRelativeTime(offer.created_at)}</div>
+                        </div>
+                    </div>
 
-					<Separator />
-				</div>
-			</div>
+                    <Separator />
 
-			<AltenatingButtons
-			 	buttonsContent={slidingButtonsContent}
-				textSize="text-xl" />
+                    <div className="mb-6">
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-lg font-black">Progreso del objetivo</span>
+                            <span className="text-lg font-black">
+                                {currentProgress} de {offer.target_progress} <Users className="w-5 h-5 inline" />
+                            </span>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <Progress value={offerCompletionPercentage} />
+                        </div>
+                        <div className="text-sm font-bold text-lightgrey">
+                            {currentProgress >= offer.target_progress ? (
+                                <span className="text-green-600">¡Objetivo alcanzado!</span>
+                            ) : (
+                                `¡Solo faltan ${
+                                    offer.target_progress - currentProgress
+                                } usuarios más para desbloquear esta oferta!`
+                            )}
+                        </div>
+                    </div>
 
-			<div className="bg-lightgrey rounded-2xl border-3 p-6 mt-8">
-				<div className="flex items-center gap-4 mb-6">
-					<div className="flex -space-x-3">
-						{[...Array(Math.min(10, currentProgress))].map((_, i) => (
-							<Avatar key={i} className="w-10 h-10 border-2 border-black">
-								<AvatarFallback
-									className={`${
-										i % 3 === 0
-											? "bg-black text-black"
-											: i % 3 === 1
-											? "bg-white text-black"
-											: "bg-black text-black border-2 border-black"
-									} text-xs font-bold`}
-								>
-									U{i + 1}
-								</AvatarFallback>
-							</Avatar>
-						))}
-						{currentProgress > 10 && (
-							<div className="w-10 h-10 border-2 border-black rounded-full bg-white flex items-center justify-center">
-								<span className="text-xs font-black">+{currentProgress - 10}</span>
-							</div>
-						)}
-					</div>
-					<div className="flex-1">
-						<div className="text-white font-black text-lg">
-							{currentProgress} {currentProgress === 1 ? "usuario apuntado" : "usuarios apuntados"}
-						</div>
-					</div>
-				</div>
+                    <Separator />
+                </div>
+            </div>
 
-				<SubscribeButton
-					post_id={offer.id}
-					typeOfPost="Oferta"
-					subscribers={currentProgress}
-					subscribedByUser={isSubscribed}
-					user_id={currentUser?.id || null}
-					onSubscriptionChange={handleSubscriptionChange}
-					fullWidth={true}
-				/>
-			</div>
+            <AltenatingButtons
+             	buttonsContent={slidingButtonsContent}
+                textSize="text-xl" />
 
-			<CommentsSection postType="Offer" postId={offer.id} currentUser={currentUser} comments={comments} />
-		</div>
-	);
+            <div className="bg-lightgrey rounded-2xl border-3 p-6 mt-8">
+                <div className="flex items-center gap-4 mb-6">
+                    <div className="flex -space-x-3">
+                        {[...Array(Math.min(10, currentProgress))].map((_, i) => (
+                            <Avatar key={i} className="w-10 h-10 border-2 border-black">
+                                <AvatarFallback
+                                    className={`${
+                                        i % 3 === 0
+                                            ? "bg-black text-black"
+                                            : i % 3 === 1
+                                            ? "bg-white text-black"
+                                            : "bg-black text-black border-2 border-black"
+                                    } text-xs font-bold`}
+                                >
+                                    U{i + 1}
+                                </AvatarFallback>
+                            </Avatar>
+                        ))}
+                        {currentProgress > 10 && (
+                            <div className="w-10 h-10 border-2 border-black rounded-full bg-white flex items-center justify-center">
+                                <span className="text-xs font-black">+{currentProgress - 10}</span>
+                            </div>
+                        )}
+                    </div>
+                    <div className="flex-1">
+                        <div className="text-white font-black text-lg">
+                            {currentProgress} {currentProgress === 1 ? "usuario apuntado" : "usuarios apuntados"}
+                        </div>
+                    </div>
+                </div>
+
+                <SubscribeButton
+                    post_id={offer.id}
+                    typeOfPost="Oferta"
+                    subscribers={currentProgress}
+                    subscribedByUser={isSubscribed}
+                    user_id={currentUser?.id || null}
+                    onSubscriptionChange={handleSubscriptionChange}
+                    fullWidth={true}
+                />
+            </div>
+
+            <CommentsSection postType="Offer" postId={offer.id} currentUser={currentUser} comments={comments} />
+        </div>
+    );
 }

@@ -3,6 +3,7 @@ import { OfferDetails } from "@/components/detail-pages/offer-details-page";
 import { getUserUuid } from "@/lib/services/user";
 import { ISearchParams } from "@/types";
 
+
 interface OfferPageProps {
 	params: Promise<{
 		id: number;
