@@ -5,15 +5,14 @@ import { BASE_DOMAIN, POST_ON_FIRE_COMPLETION_PERCENTAGE } from "@/lib/constants
 import { IOffer, IPetition } from "@/lib/services/types";
 import { GetTimeRemaining } from "@/lib/services/utilities";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { LikeButton } from "../buttons/like-button";
 import { SubscribeButton } from "../buttons/subscribe-button";
+import { CardImagesCarousel } from "../carousel/card-images-carousel";
 import { ClockIcon, PeopleAltIcon, Shining2LineIcon } from "../icons/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
 import { Button } from "../ui-custom/button";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui-custom/carousel";
 import { Progress } from "../ui-custom/progress";
 import { B1, B3, H4, S1 } from "../ui-custom/typography";
 
@@ -43,11 +42,6 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 	const { userUuid: userUuidFromHook } = useUser();
 	const userUuid = userUuidProp || userUuidFromHook;
 	const [currentProgress, setCurrentProgress] = useState(post.current_progress);
-	const [isDialogOpen, setIsDialogOpen] = useState(false);
-	const [startIndex, setStartIndex] = useState(0);
-	const [currentIndex, setCurrentIndex] = useState(0);
-	const [canScrollPrev, setCanScrollPrev] = useState(false);
-	const [canScrollNext, setCanScrollNext] = useState(false);
 
 	useEffect(() => {
 		setCurrentProgress(post.current_progress);
@@ -100,6 +94,7 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 								user_id={userUuid}
 								variant="icon"
 								onLikeChangeForParent={onLikeChangeForParent}
+								postCreatorId={post.creator_id as string}
 							/>
 						</div>
 
@@ -112,61 +107,7 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 							</Button>
 						</div>
 
-						<Carousel
-							className="w-full"
-							onSlideChange={(idx: number) => setCurrentIndex(idx)}
-							setApi={(api) => {
-								if (!api) return;
-								setCanScrollPrev(api.canScrollPrev());
-								setCanScrollNext(api.canScrollNext());
-								api.on("select", () => {
-									setCanScrollPrev(api.canScrollPrev());
-									setCanScrollNext(api.canScrollNext());
-								});
-							}}
-						>
-							<CarouselContent>
-								{displayImages.map((image, index) => (
-									<CarouselItem key={index}>
-										<div
-											className="relative aspect-square w-full cursor-pointer overflow-hidden"
-											onClick={() => {
-												setStartIndex(index);
-												setIsDialogOpen(true);
-											}}
-										>
-											<Link
-												href={
-													post.type === "Petition"
-														? `/petitions/${post.id}`
-														: `/offers/${post.id}`
-												}
-											>
-												<Image
-													src={image}
-													alt={`${post.title} - imagen ${index + 1}`}
-													fill
-													sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-													className="object-cover rounded-2xl border-[3px] border-darkmode"
-													unoptimized
-												/>
-											</Link>
-										</div>
-									</CarouselItem>
-								))}
-							</CarouselContent>
-
-							{displayImages.length > 1 && (
-								<>
-									{canScrollPrev && (
-										<CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 h-8 w-8 text-placeholder hover:text-darkmode opacity-0 group-hover:opacity-100 transition-all" />
-									)}
-									{canScrollNext && (
-										<CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 h-8 w-8 text-placeholder hover:text-darkmode opacity-0 group-hover:opacity-100 transition-all" />
-									)}
-								</>
-							)}
-						</Carousel>
+						<CardImagesCarousel post={post} displayImages={displayImages} />
 					</div>
 
 					<div className="p-5 space-y-4">

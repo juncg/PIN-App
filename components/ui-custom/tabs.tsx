@@ -14,7 +14,7 @@ function TabsList({ className, ...props }: React.ComponentProps<typeof TabsPrimi
 		<TabsPrimitive.List
 			data-slot="tabs-list"
 			className={cn(
-				"bg-lightgrey text-lightgrey inline-flex h-9 w-fit items-center justify-center rounded-lg p-[3px]",
+				"bg-hover border border-cardborder inline-flex h-auto w-full items-center justify-center rounded-lg p-1",
 				className
 			)}
 			{...props}
@@ -27,7 +27,12 @@ function TabsTrigger({ className, ...props }: React.ComponentProps<typeof TabsPr
 		<TabsPrimitive.Trigger
 			data-slot="tabs-trigger"
 			className={cn(
-				"data-[state=active]:bg-black dark:data-[state=active]:text-white focus-visible:border-lightgrey focus-visible:ring-lightgrey/50 focus-visible:outline-lightgrey dark:data-[state=active]:border-hover dark:data-[state=active]:bg-hover/30 text-white dark:text-lightgrey inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+				"inline-flex h-auto flex-1 items-center justify-center gap-2 rounded-md border border-transparent px-4 py-3 text-sm font-medium whitespace-nowrap transition-all",
+				"text-lightgrey hover:text-white",
+				"data-[state=active]:bg-black data-[state=active]:text-white data-[state=active]:border-cardborder",
+				"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-chernobyl focus-visible:ring-offset-2 focus-visible:ring-offset-darkmode",
+				"disabled:pointer-events-none disabled:opacity-50",
+				"[&_svg]:pointer-events-none [&_svg]:shrink-0",
 				className
 			)}
 			{...props}

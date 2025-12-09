@@ -32,9 +32,7 @@ export function ConditionalLayout({ children, header, sidebar }: ConditionalLayo
 				<div className="flex flex-1 relative overflow-hidden">
 					{sidebar}
 
-					<main className="flex-1 p-6 md:p-8 overflow-auto w-full">
-						<div className="mx-auto px-32">{children}</div>
-					</main>
+					<main className="flex-1 py-8 px-12 overflow-auto w-full">{children}</main>
 				</div>
 			</div>
 		</SidebarProvider>

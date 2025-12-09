@@ -64,7 +64,7 @@ export async function ProductDetailsServices(id: number) {
 
 	const { data: businessProducts } = await GetFromDatabase<IProduct>({
 		tableName: "Product",
-		select: "*, businesses:Product_Business!inner(business:Business(*))",
+		select: "*, businesses:Product_Business!inner(business:Business(*)), Review_Product(review_id)",
 		filters: [
 			{ method: "neq", column: "id", value: id },
 			{

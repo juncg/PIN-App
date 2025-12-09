@@ -41,7 +41,6 @@ export function Toaster({ ...props }: ToasterProps) {
 					cancelButton: "btn btn-sm btn-outline",
 				},
 				style: {
-					black: "hsl(var(--black))",
 					color: "hsl(var(--white))",
 					border: "1px solid hsl(var(--border))",
 					borderRadius: "var(--radius)",

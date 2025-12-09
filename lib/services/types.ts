@@ -7,6 +7,7 @@ export type IOffer = Tables<"Offer"> & {
 	User_Offer?: Tables<"User_Offer">[];
 	User?: Tables<"User">;
 	products?: { Product: IProduct }[];
+	stars?: number;
 };
 
 export type IPetition = Tables<"Petition"> & {
@@ -39,6 +40,8 @@ export type IForum = Tables<"Forum"> & {
 		Tag: ITag;
 	}[];
 	User_Forum?: Tables<"User_Forum">[];
+	Offer?: Pick<Tables<"Offer">, "id" | "state">[];
+	Petition?: Pick<Tables<"Petition">, "id" | "state">[];
 };
 
 export type IProduct = Tables<"Product"> & {
@@ -67,11 +70,24 @@ export type IReview = Tables<"Review"> & {
 export type ICategory = Tables<"Category">;
 
 export type IComment = Tables<"Comment"> & {
-	user?: Tables<"User">;
+	user?: IUser;
 	replies?: IComment[];
+	replyCount?: number;
+	Comment_Post?: {
+		offer_id: number | null;
+		petition_id: number | null;
+		referenced_comment_id: number | null;
+		referenced_user_id: string | null;
+		review_id: number | null;
+	}[];
+	referencedUser?: IUser;
 };
 
 export type ITag = Tables<"Tag">;
+
+export type INotification = Tables<"Notification"> & {
+	sender?: Pick<IUser, "id" | "name" | "profile_picture">;
+};
 
 export interface IGetFromDatabase {
 	tableName: string;

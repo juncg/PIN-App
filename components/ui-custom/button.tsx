@@ -10,14 +10,16 @@ export const buttonVariants = cva(
 		variants: {
 			variant: {
 				default: "bg-white text-black rounded-full hover:scale-105 transition border-[2px] border-white",
+				defaultSquared: "bg-white text-black rounded-lg hover:scale-105 transition border-[2px] border-white",
 				outline: "bg-transparent text-white rounded-full hover:scale-105 transition border-[2px] border-white",
 				outlineSquared:
 					"bg-hover text-white rounded-lg hover:scale-105 transition border-[2px] border-cardborder",
-				ghost: "hover:bg-hover hover:text-hover",
+				ghost: "hover:bg-hover hover:text-gray-600",
 				chernobyl:
 					"bg-transparent text-black hover:scale-105 transition bg-[linear-gradient(160deg,var(--chernobyl)_0%,var(--lightgrey)_80%)]",
 				chernobylOutline:
 					"bg-transparent text-chernobyl hover:scale-105 transition border-[2px] border-chernobyl",
+				destructive: "bg-destructive text-white hover:scale-105 transition",
 			},
 			size: {
 				default: "h-9 px-7 py-3.5",

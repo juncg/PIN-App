@@ -47,6 +47,7 @@ export default async function Profile({ params }: ProfilePageProps) {
 		{
 			content: (
 				<ProfileSubscriptionsList
+					key="subscriptions"
 					subscribedOffers={subscribedOffers}
 					subscribedPetitions={subscribedPetitions}
 					subscribedOffersCount={subscribedOffersCount}
@@ -59,6 +60,7 @@ export default async function Profile({ params }: ProfilePageProps) {
 		{
 			content: (
 				<ProfilePostsList
+					key="posts"
 					offers={offers}
 					petitions={petitions}
 					allPosts={allPosts}

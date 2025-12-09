@@ -2,22 +2,22 @@
 
 import { NotLoggedInDialog } from "@/components/dialogs/not-logged-in-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
-import { Button } from "@/components/ui-custom/button";
 import { Separator } from "@/components/ui-custom/separator";
-import { Textarea } from "@/components/ui-custom/textarea";
 import { B1, H3 } from "@/components/ui-custom/typography";
 import { PostToDatabase } from "@/lib/services/general";
+import { createNotification } from "@/lib/services/notifications";
 import { IComment, IUser } from "@/lib/services/types";
-import { Loader2, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { CommentCard } from "../cards/comment-card";
+import { CommentBox } from "./comment-box";
 
 interface CommentsSectionProps {
 	postId: number;
 	postType: "Petition" | "Offer";
 	comments?: IComment[];
 	currentUser?: IUser | null;
+	postCreatorId: string;
 }
 
 export function CommentsSection({
@@ -25,6 +25,7 @@ export function CommentsSection({
 	postType,
 	comments: initialComments = [],
 	currentUser,
+	postCreatorId,
 }: CommentsSectionProps) {
 	const [comments, setComments] = useState<IComment[]>(initialComments);
 	const [newComment, setNewComment] = useState("");
@@ -70,14 +71,18 @@ export function CommentsSection({
 				return;
 			}
 
+			// Extract the inserted ID
+			const insertedId = (response[0] as any).id as number;
+
 			const { error: postError } = await PostToDatabase({
 				tableName: "Comment_Post",
 				contentJson: [
 					{
-						comment_id: response[0].id,
+						comment_id: insertedId,
 						offer_id: postType === "Offer" ? postId : null,
 						petition_id: postType === "Petition" ? postId : null,
 						referenced_comment_id: null,
+						referenced_user_id: null,
 						review_id: null,
 					},
 				],
@@ -89,10 +94,37 @@ export function CommentsSection({
 				return;
 			}
 
+			if (postCreatorId && postCreatorId !== currentUser.id) {
+				try {
+					const linkTo = postType === "Offer" ? `/offers/${postId}` : `/petitions/${postId}`;
+					const message = postType === "Offer" ? "ha comentado en tu oferta" : "ha comentado en tu peticion";
+					await createNotification({
+						recipientId: postCreatorId,
+						type: "New_comment",
+						message: message,
+						linkTo: linkTo,
+						senderId: currentUser.id,
+					});
+				} catch (notificationError) {
+					console.error("Error sending notification:", notificationError);
+				}
+			}
+
 			const newCommentWithUser: IComment = {
-				...response[0],
-				user: currentUser || undefined,
+				// table fields
+				id: insertedId,
+				text: commentData.text,
+				created_at: commentData.created_at,
+				creator_id: commentData.creator_id,
+				forum_id: commentData.forum_id,
+				likes: commentData.likes,
+				superlikes: commentData.superlikes,
+				comment_locked_state: commentData.comment_locked_state,
+				state: commentData.state,
+				// extended fields
+				user: currentUser,
 				replies: [],
+				replyCount: 0,
 			};
 
 			setComments((prevComments) => [newCommentWithUser, ...prevComments]);
@@ -107,7 +139,7 @@ export function CommentsSection({
 	};
 
 	const totalComments = comments.reduce((acc, comment) => {
-		return acc + 1 + (comment.replies?.length || 0);
+		return acc + 1 + (comment.replyCount || 0);
 	}, 0);
 
 	return (
@@ -121,37 +153,27 @@ export function CommentsSection({
 
 			<div className="flex gap-4">
 				<Avatar className="flex-shrink-0">
-					<AvatarImage className="object-cover" src={currentUser?.profile_picture || undefined} />
+					<AvatarImage
+						className="object-cover rounded-full"
+						src={currentUser?.profile_picture || undefined}
+					/>
 					<AvatarFallback>{currentUser?.name?.[0].toUpperCase() || "U"}</AvatarFallback>
 				</Avatar>
-				<div className="flex-1 space-y-2">
-					<Textarea
-						placeholder={currentUser ? "Escribe un comentario..." : "Inicia sesión para comentar"}
-						value={newComment}
-						onChange={(e) => setNewComment(e.target.value)}
-						disabled={isSubmitting || !currentUser}
-						className="min-h-[100px] resize-none"
-					/>
-					<div className="flex justify-end">
-						<Button
-							onClick={handleSubmit}
-							disabled={isSubmitting || !newComment.trim() || !currentUser}
-							size="sm"
-						>
-							{isSubmitting ? (
-								<Loader2 className="h-4 w-4 animate-spin mr-2" />
-							) : (
-								<Plus className="h-4 w-4 mr-2" />
-							)}
-							Publicar
-						</Button>
-					</div>
-				</div>
+
+				<CommentBox
+					currentUser={currentUser}
+					newComment={newComment}
+					setNewComment={setNewComment}
+					isSubmitting={isSubmitting}
+					handleSubmit={handleSubmit}
+				/>
 			</div>
 
 			<div className="space-y-6">
 				{comments.length > 0 ? (
-					comments.map((comment) => <CommentCard key={comment.id} comment={comment} />)
+					comments.map((comment) => (
+						<CommentCard key={comment.id} comment={comment} currentUser={currentUser} postId={postId} />
+					))
 				) : (
 					<div className="text-center py-12 ">
 						<B1 className="text-lightgrey">No hay comentarios todavía. ¡Sé el primero en comentar!</B1>

@@ -15,8 +15,8 @@ export default async function Page() {
 	});
 
 	return (
-		<div className="flex flex-center flex-col gap-8">
-			<Card>
+		<div className="flex flex-col items-center gap-8 py-8">
+			<Card className="w-full  max-w-4xl">
 				<CardHeader>
 					<CardTitle className="text-2xl">Crear una petición</CardTitle>
 					<CardDescription>Introduce todos los datos para crear una nueva petición</CardDescription>

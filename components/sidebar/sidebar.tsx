@@ -1,7 +1,6 @@
 "use client";
 
 import { useUser } from "@/hooks/use-user";
-import { Hand, Home, Settings, Shield, ShoppingBag, Tag, Timer, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -12,59 +11,88 @@ import {
 	SidebarFooter,
 	SidebarGroup,
 	SidebarGroupContent,
-	SidebarGroupLabel,
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui-custom/sidebar";
+import {
+	entrySidebarAnimation,
+	handleSidebarElementMouseEnterAnimation,
+	handleSidebarElementMouseLeaveAnimation,
+} from "../animations/sidebar";
+import {
+	ChatBubblesFilledIcon,
+	ChatBubblesIcon,
+	DealBuyLogoIcon,
+	FrameFilledIcon,
+	FrameIcon,
+	HomeFilledIcon,
+	HomeIcon,
+	PersonCircleFilledIcon,
+	PersonCircleOutlineIcon,
+	Settings3FilledIcon,
+	Settings3Icon,
+	ShoppingBagFilledIcon,
+	ShoppingBagIcon,
+} from "../icons/icons";
 
 const items = [
 	{
 		title: "Inicio",
 		url: "/home",
-		icon: Home,
+		icon: HomeIcon,
+		iconFilled: HomeFilledIcon,
 	},
 	{
-		title: "Ofertas",
-		url: "/offers",
-		icon: Tag,
-	},
-	{
-		title: "Peticiones",
-		url: "/petitions",
-		icon: Hand,
+		title: "Ofertas y peticiones",
+		url: "/posts",
+		icon: DealBuyLogoIcon,
+		iconFilled: DealBuyLogoIcon,
 	},
 	{
 		title: "Productos",
 		url: "/products",
-		icon: ShoppingBag,
+		icon: ShoppingBagIcon,
+		iconFilled: ShoppingBagFilledIcon,
 	},
 	{
 		title: "Foros",
 		url: "/forums",
-		icon: Users,
+		icon: FrameIcon,
+		iconFilled: FrameFilledIcon,
 	},
 	{
-		title: "Posts",
-		url: "/posts",
-		icon: Timer,
+		title: "Feed",
+		url: "/feed",
+		icon: ChatBubblesIcon,
+		iconFilled: ChatBubblesFilledIcon,
 	},
 ];
 
-if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") {
-	items.push({
-		title: "Security Tests",
-		url: "/security-test",
-		icon: Shield,
-	});
-}
-
 export function AppSidebar() {
 	const pathname = usePathname();
-	const { setOpenMobile, setOpen } = useSidebar();
+	const { setOpenMobile, setOpen, open } = useSidebar();
 	const { userUuid } = useUser();
 	const prevPathnameRef = useRef(pathname);
+	const menuItemsRef = useRef<(HTMLLIElement | null)[]>([]);
+	const footerItemsRef = useRef<(HTMLLIElement | null)[]>([]);
+	const sidebarRef = useRef<HTMLDivElement>(null);
+
+	const settingsItems = [
+		{
+			title: "Ajustes",
+			url: "/settings",
+			icon: Settings3Icon,
+			iconFilled: Settings3FilledIcon,
+		},
+		{
+			title: "Perfil",
+			url: userUuid ? `/profile/${userUuid}` : "/profile",
+			icon: PersonCircleOutlineIcon,
+			iconFilled: PersonCircleFilledIcon,
+		},
+	];
 
 	useEffect(() => {
 		if (prevPathnameRef.current !== pathname) {
@@ -74,40 +102,38 @@ export function AppSidebar() {
 		}
 	}, [pathname, setOpenMobile, setOpen]);
 
-	const settingsItems = [
-		{
-			title: "Perfil",
-			url: userUuid ? `/profile/${userUuid}` : "/profile",
-			icon: User,
-		},
-		{
-			title: "Configuración",
-			url: "/settings",
-			icon: Settings,
-		},
-	];
+	entrySidebarAnimation(menuItemsRef, footerItemsRef, sidebarRef);
 
 	return (
-		<Sidebar>
-			<SidebarContent>
+		<Sidebar className="!border-none" collapsible="icon" ref={sidebarRef}>
+			<SidebarContent className="m-1.5">
 				<SidebarGroup>
-					<SidebarGroupLabel>Deal&Buy</SidebarGroupLabel>
 					<SidebarGroupContent>
-						<SidebarMenu>
-							{items.map((item) => {
+						<SidebarMenu className="gap-2">
+							{items.map((item, index) => {
 								const isActive = pathname === item.url;
+								const IconComponent = isActive ? item.iconFilled : item.icon;
 								return (
-									<SidebarMenuItem key={item.title}>
+									<SidebarMenuItem
+										key={item.title}
+										ref={(el) => {
+											menuItemsRef.current[index] = el;
+										}}
+									>
 										<SidebarMenuButton asChild isActive={isActive}>
 											<Link
 												href={item.url}
+												onMouseEnter={handleSidebarElementMouseEnterAnimation}
+												onMouseLeave={handleSidebarElementMouseLeaveAnimation}
 												className={
 													isActive
 														? "bg-black text-black hover:bg-black/90 font-semibold"
 														: ""
 												}
 											>
-												<item.icon />
+												<IconComponent
+													className={`!h-5 !w-5 ${isActive && "!text-chernobyl"}`}
+												/>
 												<span>{item.title}</span>
 											</Link>
 										</SidebarMenuButton>
@@ -118,20 +144,31 @@ export function AppSidebar() {
 					</SidebarGroupContent>
 				</SidebarGroup>
 			</SidebarContent>
-			<SidebarFooter>
-				<SidebarMenu>
-					{settingsItems.map((item) => {
-						const isActive = pathname === item.url || pathname.startsWith(`/profile/${userUuid}`);
+			<SidebarFooter className="m-1.5">
+				<SidebarMenu className="gap-2">
+					{settingsItems.map((item, index) => {
+						const isActive =
+							item.title === "Perfil"
+								? pathname === item.url || pathname.startsWith(`/profile/${userUuid}`)
+								: pathname === item.url;
+						const IconComponent = isActive ? item.iconFilled : item.icon;
 						return (
-							<SidebarMenuItem key={item.title}>
+							<SidebarMenuItem
+								key={item.title}
+								ref={(el) => {
+									footerItemsRef.current[index] = el;
+								}}
+							>
 								<SidebarMenuButton asChild isActive={isActive}>
 									<Link
 										href={item.url}
+										onMouseEnter={handleSidebarElementMouseEnterAnimation}
+										onMouseLeave={handleSidebarElementMouseLeaveAnimation}
 										className={
 											isActive ? "bg-black text-black hover:bg-black/90 font-semibold" : ""
 										}
 									>
-										<item.icon />
+										<IconComponent className={`!h-5 !w-5 ${isActive && "!text-chernobyl"}`} />
 										<span>{item.title}</span>
 									</Link>
 								</SidebarMenuButton>

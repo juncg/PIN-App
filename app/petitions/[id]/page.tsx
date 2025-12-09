@@ -13,20 +13,23 @@ interface PetitionPageProps {
 export default async function PetitionPage({ params }: PetitionPageProps) {
 	const { id } = await params;
 	const userUuid = await getUserUuid();
-	const { petition, comments, currentUser } = await PetitionDetailsService(id, userUuid || "");
+	const { petition, comments, currentUser, businessProducts } = await PetitionDetailsService(id, userUuid || "");
 
 	if (!petition || petition.length === 0) {
 		return <div>Loading...</div>;
 	}
 
 	const subscribedByUser = petition[0].User_Petition?.some((u) => u.user_id === userUuid && u.subscribed);
+	const likedByUser = petition[0].User_Petition?.some((u) => u.user_id === userUuid && u.liked);
 
 	return (
 		<PetitionDetails
 			petition={petition[0]}
 			subscribedByUser={subscribedByUser ?? false}
+			likedByUser={likedByUser ?? false}
 			comments={comments}
 			currentUser={currentUser}
+			businessProducts={businessProducts}
 		/>
 	);
 }

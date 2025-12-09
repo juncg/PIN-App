@@ -197,6 +197,7 @@ export type Database = {
           offer_id: number | null
           petition_id: number | null
           referenced_comment_id: number | null
+          referenced_user_id: string | null
           review_id: number | null
         }
         Insert: {
@@ -204,6 +205,7 @@ export type Database = {
           offer_id?: number | null
           petition_id?: number | null
           referenced_comment_id?: number | null
+          referenced_user_id?: string | null
           review_id?: number | null
         }
         Update: {
@@ -211,6 +213,7 @@ export type Database = {
           offer_id?: number | null
           petition_id?: number | null
           referenced_comment_id?: number | null
+          referenced_user_id?: string | null
           review_id?: number | null
         }
         Relationships: [
@@ -351,6 +354,54 @@ export type Database = {
             columns: ["tag_id"]
             isOneToOne: false
             referencedRelation: "Tag"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      Notification: {
+        Row: {
+          created_at: string
+          id: number
+          is_read: boolean
+          link_to: string | null
+          message: string
+          sender_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          is_read?: boolean
+          link_to?: string | null
+          message: string
+          sender_id?: string | null
+          type: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          is_read?: boolean
+          link_to?: string | null
+          message?: string
+          sender_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Notification_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "User"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Notification_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "User"
             referencedColumns: ["id"]
           },
         ]
@@ -1271,6 +1322,11 @@ export type Database = {
         | "None"
         | "OnlyWhenGoalReached"
       Comment_Locked_State: "Locked" | "Unlocked"
+      Notification_Type:
+        | "Like"
+        | "New_Comment"
+        | "Petition_Update"
+        | "Offer_update"
       Post_State: "Draft" | "Posted" | "Cancelled" | "Completed"
       Verification: "Unverified" | "Paid" | "Official"
     }
@@ -1414,6 +1470,12 @@ export const Constants = {
         "OnlyWhenGoalReached",
       ],
       Comment_Locked_State: ["Locked", "Unlocked"],
+      Notification_Type: [
+        "Like",
+        "New_Comment",
+        "Petition_Update",
+        "Offer_update",
+      ],
       Post_State: ["Draft", "Posted", "Cancelled", "Completed"],
       Verification: ["Unverified", "Paid", "Official"],
     },

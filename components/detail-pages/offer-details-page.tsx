@@ -1,27 +1,56 @@
 "use client";
 
 import { SubscribeButton } from "@/components/buttons/subscribe-button";
+import { LikeButton } from "@/components/buttons/like-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
 import { Progress } from "@/components/ui-custom/progress";
-import { Separator } from "@/components/ui-custom/separator";
-import { IComment, IOffer, IUser } from "@/lib/services/types";
-import { GetRelativeTime } from "@/lib/services/utilities";
-import {Users, Star } from "lucide-react";
+import { IComment, IOffer, IProduct, IUser } from "@/lib/services/types";
+import { GetTimeRemaining } from "@/lib/services/utilities";
+import { Users, ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
-import { CommentsSection } from "../posts/comments-section";
+import { CommentsSection } from "../comments/comments-section";
 import { ProductImages } from "../products/product-images";
 import { AltenatingButtons, SlidingButtonProps } from "@/components/buttons/sliding-buttons";
+import { ClockIcon } from "../icons/icons";
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "@/components/ui-custom/carousel";
+import { S1, B1 } from "@/components/ui-custom/typography";
+import Link from "next/link";
+import { Checkbox } from "../ui-custom/checkbox";
+import { Card, CardContent } from "../ui-custom/card";
+import { ShareComponent } from "../share-post/share";
+import { ProductCard } from "../cards/product-card";
 
 interface OfferDetailsProps {
-    offer: IOffer;
-    subscribedByUser: boolean;
-    currentUser: IUser | null;
-    comments?: IComment[];
+	offer: IOffer;
+	subscribedByUser: boolean;
+	likedByUser: boolean;
+	currentUser: IUser | null;
+	comments?: IComment[];
+	businessProducts: IProduct[];
 }
 
-export function OfferDetails({ offer, subscribedByUser, currentUser, comments }: OfferDetailsProps) {
-    const [currentProgress, setCurrentProgress] = useState(offer.current_progress);
-    const [isSubscribed, setIsSubscribed] = useState(subscribedByUser);
+export function OfferDetails({
+	offer,
+	subscribedByUser,
+	likedByUser,
+	currentUser,
+	comments,
+	businessProducts,
+}: OfferDetailsProps) {
+	const [currentProgress, setCurrentProgress] = useState(offer.current_progress);
+	const [isSubscribed, setIsSubscribed] = useState(subscribedByUser);
+	const [isLiked, setIsLiked] = useState(likedByUser);
+	const [likes, setLikes] = useState(offer.likes);
+	const [acceptedConditions, setAcceptedConditions] = useState(false);
+
+	const originalPrice = offer.products?.reduce((total, product) => total + (product.Product?.msrp || 0), 0) || 0;
+	const discountPercentage = originalPrice > 0 ? Math.round(100 - (offer.reduced_price! * 100) / originalPrice) : 0;
 
     useEffect(() => {
         setCurrentProgress(offer.current_progress);
@@ -57,161 +86,187 @@ export function OfferDetails({ offer, subscribedByUser, currentUser, comments }:
         },
     ];
 
-    return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="grid lg:grid-cols-2 gap-8 mb-12">
-                <ProductImages images={displayImages} />
+	return (
+		<div className="container mx-auto px-4 py-8">
+			<div className="grid lg:grid-cols-2 gap-8 mb-12">
+				<div className="space-y-4">
+					<ProductImages images={displayImages} />
+					<div className="flex flex-grid flex-center">
+						<LikeButton
+							likes={likes}
+							likedByUser={isLiked}
+							post_id={offer.id}
+							typeOfPost="Oferta"
+							user_id={currentUser?.id || null}
+							variant="withtext"
+							onLikeChangeForParent={(liked) => {
+								setIsLiked(liked);
+								setLikes(liked ? likes + 1 : likes - 1);
+							}}
+							postCreatorId={offer.creator_id || ""}
+						/>
+						<ShareComponent
+							url={typeof window !== "undefined" ? window.location.href.split("?")[0] : ""}
+							title={offer.title}
+							description={offer.text}
+							variant="withtext"
+						/>
+					</div>
+				</div>{" "}
+				<div className="space-y-6">
+					<h1 className="text-4xl font-black mb-4">{offer.title}</h1>
 
-                <div className="space-y-6">
-                    <div className="flex flex-wrap gap-2 mb-3">
-                        {offer.tags && offer.tags.length > 0 ? (
-                            offer.tags.map((tagItem, index) => (
-                                <span
-                                    key={index}
-                                    className="bg-black text-black text-xs font-black px-3 py-1 rounded-full"
-                                >
-                                    {tagItem.Tag.name?.toUpperCase()}
-                                </span>
-                            ))
-                        ) : (
-                            <span className="bg-black text-black text-xs font-black px-3 py-1 rounded-full">
-                                SIN ETIQUETAS
-                            </span>
-                        )}
-                    </div>
-                    <h1 className="text-4xl font-black mb-4">{offer.title}</h1>
+					{/* Precio con descuento */}
+					<div className="space-y-1">
+						<div className="flex items-baseline gap-3">
+							<span className="text-lg font-black" style={{ color: "#C4FF33" }}>
+								-{discountPercentage}%
+							</span>
+							<span className="text-3xl font-black">{offer.reduced_price}€</span>
+						</div>
+						<div className="text-sm text-lightgrey">Precio original: {originalPrice}€</div>
+					</div>
 
-                    {/* Sistema de valoración por estrellas */}
-                    <div className="flex items-center gap-2 mb-4">
-                        {[...Array(5)].map((_, i) => (
-                            <Star
-                                key={i}
-                                className={`h-5 w-5 ${
-                                    i < Math.floor(offer.rating ?? 0)
-                                        ? "fill-white text-white"
-                                        : "text-zinc-700"
-                                }`}
-                            />
-                        ))}
-                        <span className="text-sm font-bold ml-1">
-                            {offer.rating?.toFixed(1) ?? "0.0"}
-                        </span>
-                        <span className="text-sm text-lightgrey">
-                            ({offer.Review_Offer?.length ?? 0}{" "}
-                            {offer.Review_Offer?.length === 1 ? "valoración" : "valoraciones"})
-                        </span>
-                    </div>
+					<div>
+						<B1 className="text-lightgrey whitespace-pre-wrap break-words">{offer.text}</B1>
+					</div>
 
-                    {/* Descuento y Precio */}
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="flex items-center gap-2">
-                            {offer.reduced_price !== null && offer.reduced_price < offer.fee ? (
-                                <>
-                                    <span className="text-lg font-black text-[#C4FF33]">
-                                        -{Math.round(((offer.fee - offer.reduced_price) / offer.fee) * 100)}%
-                                    </span>
-                                    <span className="text-4xl font-black text-white">
-                                        {offer.reduced_price.toFixed(2)}€
-                                    </span>
-                                    <span className="text-xl font-bold text-lightgrey line-through">
-                                        {offer.fee.toFixed(2)}€
-                                    </span>
-                                </>
-                            ) : (
-                                <span className="text-4xl font-black text-white">
-                                    {offer.fee.toFixed(2)}€
-                                </span>
-                            )}
-                        </div>
-                    </div>
+					<div className="flex items-start gap-1.5 text-md">
+						<Link href={`/businesses/${offer.businesses?.[0].business.id}`} className="hover:underline">
+							<span className="text-lightgrey">Ver en la web de la empresa</span>
+						</Link>
+						<ArrowUpRight className="h-4 w-4" />
+					</div>
 
-                    <div className="flex items-center gap-3 mb-6">
-                        <Avatar className="w-10 h-10 border-2 border-black">
-                            <AvatarImage src={offer.User?.profile_picture || undefined} />
-                            <AvatarFallback className="bg-black text-black font-bold">
-                                {offer.User?.username?.charAt(0).toLocaleUpperCase()}
-                            </AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <div className="font-black">@{offer.User?.username}</div>
-                            <div className="text-xs text-lightgrey">{GetRelativeTime(offer.created_at)}</div>
-                        </div>
-                    </div>
+					<Card className="border-border bg-transparent">
+						<CardContent className="p-4 space-y-3">
+							<p className="text-sm text-lightgrey">
+								Al inscribirte en la oferta se realizará un{" "}
+								<span className="font-bold text-white">cargo anticipado de {offer.fee}€</span> como
+								garantía de participación.
+							</p>
+							<ul className="text-sm text-lightgrey space-y-2 list-disc ml-4">
+								<li className="pl-2">
+									Si la oferta caduca y no se lleva a cabo, se te reembolsarán los {offer.fee}
+									€.
+								</li>
+								<li className="pl-2">
+									Si la oferta se completa, estos {offer.fee}€ se descontarán del importe total a
+									pagar. Sin embargo, si cancelas tu participación una vez completada la oferta, no se
+									devolverán los {offer.fee}€.
+								</li>
+							</ul>
+							<div className="flex items-start gap-2 pt-1">
+								<Checkbox
+									id="accept-conditions"
+									checked={acceptedConditions}
+									onCheckedChange={(checked) => setAcceptedConditions(!!checked)}
+								/>
+								<label
+									htmlFor="accept-conditions"
+									className="text-sm text-white cursor-pointer select-none"
+								>
+									Acepto estas condiciones
+								</label>
+							</div>
+						</CardContent>
+					</Card>
 
-                    <Separator />
+					<div className="space-y-2">
+						<div className="flex items-center justify-between">
+							<div className="flex items-center gap-1.5">
+								<ClockIcon className="!h-4 !w-4" />
+								<span className="text-sm font-bold text-white">
+									{GetTimeRemaining(offer.target_completition_date)}
+								</span>
+							</div>
 
-                    <div className="mb-6">
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-lg font-black">Progreso del objetivo</span>
-                            <span className="text-lg font-black">
-                                {currentProgress} de {offer.target_progress} <Users className="w-5 h-5 inline" />
-                            </span>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <Progress value={offerCompletionPercentage} />
-                        </div>
-                        <div className="text-sm font-bold text-lightgrey">
-                            {currentProgress >= offer.target_progress ? (
-                                <span className="text-green-600">¡Objetivo alcanzado!</span>
-                            ) : (
-                                `¡Solo faltan ${
-                                    offer.target_progress - currentProgress
-                                } usuarios más para desbloquear esta oferta!`
-                            )}
-                        </div>
-                    </div>
+							<div className="flex items-center gap-1.5">
+								<span className="text-xs font-bold text-white">
+									{currentProgress} de {offer.target_progress}
+								</span>
+								<Users className="!h-5 !w-5" />
+							</div>
+						</div>
 
-                    <Separator />
-                </div>
-            </div>
+						<Progress value={offerCompletionPercentage} />
+					</div>
 
-            <AltenatingButtons
-             	buttonsContent={slidingButtonsContent}
-                textSize="text-xl" />
+					<div className="flex items-center justify-between pt-2">
+						<div className="flex items-center gap-2">
+							<Avatar className="h-8 w-8 rounded-full">
+								<AvatarImage src={offer.User?.profile_picture || undefined} />
+								<AvatarFallback>{offer.User?.username?.charAt(0).toLocaleUpperCase()}</AvatarFallback>
+							</Avatar>
+							<div className="flex flex-col">
+								<span className="text-[10px] text-lightgrey uppercase tracking-wider">Creador</span>
+								<a
+									href={`/profile/${offer.User?.id}`}
+									className="text-xs font-medium hover:underline cursor-pointer"
+								>
+									@{offer.User?.username}
+								</a>
+							</div>
+						</div>
 
-            <div className="bg-lightgrey rounded-2xl border-3 p-6 mt-8">
-                <div className="flex items-center gap-4 mb-6">
-                    <div className="flex -space-x-3">
-                        {[...Array(Math.min(10, currentProgress))].map((_, i) => (
-                            <Avatar key={i} className="w-10 h-10 border-2 border-black">
-                                <AvatarFallback
-                                    className={`${
-                                        i % 3 === 0
-                                            ? "bg-black text-black"
-                                            : i % 3 === 1
-                                            ? "bg-white text-black"
-                                            : "bg-black text-black border-2 border-black"
-                                    } text-xs font-bold`}
-                                >
-                                    U{i + 1}
-                                </AvatarFallback>
-                            </Avatar>
-                        ))}
-                        {currentProgress > 10 && (
-                            <div className="w-10 h-10 border-2 border-black rounded-full bg-white flex items-center justify-center">
-                                <span className="text-xs font-black">+{currentProgress - 10}</span>
-                            </div>
-                        )}
-                    </div>
-                    <div className="flex-1">
-                        <div className="text-white font-black text-lg">
-                            {currentProgress} {currentProgress === 1 ? "usuario apuntado" : "usuarios apuntados"}
-                        </div>
-                    </div>
-                </div>
+						<SubscribeButton
+							post_id={offer.id}
+							typeOfPost="Oferta"
+							subscribers={currentProgress}
+							subscribedByUser={isSubscribed}
+							user_id={currentUser?.id || null}
+							onSubscriptionChange={handleSubscriptionChange}
+							variant="switch"
+							disabled={!acceptedConditions && !isSubscribed}
+						/>
+					</div>
+				</div>
+			</div>
 
-                <SubscribeButton
-                    post_id={offer.id}
-                    typeOfPost="Oferta"
-                    subscribers={currentProgress}
-                    subscribedByUser={isSubscribed}
-                    user_id={currentUser?.id || null}
-                    onSubscriptionChange={handleSubscriptionChange}
-                    fullWidth={true}
-                />
-            </div>
+			<div className="grid lg:grid-cols-2 gap-8">
+				<div>
+					<AltenatingButtons buttonsContent={slidingButtonsContent} textSize="text-xl" />
+				</div>
+				<div></div>
+			</div>
 
-            <CommentsSection postType="Offer" postId={offer.id} currentUser={currentUser} comments={comments} />
-        </div>
-    );
+			<CommentsSection
+				postType="Offer"
+				postId={offer.id}
+				currentUser={currentUser}
+				comments={comments}
+				postCreatorId={offer.creator_id || ""}
+			/>
+
+			<div className="py-8">
+				{businessProducts && businessProducts.length > 0 ? (
+					<div>
+						<div className="mb-6">
+							<S1>Más productos de la empresa.</S1>
+						</div>
+
+						<Carousel
+							opts={{
+								align: "start",
+								loop: true,
+							}}
+							className="w-full"
+						>
+							<CarouselContent className="-ml-2 md:-ml-3">
+								{businessProducts.map((product) => (
+									<CarouselItem key={product.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+										<ProductCard props={{ product }} />
+									</CarouselItem>
+								))}
+							</CarouselContent>
+							<CarouselPrevious className="left-0" />
+							<CarouselNext className="right-0" />
+						</Carousel>
+					</div>
+				) : (
+					<B1 className="text-lightgrey">No hay más productos de esta empresa.</B1>
+				)}
+			</div>
+		</div>
+	);
 }

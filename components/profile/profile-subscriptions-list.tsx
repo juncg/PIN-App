@@ -36,7 +36,6 @@ export function ProfileSubscriptionsList({
 	) => {
 		let posts: TPost[] = [];
 
-		// Filter by type
 		if (status === "all") {
 			posts = allSubscriptions;
 			setCurrentFilter("all");
@@ -47,7 +46,6 @@ export function ProfileSubscriptionsList({
 			posts = subscribedPetitions;
 			setCurrentFilter("petition");
 		} else {
-			// For status filters (on-fire, active, etc.), keep current type filter
 			if (currentFilter === "all") {
 				posts = allSubscriptions;
 			} else if (currentFilter === "offer") {
@@ -68,34 +66,36 @@ export function ProfileSubscriptionsList({
 
 	return (
 		<div className="flex flex-col gap-12 w-full">
-			<div className="w-full overflow-x-auto">
-				<ProfilePostFilter onFilterChange={handleFilterChange} />
+			<div className="flex flex-col gap-6">
+				<div className="flex items-center justify-between">
+					<span className="flex items-end gap-6">
+						<H2>
+							{currentFilter === "all"
+								? "Todas las suscripciones"
+								: currentFilter === "offer"
+								? "Ofertas"
+								: "Peticiones"}
+							.
+						</H2>
+						<B1 className="text-lightgrey line-clamp-2">
+							{getResultCount()}{" "}
+							{currentFilter === "all"
+								? "suscripciones"
+								: currentFilter === "offer"
+								? "ofertas"
+								: "peticiones"}{" "}
+							en total
+						</B1>
+					</span>
+				</div>
+
+				<div className="w-full overflow-x-auto">
+					<ProfilePostFilter onFilterChange={handleFilterChange} />
+				</div>
 			</div>
 
 			<div className="flex flex-col gap-12 w-full">
 				<div className="flex flex-col gap-6">
-					<div className="flex items-center justify-between">
-						<span className="flex items-end gap-6">
-							<H2>
-								{currentFilter === "all"
-									? "Todas las suscripciones"
-									: currentFilter === "offer"
-									? "Ofertas"
-									: "Peticiones"}
-								.
-							</H2>
-							<B1 className="text-lightgrey line-clamp-2">
-								{getResultCount()}{" "}
-								{currentFilter === "all"
-									? "suscripciones"
-									: currentFilter === "offer"
-									? "ofertas"
-									: "peticiones"}{" "}
-								en total
-							</B1>
-						</span>
-					</div>
-
 					<div className="flex flex-col gap-8 w-full">
 						{filteredPosts.length === 0 ? (
 							<p className="text-center text-lightgrey-foreground py-12">

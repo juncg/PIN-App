@@ -36,6 +36,8 @@ export default function PostsFilters({ popularTags }: PostsFiltersProps) {
 	const [selectedTags, setSelectedTags] = useState<string[]>(tagsParam ? tagsParam.split(",") : []);
 	const [isPending, startTransition] = useTransition();
 
+	const hasActiveFilters = priceRange[0] > 0 || priceRange[1] < 10000 || selectedTags.length > 0 || currentCreator;
+
 	useEffect(() => {
 		const params = new URLSearchParams(searchParams.toString());
 
@@ -51,6 +53,21 @@ export default function PostsFilters({ popularTags }: PostsFiltersProps) {
 			});
 		}
 	}, [selectedTags]);
+
+	const clearFilters = () => {
+		const params = new URLSearchParams(searchParams.toString());
+		params.delete("minPrice");
+		params.delete("maxPrice");
+		params.delete("tags");
+		params.delete("creator");
+
+		setSelectedTags([]);
+		setPriceRange([0, 10000]);
+
+		startTransition(() => {
+			router.push(`${pathname}?${params.toString()}`, { scroll: false });
+		});
+	};
 
 	const updateCreatorFilter = (creator: "user" | "business" | "verified_business" | "followed" | null) => {
 		const params = new URLSearchParams(searchParams.toString());
@@ -89,7 +106,20 @@ export default function PostsFilters({ popularTags }: PostsFiltersProps) {
 	return (
 		<div className="space-y-8">
 			<div className="space-y-3">
-				<h3 className="font-semibold text-foreground">Creador.</h3>
+				<div className="flex items-center justify-between">
+					<h3 className="font-semibold text-foreground">Creador.</h3>
+					{hasActiveFilters && (
+						<Button
+							variant="ghost"
+							size="sm"
+							onClick={clearFilters}
+							disabled={isPending}
+							className="h-auto p-0 text-xs text-lightgrey hover:text-white"
+						>
+							Limpiar filtros
+						</Button>
+					)}
+				</div>
 				<div className="flex flex-wrap gap-2">
 					{creatorOptions.map((option) => (
 						<Button
