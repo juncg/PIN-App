@@ -32,6 +32,10 @@
 	"forums": {
 		"forum": "Foro",
 		"forums": "Foros",
-		"recommended": "Recomendado para ti."
+		"recommended": "Recomendado para ti.",
+		"popular": "Popular.",
+		"trending_in": "Tendencia en.",
+		"followed": "Siguiendo.",
+		"follow": "Seguir."
 	}
 }

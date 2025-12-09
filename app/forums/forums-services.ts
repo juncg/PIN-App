@@ -109,7 +109,13 @@ export async function ForumsServices(searchParams: Promise<ISearchParams>) {
 		);
 	}
 
+	const clientTranslations = {
+		followed: translator("followed"),
+		follow: translator("follow")
+	}
+
 	return {
+		clientTranslations,
 		translator,
 		isBusinessUser,
 		categories,
