@@ -12,9 +12,10 @@ export interface IForumCard {
 	className?: string;
 	forum: IForum;
 	currentUserId: string | null;
+	clientTranslations: any; //que
 }
 
-export function ForumCard({ className, forum, currentUserId }: IForumCard) {
+export function ForumCard({ className, forum, currentUserId, clientTranslations }: IForumCard) {
 	const { userUuid } = useUser();
 
 	const followedByUser = forum.User_Forum?.some((u) => u.user_id === userUuid && u.forum_id === forum.id);
@@ -75,6 +76,8 @@ export function ForumCard({ className, forum, currentUserId }: IForumCard) {
 					currentUserId={currentUserId}
 					followedByUser={followedByUser || false}
 					variant="switch"
+					clientTranslations={clientTranslations}
+
 				/>
 			</div>
 		</div>

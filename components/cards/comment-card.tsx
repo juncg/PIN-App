@@ -10,6 +10,7 @@ import { B1 } from "../ui-custom/typography";
 import { PostToDatabase } from "@/lib/services/general";
 import { CommentBox } from "../comments/comment-box";
 import { fetchCommentReplies } from "@/app/shared-services/post-shared-services";
+import { createNotification } from "@/lib/services/notifications";
 
 interface CommentCardProps {
 	comment: IComment;
@@ -18,6 +19,7 @@ interface CommentCardProps {
 	postId: number;
 	onReplyAdded?: (parentId: number, newReply: IComment) => void;
 	parentComment?: IComment;
+	typeOfPost?: "Petition" | "Offer";
 }
 
 export function CommentCard({
@@ -27,6 +29,7 @@ export function CommentCard({
 	postId,
 	onReplyAdded,
 	parentComment,
+	typeOfPost,
 }: CommentCardProps) {
 	const [showReplyForm, setShowReplyForm] = useState(false);
 	const [replyText, setReplyText] = useState("");
@@ -129,6 +132,14 @@ export function CommentCard({
 					isTopLevel,
 				});
 			}
+
+			await createNotification({
+				recipientId: comment.user?.id || "",
+				type: "New_comment",
+				message: `ha respondido a tu comentario.`,
+				senderId: currentUser.id,
+				linkTo: typeOfPost === "Offer" ? `/offers/${postId}` : `/petitions/${postId}`,
+			});
 
 			const { error: postError } = await PostToDatabase({
 				tableName: "Comment_Post",

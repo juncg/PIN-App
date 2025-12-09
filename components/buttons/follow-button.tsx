@@ -14,6 +14,7 @@ interface IFollowButton {
 	currentUserId: string | null;
 	followersCount?: number;
 	onFollowChange?: (isFollowing: boolean, newCount: number) => void;
+	clientTranslations?: any; //que
 }
 
 export function FollowButton({
@@ -24,6 +25,7 @@ export function FollowButton({
 	currentUserId,
 	followersCount,
 	onFollowChange,
+	clientTranslations
 }: IFollowButton) {
 	const [followed, setFollowed] = useState<boolean>(followedByUser);
 	const [followers, setFollowers] = useState<number>(followersCount || 0);
@@ -90,8 +92,8 @@ export function FollowButton({
 				<Switch
 					checked={followed}
 					onCheckedChange={handleFollow}
-					innerTextChecked="Siguiendo."
-					innerTextUnchecked="Seguir."
+					innerTextChecked={clientTranslations.followed}
+					innerTextUnchecked={clientTranslations.follow}
 					className="w-full"
 					disabled={isLoading}
 				/>
