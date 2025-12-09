@@ -42,7 +42,7 @@ export function DateInput({
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button
-					className={cn(className, "justify-between")}
+					className={cn(className, "justify-between hover:scale-100")}
 					variant="outline"
 					id={id}
 					disabled={buttonDisabled}

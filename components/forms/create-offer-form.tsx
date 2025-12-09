@@ -2,13 +2,12 @@
 
 import { SelectTags } from "@/components/select/select-tags";
 import { Button } from "@/components/ui-custom/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui-custom/select";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui-custom/tabs";
 import { Progress } from "@/components/ui-custom/progress";
-import { Badge } from "@/components/ui-custom/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui-custom/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui-custom/tabs";
 import { Tables } from "@/database.types";
 import { useUser } from "@/hooks/use-user";
-import { ExecuteRpcFunction, GetFromDatabase, PostToDatabase } from "@/lib/services/general";
+import { ExecuteRpcFunction, PostToDatabase } from "@/lib/services/general";
 import { compressImage, uploadImage } from "@/lib/services/media-upload";
 import { IForum, IOffer, IProduct } from "@/lib/services/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,16 +17,16 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { APIErrorHandler } from "../error-handlers/api-error-handler";
+import { Card } from "../ui-custom/card";
 import { DateInput } from "../ui-custom/date-input";
 import { Input } from "../ui-custom/input";
 import { Switch } from "../ui-custom/switch";
 import { Textarea } from "../ui-custom/textarea";
-import { Card } from "../ui-custom/card";
 import { B1, H3 } from "../ui-custom/typography";
 import FileDropzone from "./base/file-dropzone";
 import { FormField } from "./base/form-field";
-import { CreateOfferSchema, type TCreateOfferSchema } from "./schemas/offer";
 import { ProductSelector } from "./product-selector";
+import { CreateOfferSchema, type TCreateOfferSchema } from "./schemas/offer";
 
 interface OfferFormProps {
 	forums: IForum[];
@@ -225,7 +224,7 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 			<div className="space-y-6">
 				<Progress value={((currentStep - 1) / 2) * 100} className="h-2" />
 
-				<Tabs value={`step${currentStep}`} className="w-full">
+				<Tabs value={`step${currentStep}`} className="w-full bg-darkmode">
 					<TabsList className="grid w-full grid-cols-3">
 						<TabsTrigger value="step1" disabled>
 							<span className="ml-2">Información básica</span>
@@ -240,7 +239,13 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 
 					<TabsContent value="step1" className="space-y-6 mt-6">
 						<FormField label="Título" errorMessage={errors.title?.message || ""} htmlFor="title" required>
-							<Input id="title" type="text" {...register("title")} disabled={isSubmitting} />
+							<Input
+								id="title"
+								type="text"
+								variant="squared"
+								{...register("title")}
+								disabled={isSubmitting}
+							/>
 						</FormField>
 
 						<FormField
