@@ -1,8 +1,11 @@
 import { GetClient, GetFromDatabase } from "@/lib/services/general";
 import { ICategory, IForum } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
+import { getTranslations } from "next-intl/server";
+import { DEFAULT_LOCALE } from "@/lib/constants";
+import { ISearchParams } from "@/types";
 
-export async function ForumDetailsService(forumId: number) {
+export async function ForumDetailsService(forumId: number, searchParams: Promise<ISearchParams>) {
 	const uuid = await getUserUuid();
 
 	const { data: forum } = await GetFromDatabase<IForum>({
@@ -97,6 +100,14 @@ export async function ForumDetailsService(forumId: number) {
 		],
 	});
 
+	const params = await searchParams;
+	const translator = await getTranslations({ locale: params.locale || DEFAULT_LOCALE, namespace: "forums" });
+
+	const clientTranslations = {
+		followed: translator("followed"),
+		follow: translator("follow"),
+	};
+
 	return {
 		forum,
 		isFollowing,
@@ -108,6 +119,8 @@ export async function ForumDetailsService(forumId: number) {
 		popularForums: popularForums || [],
 		businessForums: businessForums || [],
 		randomForums: randomForums || [],
+		translator,
+		clientTranslations,
 	};
 }
 

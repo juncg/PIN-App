@@ -7,20 +7,30 @@ import { B1, H1, H2 } from "@/components/ui-custom/typography";
 import { getUserUuid } from "@/lib/services/user";
 import { Verified } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { ForumDetailsService, fetchForumPosts, loadMoreOffers, loadMorePetitions } from "./page-services";
+import { ISearchParams } from "@/types";
 
 interface ForumPageProps {
 	params: Promise<{
 		id: number;
 	}>;
+	searchParams: Promise<ISearchParams>;
 }
 
-export default async function ForumPage({ params }: ForumPageProps) {
+export default async function ForumPage({ params, searchParams }: ForumPageProps) {
 	const { id } = await params;
 	const userUuid = await getUserUuid();
-	const { forum, isFollowing, counts, categories, popularForums, businessForums, randomForums } =
-		await ForumDetailsService(id);
+	const {
+		forum,
+		isFollowing,
+		counts,
+		categories,
+		popularForums,
+		businessForums,
+		randomForums,
+		translator,
+		clientTranslations,
+	} = await ForumDetailsService(id, searchParams);
 
 	if (!forum || forum.length === 0) {
 		return (
@@ -32,32 +42,25 @@ export default async function ForumPage({ params }: ForumPageProps) {
 	}
 
 	const forumData = forum[0];
-	const tags = forumData.Forum_Tag?.map((ft) => ft.Tag.name).filter(Boolean) || [];
 	const { offers: initialOffers, petitions: initialPetitions } = await fetchForumPosts(id, 0, 10);
 
 	const bannerImage = forumData.banner || "/placeholder.png";
 	const profileImage = forumData.profile_picture || "/placeholder.png";
 
 	return (
-		<div className="max-w-7xl mx-auto space-y-8">
-			<div className="container mx-auto max-w-[1600px] px-4 md:px-6 py-6 grid grid-cols-1 lg:grid-cols-[20%_60%_20%] gap-6 lg:gap-8">
+		<div className="container mx-auto max-w-[1800px] px-4 md:px-6 py-6">
+			<div className="grid grid-cols-1 lg:grid-cols-[20%_60%_20%] gap-6 lg:gap-8">
+				{/* Left Sidebar */}
 				<div className="hidden lg:block space-y-6">
 					<div className="flex flex-wrap gap-2">
-						<Button variant={"outline"} size="sm" className="rounded-full px-4">
+						<Button variant="outline" size="sm" className="rounded-full px-4">
 							Todo
 						</Button>
-						{categories.map((category) => {
-							return (
-								<Button
-									key={category.id}
-									variant="outline"
-									size="sm"
-									className="rounded-full px-4 hover:bg-hover hover:text-hover"
-								>
-									{category.name}
-								</Button>
-							);
-						})}
+						{categories.map((category) => (
+							<Button key={category.id} variant="outline" size="sm" className="rounded-full px-4">
+								{category.name}
+							</Button>
+						))}
 					</div>
 
 					<div className="space-y-3">
@@ -71,7 +74,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 
 					<div className="space-y-3">
 						<h3 className="font-semibold text-white">Lo más popular.</h3>
-						<div className="space-y-3 pointer-events-none">
+						<div className="space-y-3">
 							{popularForums.map((forum) => (
 								<SidebarForumCard key={forum.id} forum={forum} />
 							))}
@@ -83,7 +86,6 @@ export default async function ForumPage({ params }: ForumPageProps) {
 				<div className="space-y-8">
 					{/* Forum Header */}
 					<div className="relative mb-8">
-						{/* Banner */}
 						<div className="relative w-full h-48 md:h-64 rounded-xl overflow-hidden">
 							<Image
 								src={bannerImage}
@@ -96,7 +98,6 @@ export default async function ForumPage({ params }: ForumPageProps) {
 
 						<div className="px-4 relative">
 							<div className="flex flex-col md:flex-row gap-6 items-start">
-								{/* Profile Picture */}
 								<div className="relative w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden border-4 border-black -mt-12 md:-mt-16 bg-black shadow-lg shrink-0">
 									<Image
 										src={profileImage}
@@ -130,6 +131,7 @@ export default async function ForumPage({ params }: ForumPageProps) {
 											entityType="Forum"
 											currentUserId={userUuid}
 											variant="switch"
+											clientTranslations={clientTranslations}
 										/>
 									</div>
 
@@ -162,7 +164,6 @@ export default async function ForumPage({ params }: ForumPageProps) {
 
 					{/* Forum Posts Section */}
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-						{/* Petitions Column */}
 						<div className="space-y-6">
 							<H2 className="text-2xl font-bold">Peticiones.</H2>
 							{initialPetitions.length > 0 ? (
@@ -180,7 +181,6 @@ export default async function ForumPage({ params }: ForumPageProps) {
 							)}
 						</div>
 
-						{/* Offers Column */}
 						<div className="space-y-6">
 							<H2 className="text-2xl font-bold">Ofertas.</H2>
 							{initialOffers.length > 0 ? (
@@ -204,21 +204,17 @@ export default async function ForumPage({ params }: ForumPageProps) {
 				{/* Right Sidebar */}
 				<div className="hidden lg:block space-y-6">
 					<div className="flex items-center gap-3 mb-6">
-						<div className="h-10 w-10 rounded-full bg-lightgrey flex items-center justify-center">
-							<Avatar className="h-10 w-10 rounded-full">
-								<AvatarImage
-									src={forumData.Business?.profile_picture || "/placeholder.png"}
-									alt={forumData.name || "Forum"}
-									className="object-cover"
-								/>
-								<AvatarFallback className="bg-transparent text-white font-bold">
-									{forumData.name?.charAt(0).toUpperCase()}
-								</AvatarFallback>
-							</Avatar>
-						</div>
-						<div className="flex items-center gap-1.5">
-							<span className="font-bold text-xl text-white">{forumData.Business?.name}</span>
-						</div>
+						<Avatar className="h-10 w-10 rounded-full">
+							<AvatarImage
+								src={forumData.Business?.profile_picture || "/placeholder.png"}
+								alt={forumData.name || "Forum"}
+								className="object-cover"
+							/>
+							<AvatarFallback className="bg-transparent text-white font-bold">
+								{forumData.name?.charAt(0).toUpperCase()}
+							</AvatarFallback>
+						</Avatar>
+						<span className="font-bold text-xl text-white">{forumData.Business?.name}</span>
 					</div>
 
 					<div className="space-y-3">

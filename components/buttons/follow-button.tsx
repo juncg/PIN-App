@@ -25,7 +25,7 @@ export function FollowButton({
 	currentUserId,
 	followersCount,
 	onFollowChange,
-	clientTranslations
+	clientTranslations,
 }: IFollowButton) {
 	const [followed, setFollowed] = useState<boolean>(followedByUser);
 	const [followers, setFollowers] = useState<number>(followersCount || 0);
