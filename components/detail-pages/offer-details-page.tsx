@@ -189,15 +189,15 @@ export function OfferDetails({
 							disabled={!acceptedConditions && !isSubscribed}
 						/>
 					</div>
-				</div>
 			</div>
+		</div>
 
-			<div className="grid lg:grid-cols-2 gap-8">
+			{/* <div className="grid lg:grid-cols-2 gap-8">
 				<div>
 					<AltenatingButtons buttonsContent={slidingButtonsContent} textSize="text-xl" />
 				</div>
 				<div></div>
-			</div>
+			</div> */}
 
 			<CommentsSection
 				postType="Offer"
