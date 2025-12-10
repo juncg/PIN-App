@@ -78,15 +78,18 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 						<B1 className="text-lightgrey line-clamp-2">{post.text}</B1>
 					</div>
 
-					{post.products && post.products.length > 0 && (
-						<div className="flex flex-col items-end shrink-0">
-							<H3>{post.reduced_price ?? 0}€</H3>
-							<div className="flex gap-2 items-center">
-								<B5 className="text-chernobyl md:line-clamp-1">-{discountPercentage}%</B5>
-								<B1 className="line-through text-lightgrey">{originalPrice}€</B1>
+					{post.products &&
+						post.products.length > 0 &&
+						post.reduced_price !== null &&
+						post.reduced_price > 0 && (
+							<div className="flex flex-col items-end shrink-0">
+								<H3>{post.reduced_price ?? 0}€</H3>
+								<div className="flex gap-2 items-center">
+									<B5 className="text-chernobyl md:line-clamp-1">-{discountPercentage}%</B5>
+									<B1 className="line-through text-lightgrey">{originalPrice}€</B1>
+								</div>
 							</div>
-						</div>
-					)}
+						)}
 				</div>
 
 				<div className="flex flex-col gap-4">
