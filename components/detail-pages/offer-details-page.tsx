@@ -69,23 +69,25 @@ export function OfferDetails({
         ? offer.images.filter((img) => img && img.trim() !== "")
         : ["/placeholder.png"];
 
-    const slidingButtonsContent: SlidingButtonProps[] = [
-        {
-            content: <div className="p-6"></div>,
-            displayName: "Descripción",
-            displayIcon: null,
-        },
-        {
-            content: <div className="p-6"></div>,
-            displayName: "Detalles",
-            displayIcon: null,
-        },
-        {
-            content: <div className="p-6"></div>,
-            displayName: "Especificaciones",
-            displayIcon: null,
-        },
-    ];
+    const loremIpsumDesc =
+		"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero totam ratione accusamus sunt iusto ad animi, quia incidunt cum, explicabo alias molestias itaque, nesciunt beatae dolorem autem harum sapiente laboriosam.";
+	const slidingButtonsContent: SlidingButtonProps[] = [
+		{
+			content: <div>{loremIpsumDesc}</div>,
+			displayName: "Descripción",
+			displayIcon: null,
+		},
+		{
+			content: <div>{loremIpsumDesc}</div>,
+			displayName: "Detalles",
+			displayIcon: null,
+		},
+		{
+			content: <div>{loremIpsumDesc}</div>,
+			displayName: "Especificaciones",
+			displayIcon: null,
+		},
+	];
 
 	return (
 		<div className="container mx-auto px-4 py-8">
