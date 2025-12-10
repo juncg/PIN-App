@@ -1,6 +1,7 @@
 import { FollowButton } from "@/components/buttons/follow-button";
 import { AltenatingButtons, SlidingButtonProps } from "@/components/buttons/sliding-buttons";
 import { CalendarIcon, CheckBoxIcon, LocationIcon, PeopleAlt2Icon, TextSnippetIcon } from "@/components/icons/icons";
+import EditProfileButton from "@/components/buttons/edit-profile-button";
 import { ProfilePostsList } from "@/components/profile/profile-posts-list";
 import { ProfileRightColumn } from "@/components/profile/profile-right-column";
 import { ProfileSubscriptionsList } from "@/components/profile/profile-subscriptions-list";
@@ -143,9 +144,7 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 									clientTranslations={clientTranslations}
 								/>
 							) : (
-								<Button variant="outlineSquared" size="lg">
-									Editar perfil
-								</Button>
+								<EditProfileButton userData={userData} />
 							)}
 						</span>
 					</div>
