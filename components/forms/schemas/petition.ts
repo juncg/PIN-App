@@ -10,7 +10,7 @@ export const CreatePetitionSchema = z
 		target_progress: z.number().min(10, "El progreso objetivo debe ser mayor o igual a 10"),
 		comment_locked_state: CommentLockedStateSchema.optional(),
 		state: PostStateSchema.optional(),
-		forum_id: z.number().min(0, "Debes elegir un foro al que pertenecerá la petición"),
+		forum_id: z.number().min(0, "Debes elegir un foro al que pertenecerá la petición").optional(),
 		product_ids: z.array(z.number()).optional(),
 		reduced_price: z.number().nullable().optional(),
 	})
