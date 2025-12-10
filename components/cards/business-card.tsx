@@ -1,31 +1,33 @@
-import { cn } from "@/lib/utils";
-import Image from "next/image";
-import { Button } from "../ui-custom/button";
-import { B1, H3 } from "../ui-custom/typography";
+import Link from "next/link";
+import { Avatar, AvatarImage, AvatarFallback } from "../ui-custom/avatar";
+import { IBusiness } from "@/lib/services/types";
+import { VerifiedIcon } from "@/components/icons/icons";
 
-export interface IBusinessCard {
-	className?: string;
-	businessName: string;
-	businessDescription: string;
+interface SidebarBusinessCardProps {
+	business: IBusiness;
 }
 
-export function BusinessCard({ props }: { props: IBusinessCard }) {
-	const { className, businessName, businessDescription } = props;
-
+export function SidebarBusinessCard({ business }: SidebarBusinessCardProps) {
 	return (
-		<article className={cn("flex flex-col border border-spacing-2 rounded-lg p-4 gap-4", className)}>
-			<div className="flex justify-between items-center border-b pb-4">
-				<div className="flex flex-col gap-2">
-					<H3>{businessName}</H3>
+		<Link
+			href={`/business/${business.id}`}
+			className="flex items-center gap-3 rounded-xl border border-hover bg-transparent p-3 hover:bg-hover hover:border-hover/20 transition-all"
+		>
+			<Avatar
+				className={`h-10 w-10 rounded-lg border border-hover ${!business.profile_picture && "bg-lightgrey"}`}
+			>
+				<AvatarImage src={business.profile_picture || "/placeholder.png"} className="object-cover" />
+				<AvatarFallback className="rounded-lg bg-transparent text-white font-bold">
+					{business.name?.charAt(0).toUpperCase()}
+				</AvatarFallback>
+			</Avatar>
+			<div className="flex flex-col overflow-hidden">
+				<span className="font-medium text-sm text-white truncate">{business.name}</span>
+				<div className="flex items-center gap-1">
+					<span className="text-xs text-lightgrey truncate">{business.followers} seguidores</span>
+					{business.verification !== "Unverified" && <VerifiedIcon className="h-3 w-3 text-chernobyl" />}
 				</div>
 			</div>
-			<div className="flex flex-col mb-10 gap-4">
-				<B1>{businessDescription}</B1>
-				<Image className="mx-auto" src={"/placeholder.png"} alt="" width={300} height={600} unoptimized />
-			</div>{" "}
-			<div className="flex flex-col gap-8">
-				<Button>Entra al foro</Button>
-			</div>
-		</article>
+		</Link>
 	);
 }

@@ -38,7 +38,14 @@ export async function BusinessProfileServices(businessId: number, searchParams: 
 
 	const { data: businessForums } = await GetFromDatabase<IForum>({
 		tableName: "Forum",
-		select: "*",
+		select: `
+            *, 
+            User_Forum!left(forum_id, user_id), 
+            Business(*), 
+            Forum_Category!inner(category_id),
+            Offer!left(id, state),
+            Petition!left(id)
+        `,
 		filters: [
 			{ method: "eq", column: "business_id", value: businessId },
 			{ method: "order", column: "followers", ascending: false },
