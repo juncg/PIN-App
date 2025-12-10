@@ -12,31 +12,6 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "13.0.5"
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       Business: {
@@ -49,6 +24,7 @@ export type Database = {
           name: string | null
           owner_id: string
           profile_picture: string | null
+          username: string | null
           verification: Database["public"]["Enums"]["Verification"] | null
         }
         Insert: {
@@ -60,6 +36,7 @@ export type Database = {
           name?: string | null
           owner_id: string
           profile_picture?: string | null
+          username?: string | null
           verification?: Database["public"]["Enums"]["Verification"] | null
         }
         Update: {
@@ -71,6 +48,7 @@ export type Database = {
           name?: string | null
           owner_id?: string
           profile_picture?: string | null
+          username?: string | null
           verification?: Database["public"]["Enums"]["Verification"] | null
         }
         Relationships: [
@@ -1275,6 +1253,31 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      notify_post_completion: {
+        Args: {
+          link_url: string
+          message_text: string
+          post_id: number
+          post_type: string
+          sender_uuid?: string
+        }
+        Returns: {
+          created_at: string
+          id: number
+          is_read: boolean
+          link_to: string | null
+          message: string
+          sender_id: string | null
+          type: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "Notification"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       toggle_follow: {
         Args: {
           follower_user_uuid: string
@@ -1329,7 +1332,7 @@ export type Database = {
         | "Like"
         | "New_Comment"
         | "Petition_Update"
-        | "Offer_update"
+        | "Offer_Update"
         | "Follow"
       Post_State: "Draft" | "Posted" | "Cancelled" | "Completed"
       Verification: "Unverified" | "Paid" | "Official"
@@ -1462,9 +1465,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       Chosen_Notification_State: [
@@ -1478,7 +1478,7 @@ export const Constants = {
         "Like",
         "New_Comment",
         "Petition_Update",
-        "Offer_update",
+        "Offer_Update",
         "Follow",
       ],
       Post_State: ["Draft", "Posted", "Cancelled", "Completed"],

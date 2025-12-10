@@ -1,16 +1,14 @@
 import { FollowButton } from "@/components/buttons/follow-button";
+import { BusinessCardHorizontalSmall } from "@/components/cards/business-card-horizontal-small";
+import { ForumCard } from "@/components/cards/forum-card";
+import { VerifiedIcon } from "@/components/icons/icons";
 import { InfinitePostGrid } from "@/components/posts/infinite-post-grid";
-import { Button } from "@/components/ui-custom/button";
+import { Separator } from "@/components/ui-custom/separator";
 import { B1, H1, H2 } from "@/components/ui-custom/typography";
+import { getUserUuid } from "@/lib/services/user";
+import { ISearchParams } from "@/types";
 import Image from "next/image";
 import { BusinessProfileServices, loadMoreBusinessOffers, loadMoreBusinessPetitions } from "./page-services";
-import { ISearchParams } from "@/types";
-import { getUserUuid } from "@/lib/services/user";
-import { VerifiedIcon, LocationIcon, CalendarIcon } from "@/components/icons/icons";
-import { SidebarBusinessCard } from "@/components/cards/business-card";
-import { ForumCard } from "@/components/cards/forum-card";
-import { Separator } from "@/components/ui-custom/separator";
-import { GetJoinedDate } from "@/lib/services/utilities";
 
 interface BusinessPageProps {
 	params: Promise<{
@@ -173,7 +171,7 @@ export default async function BusinessProfile({ params, searchParams }: Business
 					<div className="flex flex-col gap-3">
 						{similarBusinesses.length > 0 ? (
 							similarBusinesses.map((simBusiness) => (
-								<SidebarBusinessCard key={simBusiness.id} business={simBusiness} />
+								<BusinessCardHorizontalSmall key={simBusiness.id} business={simBusiness} />
 							))
 						) : (
 							<B1 className="text-lightgrey text-sm">No se encontraron empresas similares.</B1>

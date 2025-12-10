@@ -1,14 +1,14 @@
 import { FollowButton } from "@/components/buttons/follow-button";
-import { SidebarForumCard } from "@/components/cards/sidebar-forum-card";
+import { ForumCardHorizontalSmall } from "@/components/cards/forum-card-horizontal-small";
 import { InfinitePostGrid } from "@/components/posts/infinite-post-grid";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
 import { Button } from "@/components/ui-custom/button";
 import { B1, H1, H2 } from "@/components/ui-custom/typography";
 import { getUserUuid } from "@/lib/services/user";
+import { ISearchParams } from "@/types";
 import { Verified } from "lucide-react";
 import Image from "next/image";
 import { ForumDetailsService, fetchForumPosts, loadMoreOffers, loadMorePetitions } from "./page-services";
-import { ISearchParams } from "@/types";
 
 interface ForumPageProps {
 	params: Promise<{
@@ -67,7 +67,7 @@ export default async function ForumPage({ params, searchParams }: ForumPageProps
 						<h3 className="font-semibold text-white">Recomendado para ti.</h3>
 						<div className="space-y-3">
 							{randomForums.map((forum) => (
-								<SidebarForumCard key={forum.id} forum={forum} />
+								<ForumCardHorizontalSmall key={forum.id} forum={forum} />
 							))}
 						</div>
 					</div>
@@ -76,7 +76,7 @@ export default async function ForumPage({ params, searchParams }: ForumPageProps
 						<h3 className="font-semibold text-white">Lo más popular.</h3>
 						<div className="space-y-3">
 							{popularForums.map((forum) => (
-								<SidebarForumCard key={forum.id} forum={forum} />
+								<ForumCardHorizontalSmall key={forum.id} forum={forum} />
 							))}
 						</div>
 					</div>
@@ -221,7 +221,7 @@ export default async function ForumPage({ params, searchParams }: ForumPageProps
 						<h3 className="text-sm font-medium text-lightgrey">Más foros de la empresa.</h3>
 						<div className="space-y-3">
 							{businessForums.map((forum) => (
-								<SidebarForumCard key={forum.id} forum={forum} />
+								<ForumCardHorizontalSmall key={forum.id} forum={forum} />
 							))}
 						</div>
 					</div>
