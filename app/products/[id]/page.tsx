@@ -75,7 +75,7 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 						<Link
 							href={
 								product.businesses?.[0]?.business?.id
-									? `/businesses/${product.businesses[0].business.id}`
+									? `/business/${product.businesses[0].business.id}`
 									: "#"
 							}
 							className="hover:underline"

@@ -23,6 +23,7 @@ export type IBusiness = Tables<"Business"> & {
 	businesses?: {
 		business: Tables<"Business">;
 	}[];
+	User_Business?: Tables<"User_Business">[];
 };
 
 export type IUser = Tables<"User"> & {

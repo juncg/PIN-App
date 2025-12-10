@@ -19,7 +19,7 @@ interface ProfilePageProps {
 	searchParams: Promise<ISearchParams>;
 }
 
-export default async function Profile({ params }: ProfilePageProps) {
+export default async function Profile({ params, searchParams }: ProfilePageProps) {
 	const { id } = await params;
 	const {
 		userData,
@@ -35,7 +35,8 @@ export default async function Profile({ params }: ProfilePageProps) {
 		subscribedPetitions,
 		subscribedPetitionsCount,
 		followedByUser,
-	} = await ProfileServices(id);
+		clientTranslations,
+	} = await ProfileServices(id, searchParams);
 
 	// Get user's created posts
 	const { offers, petitions, allPosts, offersCount, petitionsCount, totalCount } = await getUserPosts(id);
@@ -139,6 +140,7 @@ export default async function Profile({ params }: ProfilePageProps) {
 									entityId={id}
 									entityType="User"
 									currentUserId={currentUserId}
+									clientTranslations={clientTranslations}
 								/>
 							) : (
 								<Button variant="outlineSquared" size="lg">

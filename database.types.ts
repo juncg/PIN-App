@@ -41,6 +41,7 @@ export type Database = {
     Tables: {
       Business: {
         Row: {
+          banner: string | null
           created_at: string
           description: string | null
           followers: number
@@ -51,6 +52,7 @@ export type Database = {
           verification: Database["public"]["Enums"]["Verification"] | null
         }
         Insert: {
+          banner?: string | null
           created_at?: string
           description?: string | null
           followers?: number
@@ -61,6 +63,7 @@ export type Database = {
           verification?: Database["public"]["Enums"]["Verification"] | null
         }
         Update: {
+          banner?: string | null
           created_at?: string
           description?: string | null
           followers?: number
@@ -1327,6 +1330,7 @@ export type Database = {
         | "New_Comment"
         | "Petition_Update"
         | "Offer_update"
+        | "Follow"
       Post_State: "Draft" | "Posted" | "Cancelled" | "Completed"
       Verification: "Unverified" | "Paid" | "Official"
     }
@@ -1475,6 +1479,7 @@ export const Constants = {
         "New_Comment",
         "Petition_Update",
         "Offer_update",
+        "Follow",
       ],
       Post_State: ["Draft", "Posted", "Cancelled", "Completed"],
       Verification: ["Unverified", "Paid", "Official"],
