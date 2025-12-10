@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Hand, Tag, MessageSquare } from "lucide-react";
+import { Plus, Hand, Tag, MessageSquare, ShoppingBagIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui-custom/button";
 import { cn } from "@/lib/utils";
 
-type CreateOption = "offer" | "petition" | "forum";
+type CreateOption = "offer" | "petition" | "forum" | "product";
 
 interface CreatePostFabProps {
 	isBusinessUser: boolean;
@@ -42,6 +42,13 @@ const OPTIONS: OptionConfig[] = [
 		icon: Hand,
 		href: "/petitions/create",
 		requiresBusiness: false,
+	},
+	{
+		type: "product",
+		label: "Crear producto",
+		icon: ShoppingBagIcon,
+		href: "/products/create",
+		requiresBusiness: true,
 	},
 ];
 
