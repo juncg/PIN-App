@@ -1,9 +1,10 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { typography } from "./typography";
 
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
-	<div ref={ref} className={cn("rounded-xl border bg-black text-white shadow", className)} {...props} />
+	<div ref={ref} className={cn("rounded-xl border-2 border-cardborder bg-darkmode", className)} {...props} />
 ));
 Card.displayName = "Card";
 
@@ -15,14 +16,12 @@ const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
 CardHeader.displayName = "CardHeader";
 
 const CardTitle = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-	({ className, ...props }, ref) => (
-		<div ref={ref} className={cn("font-semibold leading-none tracking-tight", className)} {...props} />
-	)
+	({ className, ...props }, ref) => <div ref={ref} className={cn(typography.H4, className)} {...props} />
 );
 CardTitle.displayName = "CardTitle";
 
 const CardDescription = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-	({ className, ...props }, ref) => <div ref={ref} className={cn("text-sm text-lightgrey", className)} {...props} />
+	({ className, ...props }, ref) => <div ref={ref} className={cn(typography.B5, className)} {...props} />
 );
 CardDescription.displayName = "CardDescription";
 
@@ -33,7 +32,7 @@ CardContent.displayName = "CardContent";
 
 const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
 	({ className, ...props }, ref) => (
-		<div ref={ref} className={cn("flex items-center p-6 pt-0", className)} {...props} />
+		<div ref={ref} className={cn("flex items-center p-6 pt-0 gap-2", className)} {...props} />
 	)
 );
 CardFooter.displayName = "CardFooter";
