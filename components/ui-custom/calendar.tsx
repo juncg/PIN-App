@@ -24,7 +24,7 @@ export function Calendar({
 		<DayPicker
 			showOutsideDays={showOutsideDays}
 			className={cn(
-				"bg-black group/calendar p-3 [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
+				"bg-cardbg group/calendar p-3 [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
 				String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
 				String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
 				className
@@ -44,27 +44,24 @@ export function Calendar({
 				),
 				button_previous: cn(
 					buttonVariants({ variant: buttonVariant }),
-					"size-(--cell-size) aria-disabled:opacity-50 p-0 select-none",
+					"h-9 w-9 aria-disabled:opacity-50 p-0 select-none",
 					defaultClassNames.button_previous
 				),
 				button_next: cn(
 					buttonVariants({ variant: buttonVariant }),
-					"size-(--cell-size) aria-disabled:opacity-50 p-0 select-none",
+					"h-9 w-9 aria-disabled:opacity-50 p-0 select-none",
 					defaultClassNames.button_next
 				),
-				month_caption: cn(
-					"flex items-center justify-center h-(--cell-size) w-full px-(--cell-size)",
-					defaultClassNames.month_caption
-				),
+				month_caption: cn("flex items-center justify-center h-9 w-full px-9", defaultClassNames.month_caption),
 				dropdowns: cn(
-					"w-full flex items-center text-sm font-medium justify-center h-(--cell-size) gap-1.5",
+					"w-full flex items-center text-sm font-medium justify-center h-9 gap-1.5",
 					defaultClassNames.dropdowns
 				),
 				dropdown_root: cn(
-					"relative has-focus:border-lightgrey border border-hover shadow-xs has-focus:ring-lightgrey/50 has-focus:ring-[3px] rounded-md",
+					"relative has-focus:border-lightgrey border border-cardborder shadow-xs has-focus:ring-lightgrey/50 has-focus:ring-[3px] rounded-md",
 					defaultClassNames.dropdown_root
 				),
-				dropdown: cn("absolute bg-black inset-0 opacity-0", defaultClassNames.dropdown),
+				dropdown: cn("absolute bg-cardbg inset-0 opacity-0", defaultClassNames.dropdown),
 				caption_label: cn(
 					"select-none font-medium",
 					captionLayout === "label"
@@ -79,7 +76,7 @@ export function Calendar({
 					defaultClassNames.weekday
 				),
 				week: cn("flex w-full mt-2", defaultClassNames.week),
-				week_number_header: cn("select-none w-(--cell-size)", defaultClassNames.week_number_header),
+				week_number_header: cn("select-none w-9", defaultClassNames.week_number_header),
 				week_number: cn("text-[0.8rem] select-none text-lightgrey", defaultClassNames.week_number),
 				day: cn(
 					"relative w-full h-full p-0 text-center [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square select-none",
@@ -88,10 +85,13 @@ export function Calendar({
 						: "[&:first-child[data-selected=true]_button]:rounded-l-md",
 					defaultClassNames.day
 				),
-				range_start: cn("rounded-l-md bg-hover", defaultClassNames.range_start),
-				range_middle: cn("rounded-none", defaultClassNames.range_middle),
-				range_end: cn("rounded-r-md bg-hover", defaultClassNames.range_end),
-				today: cn("bg-hover text-hover rounded-md data-[selected=true]:rounded-none", defaultClassNames.today),
+				range_start: cn("rounded-l-md bg-chernobyl/20", defaultClassNames.range_start),
+				range_middle: cn("rounded-none bg-chernobyl/10", defaultClassNames.range_middle),
+				range_end: cn("rounded-r-md bg-chernobyl/20", defaultClassNames.range_end),
+				today: cn(
+					"bg-chernobyl/10 text-white rounded-md data-[selected=true]:rounded-none",
+					defaultClassNames.today
+				),
 				outside: cn("text-lightgrey aria-selected:text-lightgrey", defaultClassNames.outside),
 				disabled: cn("text-lightgrey opacity-50", defaultClassNames.disabled),
 				hidden: cn("invisible", defaultClassNames.hidden),
@@ -116,9 +116,7 @@ export function Calendar({
 				WeekNumber: ({ children, ...props }) => {
 					return (
 						<td {...props}>
-							<div className="flex size-(--cell-size) items-center justify-center text-center">
-								{children}
-							</div>
+							<div className="flex h-9 w-9 items-center justify-center text-center">{children}</div>
 						</td>
 					);
 				},
@@ -150,7 +148,7 @@ export function CalendarDayButton({ className, day, modifiers, ...props }: React
 			data-range-end={modifiers.range_end}
 			data-range-middle={modifiers.range_middle}
 			className={cn(
-				"data-[selected-single=true]:bg-black data-[selected-single=true]:text-black data-[range-middle=true]:bg-hover data-[range-middle=true]:text-hover data-[range-start=true]:bg-black data-[range-start=true]:text-black data-[range-end=true]:bg-black data-[range-end=true]:text-black group-data-[focused=true]/day:border-lightgrey group-data-[focused=true]/day:ring-lightgrey/50 dark:hover:text-hover flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70",
+				"data-[selected-single=true]:bg-chernobyl data-[selected-single=true]:text-black data-[range-middle=true]:bg-chernobyl/10 data-[range-middle=true]:text-white data-[range-start=true]:bg-chernobyl data-[range-start=true]:text-black data-[range-end=true]:bg-chernobyl data-[range-end=true]:text-black group-data-[focused=true]/day:border-lightgrey group-data-[focused=true]/day:ring-lightgrey/50 hover:bg-hover hover:text-white flex aspect-square size-auto w-full min-w-[2.25rem] flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70",
 				defaultClassNames.day,
 				className
 			)}
