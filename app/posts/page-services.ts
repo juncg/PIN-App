@@ -5,7 +5,8 @@ import { ISearchParams } from "../../types";
 import { DEFAULT_LOCALE, OFFERS_PAGE_SIZE, PETITIONS_PAGE_SIZE } from "@/lib/constants";
 import { getUserUuid } from "@/lib/services/user";
 
-async function fetchOffers(
+async function fetchPosts(
+	type: 'offer' | 'petition',
 	creatorFilter?: "user" | "business" | "verified_business" | "followed",
 	currentUserId?: string | null,
 	tagFilter?: string,
@@ -15,7 +16,15 @@ async function fetchOffers(
 	followedForumIds?: number[],
 	minPrice?: number | null,
 	maxPrice?: number | null
-) {
+): Promise<any[]> {
+	const tableName = type === 'offer' ? 'Offer' : 'Petition';
+	const userRelation = type === 'offer' ? 'User_Offer' : 'User_Petition';
+	const tagRelation = type === 'offer' ? 'Offer_Tag' : 'Petition_Tag';
+	const idColumn = type === 'offer' ? 'offer_id' : 'petition_id';
+	const creatorFkey = type === 'offer' ? 'Offer_creator_id_fkey' : 'Petition_creator_id_fkey';
+	const productRelation = type === 'offer' ? 'Offer_Product' : 'Petition_Product';
+	const postType = type === 'offer' ? 'Offer' : 'Petition';
+
 	const filters: any[] = [{ method: "order", column: orderColumn, ascending }];
 
 	if (minPrice !== undefined && minPrice !== null && minPrice > 0) {
@@ -30,19 +39,19 @@ async function fetchOffers(
 		filters.push({ method: "not", column: "reduced_price", operator: "is", value: null });
 	}
 
-	let select = `*, User_Offer!left(liked, subscribed, user_id), tags:Offer_Tag(Tag(name)), User!Offer_creator_id_fkey(*), products:Offer_Product(Product(*))`;
+	let select = `*, ${userRelation}!left(liked, subscribed, user_id), tags:${tagRelation}(Tag(name)), User!${creatorFkey}(*), products:${productRelation}(Product(*))`;
 
 	if (tagFilter) {
 		const tagIds = tagFilter.split(",").map(Number);
-		const { data: offerTags } = await GetFromDatabase({
-			tableName: "Offer_Tag",
-			select: "offer_id",
+		const { data: postTags } = await GetFromDatabase({
+			tableName: tagRelation,
+			select: idColumn,
 			filters: [{ method: "in", column: "tag_id", value: tagIds }],
 		});
 
-		if (offerTags && offerTags.length > 0) {
-			const uniqueOfferIds = [...new Set(offerTags.map((ot: any) => ot.offer_id))];
-			filters.push({ method: "in", column: "id", value: uniqueOfferIds });
+		if (postTags && postTags.length > 0) {
+			const uniqueIds = [...new Set(postTags.map((pt: any) => pt[idColumn]))];
+			filters.push({ method: "in", column: "id", value: uniqueIds });
 		} else {
 			return [];
 		}
@@ -75,100 +84,17 @@ async function fetchOffers(
 		}
 	}
 
-	const { data: offers } = await GetFromDatabase<IOffer>({
-		tableName: "Offer",
+	const { data: posts } = await GetFromDatabase({
+		tableName: tableName,
 		select: select,
 		filters: filters,
 	});
 
-	offers?.map((offer: IOffer) => {
-		offer.type = "Offer";
+	posts?.map((post: any) => {
+		post.type = postType;
 	});
 
-	return offers || [];
-}
-
-async function fetchPetitions(
-	creatorFilter?: "user" | "business" | "verified_business" | "followed",
-	currentUserId?: string | null,
-	tagFilter?: string,
-	orderColumn: string = "created_at",
-	ascending: boolean = false,
-	followedUserIds?: string[],
-	followedForumIds?: number[],
-	minPrice?: number | null,
-	maxPrice?: number | null
-) {
-	const filters: any[] = [{ method: "order", column: orderColumn, ascending }];
-
-	if (minPrice !== undefined && minPrice !== null && minPrice > 0) {
-		filters.push({ method: "gte", column: "reduced_price", value: minPrice });
-	}
-
-	if (maxPrice !== undefined && maxPrice !== null && maxPrice < 10000) {
-		filters.push({ method: "lte", column: "reduced_price", value: maxPrice });
-	}
-
-	if (orderColumn === "reduced_price") {
-		filters.push({ method: "not", column: "reduced_price", operator: "is", value: null });
-	}
-
-	let select = `*, User_Petition!left(liked, subscribed, user_id), tags:Petition_Tag(Tag(name)), User!Petition_creator_id_fkey(*), products:Petition_Product(Product(*))`;
-
-	if (tagFilter) {
-		const tagIds = tagFilter.split(",").map(Number);
-		const { data: petitionTags } = await GetFromDatabase({
-			tableName: "Petition_Tag",
-			select: "petition_id",
-			filters: [{ method: "in", column: "tag_id", value: tagIds }],
-		});
-
-		if (petitionTags && petitionTags.length > 0) {
-			const uniquePetitionIds = [...new Set(petitionTags.map((pt: any) => pt.petition_id))];
-			filters.push({ method: "in", column: "id", value: uniquePetitionIds });
-		} else {
-			return [];
-		}
-	}
-
-	if (creatorFilter === "user") {
-		select += `, Forum!inner(business_id)`;
-		filters.push({ method: "is", column: "Forum.business_id", value: null });
-	} else if (creatorFilter === "business" || creatorFilter === "verified_business") {
-		select += `, Forum!inner(business_id, Business!inner(*))`;
-		filters.push({ method: "not", column: "Forum.business_id", operator: "is", value: null });
-
-		if (creatorFilter === "verified_business") {
-			filters.push({ method: "in", column: "Forum.Business.verification", value: ["Official", "Paid"] });
-		}
-	} else if (creatorFilter === "followed" && currentUserId) {
-		const orConditions: string[] = [];
-		if (followedUserIds && followedUserIds.length > 0) {
-			orConditions.push(`creator_id.in.(${followedUserIds.join(",")})`);
-		}
-		if (followedForumIds && followedForumIds.length > 0) {
-			orConditions.push(`forum_id.in.(${followedForumIds.join(",")})`);
-		}
-
-		if (orConditions.length > 0) {
-			filters.push({ method: "or", value: orConditions.join(",") });
-			select += `, Forum(*)`;
-		} else {
-			return [];
-		}
-	}
-
-	const { data: petitions } = await GetFromDatabase<IPetition>({
-		tableName: "Petition",
-		select: select,
-		filters: filters,
-	});
-
-	petitions?.map((petition: IPetition) => {
-		petition.type = "Petition";
-	});
-
-	return petitions || [];
+	return posts || [];
 }
 
 export async function PostsServices(searchParams: Promise<ISearchParams>) {
@@ -235,7 +161,8 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 	const offers =
 		postType === "petition"
 			? []
-			: await fetchOffers(
+			: (await fetchPosts(
+					'offer',
 					creatorFilter,
 					currentUserId,
 					tagFilter,
@@ -245,11 +172,12 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 					followedForumIds,
 					minPrice,
 					maxPrice
-			  );
+			  )) as IOffer[];
 	const petitions =
 		postType === "offer"
 			? []
-			: await fetchPetitions(
+			: (await fetchPosts(
+					'petition',
 					creatorFilter,
 					currentUserId,
 					tagFilter,
@@ -259,7 +187,7 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 					followedForumIds,
 					minPrice,
 					maxPrice
-			  );
+			  )) as IPetition[];
 
 	const allPosts = [...offers, ...petitions].sort((a, b) => {
 		if (orderColumn === "reduced_price") {
