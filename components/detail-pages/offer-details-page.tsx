@@ -26,6 +26,7 @@ import { Card, CardContent } from "../ui-custom/card";
 import { ShareComponent } from "../share-post/share";
 import { ProductCard } from "../cards/product-card";
 import { OfferWarning } from "./offer-warning";
+import { VerifiedIcon } from "@/components/icons/icons";
 
 interface OfferDetailsProps {
 	offer: IOffer;
@@ -89,6 +90,15 @@ export function OfferDetails({
 		},
 	];
 
+    let businessLink = "";
+    if (offer.products && offer.products.length > 0) {
+        const firstProduct = offer.products[0];
+        if (firstProduct?.Product?.businesses && firstProduct.Product.businesses.length > 0) {
+            const businessId = firstProduct.Product.businesses[0].business.id;
+            businessLink = `/business/${businessId}`;
+        }
+    }
+
 	return (
 		<div className="container mx-auto px-4 py-8">
 			<div className="grid lg:grid-cols-2 gap-8 mb-12">
@@ -116,8 +126,25 @@ export function OfferDetails({
 						/>
 					</div>
 				</div>{" "}
-				<div className="space-y-6">
+				
+				<div className="space-y-3">
 					<h1 className="text-4xl font-black mb-4">{offer.title}</h1>
+
+					{offer.products && offer.products.length > 0 && offer.products[0]?.Product?.businesses && (
+                        <div className="flex items-center gap-1.5">
+                            <Link
+                                href={businessLink || "#"}
+                                className="hover:underline"
+                            >
+                                <span className="text-lightgrey">
+                                    {offer.products[0].Product.businesses[0]?.business?.name?.toLocaleUpperCase() || "Empresa sin nombre"}
+                                </span>
+                            </Link>
+                            {offer.products[0].Product.businesses[0]?.business?.verification !== "Unverified" && (
+                                <VerifiedIcon className="h-4 w-4 text-chernobyl" />
+                            )}
+                        </div>
+                    )}
 
 					{/* Precio con descuento */}
 					<div className="space-y-1">
@@ -191,8 +218,8 @@ export function OfferDetails({
 							disabled={!acceptedConditions && !isSubscribed}
 						/>
 					</div>
+				</div>
 			</div>
-		</div>
 
 			<div className="grid lg:grid-cols-2 gap-8">
 				<div>
