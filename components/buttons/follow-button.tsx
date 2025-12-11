@@ -13,7 +13,7 @@ interface IFollowButton {
 	entityType: "User" | "Business" | "Forum";
 	currentUserId: string | null;
 	followersCount?: number;
-	onFollowChange?: (isFollowing: boolean, newCount: number) => void;
+	onFollowChange?: (newCount: number) => void;
 	clientTranslations?: any; //que
 }
 
@@ -74,7 +74,7 @@ export function FollowButton({
 				setFollowers(followersCountFromServer);
 
 				if (onFollowChange) {
-					onFollowChange(isFollowingFromServer, followersCountFromServer);
+					onFollowChange(followersCountFromServer);
 				}
 			}
 		} catch (error) {

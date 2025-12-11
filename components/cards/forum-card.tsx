@@ -7,6 +7,7 @@ import Link from "next/link";
 import { FollowButton } from "../buttons/follow-button";
 import { VerifiedIcon } from "../icons/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
+import React, { useState } from "react";
 
 export interface IForumCard {
 	className?: string;
@@ -19,8 +20,9 @@ export function ForumCard({ className, forum, currentUserId, clientTranslations 
 	const { userUuid } = useUser();
 
 	const followedByUser = forum.User_Forum?.some((u) => u.user_id === userUuid && u.forum_id === forum.id);
-	const activeOffersCount = forum.Offer?.length || 0;
 	const petitionsCount = forum.Petition?.length || 0;
+	const activeOffersCount = forum.Offer?.length || 0;
+	const [followersCount, setFollowersCount] = useState(forum.followers || 0);
 
 	return (
 		<div
@@ -53,7 +55,7 @@ export function ForumCard({ className, forum, currentUserId, clientTranslations 
 						</div>
 					</div>
 					<div className="text-right flex flex-col items-end gap-0.5">
-						<span className="block font-bold">{forum.followers}</span>
+						<span className="block font-bold">{followersCount}</span>
 						<span className="text-xs text-lightgrey">seguidores</span>
 					</div>
 				</div>
@@ -70,6 +72,7 @@ export function ForumCard({ className, forum, currentUserId, clientTranslations 
 						<span className="font-medium">{activeOffersCount} ofertas activas</span>
 					</div>
 				</div>
+				
 				<FollowButton
 					entityId={forum.id}
 					entityType="Forum"
@@ -77,7 +80,8 @@ export function ForumCard({ className, forum, currentUserId, clientTranslations 
 					followedByUser={followedByUser || false}
 					variant="switch"
 					clientTranslations={clientTranslations}
-
+					followersCount={followersCount}
+					onFollowChange={setFollowersCount}
 				/>
 			</div>
 		</div>
