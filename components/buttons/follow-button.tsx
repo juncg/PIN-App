@@ -30,7 +30,6 @@ export function FollowButton({
 	const [followed, setFollowed] = useState<boolean>(followedByUser);
 	const [followers, setFollowers] = useState<number>(followersCount || 0);
 	const [showLoginDialog, setShowLoginDialog] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		setFollowed(followedByUser);
@@ -55,7 +54,6 @@ export function FollowButton({
 
 		setFollowed(newFollowedState);
 		setFollowers(newFollowersCount);
-		setIsLoading(true);
 
 		try {
 			const result = await handleFollowAction(entityId, entityType);
@@ -81,8 +79,6 @@ export function FollowButton({
 			setFollowed(previousFollowed);
 			setFollowers(previousFollowers);
 			console.error("Error al actualizar follow:", error);
-		} finally {
-			setIsLoading(false);
 		}
 	};
 
@@ -95,10 +91,9 @@ export function FollowButton({
 					innerTextChecked={clientTranslations.followed}
 					innerTextUnchecked={clientTranslations.follow}
 					className="w-full"
-					disabled={isLoading}
 				/>
 			) : (
-				<Button onClick={handleFollow} className="w-full" disabled={isLoading}>
+				<Button onClick={handleFollow} className="w-full">
 					<span>{followed ? "Dejar de seguir" : "Seguir"}</span>
 				</Button>
 			)}
