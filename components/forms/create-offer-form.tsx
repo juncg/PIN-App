@@ -126,14 +126,6 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 		}
 
 		try {
-			if (selectedProductsList.length > 0 && data.reduced_price) {
-				if (data.reduced_price >= totalMsrp) {
-					toast.error("El precio reducido debe ser menor que el precio total de los productos");
-					setIsSubmitting(false);
-					return;
-				}
-			}
-
 			const newOffer: Omit<Tables<"Offer">, "id"> = {
 				title: data.title,
 				text: data.text,
