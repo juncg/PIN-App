@@ -462,16 +462,16 @@ const MultipleSelector = ({
 							<div
 								key={option.value}
 								className={cn(
-									"animate-fadeIn bg-black text-white hover:bg-black relative inline-flex h-7 cursor-default items-center rounded-md border pr-7 pl-2 text-xs font-medium transition-all disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-fixed:pr-2",
+									"animate-fadeIn bg-darkmode text-white hover:bg-hover relative inline-flex h-7 cursor-default items-center rounded-md border-2 border-white pr-7 pl-2 text-xs font-medium transition-all disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-fixed:pr-2",
 									badgeClassName
 								)}
 								data-fixed={option.fixed}
 								data-disabled={disabled || undefined}
 							>
-								{option.label}
-								<button
-									className="text-lightgrey/80 hover:text-white focus-visible:border-lightgrey focus-visible:ring-lightgrey/50 absolute -inset-y-px -right-px flex size-7 items-center justify-center rounded-r-md border border-transparent p-0 outline-hidden transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
-									onKeyDown={(e) => {
+							{option.label}
+							<button
+								className="text-lightgrey/80 hover:text-white focus-visible:border-lightgrey focus-visible:ring-lightgrey/50 absolute -inset-y-px -right-px flex size-7 items-center justify-center rounded-r-md border border-transparent p-0 outline-hidden transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
+								onKeyDown={(e) => {
 										if (e.key === "Enter") {
 											handleUnselect(option);
 										}
@@ -556,7 +556,7 @@ const MultipleSelector = ({
 				>
 					{open && (
 						<CommandList
-							className="bg-black text-white shadow-lg outline-hidden"
+							className="bg-darkmode text-white shadow-lg outline-hidden"
 							onMouseLeave={() => {
 								setOnScrollbar(false);
 							}}
