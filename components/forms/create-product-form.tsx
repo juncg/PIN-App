@@ -143,14 +143,13 @@ export default function CreateProductForm({ businesses, categories }: CreateProd
 			<APIErrorHandler error={apiError} />
 
 			<form onSubmit={handleSubmit(handleProductCreation)} className="space-y-6">
-				<FormField label="Nombre del producto" errorMessage={errors.name?.message || ""} htmlFor="name" required>
-					<Input
-						id="name"
-						type="text"
-						variant="squared"
-						{...register("name")}
-						disabled={isSubmitting}
-					/>
+				<FormField
+					label="Nombre del producto"
+					errorMessage={errors.name?.message || ""}
+					htmlFor="name"
+					required
+				>
+					<Input id="name" type="text" variant="squared" {...register("name")} disabled={isSubmitting} />
 				</FormField>
 
 				<FormField
@@ -163,12 +162,7 @@ export default function CreateProductForm({ businesses, categories }: CreateProd
 				</FormField>
 
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-					<FormField
-						label="Precio (MSRP)"
-						errorMessage={errors.msrp?.message || ""}
-						htmlFor="msrp"
-						required
-					>
+					<FormField label="Precio (MSRP)" errorMessage={errors.msrp?.message || ""} htmlFor="msrp" required>
 						<Input
 							id="msrp"
 							type="number"
@@ -223,7 +217,7 @@ export default function CreateProductForm({ businesses, categories }: CreateProd
 					</Select>
 				</FormField>
 
-				<FormField label="Imágenes" htmlFor="images">
+				<FormField htmlFor="images">
 					<FileDropzone value={images} onChange={setImages} maxFiles={10} disabled={isSubmitting} />
 				</FormField>
 

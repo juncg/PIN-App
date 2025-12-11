@@ -18,25 +18,58 @@ export async function FeedServices() {
 	});
 	const followedUserIds = followedUsers?.map((u) => u.following_id) || [];
 
-	if (followedUserIds.length === 0) {
+	const { data: followedForums } = await GetFromDatabase<{ forum_id: number }>({
+		tableName: "User_Forum",
+		select: "forum_id",
+		filters: [{ method: "eq", column: "user_id", value: userUuid }],
+	});
+	const followedForumIds = followedForums?.map((f) => f.forum_id) || [];
+
+	if (followedUserIds.length === 0 && followedForumIds.length === 0) {
 		return { posts: [] };
 	}
 
-	const { data: offers } = await GetFromDatabase<IOffer>({
-		tableName: "Offer",
-		select: "*, User!Offer_creator_id_fkey(id, profile_picture, username), User_Offer!left(liked, subscribed, user_id), Offer_Product(Product(*))",
-		filters: [{ method: "in", column: "creator_id", value: followedUserIds }],
-	});
+	const offerMap = new Map<number, IOffer>();
+	if (followedUserIds.length > 0) {
+		const { data: offersFromUsers } = await GetFromDatabase<IOffer>({
+			tableName: "Offer",
+			select: "*, User!Offer_creator_id_fkey(id, profile_picture, username), User_Offer!left(liked, subscribed, user_id), Offer_Product(Product(*))",
+			filters: [{ method: "in", column: "creator_id", value: followedUserIds }],
+		});
+		(offersFromUsers || []).forEach(o => offerMap.set(o.id, o));
+	}
+	if (followedForumIds.length > 0) {
+		const { data: offersFromForums } = await GetFromDatabase<IOffer>({
+			tableName: "Offer",
+			select: "*, User!Offer_creator_id_fkey(id, profile_picture, username), User_Offer!left(liked, subscribed, user_id), Offer_Product(Product(*))",
+			filters: [{ method: "in", column: "forum_id", value: followedForumIds }],
+		});
+		(offersFromForums || []).forEach(o => offerMap.set(o.id, o));
+	}
+	const uniqueOffers = Array.from(offerMap.values());
 
-	const { data: petitions } = await GetFromDatabase<IPetition>({
-		tableName: "Petition",
-		select: "*, User!Petition_creator_id_fkey(id, profile_picture, username), User_Petition!left(liked, subscribed, user_id), Petition_Product(Product(*))",
-		filters: [{ method: "in", column: "creator_id", value: followedUserIds }],
-	});
+	const petitionMap = new Map<number, IPetition>();
+	if (followedUserIds.length > 0) {
+		const { data: petitionsFromUsers } = await GetFromDatabase<IPetition>({
+			tableName: "Petition",
+			select: "*, User!Petition_creator_id_fkey(id, profile_picture, username), User_Petition!left(liked, subscribed, user_id), Petition_Product(Product(*))",
+			filters: [{ method: "in", column: "creator_id", value: followedUserIds }],
+		});
+		(petitionsFromUsers || []).forEach(p => petitionMap.set(p.id, p));
+	}
+	if (followedForumIds.length > 0) {
+		const { data: petitionsFromForums } = await GetFromDatabase<IPetition>({
+			tableName: "Petition",
+			select: "*, User!Petition_creator_id_fkey(id, profile_picture, username), User_Petition!left(liked, subscribed, user_id), Petition_Product(Product(*))",
+			filters: [{ method: "in", column: "forum_id", value: followedForumIds }],
+		});
+		(petitionsFromForums || []).forEach(p => petitionMap.set(p.id, p));
+	}
+	const uniquePetitions = Array.from(petitionMap.values());
 
 	const allPosts = [
-		...(offers || []).map((o) => ({ ...o, type: "Offer" as const })),
-		...(petitions || []).map((p) => ({ ...p, type: "Petition" as const })),
+		...uniqueOffers.map((o) => ({ ...o, type: "Offer" as const })),
+		...uniquePetitions.map((p) => ({ ...p, type: "Petition" as const })),
 	];
 
 	const offerIds = allPosts.filter((p) => p.type === "Offer").map((p) => p.id);
