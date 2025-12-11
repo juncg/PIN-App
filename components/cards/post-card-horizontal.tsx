@@ -8,8 +8,10 @@ import { Hand, Tag, Verified } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { LikeButton } from "../buttons/like-button";
 import { SubscribeButton } from "../buttons/subscribe-button";
-import { ClockIcon, PeopleAltIcon } from "../icons/icons";
+import { ClockIcon, PeopleAltIcon, Shining2LineIcon } from "../icons/icons";
+import { Button } from "../ui-custom/button";
 import { Progress } from "../ui-custom/progress";
 import { B1, B5, H3, S1 } from "../ui-custom/typography";
 
@@ -19,10 +21,20 @@ interface IPostCardHorizontalProps {
 	subscribedByUser?: boolean;
 	onSubscribeChangeForParent?: (subscribed: boolean) => void;
 	userUuidProp?: string | null;
+	likedByUser?: boolean;
+	onLikeChangeForParent?: (liked: boolean) => void;
 }
 
 export function PostCardHorizontal(props: IPostCardHorizontalProps) {
-	const { className, post, subscribedByUser: subscribedByUserProp, onSubscribeChangeForParent, userUuidProp } = props;
+	const {
+		className,
+		post,
+		subscribedByUser: subscribedByUserProp,
+		onSubscribeChangeForParent,
+		userUuidProp,
+		likedByUser: likedByUserProp,
+		onLikeChangeForParent,
+	} = props;
 	const { userUuid: userUuidFromHook } = useUser();
 	const userUuid = userUuidProp || userUuidFromHook;
 
@@ -42,36 +54,43 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 			? !!(post as IOffer).User_Offer?.some((u) => u.user_id === userUuid && u.subscribed)
 			: !!(post as IPetition).User_Petition?.some((u) => u.user_id === userUuid && u.subscribed);
 
+	const derivedLikedByUser =
+		post.type === "Offer"
+			? !!(post as IOffer).User_Offer?.some((u) => u.user_id === userUuid && u.liked)
+			: !!(post as IPetition).User_Petition?.some((u) => u.user_id === userUuid && u.liked);
+
 	const subscribedByUser = subscribedByUserProp !== undefined ? subscribedByUserProp : derivedSubscribedByUser;
+	const likedByUser = likedByUserProp !== undefined ? likedByUserProp : derivedLikedByUser;
 	const hasFinished = post.type === "Offer" ? new Date(post.target_completition_date) <= new Date() : false;
+
+	const hasValidImages = (post.images ?? []).filter((img) => img && img.trim() !== "")?.length > 0;
 
 	return (
 		<article className={cn(className, "flex border-[2px] rounded-2xl w-full")}>
-			<figure className="relative w-60 h-60 rounded-xl border-[3px] border-darkmode overflow-hidden shrink-0">
-				<Image
-					src={post?.images?.[0] || "/placeholder.png"}
-					alt={"Post picture"}
-					fill
-					className="object-cover"
-					unoptimized
-				/>
-
-				<div className="absolute bottom-3 left-3 rounded-full p-0">
-					{post.type === "Offer" ? (
-						<Tag className="h-5 w-5 text-primary" />
-					) : (
-						<Hand className="h-5 w-5 text-primary" />
-					)}
-				</div>
-			</figure>
+			{hasValidImages && (
+				<figure className="relative w-60 h-60 rounded-xl border-[3px] border-darkmode overflow-hidden shrink-0">
+					<Image
+						src={post?.images?.[0] || "/placeholder.png"}
+						alt={"Post picture"}
+						fill
+						className="object-cover"
+						unoptimized
+					/>
+				</figure>
+			)}
 
 			<div className="flex flex-col justify-between p-6 w-full min-w-0">
 				<div className="flex w-full justify-between gap-8">
 					<div className="flex flex-col min-w-0">
 						<Link
 							href={post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}
-							className="hover:underline"
+							className="hover:underline flex items-center gap-2"
 						>
+							{post.type === "Offer" ? (
+								<Tag className="h-5 w-5 text-primary shrink-0" />
+							) : (
+								<Hand className="h-5 w-5 text-primary shrink-0" />
+							)}
 							<H3 className="line-clamp-1">{post.title}.</H3>
 						</Link>
 
@@ -139,17 +158,37 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 							</span>
 						</div>
 
-						<SubscribeButton
-							post_id={post.id}
-							typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
-							subscribers={currentProgress}
-							subscribedByUser={subscribedByUser}
-							user_id={userUuid}
-							onSubscriptionChange={setCurrentProgress}
-							variant="switch"
-							onSubscribeChangeForParent={onSubscribeChangeForParent}
-							offerHasFinished={hasFinished}
-						/>
+						<div className="flex items-center gap-2">
+							<LikeButton
+								likes={post.likes}
+								likedByUser={likedByUser}
+								post_id={post.id}
+								typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
+								user_id={userUuid}
+								variant="icon"
+								onLikeChangeForParent={onLikeChangeForParent}
+								postCreatorId={post.creator_id as string}
+							/>
+
+							<Button
+								className="h-8 w-8 rounded-full p-0 bg-white text-darkmode transition hover:text-destructive"
+								size="icon"
+							>
+								<Shining2LineIcon className="text-black !w-5 !h-5" />
+							</Button>
+
+							<SubscribeButton
+								post_id={post.id}
+								typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
+								subscribers={currentProgress}
+								subscribedByUser={subscribedByUser}
+								user_id={userUuid}
+								onSubscriptionChange={setCurrentProgress}
+								variant="switch"
+								onSubscribeChangeForParent={onSubscribeChangeForParent}
+								offerHasFinished={hasFinished}
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
