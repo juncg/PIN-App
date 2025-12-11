@@ -8,6 +8,7 @@ import { getUserUuid } from "@/lib/services/user";
 import { ISearchParams } from "@/types";
 import { Verified } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { ForumDetailsService, fetchForumPosts, loadMoreOffers, loadMorePetitions } from "./page-services";
 
 interface ForumPageProps {
@@ -116,7 +117,12 @@ export default async function ForumPage({ params, searchParams }: ForumPageProps
 											</div>
 											{forumData.Business && (
 												<div className="flex items-center gap-1 text-lightgrey">
-													<B1 className="font-medium">@{forumData.Business.name}</B1>
+													<Link
+														href={`/business/${forumData.Business.id}`}
+														className="hover:underline"
+													>
+														<B1 className="font-medium">@{forumData.Business.name}</B1>
+													</Link>
 													{(forumData.Business.verification === "Official" ||
 														forumData.Business.verification === "Paid") && (
 														<Verified className="w-4 h-4 text-green-500" />

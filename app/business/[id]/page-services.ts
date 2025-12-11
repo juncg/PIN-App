@@ -19,7 +19,7 @@ export async function BusinessProfileServices(businessId: number, searchParams: 
 
 	const { data: businessData } = await GetFromDatabase<IBusiness>({
 		tableName: "Business",
-		select: currentUserUuid ? "*, User_Business!inner(user_id)" : "*",
+		select: currentUserUuid ? "*, User_Business!left(user_id)" : "*",
 		filters: [{ method: "eq" as const, column: "id", value: businessId }],
 	});
 
