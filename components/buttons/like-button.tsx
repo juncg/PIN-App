@@ -106,10 +106,10 @@ export function LikeButton(props: ILikeButton) {
 
 	return (
 		<>
-			<Button variant="outline" className={cn("mt-4 gap-2")} onClick={handleLike}>
-				<AnimatedLikeButton liked={liked} onClick={() => {}} className="h-5 w-5 p-0 bg-transparent" />
-				{numberOfLikes || 0}
-			</Button>
+			<div className="flex items-center gap-1.5 group cursor-pointer hover:text-destructive transition-colors" onClick={handleLike}>
+				<AnimatedLikeButton liked={liked} onClick={() => {}} className="h-4 w-4 p-0 bg-transparent" />
+				<span>{numberOfLikes || 0}</span>
+			</div>
 
 			<NotLoggedInDialog
 				open={showLoginDialog}

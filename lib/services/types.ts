@@ -8,6 +8,7 @@ export type IOffer = Tables<"Offer"> & {
 	User?: Tables<"User">;
 	products?: { Product: IProduct }[];
 	stars?: number;
+	comment_count?: number;
 };
 
 export type IPetition = Tables<"Petition"> & {
@@ -17,6 +18,7 @@ export type IPetition = Tables<"Petition"> & {
 	User_Petition?: Tables<"User_Petition">[];
 	User: Tables<"User">;
 	products?: { Product: IProduct }[];
+	comment_count?: number;
 };
 
 export type IBusiness = Tables<"Business"> & {
@@ -66,6 +68,7 @@ export type IReview = Tables<"Review"> & {
 	user?: Tables<"User">;
 	User_Review?: Tables<"User_Review">[];
 	Review_Product?: Tables<"Review_Product">[];
+	comment_count?: number;
 };
 
 export type ICategory = Tables<"Category">;
