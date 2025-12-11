@@ -1,11 +1,11 @@
 "use client";
 
+import { ITag } from "@/lib/services/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { Button } from "../ui-custom/button";
 import { Label } from "../ui-custom/label";
 import { Slider } from "../ui-custom/slider";
-import { ITag } from "@/lib/services/types";
 
 interface PostsFiltersProps {
 	popularTags: ITag[];

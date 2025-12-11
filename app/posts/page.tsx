@@ -3,6 +3,7 @@ import { PostCardHorizontal } from "@/components/cards/post-card-horizontal";
 import { PostTypeFilter } from "@/components/filters/post-type-filter";
 import PostsSidebar from "@/components/filters/posts-filters";
 import { OrderSelect } from "@/components/select/order-select";
+import { ScrollArea, ScrollBar } from "@/components/ui-custom/scroll-area";
 import { ISearchParams } from "@/types";
 import { PostsServices } from "./page-services";
 
@@ -12,12 +13,13 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 
 	return (
 		<div className="flex min-h-screen flex-col">
-			<div className="flex-1 px-4 py-6">
+			<div className="flex-1 px-4 pb-6">
 				<div className="flex gap-8 mt-6">
-					<aside className="w-64 shrink-0">
-						<div className="fixed top-35.5 w-64 pr-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
+					<aside className="w-64 overflow-visible">
+						<ScrollArea className="h-[calc(100vh-200px)] w-64 pr-4 overflow-visible">
 							<PostsSidebar popularTags={popularTags} />
-						</div>
+							<ScrollBar />
+						</ScrollArea>
 					</aside>
 
 					<main className="flex-1 min-w-0">
