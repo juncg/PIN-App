@@ -18,4 +18,4 @@ export const PETITIONS_MAX_POSTS = 50;
 export const FORUMS_PAGE_SIZE = 5;
 export const FORUMS_MAX_POSTS = 50;
 
-export const POST_ON_FIRE_COMPLETION_PERCENTAGE = 10;
+export const POST_ON_FIRE_COMPLETION_PERCENTAGE = 20;
