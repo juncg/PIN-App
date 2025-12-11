@@ -18,26 +18,27 @@ interface InfinitePostGridProps {
 	maxPosts?: number;
 	maxColumns?: number;
 	userUuid?: string | null;
+	initialPosts?: TPost[];
 }
 
 function validateMaxPosts(maxPosts: number, pageSize: number): number {
 	if (maxPosts === Infinity) return Infinity;
-	
+
 	// check if maxPosts is smaller than pageSize
 	if (maxPosts < pageSize) {
-		console.error(`Logic error: maxPosts (${maxPosts}) is smaller than pageSize (${pageSize}). Setting maxPosts = pageSize.`);
+		console.error(
+			`Logic error: maxPosts (${maxPosts}) is smaller than pageSize (${pageSize}). Setting maxPosts = pageSize.`
+		);
 		return pageSize;
 	}
-	
+
 	// round up to nearest multiple of pageSize
 	const remainder = maxPosts % pageSize;
 	if (remainder === 0) {
 		return maxPosts;
 	} else {
 		const adjusted = maxPosts + (pageSize - remainder);
-		console.error(
-			`maxPosts (${maxPosts}) adjusted to ${adjusted} to be divisible by pageSize (${pageSize})`
-		);
+		console.error(`maxPosts (${maxPosts}) adjusted to ${adjusted} to be divisible by pageSize (${pageSize})`);
 		return adjusted;
 	}
 }
@@ -47,25 +48,28 @@ export function InfinitePostGrid({
 	loadMoreAction,
 	searchParams,
 	pageSize = 5,
-	maxPosts = 100000,	// about 200mb at ~2kb a post
+	maxPosts = 100000, // about 200mb at ~2kb a post
 	maxColumns = 3,
 	userUuid,
+	initialPosts,
 }: InfinitePostGridProps) {
-	if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log('🔵 InfinitePostGrid MOUNTED/RENDERED');
+	if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log("🔵 InfinitePostGrid MOUNTED/RENDERED");
 
 	// only validate when maxPosts or pageSize actually change
 	const validatedMaxPosts = useMemo(() => {
 		return validateMaxPosts(maxPosts, pageSize);
 	}, [maxPosts, pageSize]);
-	
-	const [posts, setPosts] = useState<TPost[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
-	const [hasMore, setHasMore] = useState(true);
-	const [page, setPage] = useState(1);
-	
+
+	const [posts, setPosts] = useState<TPost[]>(initialPosts || []);
+	const [isLoading, setIsLoading] = useState(!initialPosts || initialPosts.length === 0);
+	const [hasMore, setHasMore] = useState(
+		initialPosts ? initialPosts.length >= pageSize && initialPosts.length < validatedMaxPosts : true
+	);
+	const [page, setPage] = useState(initialPosts && initialPosts.length > 0 ? 2 : 1);
+
 	// track the starting page of the current batch
 	const [batchStartPage, setBatchStartPage] = useState(0);
-	
+
 	const [likeStates, setLikeStates] = useState<Record<number, boolean>>({});
 	const [subscribeStates, setSubscribeStates] = useState<Record<number, boolean>>({});
 
@@ -74,7 +78,7 @@ export function InfinitePostGrid({
 
 	const gridRef = useRef<HTMLDivElement>(null);
 	const measurementRef = useRef<HTMLDivElement>(null);
-	
+
 	// track if there are batches ahead (for showing forward button)
 	const [hasNextBatch, setHasNextBatch] = useState(false);
 
@@ -83,29 +87,43 @@ export function InfinitePostGrid({
 
 	// load initial posts on mount and when search params change
 	useEffect(() => {
+		// If we have initialPosts and this is the first render, skip loading
+		if (initialPosts && initialPosts.length > 0 && page === 2) {
+			// We assumed page 2 if initialPosts provided, so we don't load page 0 again.
+			// But searchParams might change? If searchParams change, we should reload.
+			// But typically initialPosts come from server prop which is tied to params?
+			// Let's assume if initialPosts is present, we don't fetch on mount.
+			// But we need to handle searchParams changes if any.
+			// For now, simple hydration support.
+			if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true")
+				console.log("🟢 Initial posts provided, skipping mount fetch");
+			return;
+		}
+
 		if (isLoadingRef.current) {
 			return;
 		}
 		isLoadingRef.current = true;
 
-		if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log('🟢 useEffect FIRED for initial load');
+		// ... (original loading logic)
+		if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log("🟢 useEffect FIRED for initial load");
 
 		const loadInitialPosts = async () => {
 			setIsLoading(true);
 			setPosts([]);
 			setPage(1);
-			if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log('setting page to', page);
+			if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log("setting page to", page);
 			setBatchStartPage(0);
 			setHasNextBatch(false);
 
 			try {
-				if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log('🟡 loadInitialPosts CALLED');
+				if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log("🟡 loadInitialPosts CALLED");
 				const initialPosts = await loadMoreAction(0, pageSize, searchParams?.postName || "");
-				if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log('🟡 loadInitialPosts RETURNED', initialPosts.length, 'posts');
-				
+				if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true")
+					console.log("🟡 loadInitialPosts RETURNED", initialPosts.length, "posts");
+
 				setPosts(initialPosts);
 				setHasMore(initialPosts.length >= pageSize && initialPosts.length < validatedMaxPosts);
-
 			} catch (error) {
 				console.error("Error loading initial posts:", error);
 				setHasMore(false);
@@ -150,9 +168,10 @@ export function InfinitePostGrid({
 
 			let newPosts = await loadMoreAction(page, pageSize, searchParams?.postName || "");
 			// filter out interacted posts
-			newPosts = newPosts.filter(post => {
+			newPosts = newPosts.filter((post) => {
 				if (interactedPostIds.current.has(post.id)) {
-					if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log("!!!!!!!!!!!!! Filtered out post:", post);
+					if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true")
+						console.log("!!!!!!!!!!!!! Filtered out post:", post);
 					removedPosts = true;
 					return false;
 				}
@@ -168,7 +187,7 @@ export function InfinitePostGrid({
 			}
 
 			let shouldContinueLoading = true;
-			
+
 			setPosts((prev) => {
 				const totalAfterAdd = prev.length + newPosts.length;
 
@@ -187,10 +206,10 @@ export function InfinitePostGrid({
 			if (newPosts.length >= pageSize || removedPosts) {
 				setHasNextBatch(true);
 			}
-			
+
 			setHasMore(shouldContinueLoading);
 			setPage((prev) => prev + 1);
-			if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log('setting page to', page);
+			if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log("setting page to", page);
 		} catch (error) {
 			console.error("Error loading more posts:", error);
 			setHasMore(false);
@@ -260,7 +279,8 @@ export function InfinitePostGrid({
 			// only update if range actually changed
 			setVisibleRange((prev) => {
 				if (prev.start !== newStart || prev.end !== newEnd) {
-					if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log(`🔄 Virtualization: ${newEnd - newStart} posts rendered`);
+					if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true")
+						console.log(`🔄 Virtualization: ${newEnd - newStart} posts rendered`);
 					return { start: newStart, end: newEnd };
 				}
 				return prev;
@@ -295,11 +315,11 @@ export function InfinitePostGrid({
 
 		// the next batch starts from the current page (where we left off)
 		const nextBatchStartPage = page;
-		
+
 		setBatchStartPage(nextBatchStartPage);
 		setPosts([]);
 		setPage(nextBatchStartPage);
-		if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log('setting page to', page);
+		if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log("setting page to", page);
 		setHasMore(true);
 		setIsLoading(true);
 		setHasNextBatch(false);
@@ -312,11 +332,11 @@ export function InfinitePostGrid({
 		try {
 			// just load the first page of the new batch
 			const newPosts = await loadMoreAction(nextBatchStartPage, pageSize, searchParams?.postName || "");
-			
+
 			if (newPosts.length > 0) {
 				setPosts(newPosts);
 				setPage(nextBatchStartPage + 1);
-				if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log('setting page to', page);
+				if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log("setting page to", page);
 				// can load more if we got a full page and haven't hit maxPosts yet
 				setHasMore(newPosts.length >= pageSize && newPosts.length < validatedMaxPosts);
 			} else {
@@ -340,14 +360,14 @@ export function InfinitePostGrid({
 
 		// calculate pages needed for a full batch
 		const pagesPerFullBatch = Math.ceil(validatedMaxPosts / pageSize);
-		
+
 		// go back by that many pages
 		const prevBatchStartPage = Math.max(0, batchStartPage - pagesPerFullBatch);
 
 		setBatchStartPage(prevBatchStartPage);
 		setPosts([]);
 		setPage(prevBatchStartPage);
-		if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log('setting page to', page);
+		if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log("setting page to", page);
 		setHasMore(true);
 		setIsLoading(true);
 		setHasNextBatch(true); // we know there's a next batch (the one we came from)
@@ -360,11 +380,11 @@ export function InfinitePostGrid({
 		try {
 			// just load the first page of the previous batch
 			const newPosts = await loadMoreAction(prevBatchStartPage, pageSize, searchParams?.postName || "");
-			
+
 			if (newPosts.length > 0) {
 				setPosts(newPosts);
 				setPage(prevBatchStartPage + 1);
-				if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log('setting page to', page);
+				if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log("setting page to", page);
 				// can load more if we got a full page and haven't hit maxPosts yet
 				setHasMore(newPosts.length >= pageSize && newPosts.length < validatedMaxPosts);
 			} else {
@@ -438,7 +458,8 @@ export function InfinitePostGrid({
 								onLikeChangeForParent={(liked) => {
 									// mark post as interacted with
 									interactedPostIds.current.add(post.id);
-									if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log("post ids interacted with", interactedPostIds.current);
+									if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true")
+										console.log("post ids interacted with", interactedPostIds.current);
 									setLikeStates((prev) => ({
 										...prev,
 										[post.id]: liked,
@@ -448,7 +469,8 @@ export function InfinitePostGrid({
 								onSubscribeChangeForParent={(subscribed) => {
 									// mark post as interacted with
 									interactedPostIds.current.add(post.id);
-									if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true") console.log("post ids interacted with",interactedPostIds.current);
+									if (process.env.NEXT_PUBLIC_DEBUG_MODE === "true")
+										console.log("post ids interacted with", interactedPostIds.current);
 									setSubscribeStates((prev) => ({
 										...prev,
 										[post.id]: subscribed,
@@ -477,9 +499,7 @@ export function InfinitePostGrid({
 			{/* Message when limit has been reached */}
 			{!hasMore && posts.length > 0 && posts.length >= validatedMaxPosts && validatedMaxPosts !== Infinity && (
 				<div className="text-center py-8 space-y-4">
-					<B1 className="text-lightgrey">
-						Has cargado {posts.length} posts. ¿Quieres ver más?
-					</B1>
+					<B1 className="text-lightgrey">Has cargado {posts.length} posts. ¿Quieres ver más?</B1>
 					<div className="flex justify-center gap-4">
 						{batchStartPage > 0 && (
 							<button
@@ -503,9 +523,7 @@ export function InfinitePostGrid({
 			{!hasMore && posts.length > 0 && posts.length < validatedMaxPosts && (
 				<div className="text-center py-8 space-y-4">
 					<B1 className="text-lightgrey">
-						{posts.length === 1 
-							? "Solo hay 1 post para mostrar" 
-							: `Mostrando ${posts.length} posts`}
+						{posts.length === 1 ? "Solo hay 1 post para mostrar" : `Mostrando ${posts.length} posts`}
 					</B1>
 					<div className="flex justify-center gap-4">
 						{batchStartPage > 0 && (

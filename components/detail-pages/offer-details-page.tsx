@@ -26,6 +26,7 @@ import { Card, CardContent } from "../ui-custom/card";
 import { ShareComponent } from "../share-post/share";
 import { ProductCard } from "../cards/product-card";
 import { OfferWarning } from "./offer-warning";
+import { VerifiedIcon } from "@/components/icons/icons";
 
 interface OfferDetailsProps {
 	offer: IOffer;
@@ -69,23 +70,34 @@ export function OfferDetails({
         ? offer.images.filter((img) => img && img.trim() !== "")
         : ["/placeholder.png"];
 
-    const slidingButtonsContent: SlidingButtonProps[] = [
-        {
-            content: <div className="p-6"></div>,
-            displayName: "Descripción",
-            displayIcon: null,
-        },
-        {
-            content: <div className="p-6"></div>,
-            displayName: "Detalles",
-            displayIcon: null,
-        },
-        {
-            content: <div className="p-6"></div>,
-            displayName: "Especificaciones",
-            displayIcon: null,
-        },
-    ];
+    const loremIpsumDesc =
+		"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero totam ratione accusamus sunt iusto ad animi, quia incidunt cum, explicabo alias molestias itaque, nesciunt beatae dolorem autem harum sapiente laboriosam.";
+	const slidingButtonsContent: SlidingButtonProps[] = [
+		{
+			content: <div>{loremIpsumDesc}</div>,
+			displayName: "Descripción",
+			displayIcon: null,
+		},
+		{
+			content: <div>{loremIpsumDesc}</div>,
+			displayName: "Detalles",
+			displayIcon: null,
+		},
+		{
+			content: <div>{loremIpsumDesc}</div>,
+			displayName: "Especificaciones",
+			displayIcon: null,
+		},
+	];
+
+    let businessLink = "";
+    if (offer.products && offer.products.length > 0) {
+        const firstProduct = offer.products[0];
+        if (firstProduct?.Product?.businesses && firstProduct.Product.businesses.length > 0) {
+            const businessId = firstProduct.Product.businesses[0].business.id;
+            businessLink = `/business/${businessId}`;
+        }
+    }
 
 	return (
 		<div className="container mx-auto px-4 py-8">
@@ -114,8 +126,25 @@ export function OfferDetails({
 						/>
 					</div>
 				</div>{" "}
-				<div className="space-y-6">
+				
+				<div className="space-y-3">
 					<h1 className="text-4xl font-black mb-4">{offer.title}</h1>
+
+					{offer.products && offer.products.length > 0 && offer.products[0]?.Product?.businesses && (
+                        <div className="flex items-center gap-1.5">
+                            <Link
+                                href={businessLink || "#"}
+                                className="hover:underline"
+                            >
+                                <span className="text-lightgrey">
+                                    {offer.products[0].Product.businesses[0]?.business?.name?.toLocaleUpperCase() || "Empresa sin nombre"}
+                                </span>
+                            </Link>
+                            {offer.products[0].Product.businesses[0]?.business?.verification !== "Unverified" && (
+                                <VerifiedIcon className="h-4 w-4 text-chernobyl" />
+                            )}
+                        </div>
+                    )}
 
 					{/* Precio con descuento */}
 					<div className="space-y-1">

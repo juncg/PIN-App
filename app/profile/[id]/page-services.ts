@@ -1,9 +1,14 @@
+import { DEFAULT_LOCALE } from "@/lib/constants";
 import { GetFromDatabase, GetServiceClient } from "@/lib/services/general";
 import { IOffer, IPetition, IUser } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
+import { ISearchParams } from "@/types";
+import { getTranslations } from "next-intl/server";
 
-export async function ProfileServices(uuid: number) {
+export async function ProfileServices(uuid: number, searchParams: Promise<ISearchParams>) {
 	const currentUserUuid = await getUserUuid();
+	const params = await searchParams;
+	const translator = await getTranslations({ locale: params.locale || DEFAULT_LOCALE, namespace: "profile" });
 	var followedByUser = false;
 
 	const user = uuid
@@ -146,6 +151,11 @@ export async function ProfileServices(uuid: number) {
 	// Get total liked posts count
 	const likedPostsCount = await getLikedPostsCount(uuid);
 
+	const clientTranslations = {
+		followed: translator("followed"),
+		follow: translator("follow"),
+	};
+
 	return {
 		userData,
 		followingForums,
@@ -160,6 +170,7 @@ export async function ProfileServices(uuid: number) {
 		subscribedPetitionsCount,
 		followedByUser,
 		likedPostsCount,
+		clientTranslations,
 	};
 }
 

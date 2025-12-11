@@ -60,7 +60,12 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 	];
 
 	if (!product) {
-		return <div>Loading...</div>;
+		return (
+			<div className="flex flex-col items-center justify-center h-full gap-4">
+				<H1>Producto no disponible</H1>
+				<B1 className="text-lightgrey">El producto que buscas no existe o ha sido eliminado.</B1>
+			</div>
+		);
 	}
 
 	return (
@@ -75,7 +80,7 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 						<Link
 							href={
 								product.businesses?.[0]?.business?.id
-									? `/businesses/${product.businesses[0].business.id}`
+									? `/business/${product.businesses[0].business.id}`
 									: "#"
 							}
 							className="hover:underline"

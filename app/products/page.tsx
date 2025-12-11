@@ -1,3 +1,4 @@
+import { CreateFab } from "@/components/buttons/create-floating-action-button";
 import { ProductCard } from "@/components/cards/product-card";
 import ProductsFilters from "@/components/filters/products-filters";
 import { OrderSelect } from "@/components/select/order-select";
@@ -7,7 +8,7 @@ import { ISearchParams } from "@/types";
 import { ProductServices } from "./page-services";
 
 export default async function ProductsPage({ searchParams }: { searchParams: Promise<ISearchParams> }) {
-	const { translator, products, categories, clientTranslations } = await ProductServices(searchParams);
+	const { translator, products, categories, clientTranslations, currentUserId, isBusinessUser } = await ProductServices(searchParams);
 	const params = await searchParams;
 
 	return (
@@ -52,6 +53,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
 					</main>
 				</div>
 			</div>
+			{currentUserId && <CreateFab isBusinessUser={isBusinessUser} enabledOptions={["product"]} />}
 		</div>
 	);
 }

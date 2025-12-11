@@ -5,18 +5,22 @@ import { getUserUuid } from "@/lib/services/user";
 import { getTranslations } from "next-intl/server";
 import { ISearchParams } from "../../types";
 
-async function fetchForumsByCategory(categoryId: number, limit: number = 4) {
+const BASE_FORUM_SELECT = `
+    *,
+    User_Forum!left(forum_id, user_id),
+    Business(*),
+    Offer!left(id, state),
+    Petition!left(id)
+`;
+
+async function fetchForumsByCategory(categoryId: number, limit: number = 7) {
 	const { data: forums } = await GetFromDatabase<IForum>({
 		tableName: "Forum",
-		select: `
-            *, 
-            User_Forum!left(forum_id, user_id), 
-            Business(*), 
-            Forum_Category!inner(category_id),
-            Offer!left(id, state),
-            Petition!left(id)
-        `,
-		filters: [{ method: "eq", column: "Forum_Category.category_id", value: categoryId }],
+		select: `${BASE_FORUM_SELECT}, Forum_Category!inner(category_id)`,
+		filters: [
+			{ method: "eq", column: "Forum_Category.category_id", value: categoryId },
+			{ method: "limit", value: limit },
+		],
 	});
 
 	return forums || [];
@@ -25,14 +29,11 @@ async function fetchForumsByCategory(categoryId: number, limit: number = 4) {
 async function fetchRecommendedForums(limit: number = 7) {
 	const { data: forums } = await GetFromDatabase<IForum>({
 		tableName: "Forum",
-		select: `
-            *, 
-            User_Forum!left(forum_id, user_id), 
-            Business(*),
-            Offer!left(id, state),
-            Petition!left(id)
-        `,
-		filters: [{ method: "order", column: "created_at", ascending: false }],
+		select: BASE_FORUM_SELECT,
+		filters: [
+			{ method: "order", column: "created_at", ascending: false },
+			{ method: "limit", value: limit },
+		],
 	});
 
 	return forums || [];
@@ -41,14 +42,11 @@ async function fetchRecommendedForums(limit: number = 7) {
 async function fetchPopularForums(limit: number = 6) {
 	const { data: forums } = await GetFromDatabase<IForum>({
 		tableName: "Forum",
-		select: `
-            *, 
-            User_Forum!left(forum_id, user_id), 
-            Business(*),
-            Offer!left(id, state),
-            Petition!left(id, state)
-        `,
-		filters: [{ method: "order", column: "followers", ascending: false }],
+		select: BASE_FORUM_SELECT,
+		filters: [
+			{ method: "order", column: "followers", ascending: false },
+			{ method: "limit", value: limit },
+		],
 	});
 
 	return forums || [];
@@ -57,6 +55,18 @@ async function fetchPopularForums(limit: number = 6) {
 function getRandomCategories(categories: ICategory[], count: number): ICategory[] {
 	const shuffled = [...categories].sort(() => 0.5 - Math.random());
 	return shuffled.slice(0, count);
+}
+
+async function getTrendingByCategory(
+	categories: ICategory[],
+	limit: number
+): Promise<{ category: ICategory; forums: IForum[] }[]> {
+	return Promise.all(
+		categories.map(async (category) => ({
+			category,
+			forums: await fetchForumsByCategory(category.id, limit),
+		}))
+	);
 }
 
 export async function ForumsServices(searchParams: Promise<ISearchParams>) {
@@ -88,31 +98,19 @@ export async function ForumsServices(searchParams: Promise<ISearchParams>) {
 
 	if (hasSelectedCategories) {
 		const selectedCategories = categories.filter((cat) => categoryIds.includes(cat.id));
-
-		trendingByCategory = await Promise.all(
-			selectedCategories.map(async (category) => ({
-				category,
-				forums: await fetchForumsByCategory(category.id, 4),
-			}))
-		);
+		trendingByCategory = await getTrendingByCategory(selectedCategories, 4);
 	} else {
 		recommendedForums = await fetchRecommendedForums(4);
 		popularForums = await fetchPopularForums(4);
 
 		const randomCategories = getRandomCategories(categories, 2);
-
-		trendingByCategory = await Promise.all(
-			randomCategories.map(async (category) => ({
-				category,
-				forums: await fetchForumsByCategory(category.id, 4),
-			}))
-		);
+		trendingByCategory = await getTrendingByCategory(randomCategories, 4);
 	}
 
 	const clientTranslations = {
 		followed: translator("followed"),
-		follow: translator("follow")
-	}
+		follow: translator("follow"),
+	};
 
 	return {
 		clientTranslations,
@@ -125,3 +123,4 @@ export async function ForumsServices(searchParams: Promise<ISearchParams>) {
 		trendingByCategory,
 	};
 }
+

@@ -1,13 +1,14 @@
 "use client";
 
 import { FollowButton } from "@/components/buttons/follow-button";
-import { SidebarForumCard } from "@/components/cards/sidebar-forum-card";
+import { ForumCardHorizontalSmall } from "@/components/cards/forum-card-horizontal-small";
 import { InfinitePostGrid } from "@/components/posts/infinite-post-grid";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
 import { Button } from "@/components/ui-custom/button";
 import { B1, H1, H2 } from "@/components/ui-custom/typography";
 import { Verified } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 interface ForumPageClientProps {
@@ -52,7 +53,7 @@ export function ForumPageClient({
     return (
         <div className="container mx-auto max-w-[1800px] px-4 md:px-6 py-6">
             <div className="grid grid-cols-1 lg:grid-cols-[20%_60%_20%] gap-6 lg:gap-8">
-				
+
                 {/* Left Sidebar */}
                 <div className="hidden lg:block space-y-6">
                     <div className="flex flex-wrap gap-2">
@@ -70,7 +71,7 @@ export function ForumPageClient({
                         <h3 className="font-semibold text-white">Recomendado para ti.</h3>
                         <div className="space-y-3">
                             {randomForums.map((forum) => (
-                                <SidebarForumCard key={forum.id} forum={forum} />
+                                <ForumCardHorizontalSmall key={forum.id} forum={forum} />
                             ))}
                         </div>
                     </div>
@@ -79,7 +80,7 @@ export function ForumPageClient({
                         <h3 className="font-semibold text-white">Lo más popular.</h3>
                         <div className="space-y-3">
                             {popularForums.map((forum) => (
-                                <SidebarForumCard key={forum.id} forum={forum} />
+                                <ForumCardHorizontalSmall key={forum.id} forum={forum} />
                             ))}
                         </div>
                     </div>
@@ -120,7 +121,12 @@ export function ForumPageClient({
                                             </div>
                                             {forumData.Business && (
                                                 <div className="flex items-center gap-1 text-lightgrey">
-                                                    <B1 className="font-medium">@{forumData.Business.name}</B1>
+                                                    <Link
+                                                        href={`/business/${forumData.Business.id}`}
+                                                        className="hover:underline"
+                                                    >
+                                                        <B1 className="font-medium">@{forumData.Business.name}</B1>
+                                                    </Link>
                                                     {(forumData.Business.verification === "Official" ||
                                                         forumData.Business.verification === "Paid") && (
                                                         <Verified className="w-4 h-4 text-green-500" />
@@ -227,7 +233,7 @@ export function ForumPageClient({
                         <h3 className="text-sm font-medium text-lightgrey">Más foros de la empresa.</h3>
                         <div className="space-y-3">
                             {businessForums.map((forum) => (
-                                <SidebarForumCard key={forum.id} forum={forum} />
+                                <ForumCardHorizontalSmall key={forum.id} forum={forum} />
                             ))}
                         </div>
                     </div>

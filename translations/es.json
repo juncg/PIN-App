@@ -37,5 +37,17 @@
 		"trending_in": "Tendencia en.",
 		"followed": "Siguiendo.",
 		"follow": "Seguir."
+	},
+	"profile": {
+		"edit_profile": "Editar perfil",
+		"followed": "Siguiendo.",
+		"follow": "Seguir.",
+		"followers": "Seguidores"
+	},
+	"business": {
+		"edit_profile": "Editar perfil",
+		"followed": "Siguiendo.",
+		"follow": "Seguir.",
+		"followers": "Seguidores"
 	}
 }

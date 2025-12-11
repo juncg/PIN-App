@@ -146,7 +146,7 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 				creator_id: userUuid,
 				current_progress: 0,
 				comment_locked_state: data.comment_locked_state ?? "Unlocked",
-				forum_id: data.forum_id,
+				forum_id: data.forum_id ?? null,
 				likes: 0,
 				superlikes: 0,
 				state: data.state ?? "Posted",
@@ -258,11 +258,10 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 								label="Foro asociado"
 								htmlFor="forum_id"
 								errorMessage={errors.forum_id?.message}
-								required
 							>
 								<Select
-									value={forumId?.toString() || ""}
-									onValueChange={(value) => setValue("forum_id", Number(value))}
+									value={forumId != null ? forumId.toString() : ""}
+									onValueChange={(value) => setValue("forum_id", value ? Number(value) : undefined)}
 									disabled={isSubmitting}
 								>
 									<SelectTrigger id="forum_id">

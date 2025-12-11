@@ -3,10 +3,12 @@ import { IProduct, ICategory } from "@/lib/services/types";
 import { getTranslations } from "next-intl/server";
 import { ISearchParams } from "../../types";
 import { DEFAULT_LOCALE } from "@/lib/constants";
+import { getUserUuid } from "@/lib/services/user";
 
 export async function ProductServices(searchParams: Promise<ISearchParams>) {
 	const params = await searchParams;
 	const translator = await getTranslations({ locale: params.locale || DEFAULT_LOCALE, namespace: "products" });
+	const currentUserId = await getUserUuid();
 
 	const orderBy = params.orderBy || "newest";
 	let orderColumn = "created_at";
@@ -76,6 +78,14 @@ export async function ProductServices(searchParams: Promise<ISearchParams>) {
 		filters: [{ method: "order", column: "name", ascending: true }],
 	});
 
+	const userBusinesses = await GetFromDatabase<{ business_id: number }>({
+		tableName: "User_Business",
+		select: "business_id",
+		filters: [{ method: "eq", column: "user_id", value: currentUserId }],
+	});
+
+	const isBusinessUser = userBusinesses.data !== null && userBusinesses.data.length > 0;
+
 	const clientTranslations = {
 		sort_by: translator("sort_by"),
 		newest: translator("newest"),
@@ -86,5 +96,5 @@ export async function ProductServices(searchParams: Promise<ISearchParams>) {
 		rating_high_low: translator("rating_high_low"),
 	};
 
-	return { products, categories, translator, clientTranslations };
+	return { products, categories, translator, clientTranslations, currentUserId, isBusinessUser };
 }

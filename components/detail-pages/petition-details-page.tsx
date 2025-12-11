@@ -74,19 +74,21 @@ export function PetitionDetails({
 		? petition.images.filter((img) => img && img.trim() !== "")
 		: ["/placeholder.png"];
 
+	const loremIpsumDesc =
+		"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero totam ratione accusamus sunt iusto ad animi, quia incidunt cum, explicabo alias molestias itaque, nesciunt beatae dolorem autem harum sapiente laboriosam.";
 	const slidingButtonsContent: SlidingButtonProps[] = [
 		{
-			content: <div className="p-6"></div>,
+			content: <div>{loremIpsumDesc}</div>,
 			displayName: "Descripción",
 			displayIcon: null,
 		},
 		{
-			content: <div className="p-6"></div>,
+			content: <div>{loremIpsumDesc}</div>,
 			displayName: "Detalles",
 			displayIcon: null,
 		},
 		{
-			content: <div className="p-6"></div>,
+			content: <div>{loremIpsumDesc}</div>,
 			displayName: "Especificaciones",
 			displayIcon: null,
 		},
