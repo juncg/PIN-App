@@ -217,13 +217,17 @@ export async function PostsServices(searchParams: Promise<ISearchParams>) {
 		],
 	});
 
-	const userBusinesses = await GetFromDatabase<{ business_id: number }>({
-		tableName: "User_Business",
-		select: "business_id",
-		filters: [{ method: "eq", column: "user_id", value: currentUserId }],
-	});
+	let isBusinessUser = false;
 
-	const isBusinessUser = userBusinesses.data !== null && userBusinesses.data.length > 0;
+	if (currentUserId) {
+		const userBusinesses = await GetFromDatabase<{ business_id: number }>({
+			tableName: "User_Business",
+			select: "business_id",
+			filters: [{ method: "eq", column: "user_id", value: currentUserId }],
+		});
+		
+		isBusinessUser = userBusinesses.data !== null && userBusinesses.data.length > 0;
+	}
 
 	return {
 		translator,
