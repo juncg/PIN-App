@@ -98,13 +98,13 @@ export async function ForumsServices(searchParams: Promise<ISearchParams>) {
 
 	if (hasSelectedCategories) {
 		const selectedCategories = categories.filter((cat) => categoryIds.includes(cat.id));
-		trendingByCategory = await getTrendingByCategory(selectedCategories, 4);
+		trendingByCategory = await getTrendingByCategory(selectedCategories, 6);
 	} else {
-		recommendedForums = await fetchRecommendedForums(4);
-		popularForums = await fetchPopularForums(4);
+		recommendedForums = await fetchRecommendedForums(6);
+		popularForums = await fetchPopularForums(6);
 
 		const randomCategories = getRandomCategories(categories, 2);
-		trendingByCategory = await getTrendingByCategory(randomCategories, 4);
+		trendingByCategory = await getTrendingByCategory(randomCategories, 6);
 	}
 
 	const clientTranslations = {
