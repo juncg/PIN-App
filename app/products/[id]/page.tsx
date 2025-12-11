@@ -121,7 +121,7 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 					</div>
 
 					<div className="flex items-start gap-1.5 text-md">
-						<Link href={`/businesses/${product.businesses?.[0].business.id}`} className="hover:underline">
+						<Link href={`/business/${product.businesses?.[0].business.id}`} className="hover:underline">
 							<span className="text-lightgrey">Ver en la web de la empresa</span>
 						</Link>
 						<ArrowUpRight className="h-4 w-4" />

@@ -51,7 +51,7 @@ export function SearchGeneralDropdownItem({ item, type, onClose }: SearchGeneral
 			case "business": {
 				const business = item as IBusiness;
 				return {
-					href: `/businesses/${business.id}`,
+					href: `/business/${business.id}`,
 					title: business.name,
 					subtitle: business.description?.substring(0, 50),
 					tags: undefined,

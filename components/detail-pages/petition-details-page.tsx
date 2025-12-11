@@ -96,11 +96,11 @@ export function PetitionDetails({
 
 	let businessLink = "";
 	if (petition.businesses && petition.businesses.length > 0) {
-		businessLink = `/businesses/${petition.businesses[0].business.id}`;
+		businessLink = `/business/${petition.businesses[0].business.id}`;
 	} else if (hasProducts) {
 		const productBusinessId = petition.products?.[0]?.Product?.businesses?.[0]?.business?.id;
 		if (productBusinessId) {
-			businessLink = `/businesses/${productBusinessId}`;
+			businessLink = `/business/${productBusinessId}`;
 		}
 	}
 

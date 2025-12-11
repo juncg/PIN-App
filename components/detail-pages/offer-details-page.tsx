@@ -54,23 +54,23 @@ export function OfferDetails({
 	const originalPrice = offer.products?.reduce((total, product) => total + (product.Product?.msrp || 0), 0) || 0;
 	const discountPercentage = originalPrice > 0 ? Math.round(100 - (offer.reduced_price! * 100) / originalPrice) : 0;
 
-    useEffect(() => {
-        setCurrentProgress(offer.current_progress);
-        setIsSubscribed(subscribedByUser);
-    }, [offer.current_progress, subscribedByUser]);
+	useEffect(() => {
+		setCurrentProgress(offer.current_progress);
+		setIsSubscribed(subscribedByUser);
+	}, [offer.current_progress, subscribedByUser]);
 
-    const offerCompletionPercentage = parseFloat(((currentProgress * 100) / (offer?.target_progress ?? 1)).toFixed(2));
+	const offerCompletionPercentage = parseFloat(((currentProgress * 100) / (offer?.target_progress ?? 1)).toFixed(2));
 
-    const handleSubscriptionChange = (newProgress: number) => {
-        setCurrentProgress(newProgress);
-        setIsSubscribed(!isSubscribed);
-    };
+	const handleSubscriptionChange = (newProgress: number) => {
+		setCurrentProgress(newProgress);
+		setIsSubscribed(!isSubscribed);
+	};
 
-    const displayImages: string[] = offer.images?.filter((img) => img && img.trim() !== "")?.length
-        ? offer.images.filter((img) => img && img.trim() !== "")
-        : ["/placeholder.png"];
+	const displayImages: string[] = offer.images?.filter((img) => img && img.trim() !== "")?.length
+		? offer.images.filter((img) => img && img.trim() !== "")
+		: ["/placeholder.png"];
 
-    const loremIpsumDesc =
+	const loremIpsumDesc =
 		"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero totam ratione accusamus sunt iusto ad animi, quia incidunt cum, explicabo alias molestias itaque, nesciunt beatae dolorem autem harum sapiente laboriosam.";
 	const slidingButtonsContent: SlidingButtonProps[] = [
 		{
@@ -90,14 +90,14 @@ export function OfferDetails({
 		},
 	];
 
-    let businessLink = "";
-    if (offer.products && offer.products.length > 0) {
-        const firstProduct = offer.products[0];
-        if (firstProduct?.Product?.businesses && firstProduct.Product.businesses.length > 0) {
-            const businessId = firstProduct.Product.businesses[0].business.id;
-            businessLink = `/business/${businessId}`;
-        }
-    }
+	let businessLink = "";
+	if (offer.products && offer.products.length > 0) {
+		const firstProduct = offer.products[0];
+		if (firstProduct?.Product?.businesses && firstProduct.Product.businesses.length > 0) {
+			const businessId = firstProduct.Product.businesses[0].business.id;
+			businessLink = `/business/${businessId}`;
+		}
+	}
 
 	return (
 		<div className="container mx-auto px-4 py-8">
@@ -126,25 +126,22 @@ export function OfferDetails({
 						/>
 					</div>
 				</div>{" "}
-				
 				<div className="space-y-3">
 					<h1 className="text-4xl font-black mb-4">{offer.title}</h1>
 
 					{offer.products && offer.products.length > 0 && offer.products[0]?.Product?.businesses && (
-                        <div className="flex items-center gap-1.5">
-                            <Link
-                                href={businessLink || "#"}
-                                className="hover:underline"
-                            >
-                                <span className="text-lightgrey">
-                                    {offer.products[0].Product.businesses[0]?.business?.name?.toLocaleUpperCase() || "Empresa sin nombre"}
-                                </span>
-                            </Link>
-                            {offer.products[0].Product.businesses[0]?.business?.verification !== "Unverified" && (
-                                <VerifiedIcon className="h-4 w-4 text-chernobyl" />
-                            )}
-                        </div>
-                    )}
+						<div className="flex items-center gap-1.5">
+							<Link href={businessLink || "#"} className="hover:underline">
+								<span className="text-lightgrey">
+									{offer.products[0].Product.businesses[0]?.business?.name?.toLocaleUpperCase() ||
+										"Empresa sin nombre"}
+								</span>
+							</Link>
+							{offer.products[0].Product.businesses[0]?.business?.verification !== "Unverified" && (
+								<VerifiedIcon className="h-4 w-4 text-chernobyl" />
+							)}
+						</div>
+					)}
 
 					{/* Precio con descuento */}
 					<div className="space-y-1">
@@ -162,13 +159,17 @@ export function OfferDetails({
 					</div>
 
 					<div className="flex items-start gap-1.5 text-md">
-						<Link href={`/businesses/${offer.businesses?.[0].business.id}`} className="hover:underline">
+						<Link href={`/business/${offer.businesses?.[0].business.id}`} className="hover:underline">
 							<span className="text-lightgrey">Ver en la web de la empresa</span>
 						</Link>
 						<ArrowUpRight className="h-4 w-4" />
 					</div>
 
-					<OfferWarning fee={offer.fee} acceptedConditions={acceptedConditions} setAcceptedConditions={setAcceptedConditions} />
+					<OfferWarning
+						fee={offer.fee}
+						acceptedConditions={acceptedConditions}
+						setAcceptedConditions={setAcceptedConditions}
+					/>
 
 					<div className="space-y-2">
 						<div className="flex items-center justify-between">

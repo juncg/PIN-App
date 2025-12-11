@@ -24,13 +24,13 @@ export async function FeedServices() {
 
 	const { data: offers } = await GetFromDatabase<IOffer>({
 		tableName: "Offer",
-		select: "*, User!Offer_creator_id_fkey(*), User_Offer!left(liked, subscribed, user_id), Offer_Product(Product(*))",
+		select: "*, User!Offer_creator_id_fkey(id, profile_picture, username), User_Offer!left(liked, subscribed, user_id), Offer_Product(Product(*))",
 		filters: [{ method: "in", column: "creator_id", value: followedUserIds }],
 	});
 
 	const { data: petitions } = await GetFromDatabase<IPetition>({
 		tableName: "Petition",
-		select: "*, User!Petition_creator_id_fkey(*), User_Petition!left(liked, subscribed, user_id), Petition_Product(Product(*))",
+		select: "*, User!Petition_creator_id_fkey(id, profile_picture, username), User_Petition!left(liked, subscribed, user_id), Petition_Product(Product(*))",
 		filters: [{ method: "in", column: "creator_id", value: followedUserIds }],
 	});
 
