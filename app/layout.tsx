@@ -1,3 +1,4 @@
+import 'sonner/dist/styles.css';
 import { Header } from "@/components/header/header-server";
 import { ConditionalLayout } from "@/components/layout/layout-content";
 import { AppSidebar } from "@/components/sidebar/sidebar";

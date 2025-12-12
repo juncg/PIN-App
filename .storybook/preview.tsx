@@ -1,6 +1,7 @@
 import type { Preview } from "@storybook/nextjs-vite";
 import { Funnel_Display, Funnel_Sans } from "next/font/google";
 import "../app/globals.css";
+import 'sonner/dist/styles.css';
 
 const funnelSans = Funnel_Sans({
 	variable: "--font-funnel-sans",

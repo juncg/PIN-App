@@ -1,3 +1,4 @@
+import 'sonner/dist/styles.css';
 import { toast } from "sonner";
 import { Button } from "../button";
 import { Toaster } from "../sonner";
