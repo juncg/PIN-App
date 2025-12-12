@@ -108,10 +108,18 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 						<div className="flex items-start justify-between">
 							<Link
 								href={post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}
-								className="flex-1"
+								className="flex-1 min-w-0"
 							>
-								<H4 className="hover:underline">{post.title}</H4>
-								<B3 className="mt-1 line-clamp-2">{post.text}</B3>
+								<div className="min-h-[3.5rem] flex items-start">
+									<H4 className="hover:underline line-clamp-2 overflow-hidden">{post.title}</H4>
+								</div>
+								<div className="min-h-[3rem] flex items-start mt-1">
+									{post.text && post.text.trim().length > 0 ? (
+										<B3 className="line-clamp-2 overflow-hidden">{post.text}</B3>
+									) : (
+										<B3 className="italic line-clamp-2 overflow-hidden">{/* no extra color class */}*El creador de esta publicación no ha añadido una descripción.*</B3>
+									)}
+								</div>
 							</Link>
 						</div>
 
