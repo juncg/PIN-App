@@ -237,7 +237,9 @@ export function CommentCard({
 		<div className={`flex gap-4 group ${level > 0 ? "ml-12 mt-4" : ""}`}>
 			<Avatar className="h-10 w-10  flex-shrink-0">
 				<AvatarImage className="object-cover rounded-full" src={comment.user?.profile_picture || undefined} />
-				<AvatarFallback>{comment.user?.name?.[0].toUpperCase() || "U"}</AvatarFallback>
+				<AvatarFallback className="object-cover rounded-full">
+					{currentUser?.name?.[0].toUpperCase() || "U"}
+				</AvatarFallback>
 			</Avatar>
 
 			<div className="flex-1 space-y-2">
