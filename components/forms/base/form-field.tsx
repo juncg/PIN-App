@@ -16,7 +16,7 @@ export function FormField({ children, required = false, errorMessage, className,
 	return (
 		<div className={cn("grid gap-2", className)}>
 			{label && (
-				<Label className="flex items-center gap-0.5" htmlFor={htmlFor}>
+				<Label className="flex items-center gap-0.5 text-white" htmlFor={htmlFor}>
 					{label}
 					{required && <Label className="!text-destructive">*</Label>}
 				</Label>
