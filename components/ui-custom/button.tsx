@@ -27,10 +27,15 @@ export const buttonVariants = cva(
 				].join(" "),
 				ghost: "hover:bg-hover hover:text-gray-600 rounded-full",
 				ghostSquared: "hover:bg-hover hover:text-gray-600 rounded-lg",
-				chernobyl: ["bg-transparent text-black", "transition", "bg-chernobyl-to-white", "rounded-full"].join(
-					" "
-				),
-				chernobylSquared: [
+				chernobyl: ["bg-transparent text-black", "transition", "bg-chernobyl", "rounded-full"].join(" "),
+				chernobylSquared: ["bg-transparent text-black", "transition", "bg-chernobyl", "rounded-lg"].join(" "),
+				chernobylGradient: [
+					"bg-transparent text-black",
+					"transition",
+					"bg-chernobyl-to-white",
+					"rounded-full",
+				].join(" "),
+				chernobylGradientSquared: [
 					"bg-transparent text-black",
 					"transition",
 					"bg-chernobyl-to-white",

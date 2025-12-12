@@ -15,14 +15,14 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 		<div className="flex min-h-screen flex-col">
 			<div className="flex-1 px-4 pb-6">
 				<div className="flex gap-8">
-					<aside className="w-64 overflow-visible">
-						<ScrollArea className="h-[calc(100vh-200px)] w-64 pr-4 overflow-visible">
+					<aside className="w-64 fixed top-24 z-20 h-[calc(100vh-8rem)]">
+						<ScrollArea className="pr-6 h-full">
 							<PostsFilters popularTags={popularTags} />
 							<ScrollBar />
 						</ScrollArea>
 					</aside>
 
-					<main className="flex-1 min-w-0">
+					<main className="flex-1 min-w-0 ml-72">
 						<div className="mb-6">
 							<PostTypeFilter />
 						</div>

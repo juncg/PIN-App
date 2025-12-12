@@ -92,8 +92,12 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 		});
 	};
 
+	const handleWheel = (e: React.WheelEvent) => {
+		e.stopPropagation();
+	};
+
 	return (
-		<div className="space-y-8">
+		<div className="space-y-8" onWheel={handleWheel}>
 			<div className="space-y-4">
 				<div className="flex items-center justify-between">
 					<Label className="text-base font-bold">Categorías.</Label>

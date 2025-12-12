@@ -2,26 +2,30 @@ import { CreateFab } from "@/components/buttons/create-floating-action-button";
 import { ProductCard } from "@/components/cards/product-card";
 import ProductsFilters from "@/components/filters/products-filters";
 import { OrderSelect } from "@/components/select/order-select";
+import { ScrollArea, ScrollBar } from "@/components/ui-custom/scroll-area";
 import { B3 } from "@/components/ui-custom/typography";
 import { IProduct } from "@/lib/services/types";
 import { ISearchParams } from "@/types";
 import { ProductServices } from "./page-services";
 
 export default async function ProductsPage({ searchParams }: { searchParams: Promise<ISearchParams> }) {
-	const { translator, products, categories, clientTranslations, currentUserId, isBusinessUser } = await ProductServices(searchParams);
+	const { products, categories, clientTranslations, currentUserId, isBusinessUser } = await ProductServices(
+		searchParams
+	);
 	const params = await searchParams;
 
 	return (
 		<div className="flex min-h-screen flex-col">
-			<div className="container flex-1 px-4 py-6">
+			<div className="flex-1 px-4 pb-6">
 				<div className="flex gap-8">
-					<aside className="w-64 shrink-0">
-						<div className="fixed top-35.5 w-64 pr-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
+					<aside className="w-64 fixed top-24 z-20 h-[calc(100vh-8rem)]">
+						<ScrollArea className="pr-6 h-full">
 							<ProductsFilters categories={categories ?? []} />
-						</div>
+							<ScrollBar />
+						</ScrollArea>
 					</aside>
 
-					<main className="flex-1 min-w-0 ml-0">
+					<main className="flex-1 min-w-0 ml-72">
 						<div className="mb-6 flex items-center justify-between">
 							<B3>Todos los productos ({products?.length || 0})</B3>
 

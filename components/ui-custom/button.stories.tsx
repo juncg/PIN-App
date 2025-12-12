@@ -21,6 +21,8 @@ const meta = {
 				"ghostSquared",
 				"chernobyl",
 				"chernobylSquared",
+				"chernobylGradient",
+				"chernobylGradientSquared",
 				"chernobylOutline",
 				"chernobylOutlineSquared",
 				"destructive",
@@ -100,6 +102,22 @@ export const ChernobylSquared: Story = {
 	args: {
 		children: "Button",
 		variant: "chernobylSquared",
+		size: "default",
+	},
+};
+
+export const ChernobylGradient: Story = {
+	args: {
+		children: "Button",
+		variant: "chernobylGradient",
+		size: "default",
+	},
+};
+
+export const ChernobylGradientSquared: Story = {
+	args: {
+		children: "Button",
+		variant: "chernobylGradientSquared",
 		size: "default",
 	},
 };
