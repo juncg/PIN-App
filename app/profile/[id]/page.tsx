@@ -77,10 +77,10 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 	];
 
 	return (
-		<section className="flex flex-row justify-center items-start gap-16">
-			<div className="flex flex-col gap-6 items-start w-full">
+		<section className="flex flex-col lg:flex-row justify-center items-start gap-6 lg:gap-16 w-full px-2 sm:px-4">
+			<div className="flex flex-col gap-6 items-start w-full lg:w-3/5">
 				<div className="relative w-full">
-					<figure className="relative w-full h-[200px] rounded-b-lg overflow-hidden -mt-8">
+					<figure className="relative w-full h-[120px] xs:h-[160px] sm:h-[200px] rounded-b-lg overflow-hidden -mt-8">
 						<Image
 							src={userData?.banner || "/placeholder.png"}
 							alt="Profile banner"
@@ -90,7 +90,7 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 						/>
 					</figure>
 
-					<figure className="absolute -bottom-[100px] left-8 w-[140px] h-[140px] rounded-full overflow-hidden border-[2px] border-darkmode">
+					<figure className="absolute -bottom-[60px] left-4 xs:left-8 w-[80px] h-[80px] xs:w-[120px] xs:h-[120px] sm:w-[140px] sm:h-[140px] rounded-full overflow-hidden border-[2px] border-darkmode">
 						<Image
 							src={userData?.profile_picture || "/placeholder.png"}
 							alt="User profile picture"
@@ -101,10 +101,10 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 					</figure>
 				</div>
 
-				<div className="flex gap-16 w-full">
+				<div className="flex flex-col md:flex-row gap-6 md:gap-10 w-full">
 					<div className="flex flex-col gap-10">
 						<span className="flex gap-8 items-center">
-							<span className="flex flex-col gap-2 ml-[200px]">
+							<span className="flex flex-col gap-2 ml-[100px] sm:ml-[140px] md:ml-[200px]">
 								<H2 className="font-funnel-sans">
 									{userData?.name} {userData?.surnames}.
 								</H2>
@@ -115,7 +115,7 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 
 						<B1>{userData?.bio}</B1>
 
-						<span className="flex flex-row gap-4 text-lightgrey">
+						<span className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-lightgrey">
 							<B1 className="flex gap-2 items-center">
 								<PeopleAlt2Icon className="!h-4" />
 								{userData?.followers} {userData?.followers === 1 ? "seguidor" : "seguidores"}
@@ -132,7 +132,7 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 						</span>
 					</div>
 
-					<div className="flex flex-col gap-12 mt-8 w-1/3">
+					<div className="flex flex-row md:flex-col gap-4 md:gap-12 mt-4 md:mt-8 w-full md:w-1/3">
 						<span>
 							{!isCurrentUser ? (
 								<FollowButton
@@ -154,7 +154,7 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 			</div>
 
 			<ProfileRightColumn
-				className="w-2/5"
+				className="w-full lg:w-2/5 mt-8 lg:mt-0"
 				userData={userData}
 				followingBusinesses={followingBusinesses}
 				followingBusinessesTotalCount={followingBusinessesCount}
