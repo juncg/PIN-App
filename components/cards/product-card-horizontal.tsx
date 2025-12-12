@@ -5,7 +5,7 @@ import Link from "next/link";
 export function ProductCardHorizontal(product: IProduct) {
 	return (
 		<div className="group flex min-h-[8.75rem] w-full cursor-pointer rounded-[20px] border-[2px] border-cardborder bg-darkmode transition-colors hover:bg-hover">
-			<div className="relative aspect-square h-full flex-shrink-0 overflow-hidden rounded-[20px] border-[2px] border-darkmode">
+			<div className="relative aspect-square h-[8.75rem] flex-shrink-0 overflow-hidden rounded-[20px] border-[2px] border-darkmode">
 				<Image
 					src={product.images?.[0] || "/placeholder.png"}
 					alt={product.name}

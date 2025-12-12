@@ -4,7 +4,7 @@ import { GetFromDatabase } from "@/lib/services/general";
 import { IOffer, IPetition, IReview } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
 
-export async function FeedServices() {
+export async function FollowingPageServices() {
 	const userUuid = await getUserUuid();
 
 	if (!userUuid) {

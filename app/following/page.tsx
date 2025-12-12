@@ -5,11 +5,11 @@ import { ProductCardHorizontal } from "@/components/cards/product-card-horizonta
 import { getUserUuid } from "@/lib/services/user";
 import { IOffer, IPetition, IBusiness, IForum, IProduct } from "@/lib/services/types";
 import { ISearchParams } from "@/types";
-import { FeedServices } from "./page-services";
+import { FollowingPageServices } from "./page-services";
 
 export default async function Feed({ searchParams }: { searchParams: Promise<ISearchParams> }) {
 	const userUuid = await getUserUuid();
-	const { posts, businesses, forums, products } = await FeedServices();
+	const { posts, businesses, forums, products } = await FollowingPageServices();
 
 	console.log(posts, userUuid);
 
