@@ -75,12 +75,14 @@ export function FeedPostCard(props: IFeedPostCard) {
 	const showSideBySide = displayImages.length === 2;
 
 	return (
-		<article className={cn("w-full bg-darkmode rounded-3xl border border-cardborder p-6", className)}>
+		<article className={cn("w-full bg-darkmode rounded-3xl border-[2px] border-cardborder p-6", className)}>
 			<div className="flex justify-between items-start mb-4">
 				<div className="flex gap-3 items-center">
 					<Avatar className="h-10 w-10 rounded-full">
 						<AvatarImage src={post.User?.profile_picture || "/placeholder.png"} />
-						<AvatarFallback>{post.User?.username?.[0] || "U"}</AvatarFallback>
+						<AvatarFallback className="object-cover rounded-full">
+							{post.User?.username?.[0] || "U"}
+						</AvatarFallback>
 					</Avatar>
 					<div className="flex flex-col">
 						<span className="text-[10px] text-lightgrey uppercase tracking-wider font-semibold">
@@ -119,7 +121,7 @@ export function FeedPostCard(props: IFeedPostCard) {
 					{post.type === "Offer" && post.reduced_price && (
 						<div className="text-right">
 							<span className="text-xl font-bold text-white block">{post.reduced_price}€</span>
-							{originalPrice != post.reduced_price && (
+							{originalPrice != post.reduced_price && originalPrice > 0 && (
 								<div className="text-xs flex items-center gap-1 justify-end">
 									<span className="text-chernobyl font-bold">-{discountPercentage}%</span>
 									<span className="text-lightgrey line-through">{originalPrice}€</span>

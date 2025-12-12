@@ -12,8 +12,8 @@ export default async function Feed({ searchParams }: { searchParams: Promise<ISe
 	const { posts, businesses, forums, products } = await FollowingPageServices();
 
 	return (
-		<div className="container mx-auto max-w-[1800px] px-4 md:px-6 py-6">
-			<div className="grid grid-cols-1 lg:grid-cols-[20%_50%_30%] gap-6 lg:gap-8">
+		<div className="container mx-auto max-w-[1800px] pr-3 py-6">
+			<div className="grid grid-cols-1 lg:grid-cols-[20%_50%_25%] gap-6 lg:gap-8">
 				<div className="hidden lg:block space-y-6">
 					<h3 className="font-semibold text-white">Empresas a las que sigues.</h3>
 
