@@ -157,7 +157,9 @@ export function CommentsSection({
 						className="object-cover rounded-full"
 						src={currentUser?.profile_picture || undefined}
 					/>
-					<AvatarFallback>{currentUser?.name?.[0].toUpperCase() || "U"}</AvatarFallback>
+					<AvatarFallback className="object-cover rounded-full">
+						{currentUser?.name?.[0].toUpperCase() || "U"}
+					</AvatarFallback>
 				</Avatar>
 
 				<CommentBox
