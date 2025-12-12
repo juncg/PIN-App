@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui-custom/badge";
-import { B1, H4 } from "@/components/ui-custom/typography";
+import { B4, H4 } from "@/components/ui-custom/typography";
 import { IBusiness, IForum, IOffer, IPetition, IProduct, IUser } from "@/lib/services/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -97,13 +97,13 @@ export function SearchGeneralDropdownItem({ item, type, onClose }: SearchGeneral
 				</div>
 
 				<div className="flex-1 min-w-0">
-					<H4 className="truncate mb-1">{title}</H4>
-					{subtitle && <B1 className="text-sm text-lightgrey truncate">{subtitle}</B1>}
+					<H4 className="line-clamp-1 mb-1">{title}</H4>
+					{subtitle && <B4 className="line-clamp-2">{subtitle}</B4>}
 
 					{tags && tags.length > 0 && (
 						<div className="flex gap-1 mt-2">
 							{tags.map((tag: any, index: number) => (
-								<Badge key={index} variant="secondary" className="text-xs">
+								<Badge key={index} variant="default">
 									{tag.name}
 								</Badge>
 							))}

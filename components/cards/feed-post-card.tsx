@@ -10,13 +10,13 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { LikeButton } from "../buttons/like-button";
 import { SubscribeButton } from "../buttons/subscribe-button";
-import { ShareComponent } from "../share-post/share";
 import { CardImagesCarousel } from "../carousel/card-images-carousel";
 import { ClockIcon, FrontHandIcon, LocalOfferIcon, PeopleAltIcon, Shining2LineIcon } from "../icons/icons";
+import { ShareComponent } from "../share-post/share";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
 import { Button } from "../ui-custom/button";
 import { Progress } from "../ui-custom/progress";
-import { B1, B3, H3, H4, S1 } from "../ui-custom/typography";
+import { B1, H3, S1 } from "../ui-custom/typography";
 
 export interface IFeedPostCard {
 	className?: string;
@@ -119,10 +119,12 @@ export function FeedPostCard(props: IFeedPostCard) {
 					{post.type === "Offer" && post.reduced_price && (
 						<div className="text-right">
 							<span className="text-xl font-bold text-white block">{post.reduced_price}€</span>
-							<div className="text-xs flex items-center gap-1 justify-end">
-								<span className="text-chernobyl font-bold">-{discountPercentage}%</span>
-								<span className="text-lightgrey line-through">{originalPrice}€</span>
-							</div>
+							{originalPrice != post.reduced_price && (
+								<div className="text-xs flex items-center gap-1 justify-end">
+									<span className="text-chernobyl font-bold">-{discountPercentage}%</span>
+									<span className="text-lightgrey line-through">{originalPrice}€</span>
+								</div>
+							)}
 						</div>
 					)}
 				</div>

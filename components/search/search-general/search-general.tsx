@@ -1,6 +1,7 @@
 "use client";
 
 import { SearchIcon } from "@/components/icons/icons";
+import { X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "../../ui-custom/input";
@@ -69,11 +70,24 @@ export function SearchGeneral() {
 				<Input
 					type="search"
 					placeholder="Buscar..."
-					className="pl-9 w-96 border-2 border-cardborder"
+					className="pl-9 pr-9 w-96 border-2 border-cardborder"
 					onChange={handleChange}
 					value={searchQuery}
 					onFocus={() => searchQuery && setIsOpen(true)}
 				/>
+
+				{searchQuery && (
+					<button
+						type="button"
+						onClick={() => setSearchQuery("")}
+						className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 hover:text-gray-600 focus:outline-none"
+						tabIndex={-1}
+						aria-label="Limpiar búsqueda"
+						style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
+					>
+						<X className="h-4 w-4" />
+					</button>
+				)}
 
 				<SearchGeneralDropdown isOpen={isOpen} onClose={handleClose} />
 			</div>
