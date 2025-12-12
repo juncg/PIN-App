@@ -45,6 +45,12 @@ const items = [
 		iconFilled: HomeFilledIcon,
 	},
 	{
+		title: "Siguiendo",
+		url: "/following",
+		icon: ChatBubblesIcon,
+		iconFilled: ChatBubblesFilledIcon,
+	},
+	{
 		title: "Ofertas y peticiones",
 		url: "/posts",
 		icon: DealBuyLogoIcon,
@@ -61,12 +67,6 @@ const items = [
 		url: "/forums",
 		icon: FrameIcon,
 		iconFilled: FrameFilledIcon,
-	},
-	{
-		title: "Feed",
-		url: "/feed",
-		icon: ChatBubblesIcon,
-		iconFilled: ChatBubblesFilledIcon,
 	},
 ];
 
