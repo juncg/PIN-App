@@ -1,9 +1,10 @@
 import CreateOfferForm from "@/components/forms/create-offer-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui-custom/card";
 import { CreateOfferServices } from "./page-services";
+import { getUserUuid } from "@/lib/services/user";
 
 export default async function Page() {
-	const { forums, tags } = await CreateOfferServices();
+	const { forums, tags, businesses } = await CreateOfferServices();
 
 	return (
 		<div className="flex flex-col items-center gap-8 py-8">
@@ -14,9 +15,10 @@ export default async function Page() {
 				</CardHeader>
 
 				<CardContent>
-					<CreateOfferForm forums={forums.data || []} tags={tags.data || []} />
+					<CreateOfferForm forums={forums.data || []} tags={tags.data || []} businesses={businesses} />
 				</CardContent>
 			</Card>
 		</div>
 	);
 }
+

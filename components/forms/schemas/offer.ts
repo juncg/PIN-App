@@ -38,6 +38,7 @@ export const OfferSchema = z.object({
 	target_completition_date: z.string(),
 	creator_id: z.string(),
 	forum_id: z.number().nullable(),
+	business_id: z.number().nullable(),
 	likes: z.number(),
 	superlikes: z.number(),
 	state: PostStateSchema,
@@ -66,6 +67,7 @@ export const CreateOfferSchema = z
 		comment_locked_state: CommentLockedStateSchema.optional(),
 		state: PostStateSchema.optional(),
 		forum_id: z.number().min(0, "Debes elegir un foro al que pertenecerá la oferta"),
+		business_id: z.number().min(0, "Debes elegir una empresa a la que pertenecerá la oferta"),
 		product_ids: z.array(z.number()).optional(),
 		reduced_price: z.number().nullable().optional(),
 	})

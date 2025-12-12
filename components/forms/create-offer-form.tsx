@@ -9,7 +9,7 @@ import { Tables } from "@/database.types";
 import { useUser } from "@/hooks/use-user";
 import { ExecuteRpcFunction, PostToDatabase } from "@/lib/services/general";
 import { compressImage, uploadImage } from "@/lib/services/media-upload";
-import { IForum, IOffer, IProduct } from "@/lib/services/types";
+import { IForum, IOffer, IProduct, IBusiness } from "@/lib/services/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type PostgrestError } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
@@ -31,9 +31,10 @@ import { CreateOfferSchema, type TCreateOfferSchema } from "./schemas/offer";
 interface OfferFormProps {
 	forums: IForum[];
 	tags: { id: number; name: string }[];
+	businesses: IBusiness[];
 }
 
-export default function OfferForm({ forums, tags }: OfferFormProps) {
+export default function OfferForm({ forums, tags, businesses }: OfferFormProps) {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [selectedTags, setSelectedTags] = useState<number[]>([]);
 	const [apiError, setApiError] = useState<PostgrestError | null>(null);
@@ -64,6 +65,7 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 			comment_locked_state: "Unlocked",
 			fee: undefined,
 			forum_id: undefined,
+			business_id: undefined,
 			state: "Posted",
 			product_ids: [],
 			reduced_price: null,
@@ -71,6 +73,7 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 	});
 
 	const forumId = watch("forum_id");
+	const businessId = watch("business_id");
 	const allowComments = watch("comment_locked_state") === "Unlocked";
 	const reducedPrice = watch("reduced_price");
 
@@ -92,7 +95,7 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 		let fieldsToValidate: (keyof TCreateOfferSchema)[] = [];
 
 		if (currentStep === 1) {
-			fieldsToValidate = ["title", "text", "forum_id", "comment_locked_state"];
+			fieldsToValidate = ["title", "text", "forum_id", "business_id", "comment_locked_state"];
 		} else if (currentStep === 2) {
 			fieldsToValidate = ["target_progress", "fee", "target_completition_date"];
 		}
@@ -137,6 +140,7 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 				comment_locked_state: data.comment_locked_state ?? "Unlocked",
 				fee: data.fee,
 				forum_id: data.forum_id,
+				business_id: data.business_id,
 				likes: 0,
 				superlikes: 0,
 				state: data.state ?? "Posted",
@@ -268,6 +272,30 @@ export default function OfferForm({ forums, tags }: OfferFormProps) {
 										{forums.map((forum) => (
 											<SelectItem key={forum.id} value={forum.id.toString()}>
 												{forum.name}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</FormField>
+
+							<FormField
+								label="Empresa asociada"
+								htmlFor="business_id"
+								errorMessage={errors.business_id?.message}
+								required
+							>
+								<Select
+									value={businessId?.toString() || ""}
+									onValueChange={(value) => setValue("business_id", Number(value))}
+									disabled={isSubmitting}
+								>
+									<SelectTrigger id="business_id">
+										<SelectValue placeholder="Selecciona una empresa" />
+									</SelectTrigger>
+									<SelectContent>
+										{businesses.map((business) => (
+											<SelectItem key={business.id} value={business.id.toString()}>
+												{business.name}
 											</SelectItem>
 										))}
 									</SelectContent>
