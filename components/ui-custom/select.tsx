@@ -6,6 +6,7 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 import { KeyboardArrowLeftIcon } from "../icons/icons";
+import { typography } from "./typography";
 
 function Select({ ...props }: React.ComponentProps<typeof SelectPrimitive.Root>) {
 	return <SelectPrimitive.Root data-slot="select" {...props} />;
@@ -32,7 +33,8 @@ function SelectTrigger({
 			data-slot="select-trigger"
 			data-size={size}
 			className={cn(
-				"group border-hover data-[placeholder]:text-lightgrey [&_svg:not([class*='text-'])]:text-lightgrey focus-visible:border-lightgrey focus-visible:ring-lightgrey/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-hover/30 dark:hover:bg-hover/50 flex w-fit items-center justify-between gap-2 rounded-md border-[2px] bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+				"group border-cardborder hover:border-white data-[state=open]:border-white transition-colors rounded-full data-[placeholder]:text-lightgrey [&_svg:not([class*='text-'])]:text-lightgrey focus-visible:border-lightgrey focus-visible:ring-lightgrey/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-hover/30 dark:hover:bg-hover/50 flex w-fit items-center justify-between gap-2 border-[2px] bg-transparent px-3 py-2 whitespace-nowrap outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+				typography.B1,
 				className
 			)}
 			{...props}
@@ -86,7 +88,7 @@ function SelectLabel({ className, ...props }: React.ComponentProps<typeof Select
 	return (
 		<SelectPrimitive.Label
 			data-slot="select-label"
-			className={cn("text-lightgrey px-2 py-1.5 text-xs", className)}
+			className={cn("px-2 py-1.5", typography.B1, className)}
 			{...props}
 		/>
 	);
@@ -97,7 +99,8 @@ function SelectItem({ className, children, ...props }: React.ComponentProps<type
 		<SelectPrimitive.Item
 			data-slot="select-item"
 			className={cn(
-				"focus:bg-hover focus:text-white transition cursor-pointer [&_svg:not([class*='text-'])]:text-lightgrey relative flex w-full items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2 focus:outline-none focus:ring-0 focus:border-0",
+				"focus:bg-hover focus:text-white transition cursor-pointer [&_svg:not([class*='text-'])]:text-lightgrey relative flex w-full items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2 focus:outline-none focus:ring-0 focus:border-0",
+				typography.B3,
 				className
 			)}
 			{...props}
@@ -116,7 +119,7 @@ function SelectSeparator({ className, ...props }: React.ComponentProps<typeof Se
 	return (
 		<SelectPrimitive.Separator
 			data-slot="select-separator"
-			className={cn("bg-hover pointer-events-none -mx-1 my-1 h-px", className)}
+			className={cn("bg-cardborder pointer-events-none -mx-1 my-1 h-px", className)}
 			{...props}
 		/>
 	);

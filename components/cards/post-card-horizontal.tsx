@@ -66,9 +66,9 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 	const hasValidImages = (post.images ?? []).filter((img) => img && img.trim() !== "")?.length > 0;
 
 	return (
-		<article className={cn(className, "flex border-[2px] rounded-2xl w-full")}>
+		<article className={cn(className, "flex border-[2px] border-cardborder rounded-2xl w-full")}>
 			{hasValidImages && (
-				<figure className="relative w-60 h-60 rounded-xl border-[3px] border-darkmode overflow-hidden shrink-0">
+				<figure className="relative w-60 h-60 rounded-2xl border-[3px] border-darkmode overflow-hidden shrink-0">
 					<Image
 						src={post?.images?.[0] || "/placeholder.png"}
 						alt={"Post picture"}
@@ -158,24 +158,26 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 							</span>
 						</div>
 
-						<div className="flex items-center gap-2">
-							<LikeButton
-								likes={post.likes}
-								likedByUser={likedByUser}
-								post_id={post.id}
-								typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
-								user_id={userUuid}
-								variant="icon"
-								onLikeChangeForParent={onLikeChangeForParent}
-								postCreatorId={post.creator_id as string}
-							/>
+						<div className="flex items-center gap-4">
+							<div className="flex gap-2">
+								<LikeButton
+									likes={post.likes}
+									likedByUser={likedByUser}
+									post_id={post.id}
+									typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
+									user_id={userUuid}
+									variant="icon"
+									onLikeChangeForParent={onLikeChangeForParent}
+									postCreatorId={post.creator_id as string}
+								/>
 
-							<Button
-								className="h-8 w-8 rounded-full p-0 bg-white text-darkmode transition hover:text-destructive"
-								size="icon"
-							>
-								<Shining2LineIcon className="text-black !w-5 !h-5" />
-							</Button>
+								<Button
+									className="h-8 w-8 rounded-full p-0 bg-white text-darkmode transition hover:text-destructive"
+									size="icon"
+								>
+									<Shining2LineIcon className="text-black !w-5 !h-5" />
+								</Button>
+							</div>
 
 							<SubscribeButton
 								post_id={post.id}

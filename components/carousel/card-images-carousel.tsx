@@ -46,7 +46,7 @@ export function CardImagesCarousel({ post, product, displayImages }: CardImagesC
 				{displayImages.map((image, index) => (
 					<CarouselItem key={index}>
 						<Link href={getHref()}>
-							<div className="relative aspect-square w-full cursor-pointer overflow-hidden">
+							<div className="relative aspect-[4/3] w-full cursor-pointer overflow-hidden">
 								<Image
 									src={image}
 									alt={getAltText(index)}

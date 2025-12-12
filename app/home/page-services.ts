@@ -34,5 +34,11 @@ export async function HomeServices(searchParams: Promise<ISearchParams>) {
 		petition.type = "Petition";
 	});
 
-	return { translator, offers, petitions, products };
+	const translations = {
+		petitions: translator("petitions"),
+		offers: translator("offers"),
+		products: translator("products"),
+	};
+
+	return { translations, offers, petitions, products };
 }

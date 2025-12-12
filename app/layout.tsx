@@ -1,6 +1,7 @@
 import { Header } from "@/components/header/header-server";
 import { ConditionalLayout } from "@/components/layout/layout-content";
 import { AppSidebar } from "@/components/sidebar/sidebar";
+import { SmoothScroll } from "@/components/ui-custom/smooth-scroll";
 import { Toaster } from "@/components/ui-custom/sonner";
 import type { Metadata } from "next";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
@@ -36,7 +37,7 @@ export default async function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={`${funnelSans.variable} ${funnelDisplay.variable} font-funnel-sans antialiased`}>
-				{/*<SmoothScroll /> it is problematic for now*/}
+				<SmoothScroll />
 
 				<ErrorBoundary errorComponent={Error}>
 					<ConditionalLayout header={<Header />} sidebar={<AppSidebar />}>

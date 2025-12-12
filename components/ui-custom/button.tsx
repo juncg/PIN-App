@@ -16,42 +16,40 @@ export const buttonVariants = cva(
 	{
 		variants: {
 			variant: {
-				default: "bg-white text-black rounded-full hover:scale-105 transition border-[2px] border-white",
-				defaultSquared: "bg-white text-black rounded-lg hover:scale-105 transition border-[2px] border-white",
-				outline: "bg-transparent text-white rounded-full hover:scale-105 transition border-[2px] border-white",
+				default: "bg-white text-black rounded-full transition",
+				defaultSquared: "bg-white text-black rounded-lg transition",
+				outline:
+					"bg-transparent text-white rounded-full transition border-[2px] border-cardborder hover:border-white",
 				outlineSquared: [
-					"bg-hover text-white rounded-lg",
-					"hover:scale-105 transition",
+					"bg-hover text-white rounded-lg hover:border-white",
+					"transition",
 					"border-[2px] border-cardborder",
 				].join(" "),
 				ghost: "hover:bg-hover hover:text-gray-600 rounded-full",
 				ghostSquared: "hover:bg-hover hover:text-gray-600 rounded-lg",
-				chernobyl: [
-					"bg-transparent text-black",
-					"hover:scale-105 transition",
-					"bg-[linear-gradient(160deg,var(--chernobyl)_0%,var(--lightgrey)_80%)]",
-					"rounded-full",
-				].join(" "),
+				chernobyl: ["bg-transparent text-black", "transition", "bg-chernobyl-to-white", "rounded-full"].join(
+					" "
+				),
 				chernobylSquared: [
 					"bg-transparent text-black",
-					"hover:scale-105 transition",
-					"bg-[linear-gradient(160deg,var(--chernobyl)_0%,var(--lightgrey)_80%)]",
+					"transition",
+					"bg-chernobyl-to-white",
 					"rounded-lg",
 				].join(" "),
 				chernobylOutline: [
 					"bg-transparent text-chernobyl",
-					"hover:scale-105 transition",
+					"transition",
 					"border-[2px] border-chernobyl",
 					"rounded-full",
 				].join(" "),
 				chernobylOutlineSquared: [
 					"bg-transparent text-chernobyl",
-					"hover:scale-105 transition",
+					"transition",
 					"border-[2px] border-chernobyl",
 					"rounded-lg",
 				].join(" "),
-				destructive: "bg-destructive text-white hover:scale-105 transition rounded-full",
-				destructiveSquared: "bg-destructive text-white hover:scale-105 transition rounded-lg",
+				destructive: "bg-destructive text-white transition rounded-full",
+				destructiveSquared: "bg-destructive text-white transition rounded-lg",
 			},
 			size: {
 				default: "h-9 px-7 py-3.5",

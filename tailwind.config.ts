@@ -63,6 +63,10 @@ export default {
 				md: "calc(var(--radius) - 2px)",
 				sm: "calc(var(--radius) - 4px)",
 			},
+
+			backgroundImage: {
+				"chernobyl-to-white": "var(--chernobyl-to-white)",
+			},
 		},
 	},
 

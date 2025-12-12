@@ -1,7 +1,7 @@
 import { CreateFab } from "@/components/buttons/create-floating-action-button";
 import { PostCardHorizontal } from "@/components/cards/post-card-horizontal";
 import { PostTypeFilter } from "@/components/filters/post-type-filter";
-import PostsSidebar from "@/components/filters/posts-filters";
+import PostsFilters from "@/components/filters/posts-filters";
 import { OrderSelect } from "@/components/select/order-select";
 import { ScrollArea, ScrollBar } from "@/components/ui-custom/scroll-area";
 import { ISearchParams } from "@/types";
@@ -14,10 +14,10 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 	return (
 		<div className="flex min-h-screen flex-col">
 			<div className="flex-1 px-4 pb-6">
-				<div className="flex gap-8 mt-6">
+				<div className="flex gap-8">
 					<aside className="w-64 overflow-visible">
 						<ScrollArea className="h-[calc(100vh-200px)] w-64 pr-4 overflow-visible">
-							<PostsSidebar popularTags={popularTags} />
+							<PostsFilters popularTags={popularTags} />
 							<ScrollBar />
 						</ScrollArea>
 					</aside>
@@ -26,10 +26,12 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 						<div className="mb-6">
 							<PostTypeFilter />
 						</div>
+
 						<div className="mb-6 flex items-center justify-between">
 							<p className="text-sm font-medium text-lightgrey-foreground">
 								{posts.length} {posts.length === 1 ? "resultado" : "resultados"}
 							</p>
+
 							<OrderSelect
 								options={[
 									{ value: "newest", label: clientTranslations.newest },
@@ -41,6 +43,7 @@ export default async function PostsPage({ searchParams }: { searchParams: Promis
 								defaultValue={params.orderBy || "newest"}
 							/>
 						</div>
+
 						<div className="space-y-6">
 							{posts.length === 0 ? (
 								<p className="text-center text-lightgrey-foreground py-12">
