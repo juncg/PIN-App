@@ -7,15 +7,14 @@ import { GetTimeRemaining } from "@/lib/services/utilities";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { HyperLikeButton } from "../buttons/hyper-like";
 import { LikeButton } from "../buttons/like-button";
 import { SubscribeButton } from "../buttons/subscribe-button";
 import { CardImagesCarousel } from "../carousel/card-images-carousel";
-import { ClockIcon, PeopleAltIcon, Shining2LineIcon } from "../icons/icons";
+import { ClockIcon, PeopleAltIcon } from "../icons/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
-import { Button } from "../ui-custom/button";
 import { Progress } from "../ui-custom/progress";
 import { B1, B3, H4, S1 } from "../ui-custom/typography";
-import { HyperLikeButton } from "../buttons/hyper-like";
 
 export interface IPostCard {
 	className?: string;

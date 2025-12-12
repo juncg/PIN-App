@@ -1,15 +1,9 @@
 "use client";
 
-import { SubscribeButton } from "@/components/buttons/subscribe-button";
 import { LikeButton } from "@/components/buttons/like-button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
-import { Progress } from "@/components/ui-custom/progress";
-import { IComment, IPetition, IProduct, IUser } from "@/lib/services/types";
-import { Users, ArrowUpRight } from "lucide-react";
-import { useEffect, useState } from "react";
-import { CommentsSection } from "../comments/comments-section";
-import { ProductImages } from "../products/product-images";
 import { AltenatingButtons, SlidingButtonProps } from "@/components/buttons/sliding-buttons";
+import { SubscribeButton } from "@/components/buttons/subscribe-button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
 import {
 	Carousel,
 	CarouselContent,
@@ -17,10 +11,16 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui-custom/carousel";
-import { S1, B1 } from "@/components/ui-custom/typography";
+import { Progress } from "@/components/ui-custom/progress";
+import { B1, B5, H3, S1 } from "@/components/ui-custom/typography";
+import { IComment, IPetition, IProduct, IUser } from "@/lib/services/types";
+import { ArrowUpRight, Users } from "lucide-react";
 import Link from "next/link";
-import { ShareComponent } from "../share-post/share";
+import { useEffect, useState } from "react";
 import { ProductCard } from "../cards/product-card";
+import { CommentsSection } from "../comments/comments-section";
+import { ProductImages } from "../products/product-images";
+import { ShareComponent } from "../share-post/share";
 
 interface PetitionDetailsProps {
 	petition: IPetition;
@@ -134,17 +134,21 @@ export function PetitionDetails({
 				<div className="space-y-6">
 					<h1 className="text-4xl font-black mb-4">{petition.title}</h1>
 
-					{hasProducts && petition.reduced_price !== null && (
-						<div className="space-y-1">
-							<div className="flex items-baseline gap-3">
-								<span className="text-lg font-black" style={{ color: "#C4FF33" }}>
-									-{discountPercentage}%
-								</span>
-								<span className="text-3xl font-black">{petition.reduced_price}€</span>
+					{petition.products &&
+						petition.products.length > 0 &&
+						petition.reduced_price !== null &&
+						petition.reduced_price > 0 && (
+							<div className="flex flex-col items-start shrink-0">
+								<H3>{petition.reduced_price ?? 0}€</H3>
+
+								{originalPrice != petition.reduced_price && (
+									<div className="flex gap-2 items-center">
+										<B5 className="text-chernobyl md:line-clamp-1">-{discountPercentage}%</B5>
+										<B1 className="line-through text-lightgrey">{originalPrice}€</B1>
+									</div>
+								)}
 							</div>
-							<div className="text-sm text-lightgrey">Precio original: {originalPrice}€</div>
-						</div>
-					)}
+						)}
 
 					<div>
 						<B1 className="text-lightgrey whitespace-pre-wrap break-words">{petition.text}</B1>
