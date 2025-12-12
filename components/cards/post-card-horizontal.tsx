@@ -14,6 +14,7 @@ import { ClockIcon, PeopleAltIcon, Shining2LineIcon } from "../icons/icons";
 import { Button } from "../ui-custom/button";
 import { Progress } from "../ui-custom/progress";
 import { B1, B5, H3, S1 } from "../ui-custom/typography";
+import { HyperLikeButton } from "../buttons/hyper-like";
 
 interface IPostCardHorizontalProps {
 	className?: string;
@@ -167,24 +168,19 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 									likes={post.likes}
 									likedByUser={likedByUser}
 									post_id={post.id}
-									typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
+									typeOfPost={post.type}
 									user_id={userUuid}
 									variant="icon"
 									onLikeChangeForParent={onLikeChangeForParent}
 									postCreatorId={post.creator_id as string}
 								/>
 
-								<Button
-									className="h-8 w-8 rounded-full p-0 bg-white text-darkmode transition hover:text-destructive"
-									size="icon"
-								>
-									<Shining2LineIcon className="text-black !w-5 !h-5" />
-								</Button>
+								<HyperLikeButton />
 							</div>
 
 							<SubscribeButton
 								post_id={post.id}
-								typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
+								typeOfPost={post.type}
 								subscribers={currentProgress}
 								subscribedByUser={subscribedByUser}
 								user_id={userUuid}

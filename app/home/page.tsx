@@ -6,7 +6,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<ISe
     const { translations, offers, petitions, products } = await HomeServices(searchParams);
 
     return (
-        <section className="flex flex-row justify-center !gap-12 px-8 mx-auto max-w-[1500px] py-8">
+        <section className="flex flex-row justify-center !gap-12 px-8 mx-auto max-w-[1400px] py-8">
             <HomeColumns
                 petitions={petitions || []}
                 offers={offers || []}

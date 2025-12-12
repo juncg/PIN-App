@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
 import { Button } from "../ui-custom/button";
 import { Progress } from "../ui-custom/progress";
 import { B1, B3, H4, S1 } from "../ui-custom/typography";
+import { HyperLikeButton } from "../buttons/hyper-like";
 
 export interface IPostCard {
 	className?: string;
@@ -87,7 +88,7 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 								likes={post.likes}
 								likedByUser={likedByUser}
 								post_id={post.id}
-								typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
+								typeOfPost={post.type}
 								user_id={userUuid}
 								variant="icon"
 								onLikeChangeForParent={onLikeChangeForParent}
@@ -96,9 +97,7 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 						</div>
 
 						<div className="absolute right-3 top-3 z-10">
-							<Button className="h-8 w-8 rounded-full p-0 hover:scale-100 transition-none" size="icon">
-								<Shining2LineIcon className="text-black !w-5 !h-5" />
-							</Button>
+							<HyperLikeButton />
 						</div>
 
 						<CardImagesCarousel post={post} displayImages={displayImages} />
@@ -110,14 +109,21 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 								href={post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}
 								className="flex-1 min-w-0"
 							>
-								<div className="min-h-[3.5rem] flex items-start">
+								<div
+									className={cn(
+										"min-h-[3.5rem] flex items-start",
+										displayImages.length === 0 && "mt-10" // Add margin if no images
+									)}
+								>
 									<H4 className="hover:underline line-clamp-2 overflow-hidden">{post.title}</H4>
 								</div>
 								<div className="min-h-[3rem] flex items-start mt-1">
 									{post.text && post.text.trim().length > 0 ? (
 										<B3 className="line-clamp-2 overflow-hidden">{post.text}</B3>
 									) : (
-										<B3 className="italic line-clamp-2 overflow-hidden">{/* no extra color class */}*El creador de esta publicación no ha añadido una descripción.*</B3>
+										<B3 className="italic line-clamp-2 overflow-hidden">
+											*El creador de esta publicación no ha añadida una descripción.*
+										</B3>
 									)}
 								</div>
 							</Link>
@@ -157,23 +163,25 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 									<span className="text-[10px] text-lightgrey uppercase tracking-wider">Creador</span>
 									<Link
 										href={`/profile/${post?.User?.id}`}
-										className="text-xs font-medium hover:underline cursor-pointer"
+										className="text-xs font-medium hover:underline cursor-pointer max-w-[5rem] line-clamp-1 overflow-hidden text-ellipsis"
 									>
 										@{post?.User?.username}
 									</Link>
 								</div>
 							</div>
 
-							<SubscribeButton
-								post_id={post.id}
-								typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
-								subscribers={currentProgress}
-								subscribedByUser={subscribedByUser}
-								user_id={userUuid}
-								onSubscriptionChange={setCurrentProgress}
-								variant="switch"
-								onSubscribeChangeForParent={onSubscribeChangeForParent}
-							/>
+							<div className="flex items-center gap-2">
+								<SubscribeButton
+									post_id={post.id}
+									typeOfPost={post.type}
+									subscribers={currentProgress}
+									subscribedByUser={subscribedByUser}
+									user_id={userUuid}
+									onSubscriptionChange={setCurrentProgress}
+									variant="switch"
+									onSubscribeChangeForParent={onSubscribeChangeForParent}
+								/>
+							</div>
 						</div>
 					</div>
 				</div>

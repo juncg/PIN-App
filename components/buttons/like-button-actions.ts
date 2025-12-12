@@ -12,7 +12,7 @@ interface ToggleLikeResult {
 export async function handleLikeAction(
 	post_id: number,
 	currentlyLiked: boolean,
-	typeOfPost?: "Oferta" | "Petición" | "Review",
+	typeOfPost?: "Offer" | "Petition" | "Review",
 	postCreatorId?: string
 ) {
 	try {
@@ -25,10 +25,10 @@ export async function handleLikeAction(
 		let tableName: string;
 
 		switch (typeOfPost) {
-			case "Petición":
+			case "Petition":
 				tableName = "Petition";
 				break;
-			case "Oferta":
+			case "Offer":
 				tableName = "Offer";
 				break;
 			case "Review":
@@ -74,11 +74,11 @@ export async function handleLikeAction(
 						let linkTo: string;
 
 						switch (typeOfPost) {
-							case "Oferta":
+							case "Offer":
 								notificationMessage = `le dió me gusta a tu oferta.`;
 								linkTo = `/offers/${post_id}`;
 								break;
-							case "Petición":
+							case "Petition":
 								notificationMessage = `le dió me gusta a tu petición.`;
 								linkTo = `/petitions/${post_id}`;
 								break;

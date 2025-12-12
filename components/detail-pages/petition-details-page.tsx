@@ -114,7 +114,7 @@ export function PetitionDetails({
 							likes={likes}
 							likedByUser={isLiked}
 							post_id={petition.id}
-							typeOfPost="Petición"
+							typeOfPost="Petition"
 							user_id={currentUser?.id || null}
 							variant="withtext"
 							onLikeChangeForParent={(liked) => {
@@ -193,7 +193,7 @@ export function PetitionDetails({
 
 						<SubscribeButton
 							post_id={petition.id}
-							typeOfPost="Petición"
+							typeOfPost="Petition"
 							subscribers={currentProgress}
 							subscribedByUser={isSubscribed}
 							user_id={currentUser?.id || null}

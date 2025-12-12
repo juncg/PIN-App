@@ -197,7 +197,7 @@ export function FeedPostCard(props: IFeedPostCard) {
 								likes={post.likes}
 								likedByUser={likedByUser}
 								post_id={post.id}
-								typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
+								typeOfPost={post.type}
 								user_id={userUuid}
 								variant="default"
 								onLikeChangeForParent={onLikeChangeForParent}
@@ -222,7 +222,7 @@ export function FeedPostCard(props: IFeedPostCard) {
 
 				<SubscribeButton
 					post_id={post.id}
-					typeOfPost={post.type === "Petition" ? "Petición" : "Oferta"}
+					typeOfPost={post.type}
 					subscribers={currentProgress}
 					subscribedByUser={subscribedByUser}
 					user_id={userUuid}

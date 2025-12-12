@@ -13,7 +13,7 @@ import { OfferWarning } from "../detail-pages/offer-warning";
 
 export interface ISubscribeButton {
 	post_id: number;
-	typeOfPost: "Oferta" | "Petición";
+	typeOfPost: "Offer" | "Petition";
 	subscribedByUser: boolean;
 	subscribers: number;
 	user_id: string | null;
@@ -99,7 +99,7 @@ export function SubscribeButton(props: ISubscribeButton) {
 			return;
 		}
 
-		if (typeOfPost === "Oferta" && !subscribed) {
+		if (typeOfPost === "Offer" && !subscribed) {
 			setShowDialog(true);
 			return;
 		}
@@ -112,7 +112,7 @@ export function SubscribeButton(props: ISubscribeButton) {
 		await performSubscribeToggle();
 	};
 
-	const isDisabled = (typeOfPost === "Oferta" && subscribed) || offerHasFinished || disabled;
+	const isDisabled = (typeOfPost === "Offer" && subscribed) || offerHasFinished || disabled;
 
 	return (
 		<>

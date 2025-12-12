@@ -9,7 +9,10 @@ interface ToggleSubscriptionResult {
 	user_subscribed: boolean;
 }
 
-export async function handleSubscribeAction(post_id: number, typeOfPost: "Oferta" | "Petición") {
+export async function handleSubscribeAction(
+	post_id: number, 
+	typeOfPost: "Offer" | "Petition"
+) {
 	try {
 		const user_id = await getUserUuid();
 
@@ -20,10 +23,10 @@ export async function handleSubscribeAction(post_id: number, typeOfPost: "Oferta
 		let tableName: string;
 
 		switch (typeOfPost) {
-			case "Petición":
+			case "Petition":
 				tableName = "Petition";
 				break;
-			case "Oferta":
+			case "Offer":
 				tableName = "Offer";
 				break;
 			default:
@@ -71,7 +74,7 @@ export async function handleSubscribeAction(post_id: number, typeOfPost: "Oferta
 		if (postData && postData.length > 0) {
 			const post = postData[0];
 			if (post.current_progress >= post.target_progress) {
-				const postType = typeOfPost === "Oferta" ? "Offer" : "Petition";
+				const postType = typeOfPost;
 				const link = `/${postType.toLowerCase()}s/${post_id}`;
 				await notifyPostCompletion({
 					postId: post_id,

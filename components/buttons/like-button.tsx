@@ -12,7 +12,7 @@ export interface ILikeButton {
 	likes: number;
 	likedByUser: boolean;
 	post_id: number;
-	typeOfPost?: "Oferta" | "Petición" | "Review";
+	typeOfPost?: "Offer" | "Petition" | "Review";
 	user_id: string | null;
 	variant?: "default" | "icon" | "withtext";
 	onLikeChangeForParent?: (liked: boolean) => void;
