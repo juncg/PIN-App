@@ -32,7 +32,7 @@ export async function FollowingPageServices() {
 	});
 	const followedBusinessIds = followedBusinesses?.map((b) => b.business_id) || [];
 
-	if (followedUserIds.length === 0 && followedForumIds.length === 0) {
+	if (followedUserIds.length === 0 && followedForumIds.length === 0 && followedBusinessIds.length === 0) {
 		return { posts: [], businesses: [], forums: [] };
 	}
 
@@ -52,6 +52,14 @@ export async function FollowingPageServices() {
 			filters: [{ method: "in", column: "forum_id", value: followedForumIds }],
 		});
 		(offersFromForums || []).forEach((o) => offerMap.set(o.id, o));
+	}
+	if (followedBusinessIds.length > 0) {
+		const { data: offersFromBusinesses } = await GetFromDatabase<IOffer>({
+			tableName: "Offer",
+			select: "*, User!Offer_creator_id_fkey(id, profile_picture, username), User_Offer!left(liked, subscribed, user_id), Offer_Product(Product(*))",
+			filters: [{ method: "in", column: "business_id", value: followedBusinessIds }],
+		});
+		(offersFromBusinesses || []).forEach((o) => offerMap.set(o.id, o));
 	}
 	const uniqueOffers = Array.from(offerMap.values());
 
@@ -138,8 +146,6 @@ export async function FollowingPageServices() {
 					filters: [{ method: "in", column: "Product_Business.business_id", value: followedBusinessIds }],
 			  })
 			: { data: [] };
-
-	console.log("Feed products:", products);
 
 	return { posts: allPosts, businesses: businesses || [], forums: forums || [], products: products || [] };
 }
