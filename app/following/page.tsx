@@ -11,8 +11,6 @@ export default async function Feed({ searchParams }: { searchParams: Promise<ISe
 	const userUuid = await getUserUuid();
 	const { posts, businesses, forums, products } = await FollowingPageServices();
 
-	console.log(posts, userUuid);
-
 	return (
 		<div className="container mx-auto max-w-[1800px] px-4 md:px-6 py-6">
 			<div className="grid grid-cols-1 lg:grid-cols-[20%_50%_30%] gap-6 lg:gap-8">
