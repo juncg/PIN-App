@@ -8,7 +8,7 @@ export async function FeedServices() {
 	const userUuid = await getUserUuid();
 
 	if (!userUuid) {
-		return { posts: [] };
+		return { posts: [], businesses: [], forums: [] };
 	}
 
 	const { data: followedUsers } = await GetFromDatabase<{ following_id: string }>({
@@ -25,8 +25,15 @@ export async function FeedServices() {
 	});
 	const followedForumIds = followedForums?.map((f) => f.forum_id) || [];
 
+	const { data: followedBusinesses } = await GetFromDatabase<{ business_id: number }>({
+		tableName: "User_Business",
+		select: "business_id",
+		filters: [{ method: "eq", column: "user_id", value: userUuid }],
+	});
+	const followedBusinessIds = followedBusinesses?.map((b) => b.business_id) || [];
+
 	if (followedUserIds.length === 0 && followedForumIds.length === 0) {
-		return { posts: [] };
+		return { posts: [], businesses: [], forums: [] };
 	}
 
 	const offerMap = new Map<number, IOffer>();
@@ -36,7 +43,7 @@ export async function FeedServices() {
 			select: "*, User!Offer_creator_id_fkey(id, profile_picture, username), User_Offer!left(liked, subscribed, user_id), Offer_Product(Product(*))",
 			filters: [{ method: "in", column: "creator_id", value: followedUserIds }],
 		});
-		(offersFromUsers || []).forEach(o => offerMap.set(o.id, o));
+		(offersFromUsers || []).forEach((o) => offerMap.set(o.id, o));
 	}
 	if (followedForumIds.length > 0) {
 		const { data: offersFromForums } = await GetFromDatabase<IOffer>({
@@ -44,7 +51,7 @@ export async function FeedServices() {
 			select: "*, User!Offer_creator_id_fkey(id, profile_picture, username), User_Offer!left(liked, subscribed, user_id), Offer_Product(Product(*))",
 			filters: [{ method: "in", column: "forum_id", value: followedForumIds }],
 		});
-		(offersFromForums || []).forEach(o => offerMap.set(o.id, o));
+		(offersFromForums || []).forEach((o) => offerMap.set(o.id, o));
 	}
 	const uniqueOffers = Array.from(offerMap.values());
 
@@ -55,7 +62,7 @@ export async function FeedServices() {
 			select: "*, User!Petition_creator_id_fkey(id, profile_picture, username), User_Petition!left(liked, subscribed, user_id), Petition_Product(Product(*))",
 			filters: [{ method: "in", column: "creator_id", value: followedUserIds }],
 		});
-		(petitionsFromUsers || []).forEach(p => petitionMap.set(p.id, p));
+		(petitionsFromUsers || []).forEach((p) => petitionMap.set(p.id, p));
 	}
 	if (followedForumIds.length > 0) {
 		const { data: petitionsFromForums } = await GetFromDatabase<IPetition>({
@@ -63,7 +70,7 @@ export async function FeedServices() {
 			select: "*, User!Petition_creator_id_fkey(id, profile_picture, username), User_Petition!left(liked, subscribed, user_id), Petition_Product(Product(*))",
 			filters: [{ method: "in", column: "forum_id", value: followedForumIds }],
 		});
-		(petitionsFromForums || []).forEach(p => petitionMap.set(p.id, p));
+		(petitionsFromForums || []).forEach((p) => petitionMap.set(p.id, p));
 	}
 	const uniquePetitions = Array.from(petitionMap.values());
 
@@ -105,6 +112,35 @@ export async function FeedServices() {
 
 	allPosts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
-	return { posts: allPosts };
+	const { data: businesses } =
+		followedBusinessIds.length > 0
+			? await GetFromDatabase({
+					tableName: "Business",
+					select: "id, name, username, profile_picture, verification",
+					filters: [{ method: "in", column: "id", value: followedBusinessIds }],
+			  })
+			: { data: [] };
+
+	const { data: forums } =
+		followedForumIds.length > 0
+			? await GetFromDatabase({
+					tableName: "Forum",
+					select: "id, name, profile_picture, Business(username, verification)",
+					filters: [{ method: "in", column: "id", value: followedForumIds }],
+			  })
+			: { data: [] };
+
+	const { data: products } =
+		followedBusinessIds.length > 0
+			? await GetFromDatabase({
+					tableName: "Product",
+					select: "*, businesses:Product_Business!inner(business:Business(*))",
+					filters: [{ method: "in", column: "Product_Business.business_id", value: followedBusinessIds }],
+			  })
+			: { data: [] };
+
+	console.log("Feed products:", products);
+
+	return { posts: allPosts, businesses: businesses || [], forums: forums || [], products: products || [] };
 }
 
