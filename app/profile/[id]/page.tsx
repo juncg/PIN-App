@@ -1,11 +1,10 @@
+import EditProfileButton from "@/components/buttons/edit-profile-button";
 import { FollowButton } from "@/components/buttons/follow-button";
 import { AltenatingButtons, SlidingButtonProps } from "@/components/buttons/sliding-buttons";
 import { CalendarIcon, CheckBoxIcon, LocationIcon, PeopleAlt2Icon, TextSnippetIcon } from "@/components/icons/icons";
-import EditProfileButton from "@/components/buttons/edit-profile-button";
 import { ProfilePostsList } from "@/components/profile/profile-posts-list";
 import { ProfileRightColumn } from "@/components/profile/profile-right-column";
 import { ProfileSubscriptionsList } from "@/components/profile/profile-subscriptions-list";
-import { Button } from "@/components/ui-custom/button";
 import { B1, H2, H5DisplayBold } from "@/components/ui-custom/typography";
 import { getUserUuid } from "@/lib/services/user";
 import { GetJoinedDate } from "@/lib/services/utilities";
@@ -115,14 +114,15 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 
 						<B1>{userData?.bio}</B1>
 
-						<span className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-lightgrey">
+						<span className="flex flex-col sm:flex-row gap-4 sm:gap-8 text-lightgrey">
 							<B1 className="flex gap-2 items-center">
 								<PeopleAlt2Icon className="!h-4" />
 								{userData?.followers} {userData?.followers === 1 ? "seguidor" : "seguidores"}
 							</B1>
 
 							<B1 className="flex gap-2 items-center">
-								<LocationIcon className="!h-4" /> Ubicación: Ejemplo
+								<LocationIcon className="!h-4" />
+								Ubicación: Ejemplo
 							</B1>
 
 							<B1 className="flex gap-2 items-center">
