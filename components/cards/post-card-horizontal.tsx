@@ -4,14 +4,12 @@ import { useUser } from "@/hooks/use-user";
 import { IOffer, IPetition } from "@/lib/services/types";
 import { GetTimeRemaining } from "@/lib/services/utilities";
 import { cn } from "@/lib/utils";
-import { Hand, Tag, Verified } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { LikeButton } from "../buttons/like-button";
 import { SubscribeButton } from "../buttons/subscribe-button";
-import { ClockIcon, PeopleAltIcon, Shining2LineIcon } from "../icons/icons";
-import { Button } from "../ui-custom/button";
+import { ClockIcon, PeopleAltIcon, FrontHandIcon, LocalOfferIcon } from "../icons/icons";
 import { Progress } from "../ui-custom/progress";
 import { B1, B5, H3, S1 } from "../ui-custom/typography";
 import { HyperLikeButton } from "../buttons/hyper-like";
@@ -88,9 +86,9 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 							className="hover:underline flex items-center gap-2"
 						>
 							{post.type === "Offer" ? (
-								<Tag className="h-5 w-5 text-primary shrink-0" />
+								<LocalOfferIcon className="h-5 w-5 text-primary shrink-0" />
 							) : (
-								<Hand className="h-5 w-5 text-primary shrink-0" />
+								<FrontHandIcon className="h-5 w-5 text-primary shrink-0" />
 							)}
 							<H3 className="line-clamp-1">{post.title}.</H3>
 						</Link>
@@ -152,9 +150,7 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 							<span>
 								<B5 className="text-lightgrey">Creador</B5>
 								<Link href={`/profile/${post?.User?.id}`} className="hover:underline">
-									<B1 className="flex items-center gap-2">
-										@{post?.User?.username || "ejemplo"} <Verified className="h-4" />
-									</B1>
+									<B1 className="flex items-center gap-2">@{post?.User?.username || "ejemplo"} </B1>
 								</Link>
 							</span>
 						</div>
