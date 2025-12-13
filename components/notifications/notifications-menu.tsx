@@ -43,7 +43,7 @@ export function NotificationsMenu({ notifications, userId }: NotificationsMenuPr
 				<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/20">
 					<h4 className="font-semibold text-sm">Notificaciones</h4>
 				</div>
-				<div className="max-h-[500px] overflow-y-auto w-full">
+				<div className="max-h-[500px] overflow-y-auto w-full" onWheel={(e) => e.stopPropagation()}>
 					{notifications.length === 0 ? (
 						<div className="p-8 text-center text-sm text-muted-foreground flex flex-col items-center gap-2">
 							<Bell className="h-8 w-8 opacity-50" />
