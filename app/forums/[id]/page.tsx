@@ -21,6 +21,7 @@ export default async function ForumPage({ params, searchParams }: ForumPageProps
         categories,
         popularForums,
         businessForums,
+        businessProducts,
         randomForums,
         translator,
         clientTranslations,
@@ -47,6 +48,7 @@ export default async function ForumPage({ params, searchParams }: ForumPageProps
             categories={categories}
             popularForums={popularForums}
             businessForums={businessForums}
+            businessProducts={businessProducts}
             randomForums={randomForums}
             clientTranslations={clientTranslations}
             initialOffers={initialOffers}

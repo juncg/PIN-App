@@ -2,14 +2,16 @@
 
 import { FollowButton } from "@/components/buttons/follow-button";
 import { ForumCardHorizontalSmall } from "@/components/cards/forum-card-horizontal-small";
+import { ProductCardHorizontal } from "@/components/cards/product-card-horizontal";
 import { InfinitePostGrid } from "@/components/posts/infinite-post-grid";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
+
 import { Button } from "@/components/ui-custom/button";
 import { B1, H1, H2 } from "@/components/ui-custom/typography";
 import { VerifiedIcon } from "@/components/icons/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
 
 interface ForumPageClientProps {
 	id: number;
@@ -20,6 +22,7 @@ interface ForumPageClientProps {
 	categories: any[];
 	popularForums: any[];
 	businessForums: any[];
+	businessProducts: any[];
 	randomForums: any[];
 	clientTranslations: any;
 	initialOffers: any[];
@@ -37,6 +40,7 @@ export function ForumPageClient({
 	categories,
 	popularForums,
 	businessForums,
+	businessProducts,
 	randomForums,
 	clientTranslations,
 	initialOffers,
@@ -212,6 +216,7 @@ export function ForumPageClient({
 				</div>
 
 				{/* Right Sidebar */}
+
 				<div className="hidden lg:block space-y-6">
 					<div className="flex items-center gap-3 mb-6">
 						<Avatar className="h-10 w-10 rounded-full">
@@ -226,20 +231,27 @@ export function ForumPageClient({
 						</Avatar>
 						<span className="font-bold text-xl text-white">{forumData.Business?.name}</span>
 					</div>
-
-					<div className="space-y-3">
-						<h3 className="text-sm font-medium text-lightgrey">Más foros de la empresa.</h3>
+					{businessForums.length > 0 && (
 						<div className="space-y-3">
-							{businessForums.map((forum) => (
-								<ForumCardHorizontalSmall key={forum.id} forum={forum} />
-							))}
+							<h3 className="text-sm font-medium text-lightgrey">Más foros de la empresa.</h3>
+							<div className="space-y-3">
+								{businessForums.map((forum) => (
+									<ForumCardHorizontalSmall key={forum.id} forum={forum} />
+								))}
+							</div>
 						</div>
-					</div>
+					)}
 
-					<div className="space-y-3">
-						<h3 className="text-sm font-medium text-lightgrey">Foros de productos similares.</h3>
-						<div className="space-y-3"></div>
-					</div>
+					{businessProducts.length > 0 && (
+						<div className="space-y-3">
+							<h3 className="text-sm font-medium text-lightgrey">Productos de la empresa.</h3>
+							<div className="space-y-3">
+								{businessProducts.map((product) => (
+									<ProductCardHorizontal key={product.id} {...product} />
+								))}
+							</div>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>

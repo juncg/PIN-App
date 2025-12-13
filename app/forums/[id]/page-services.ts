@@ -1,5 +1,5 @@
 import { GetClient, GetFromDatabase } from "@/lib/services/general";
-import { ICategory, IForum } from "@/lib/services/types";
+import { ICategory, IForum, IProduct } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
 import { getTranslations } from "next-intl/server";
 import { DEFAULT_LOCALE } from "@/lib/constants";
@@ -90,6 +90,21 @@ export async function ForumDetailsService(forumId: number, searchParams: Promise
 		],
 	});
 
+	const { data: businessProductsRaw } = await GetFromDatabase<IProduct>({
+		tableName: "Product",
+		select: "*, Product_Business!inner(Business(*))",
+		filters: [
+			{ method: "eq", column: "Product_Business.business_id", value: forum[0].business_id },
+			{ method: "order", column: "created_at", ascending: false },
+			{ method: "range", from: 0, to: 4 },
+		],
+	});
+
+	const businessProducts = businessProductsRaw?.map((product: any) => ({
+		...product,
+		businesses: product.Product_Business ? [{ business: product.Product_Business.Business }] : [],
+	})) || [];
+
 	const { data: randomForums } = await GetFromDatabase<IForum>({
 		tableName: "Forum",
 		select: "*, Business(*)",
@@ -118,6 +133,7 @@ export async function ForumDetailsService(forumId: number, searchParams: Promise
 		categories: categories || [],
 		popularForums: popularForums || [],
 		businessForums: businessForums || [],
+		businessProducts: businessProducts || [],
 		randomForums: randomForums || [],
 		translator,
 		clientTranslations,
