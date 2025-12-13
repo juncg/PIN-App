@@ -111,11 +111,13 @@ export function FeedPostCard(props: IFeedPostCard) {
 				<div className="flex justify-between items-start">
 					<Link
 						href={post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}
-						className="group"
+						className="group flex-1 min-w-0"
 					>
 						<H3 className="text-xl font-bold text-white mb-2 group-hover:underline decoration-white/50 underline-offset-4">
 							{post.title}.
 						</H3>
+
+						<B1 className="text-lightgrey mb-4 line-clamp-2 leading-relaxed text-sm">{post.text}</B1>
 					</Link>
 
 					{post.type === "Offer" && post.reduced_price && (
@@ -131,29 +133,31 @@ export function FeedPostCard(props: IFeedPostCard) {
 					)}
 				</div>
 
-				<B1 className="text-lightgrey mb-4 line-clamp-2 leading-relaxed text-sm">{post.text}</B1>
-
 				{hasValidImages && (
 					<div className="w-full mt-4">
 						{showSideBySide ? (
-							<div className="flex gap-2 h-64 w-full">
-								{displayImages.map((img, idx) => (
-									<div
-										key={idx}
-										className="relative w-1/2 h-full rounded-2xl overflow-hidden border-2 border-cardborder group/image cursor-pointer"
-									>
-										<Image
-											src={img}
-											alt={`Image ${idx}`}
-											fill
-											className="object-cover transition-transform duration-500 group-hover/image:scale-110"
-											unoptimized
-										/>
-									</div>
-								))}
-							</div>
+							<Link href={post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}>
+								<div className="flex gap-2 h-64 w-full">
+									{displayImages.map((img, idx) => (
+										<div
+											key={idx}
+											className="relative w-1/2 h-full rounded-2xl overflow-hidden border-2 border-cardborder group/image cursor-pointer"
+										>
+											<Image
+												src={img}
+												alt={`Image ${idx}`}
+												fill
+												className="object-cover transition-transform duration-500 group-hover/image:scale-110"
+												unoptimized
+											/>
+										</div>
+									))}
+								</div>
+							</Link>
 						) : (
-							<CardImagesCarousel post={post} displayImages={displayImages} />
+							<Link href={post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}>
+								<CardImagesCarousel post={post} displayImages={displayImages} />
+							</Link>
 						)}
 					</div>
 				)}

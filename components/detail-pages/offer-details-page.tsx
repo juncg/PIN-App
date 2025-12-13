@@ -109,7 +109,7 @@ export function OfferDetails({
 							likes={likes}
 							likedByUser={isLiked}
 							post_id={offer.id}
-							typeOfPost="Oferta"
+							typeOfPost="Offer"
 							user_id={currentUser?.id || null}
 							variant="withtext"
 							onLikeChangeForParent={(liked) => {
@@ -143,15 +143,18 @@ export function OfferDetails({
 						</div>
 					)}
 
-					{/* Precio con descuento */}
 					<div className="space-y-1">
 						<div className="flex items-baseline gap-3">
-							<span className="text-lg font-black" style={{ color: "#C4FF33" }}>
-								-{discountPercentage}%
-							</span>
+							{originalPrice != offer.reduced_price && originalPrice > 0 && (
+								<span className="text-lg font-black" style={{ color: "#C4FF33" }}>
+									-{discountPercentage}%
+								</span>
+							)}
 							<span className="text-3xl font-black">{offer.reduced_price}€</span>
 						</div>
-						<div className="text-sm text-lightgrey">Precio original: {originalPrice}€</div>
+						{originalPrice != offer.reduced_price && originalPrice > 0 && (
+							<div className="text-sm text-lightgrey">Precio original: {originalPrice}€</div>
+						)}
 					</div>
 
 					<div>
@@ -210,7 +213,7 @@ export function OfferDetails({
 
 						<SubscribeButton
 							post_id={offer.id}
-							typeOfPost="Oferta"
+							typeOfPost="Offer"
 							subscribers={currentProgress}
 							subscribedByUser={isSubscribed}
 							user_id={currentUser?.id || null}
