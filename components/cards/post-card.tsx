@@ -110,8 +110,8 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 							>
 								<div
 									className={cn(
-										"min-h-[3.5rem] flex items-start",
-										displayImages.length === 0 && "mt-10" // Add margin if no images
+										"min-h-[4rem] max-h-[4rem] flex items-start overflow-hidden",
+										displayImages.length === 0 && "mt-10"
 									)}
 								>
 									<H4 className="hover:underline line-clamp-2 overflow-hidden">{post.title}</H4>
