@@ -12,6 +12,7 @@ interface FileDropzoneProps {
 	disabled?: boolean;
 	accept?: string;
 	label?: string;
+	required?: boolean;
 }
 
 export default function FileDropzone({
@@ -21,6 +22,7 @@ export default function FileDropzone({
 	disabled = false,
 	accept = "image/*",
 	label = "Imágenes",
+	required = false,
 }: FileDropzoneProps) {
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [isDragActive, setIsDragActive] = useState(false);
@@ -75,7 +77,10 @@ export default function FileDropzone({
 
 	return (
 		<div className="grid gap-2">
-			<Label>{label}</Label>
+			<Label>
+				{label}
+				{required && <Label className="!text-destructive">*</Label>}
+			</Label>
 			<div
 				className={`relative flex flex-col items-center justify-center gap-3 rounded-lg border-2 p-6 transition-colors ${
 					isDragActive ? "border-black bg-black/5" : "border-dashed border-lightgrey/40"

@@ -80,9 +80,13 @@ export function SubscribeButton(props: ISubscribeButton) {
 			}
 
 			if (newSubscribedState) {
-				toast.success(`Te has suscrito a esta ${typeOfPost.toLowerCase()} correctamente`);
+				toast.success(
+					`Te has suscrito a esta ${typeOfPost === "Offer" ? "oferta" : "petición"} correctamente.`
+				);
 			} else {
-				toast.success(`Te has desuscrito de esta ${typeOfPost.toLowerCase()} correctamente`);
+				toast.success(
+					`Te has desuscrito de esta ${typeOfPost === "Offer" ? "oferta" : "petición"} correctamente.`
+				);
 			}
 		} catch (error) {
 			setSubscribed(previousSubscribed);
@@ -141,7 +145,7 @@ export function SubscribeButton(props: ISubscribeButton) {
 						<DialogDescription>
 							Una vez que te suscribas a esta oferta, no podrás desuscribirte a menos que la oferta sea
 							cancelada o eliminada.
-						</DialogDescription>						
+						</DialogDescription>
 					</DialogHeader>
 					<DialogFooter>
 						<Button variant="outline" onClick={() => setShowDialog(false)}>

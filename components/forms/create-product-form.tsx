@@ -48,6 +48,7 @@ export default function CreateProductForm({ businesses, categories }: CreateProd
 			msrp: undefined,
 			business_id: undefined,
 			category_id: undefined,
+			images: [],
 		},
 	});
 
@@ -72,7 +73,7 @@ export default function CreateProductForm({ businesses, categories }: CreateProd
 				msrp: data.msrp,
 				images: uploadedUrls.length > 0 ? uploadedUrls : null,
 				associated_links: null,
-				rating: null,
+				rating: 0,
 				created_at: new Date().toISOString(),
 			};
 
@@ -217,8 +218,17 @@ export default function CreateProductForm({ businesses, categories }: CreateProd
 					</Select>
 				</FormField>
 
-				<FormField htmlFor="images">
-					<FileDropzone value={images} onChange={setImages} maxFiles={10} disabled={isSubmitting} />
+				<FormField htmlFor="images" errorMessage={errors.images?.message || ""} required>
+					<FileDropzone
+						value={images}
+						onChange={(value) => {
+							setImages(value);
+							setValue("images", value);
+						}}
+						maxFiles={5}
+						disabled={isSubmitting}
+						required
+					/>
 				</FormField>
 
 				<div className="flex justify-end pt-6">
@@ -230,3 +240,4 @@ export default function CreateProductForm({ businesses, categories }: CreateProd
 		</>
 	);
 }
+
