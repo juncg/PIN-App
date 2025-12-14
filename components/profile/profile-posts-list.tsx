@@ -15,6 +15,7 @@ interface ProfilePostsListProps {
 	offersCount: number;
 	petitionsCount: number;
 	totalCount: number;
+	currentUserId?: string | null;
 }
 
 export function ProfilePostsList({
@@ -24,6 +25,7 @@ export function ProfilePostsList({
 	offersCount,
 	petitionsCount,
 	totalCount,
+	currentUserId,
 }: ProfilePostsListProps) {
 	const [filteredPosts, setFilteredPosts] = useState<TPost[]>(allPosts);
 	const [currentFilter, setCurrentFilter] = useState<
@@ -89,7 +91,7 @@ export function ProfilePostsList({
 				{filteredPosts.length === 0 ? (
 					<p className="text-center text-lightgrey-foreground py-12">No se encontraron publicaciones</p>
 				) : (
-					filteredPosts.map((post) => <PostCardHorizontal key={`${post.type}-${post.id}`} post={post} />)
+					filteredPosts.map((post) => <PostCardHorizontal key={`${post.type}-${post.id}`} post={post} userUuidProp={currentUserId} />)
 				)}
 			</div>
 		</div>

@@ -14,6 +14,7 @@ interface ProfileSubscriptionsListProps {
 	subscribedPetitions: IPetition[];
 	subscribedOffersCount: number;
 	subscribedPetitionsCount: number;
+	currentUserId?: string | null;
 }
 
 export function ProfileSubscriptionsList({
@@ -21,6 +22,7 @@ export function ProfileSubscriptionsList({
 	subscribedPetitions,
 	subscribedOffersCount,
 	subscribedPetitionsCount,
+	currentUserId,
 }: ProfileSubscriptionsListProps) {
 	const allSubscriptions = [...subscribedOffers, ...subscribedPetitions].sort((a, b) => {
 		const dateA = new Date(a.created_at).getTime();
@@ -103,7 +105,7 @@ export function ProfileSubscriptionsList({
 							</p>
 						) : (
 							filteredPosts.map((post) => (
-								<PostCardHorizontal key={`${post.type}-${post.id}`} post={post} />
+								<PostCardHorizontal key={`${post.type}-${post.id}`} post={post} userUuidProp={currentUserId} />
 							))
 						)}
 					</div>

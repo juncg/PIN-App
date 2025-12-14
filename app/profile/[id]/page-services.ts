@@ -107,8 +107,11 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 	const { supabase: supabaseService } = await GetServiceClient();
 	const { data: subscribedOffersRaw } = await supabaseService
 		.from("User_Offer")
-		.select("Offer(*, User!Offer_creator_id_fkey(*))")
+		.select(
+			"Offer(*, User_Offer!User_Offer_offer_id_fkey(liked, subscribed, user_id), User!Offer_creator_id_fkey(*))"
+		)
 		.eq("user_id", uuid)
+		.eq("subscribed", true)
 		.order("offer_id", { ascending: false })
 		.range(0, 2);
 
@@ -132,8 +135,11 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 
 	const { data: subscribedPetitionsRaw } = await supabaseService
 		.from("User_Petition")
-		.select("Petition(*, User!Petition_creator_id_fkey(*))")
+		.select(
+			"Petition(*, User_Petition!User_Petition_petition_id_fkey(liked, subscribed, user_id), User!Petition_creator_id_fkey(*))"
+		)
 		.eq("user_id", uuid)
+		.eq("subscribed", true)
 		.order("petition_id", { ascending: false })
 		.range(0, 5);
 

@@ -54,6 +54,7 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 					subscribedPetitions={subscribedPetitions}
 					subscribedOffersCount={subscribedOffersCount}
 					subscribedPetitionsCount={subscribedPetitionsCount}
+					currentUserId={currentUserId}
 				/>
 			),
 			displayName: isCurrentUser ? "Mis suscripciones" : "Suscripciones",
@@ -69,6 +70,7 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 					offersCount={offersCount}
 					petitionsCount={petitionsCount}
 					totalCount={totalCount}
+					currentUserId={currentUserId}
 				/>
 			),
 			displayName: isCurrentUser ? "Mis publicaciones" : "Publicaciones",
