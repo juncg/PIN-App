@@ -136,10 +136,30 @@ function Carousel({
 }
 
 function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
-	const { carouselRef, orientation } = useCarousel();
+	const { carouselRef, orientation, canScrollPrev, canScrollNext } = useCarousel();
+
+	const getMaskImage = () => {
+		if (orientation === "horizontal") {
+			const left = canScrollPrev ? "transparent 0%, " : "black 0%, ";
+			const right = canScrollNext ? "transparent 100%" : "black 100%";
+			return `linear-gradient(to right, ${left}black 10%, black 90%, ${right})`;
+		} else {
+			const top = canScrollPrev ? "transparent 0%, " : "black 0%, ";
+			const bottom = canScrollNext ? "transparent 100%" : "black 100%";
+			return `linear-gradient(to bottom, ${top}black 10%, black 90%, ${bottom})`;
+		}
+	};
 
 	return (
-		<div ref={carouselRef} className="overflow-hidden" data-slot="carousel-content">
+		<div
+			ref={carouselRef}
+			className="overflow-hidden"
+			style={{
+				WebkitMaskImage: getMaskImage(),
+				maskImage: getMaskImage(),
+			}}
+			data-slot="carousel-content"
+		>
 			<div
 				className={cn("flex", orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col", className)}
 				{...props}

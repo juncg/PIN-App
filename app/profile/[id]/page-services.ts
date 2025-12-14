@@ -100,7 +100,12 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 		],
 	});
 
-	const subscribedOffers = subscribedOffersRaw?.map((item) => item.Offer) || [];
+	const subscribedOffers =
+		subscribedOffersRaw?.map((item) => {
+			const offer = item.Offer;
+			offer.type = "Offer";
+			return offer;
+		}) || [];
 
 	// Total subscribed offers count
 	let subscribedOffersCount = 0;
@@ -123,7 +128,12 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 		],
 	});
 
-	const subscribedPetitions = subscribedPetitionsRaw?.map((item) => item.Petition) || [];
+	const subscribedPetitions =
+		subscribedPetitionsRaw?.map((item) => {
+			const petition = item.Petition;
+			petition.type = "Petition";
+			return petition;
+		}) || [];
 
 	// Total subscribed petitions count
 	let subscribedPetitionsCount = 0;
