@@ -90,15 +90,13 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 		if (!error && typeof count === "number") followingUsersCount = count;
 	}
 
-	const { data: subscribedOffersRaw } = await GetFromDatabase<any>({
-		tableName: "User_Offer",
-		select: "Offer(*, User!Offer_creator_id_fkey(*))",
-		filters: [
-			{ method: "eq", column: "user_id", value: uuid },
-			{ method: "order", column: "offer_id", ascending: false },
-			{ method: "range", from: 0, to: 2 },
-		],
-	});
+	const { supabase: supabaseService } = await GetServiceClient();
+	const { data: subscribedOffersRaw } = await supabaseService
+		.from("User_Offer")
+		.select("Offer(*, User!Offer_creator_id_fkey(*))")
+		.eq("user_id", uuid)
+		.order("offer_id", { ascending: false })
+		.range(0, 2);
 
 	const subscribedOffers =
 		subscribedOffersRaw?.map((item) => {
@@ -118,15 +116,12 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 		if (!error && typeof count === "number") subscribedOffersCount = count;
 	}
 
-	const { data: subscribedPetitionsRaw } = await GetFromDatabase<any>({
-		tableName: "User_Petition",
-		select: "Petition(*, User!Petition_creator_id_fkey(*))",
-		filters: [
-			{ method: "eq", column: "user_id", value: uuid },
-			{ method: "order", column: "petition_id", ascending: false },
-			{ method: "range", from: 0, to: 5 },
-		],
-	});
+	const { data: subscribedPetitionsRaw } = await supabaseService
+		.from("User_Petition")
+		.select("Petition(*, User!Petition_creator_id_fkey(*))")
+		.eq("user_id", uuid)
+		.order("petition_id", { ascending: false })
+		.range(0, 5);
 
 	const subscribedPetitions =
 		subscribedPetitionsRaw?.map((item) => {
