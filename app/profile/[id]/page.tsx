@@ -36,6 +36,7 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 		subscribedPetitionsCount,
 		followedByUser,
 		clientTranslations,
+		isBusinessUser,
 	} = await ProfileServices(id, searchParams);
 
 	// Get user's created posts
@@ -55,7 +56,7 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 					subscribedPetitionsCount={subscribedPetitionsCount}
 				/>
 			),
-			displayName: "Mis suscripciones",
+			displayName: isCurrentUser ? "Mis suscripciones" : "Suscripciones",
 			displayIcon: <CheckBoxIcon />,
 		},
 		{
@@ -70,7 +71,7 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 					totalCount={totalCount}
 				/>
 			),
-			displayName: "Mis publicaciones",
+			displayName: isCurrentUser ? "Mis publicaciones" : "Publicaciones",
 			displayIcon: <TextSnippetIcon />,
 		},
 	];
@@ -163,6 +164,8 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 				followingUsers={followingUsers}
 				followingUsersTotalCount={followingUsersCount}
 				likedPostsCount={likedPostsCount}
+				isCurrentUser={isCurrentUser}
+				isBusinessUser={isBusinessUser}
 			/>
 		</section>
 	);

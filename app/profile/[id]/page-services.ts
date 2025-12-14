@@ -21,6 +21,20 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 
 	const userData = user?.data?.[0];
 
+	const { data: employeeData } = await GetFromDatabase<any>({
+		tableName: "Business_Employee",
+		select: "business_id",
+		filters: [{ method: "eq", column: "user_id", value: userData?.id }],
+	});
+
+	const { data: businessCreatorData } = await GetFromDatabase<any>({
+		tableName: "Business",
+		select: "id",
+		filters: [{ method: "eq", column: "owner_id", value: userData?.id }],
+	});
+
+	const isBusinessUser = !!(employeeData?.length || businessCreatorData?.length);
+
 	const { data: followingForumsRaw } = await GetFromDatabase<any>({
 		tableName: "User_Forum",
 		select: "Forum(*)",
@@ -176,6 +190,7 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 		followedByUser,
 		likedPostsCount,
 		clientTranslations,
+		isBusinessUser,
 	};
 }
 
