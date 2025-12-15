@@ -17,10 +17,11 @@ import { IComment, IPetition, IProduct, IUser } from "@/lib/services/types";
 import { ArrowUpRight, Users } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ProductCard } from "../cards/product-card";
+import { ProductCardHorizontal } from "../cards/product-card-horizontal";
 import { CommentsSection } from "../comments/comments-section";
 import { ProductImages } from "../products/product-images";
 import { ShareComponent } from "../share-post/share";
+import { ProductCard } from "../cards/product-card";
 
 interface PetitionDetailsProps {
 	petition: IPetition;
@@ -212,7 +213,18 @@ export function PetitionDetails({
 				<div>
 					<AltenatingButtons buttonsContent={slidingButtonsContent} textSize="text-xl" />
 				</div>
-				<div></div>
+				{hasProducts && (
+					<div>
+						<div className="mb-6">
+							<S1>Productos relacionados.</S1>
+						</div>
+						<div className="space-y-4">
+							{petition.products?.map((productRelation) => (
+								<ProductCardHorizontal key={productRelation.Product.id} {...productRelation.Product} />
+							))}
+						</div>
+					</div>
+				)}
 			</div>
 
 			<CommentsSection
