@@ -25,8 +25,8 @@ export const buttonVariants = cva(
 					"transition",
 					"border-[2px] border-cardborder",
 				].join(" "),
-				ghost: "hover:bg-hover hover:text-gray-600 rounded-full",
-				ghostSquared: "hover:bg-hover hover:text-gray-600 rounded-lg",
+				ghost: "hover:bg-hover rounded-full",
+				ghostSquared: "hover:bg-hover rounded-lg",
 				chernobyl: ["bg-transparent text-black", "transition", "bg-chernobyl", "rounded-full"].join(" "),
 				chernobylSquared: ["bg-transparent text-black", "transition", "bg-chernobyl", "rounded-lg"].join(" "),
 				chernobylGradient: [

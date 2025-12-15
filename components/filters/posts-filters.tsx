@@ -4,8 +4,8 @@ import { ITag } from "@/lib/services/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { Button } from "../ui-custom/button";
-import { Label } from "../ui-custom/label";
 import { Slider } from "../ui-custom/slider";
+import { B1, B5 } from "../ui-custom/typography";
 
 interface PostsFiltersProps {
 	popularTags: ITag[];
@@ -107,26 +107,20 @@ export default function PostsFilters({ popularTags }: PostsFiltersProps) {
 		<div className="space-y-8">
 			<div className="space-y-3">
 				<div className="flex items-center justify-between">
-					<h3 className="font-semibold text-foreground">Creador.</h3>
+					<B1>Creador.</B1>
 					{hasActiveFilters && (
-						<Button
-							variant="ghost"
-							size="sm"
-							onClick={clearFilters}
-							disabled={isPending}
-							className="h-auto p-0 text-xs text-lightgrey hover:text-white"
-						>
+						<Button variant="ghost" size="sm" onClick={clearFilters} disabled={isPending}>
 							Limpiar filtros
 						</Button>
 					)}
 				</div>
+
 				<div className="flex flex-wrap gap-2">
 					{creatorOptions.map((option) => (
 						<Button
 							key={option.id}
 							variant={currentCreator === option.value ? "default" : "outline"}
 							size="sm"
-							className="rounded-full px-4 justify-start"
 							onClick={() => updateCreatorFilter(currentCreator === option.value ? null : option.value)}
 							disabled={isPending}
 						>
@@ -137,17 +131,17 @@ export default function PostsFilters({ popularTags }: PostsFiltersProps) {
 			</div>
 
 			<div className="space-y-3">
-				<h3 className="font-semibold text-foreground">Categorías.</h3>
+				<B1>Categorías.</B1>
 				<div className="flex flex-wrap gap-2">
 					<Button
 						variant={selectedTags.length === 0 ? "default" : "outline"}
 						size="sm"
-						className="rounded-full px-4"
 						onClick={() => setSelectedTags([])}
 						disabled={isPending}
 					>
 						Todas
 					</Button>
+
 					{popularTags.map((tag) => {
 						const isSelected = selectedTags.includes(tag.id.toString());
 						return (
@@ -155,7 +149,6 @@ export default function PostsFilters({ popularTags }: PostsFiltersProps) {
 								key={tag.id}
 								variant={isSelected ? "default" : "outline"}
 								size="sm"
-								className="rounded-full px-4"
 								onClick={() => {
 									const newTags = isSelected
 										? selectedTags.filter((t) => t !== tag.id.toString())
@@ -173,7 +166,7 @@ export default function PostsFilters({ popularTags }: PostsFiltersProps) {
 
 			<div className="space-y-4">
 				<div>
-					<Label className="text-base font-bold">Precio.</Label>
+					<B1>Precio.</B1>
 					<div className="mt-6 px-2">
 						<Slider
 							value={priceRange}
@@ -181,13 +174,13 @@ export default function PostsFilters({ popularTags }: PostsFiltersProps) {
 							onValueCommit={updatePriceFilters}
 							max={10000}
 							step={100}
-							className="w-full"
 							disabled={isPending}
 						/>
 					</div>
-					<div className="mt-2 flex items-center justify-between text-sm text-lightgrey-foreground">
-						<span>{priceRange[0].toFixed(2)}€</span>
-						<span>{priceRange[1].toFixed(2)}€</span>
+
+					<div className="mt-2 flex items-center justify-between">
+						<B5>{priceRange[0].toFixed(2)}€</B5>
+						<B5>{priceRange[1].toFixed(2)}€</B5>
 					</div>
 				</div>
 			</div>

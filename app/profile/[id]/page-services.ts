@@ -1,5 +1,5 @@
 import { DEFAULT_LOCALE } from "@/lib/constants";
-import { GetFromDatabase, GetServiceClient } from "@/lib/services/general";
+import { GetFromDatabase } from "@/lib/services/general";
 import { IOffer, IPetition, IUser } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
 import { ISearchParams } from "@/types";
@@ -50,12 +50,12 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 	// Total forums count
 	let followingForumsCount = 0;
 	if (uuid) {
-		const { supabase } = await GetServiceClient();
-		const { count, error } = await supabase
-			.from("User_Forum")
-			.select("*", { count: "exact", head: true })
-			.eq("user_id", uuid);
-		if (!error && typeof count === "number") followingForumsCount = count;
+		const { data: countData } = await GetFromDatabase<any>({
+			tableName: "User_Forum",
+			select: "*",
+			filters: [{ method: "eq", column: "user_id", value: uuid }],
+		});
+		followingForumsCount = countData?.length || 0;
 	}
 
 	const { data: followingBusinessesRaw } = await GetFromDatabase<any>({
@@ -73,12 +73,12 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 	// Total businesses count
 	let followingBusinessesCount = 0;
 	if (uuid) {
-		const { supabase } = await GetServiceClient();
-		const { count, error } = await supabase
-			.from("User_Business")
-			.select("*", { count: "exact", head: true })
-			.eq("user_id", uuid);
-		if (!error && typeof count === "number") followingBusinessesCount = count;
+		const { data: countData } = await GetFromDatabase<any>({
+			tableName: "User_Business",
+			select: "*",
+			filters: [{ method: "eq", column: "user_id", value: uuid }],
+		});
+		followingBusinessesCount = countData?.length || 0;
 	}
 
 	const { data: followingUsersRaw } = await GetFromDatabase<any>({
@@ -96,21 +96,23 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 	// Total users count
 	let followingUsersCount = 0;
 	if (uuid) {
-		const { supabase } = await GetServiceClient();
-		const { count, error } = await supabase
-			.from("User_User")
-			.select("*", { count: "exact", head: true })
-			.eq("user_id", uuid);
-		if (!error && typeof count === "number") followingUsersCount = count;
+		const { data: countData } = await GetFromDatabase<any>({
+			tableName: "User_User",
+			select: "*",
+			filters: [{ method: "eq", column: "user_id", value: uuid }],
+		});
+		followingUsersCount = countData?.length || 0;
 	}
 
-	const { supabase: supabaseService } = await GetServiceClient();
-	const { data: subscribedOffersRaw } = await supabaseService
-		.from("User_Offer")
-		.select("Offer(*, User!Offer_creator_id_fkey(*))")
-		.eq("user_id", uuid)
-		.order("offer_id", { ascending: false })
-		.range(0, 2);
+	const { data: subscribedOffersRaw } = await GetFromDatabase<any>({
+		tableName: "User_Offer",
+		select: "Offer(*, User!Offer_creator_id_fkey(*))",
+		filters: [
+			{ method: "eq", column: "user_id", value: uuid },
+			{ method: "order", column: "offer_id", ascending: false },
+			{ method: "range", from: 0, to: 2 },
+		],
+	});
 
 	const subscribedOffers =
 		subscribedOffersRaw?.map((item) => {
@@ -122,20 +124,23 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 	// Total subscribed offers count
 	let subscribedOffersCount = 0;
 	if (uuid) {
-		const { supabase } = await GetServiceClient();
-		const { count, error } = await supabase
-			.from("User_Offer")
-			.select("*", { count: "exact", head: true })
-			.eq("user_id", uuid);
-		if (!error && typeof count === "number") subscribedOffersCount = count;
+		const { data: countData } = await GetFromDatabase<any>({
+			tableName: "User_Offer",
+			select: "*",
+			filters: [{ method: "eq", column: "user_id", value: uuid }],
+		});
+		subscribedOffersCount = countData?.length || 0;
 	}
 
-	const { data: subscribedPetitionsRaw } = await supabaseService
-		.from("User_Petition")
-		.select("Petition(*, User!Petition_creator_id_fkey(*))")
-		.eq("user_id", uuid)
-		.order("petition_id", { ascending: false })
-		.range(0, 5);
+	const { data: subscribedPetitionsRaw } = await GetFromDatabase<any>({
+		tableName: "User_Petition",
+		select: "Petition(*, User!Petition_creator_id_fkey(*))",
+		filters: [
+			{ method: "eq", column: "user_id", value: uuid },
+			{ method: "order", column: "petition_id", ascending: false },
+			{ method: "range", from: 0, to: 5 },
+		],
+	});
 
 	const subscribedPetitions =
 		subscribedPetitionsRaw?.map((item) => {
@@ -147,12 +152,12 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 	// Total subscribed petitions count
 	let subscribedPetitionsCount = 0;
 	if (uuid) {
-		const { supabase } = await GetServiceClient();
-		const { count, error } = await supabase
-			.from("User_Petition")
-			.select("*", { count: "exact", head: true })
-			.eq("user_id", uuid);
-		if (!error && typeof count === "number") subscribedPetitionsCount = count;
+		const { data: countData } = await GetFromDatabase<any>({
+			tableName: "User_Petition",
+			select: "*",
+			filters: [{ method: "eq", column: "user_id", value: uuid }],
+		});
+		subscribedPetitionsCount = countData?.length || 0;
 	}
 
 	if (userData && currentUserUuid) {
@@ -263,41 +268,40 @@ export async function getUserPosts(userId: string | number) {
 export async function getLikedPostsCount(userId: string | number): Promise<number> {
 	if (!userId) return 0;
 
-	const { supabase } = await GetServiceClient();
 	let totalLikes = 0;
 
 	// Count liked offers
-	const { count: offersCount, error: offersError } = await supabase
-		.from("User_Offer")
-		.select("*", { count: "exact", head: true })
-		.eq("user_id", userId)
-		.eq("liked", true);
-
-	if (!offersError && typeof offersCount === "number") {
-		totalLikes += offersCount;
-	}
+	const { data: offersData } = await GetFromDatabase<any>({
+		tableName: "User_Offer",
+		select: "*",
+		filters: [
+			{ method: "eq", column: "user_id", value: userId },
+			{ method: "eq", column: "liked", value: true },
+		],
+	});
+	totalLikes += offersData?.length || 0;
 
 	// Count liked petitions
-	const { count: petitionsCount, error: petitionsError } = await supabase
-		.from("User_Petition")
-		.select("*", { count: "exact", head: true })
-		.eq("user_id", userId)
-		.eq("liked", true);
-
-	if (!petitionsError && typeof petitionsCount === "number") {
-		totalLikes += petitionsCount;
-	}
+	const { data: petitionsData } = await GetFromDatabase<any>({
+		tableName: "User_Petition",
+		select: "*",
+		filters: [
+			{ method: "eq", column: "user_id", value: userId },
+			{ method: "eq", column: "liked", value: true },
+		],
+	});
+	totalLikes += petitionsData?.length || 0;
 
 	// Count liked reviews
-	const { count: reviewsCount, error: reviewsError } = await supabase
-		.from("User_Review")
-		.select("*", { count: "exact", head: true })
-		.eq("user_id", userId)
-		.eq("liked", true);
-
-	if (!reviewsError && typeof reviewsCount === "number") {
-		totalLikes += reviewsCount;
-	}
+	const { data: reviewsData } = await GetFromDatabase<any>({
+		tableName: "User_Review",
+		select: "*",
+		filters: [
+			{ method: "eq", column: "user_id", value: userId },
+			{ method: "eq", column: "liked", value: true },
+		],
+	});
+	totalLikes += reviewsData?.length || 0;
 
 	return totalLikes;
 }

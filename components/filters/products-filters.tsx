@@ -7,8 +7,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { Button } from "../ui-custom/button";
 import { Checkbox } from "../ui-custom/checkbox";
-import { Label } from "../ui-custom/label";
 import { Slider } from "../ui-custom/slider";
+import { B1, B5 } from "../ui-custom/typography";
 
 interface ProductsFiltersProps {
 	categories: ICategory[];
@@ -100,19 +100,14 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 		<div className="space-y-8" onWheel={handleWheel}>
 			<div className="space-y-4">
 				<div className="flex items-center justify-between">
-					<Label className="text-base font-bold">Categorías.</Label>
+					<B1>Categorías.</B1>
 					{hasActiveFilters && (
-						<Button
-							variant="ghost"
-							size="sm"
-							onClick={clearFilters}
-							disabled={isPending}
-							className="h-auto p-0 text-xs text-lightgrey hover:text-white"
-						>
+						<Button variant="ghost" size="sm" onClick={clearFilters} disabled={isPending}>
 							Limpiar filtros
 						</Button>
 					)}
 				</div>
+
 				<div className="flex flex-wrap gap-2">
 					<Button
 						variant={selectedCategories.length === 0 ? "default" : "outline"}
@@ -122,6 +117,7 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 					>
 						Todo
 					</Button>
+
 					{categories.map((category) => {
 						const isSelected = selectedCategories.includes(category.id.toString());
 						return (
@@ -146,7 +142,7 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 
 			<div className="space-y-4">
 				<div>
-					<Label className="text-base font-bold">Precio.</Label>
+					<B1>Precio.</B1>
 					<div className="mt-6 px-2">
 						<Slider
 							value={priceRange}
@@ -158,15 +154,16 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 							disabled={isPending}
 						/>
 					</div>
-					<div className="mt-2 flex items-center justify-between text-sm text-lightgrey">
-						<span>{priceRange[0].toFixed(2)}€</span>
-						<span>{priceRange[1].toFixed(2)}€</span>
+
+					<div className="mt-2 flex items-center justify-between">
+						<B5>{priceRange[0].toFixed(2)}€</B5>
+						<B5>{priceRange[1].toFixed(2)}€</B5>
 					</div>
 				</div>
 			</div>
 
 			<div className="space-y-4">
-				<Label className="text-base font-bold">Valoración.</Label>
+				<B1>Valoración.</B1>
 				<div className="space-y-3">
 					{[5, 4, 3, 2, 1].map((rating) => (
 						<div key={rating} className="flex items-center space-x-3">
@@ -179,10 +176,8 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 								}}
 								className="h-5 w-5 rounded-sm border-lightgrey/50 data-[state=checked]:bg-black data-[state=checked]:text-black"
 							/>
-							<label
-								htmlFor={`rating-${rating}`}
-								className="text-sm leading-none cursor-pointer flex items-center gap-1"
-							>
+
+							<span className="flex items-center gap-2">
 								<div className="flex">
 									{Array.from({ length: 5 }).map((_, i) => (
 										<Star
@@ -194,8 +189,9 @@ export default function ProductsFilters({ categories }: ProductsFiltersProps) {
 										/>
 									))}
 								</div>
-								{rating < 5 && <span className="text-lightgrey ml-1 text-xs">y más</span>}
-							</label>
+
+								{rating < 5 && <B5>y más</B5>}
+							</span>
 						</div>
 					))}
 				</div>

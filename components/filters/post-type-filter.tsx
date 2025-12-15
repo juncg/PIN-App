@@ -31,6 +31,7 @@ export function PostTypeFilter() {
 		<div className="flex gap-2">
 			<Button
 				variant={currentType === "all" ? "chernobyl" : "outline"}
+				size="sm"
 				onClick={() => updateTypeFilter("all")}
 				disabled={isPending}
 			>
@@ -39,6 +40,7 @@ export function PostTypeFilter() {
 			</Button>
 			<Button
 				variant={currentType === "offer" ? "chernobyl" : "outline"}
+				size="sm"
 				onClick={() => updateTypeFilter("offer")}
 				disabled={isPending}
 			>
@@ -47,6 +49,7 @@ export function PostTypeFilter() {
 			</Button>
 			<Button
 				variant={currentType === "petition" ? "chernobyl" : "outline"}
+				size="sm"
 				onClick={() => updateTypeFilter("petition")}
 				disabled={isPending}
 			>

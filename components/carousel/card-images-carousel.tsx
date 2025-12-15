@@ -45,7 +45,20 @@ export function CardImagesCarousel({ post, product, displayImages }: CardImagesC
 			<CarouselContent>
 				{displayImages.map((image, index) => (
 					<CarouselItem key={index}>
-						<Link href={getHref()}>
+						{product ? (
+							<Link href={getHref()}>
+								<div className="relative aspect-[4/3] w-full cursor-pointer overflow-hidden">
+									<Image
+										src={image}
+										alt={getAltText(index)}
+										fill
+										sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+										className="object-cover rounded-2xl border-[3px] border-darkmode"
+										unoptimized
+									/>
+								</div>
+							</Link>
+						) : (
 							<div className="relative aspect-[4/3] w-full cursor-pointer overflow-hidden">
 								<Image
 									src={image}
@@ -56,7 +69,7 @@ export function CardImagesCarousel({ post, product, displayImages }: CardImagesC
 									unoptimized
 								/>
 							</div>
-						</Link>
+						)}
 					</CarouselItem>
 				))}
 			</CarouselContent>
