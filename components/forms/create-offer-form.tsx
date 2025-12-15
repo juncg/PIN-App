@@ -53,6 +53,7 @@ export default function OfferForm({ forums, tags, businesses }: OfferFormProps) 
 		setValue,
 		watch,
 		trigger,
+		setError,
 	} = useForm<TCreateOfferSchema>({
 		resolver: zodResolver(CreateOfferSchema),
 		mode: "onBlur",
@@ -68,7 +69,7 @@ export default function OfferForm({ forums, tags, businesses }: OfferFormProps) 
 			business_id: undefined,
 			state: "Posted",
 			product_ids: [],
-			reduced_price: null,
+			reduced_price: 0.01,
 		},
 	});
 
@@ -120,6 +121,12 @@ export default function OfferForm({ forums, tags, businesses }: OfferFormProps) 
 	async function handleOfferCreation(data: TCreateOfferSchema) {
 		setIsSubmitting(true);
 		setApiError(null);
+
+		if (selectedProductsList.length > 0 && data.reduced_price >= totalMsrp) {
+			setError("reduced_price", { message: "El precio debe ser menor que el precio total de los productos" });
+			setIsSubmitting(false);
+			return;
+		}
 
 		const uploadedUrls: string[] = [];
 		for (const file of images) {
@@ -229,7 +236,7 @@ export default function OfferForm({ forums, tags, businesses }: OfferFormProps) 
 							<span className="ml-2">Objetivos</span>
 						</TabsTrigger>
 						<TabsTrigger value="step3" disabled>
-							<span className="ml-2">Productos</span>
+							<span className="ml-2">Precio y Productos</span>
 						</TabsTrigger>
 					</TabsList>
 
@@ -384,7 +391,23 @@ export default function OfferForm({ forums, tags, businesses }: OfferFormProps) 
 					</TabsContent>
 
 					<TabsContent value="step3" className="space-y-6 mt-6">
-						<FormField label="Productos asociados" htmlFor="products" required>
+						<FormField
+							label="Precio de la oferta"
+							errorMessage={errors.reduced_price?.message || ""}
+							htmlFor="reduced_price"
+						>
+							<Input
+								id="reduced_price"
+								type="number"
+								step="0.01"
+								min="0.01"
+								{...register("reduced_price", { valueAsNumber: true })}
+								disabled={isSubmitting}
+								placeholder="Introduce el precio de la oferta"
+							/>
+						</FormField>
+
+						<FormField label="Productos asociados" htmlFor="products">
 							<ProductSelector
 								selectedProducts={selectedProductsList}
 								onProductsChange={setSelectedProductsList}
@@ -395,36 +418,9 @@ export default function OfferForm({ forums, tags, businesses }: OfferFormProps) 
 							{selectedProductsList.length > 0 && (
 								<Card className="p-4 bg-primary/5 border border-input mt-4">
 									<div className="flex justify-between items-center mb-3">
-										<H3>Precio total:</H3>
+										<H3>Precio total de productos:</H3>
 										<H3 className="text-primary">{totalMsrp.toFixed(2)}€</H3>
 									</div>
-
-									<FormField
-										label="Precio reducido de la oferta"
-										errorMessage={errors.reduced_price?.message || ""}
-										htmlFor="reduced_price"
-										required
-									>
-										<Input
-											id="reduced_price"
-											type="number"
-											step="0.01"
-											min="0"
-											max={totalMsrp}
-											{...register("reduced_price", { valueAsNumber: true })}
-											disabled={isSubmitting}
-											placeholder={`Debe ser menor a ${totalMsrp.toFixed(2)}€`}
-										/>
-									</FormField>
-
-									{reducedPrice !== null && reducedPrice !== undefined && totalMsrp > 0 && (
-										<div className="mt-3 text-center">
-											<B1 className="text-primary font-semibold">
-												Descuento: {(((totalMsrp - reducedPrice) / totalMsrp) * 100).toFixed(1)}
-												%
-											</B1>
-										</div>
-									)}
 								</Card>
 							)}
 						</FormField>

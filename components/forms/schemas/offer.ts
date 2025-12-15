@@ -57,32 +57,19 @@ export const OfferSchema = z.object({
 	User_Offer: z.array(UserOfferSchema).optional(),
 });
 
-export const CreateOfferSchema = z
-	.object({
-		title: z.string().min(1, "El título es requerido"),
-		text: z.string().min(1, "El texto es requerido"),
-		fee: z.number().min(0, "La tarifa debe ser mayor o igual a 0"),
-		target_progress: z.number().min(10, "El progreso objetivo debe ser mayor o igual a 10"),
-		target_completition_date: z.string().min(1, "La fecha es requerida"),
-		comment_locked_state: CommentLockedStateSchema.optional(),
-		state: PostStateSchema.optional(),
-		forum_id: z.number().min(0, "Debes elegir un foro al que pertenecerá la oferta"),
-		business_id: z.number().min(0, "Debes elegir una empresa a la que pertenecerá la oferta"),
+export const CreateOfferSchema = z.object({
+	title: z.string().min(1, "El título es requerido"),
+	text: z.string().min(1, "La descripción es requerida"),
+	fee: z.number().min(0, "La tarifa debe ser mayor o igual a 0"),
+	target_progress: z.number().min(10, "El progreso objetivo debe ser mayor o igual a 10"),
+	target_completition_date: z.string().min(1, "La fecha es requerida"),
+	comment_locked_state: CommentLockedStateSchema.optional(),
+	state: PostStateSchema.optional(),
+	forum_id: z.number().min(0, "Debes elegir un foro al que pertenecerá la oferta"),
+	business_id: z.number().min(0, "Debes elegir una empresa a la que pertenecerá la oferta"),
 		product_ids: z.array(z.number()).optional(),
-		reduced_price: z.number().nullable().optional(),
-	})
-	.refine(
-		(data) => {
-			if (data.product_ids && data.product_ids.length > 0) {
-				return data.reduced_price !== null && data.reduced_price !== undefined;
-			}
-			return true;
-		},
-		{
-			message: "El precio reducido es requerido cuando hay productos asociados",
-			path: ["reduced_price"],
-		}
-	);
+		reduced_price: z.number().min(0.01, "El precio debe ser mayor a 0"),
+});
 
 export type TOfferSchema = z.infer<typeof OfferSchema>;
 export type TCreateOfferSchema = z.infer<typeof CreateOfferSchema>;
