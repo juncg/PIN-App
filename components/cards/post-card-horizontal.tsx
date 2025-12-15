@@ -7,12 +7,12 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { HyperLikeButton } from "../buttons/hyper-like";
 import { LikeButton } from "../buttons/like-button";
 import { SubscribeButton } from "../buttons/subscribe-button";
-import { ClockIcon, PeopleAltIcon, FrontHandIcon, LocalOfferIcon } from "../icons/icons";
+import { ClockIcon, FrontHandIcon, LocalOfferIcon, PeopleAltIcon } from "../icons/icons";
 import { Progress } from "../ui-custom/progress";
 import { B1, B5, H3, S1 } from "../ui-custom/typography";
-import { HyperLikeButton } from "../buttons/hyper-like";
 
 interface IPostCardHorizontalProps {
 	className?: string;
@@ -65,9 +65,9 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 	const hasValidImages = (post.images ?? []).filter((img) => img && img.trim() !== "")?.length > 0;
 
 	return (
-		<article className={cn(className, "flex border-[2px] border-cardborder rounded-2xl w-full")}>
+		<article className={cn(className, "flex border border-cardborder rounded-2xl w-full")}>
 			{hasValidImages && (
-				<figure className="relative w-60 h-60 rounded-2xl border-[3px] border-darkmode overflow-hidden shrink-0">
+				<figure className="relative w-60 h-60 rounded-2xl border border-darkmode overflow-hidden shrink-0">
 					<Image
 						src={post?.images?.[0] || "/placeholder.png"}
 						alt={"Post picture"}

@@ -90,7 +90,7 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 						/>
 					</figure>
 
-					<figure className="absolute -bottom-[60px] left-4 xs:left-8 w-[80px] h-[80px] xs:w-[120px] xs:h-[120px] sm:w-[140px] sm:h-[140px] rounded-full overflow-hidden border-[2px] border-darkmode">
+					<figure className="absolute -bottom-[60px] left-4 xs:left-8 w-[80px] h-[80px] xs:w-[120px] xs:h-[120px] sm:w-[140px] sm:h-[140px] rounded-full overflow-hidden border border-darkmode">
 						<Image
 							src={userData?.profile_picture || "/placeholder.png"}
 							alt="User profile picture"

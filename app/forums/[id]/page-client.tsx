@@ -5,13 +5,13 @@ import { ForumCardHorizontalSmall } from "@/components/cards/forum-card-horizont
 import { ProductCardHorizontal } from "@/components/cards/product-card-horizontal";
 import { InfinitePostGrid } from "@/components/posts/infinite-post-grid";
 
+import { VerifiedIcon } from "@/components/icons/icons";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
 import { Button } from "@/components/ui-custom/button";
 import { B1, H1, H2 } from "@/components/ui-custom/typography";
-import { VerifiedIcon } from "@/components/icons/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui-custom/avatar";
 
 interface ForumPageClientProps {
 	id: number;
@@ -219,7 +219,7 @@ export function ForumPageClient({
 
 				<div className="hidden lg:block space-y-6">
 					<div className="flex items-center gap-3 mb-6">
-						<Avatar className="h-10 w-10 rounded-full">
+						<Avatar className="h-10 w-10 rounded-full border">
 							<AvatarImage
 								src={forumData.Business?.profile_picture || "/placeholder.png"}
 								alt={forumData.name || "Forum"}

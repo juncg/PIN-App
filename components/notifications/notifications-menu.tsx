@@ -3,10 +3,10 @@
 import { useState } from "react";
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui-custom/dropdown-menu";
-import { INotification } from "@/lib/services/types";
 import { markAllAsRead } from "@/lib/services/notifications";
+import { INotification } from "@/lib/services/types";
+import { Bell } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Bell, Hand, Tag, Infinity } from "lucide-react";
 import { Button } from "../ui-custom/button";
 import { NotificationItem } from "./notification-item";
 
@@ -49,17 +49,17 @@ export function NotificationsMenu({ notifications, userId }: NotificationsMenuPr
 				<Button variant="default" size="icon" className="outline-none focus-visible:ring-0 relative">
 					<Bell className="h-5 w-5" />
 					{(notifications.some((n) => !n.is_read) || hasNewNotification) && (
-						<span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-[var(--destructive)] border border-[var(--darkmode)]" />
+						<span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-destructive border border-darkmode" />
 					)}
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent
 				align="end"
-				className="w-[400px] p-0 overflow-hidden bg-[var(--darkmode)] border-2 border-[var(--cardborder)] rounded-2xl"
+				className="w-[400px] p-0 overflow-hidden bg-darkmode border border-cardborder rounded-2xl"
 			>
-				<div className="flex flex-col bg-[var(--hover)]/50">
+				<div className="flex flex-col bg-hover/50">
 					<div className="px-4 py-3 pb-2">
-						<h4 className="font-semibold text-2xl text-[var(--white)]">Notificaciones.</h4>
+						<h4 className="font-semibold text-2xl text-white">Notificaciones.</h4>
 					</div>
 					<div className="flex items-center gap-2 px-4 pb-3 overflow-x-auto no-scrollbar">
 						<Button
@@ -98,11 +98,11 @@ export function NotificationsMenu({ notifications, userId }: NotificationsMenuPr
 					</div>
 				</div>
 				<div
-					className="max-h-[500px] overflow-y-auto w-full scrollbar-hide bg-[var(--darkmode)]"
+					className="max-h-[500px] overflow-y-auto w-full scrollbar-hide bg-darkmode"
 					onWheel={(e) => e.stopPropagation()}
 				>
 					{filteredNotifications.length === 0 ? (
-						<div className="p-8 text-center text-sm text-[var(--placeholder)] flex flex-col items-center gap-2">
+						<div className="p-8 text-center text-sm text-placeholder flex flex-col items-center gap-2">
 							<Bell className="h-8 w-8 opacity-50" />
 							<span>No hay notificaciones en esta categoría</span>
 						</div>

@@ -47,7 +47,7 @@ export default async function BusinessProfile({ params, searchParams }: Business
 						/>
 					</figure>
 
-					<figure className="absolute -bottom-[100px] left-8 w-[140px] h-[140px] rounded-full overflow-hidden border-[2px] border-darkmode">
+					<figure className="absolute -bottom-[100px] left-8 w-[140px] h-[140px] rounded-full overflow-hidden border border-darkmode">
 						<Image
 							src={business.profile_picture || "/placeholder.png"}
 							alt="Business profile picture"

@@ -9,10 +9,10 @@ export const inputVariants = cva(
 			variant: {
 				default: "rounded-3xl border border-hover focus-visible:border-white",
 				squared: "rounded-md border border-hover focus-visible:border-white",
-				outline: "rounded-3xl border-2 border-white focus-visible:border-chernobyl",
-				outlineSquared: "rounded-lg border-2 border-white focus-visible:border-chernobyl",
+				outline: "rounded-3xl border border-white focus-visible:border-chernobyl",
+				outlineSquared: "rounded-lg border border-white focus-visible:border-chernobyl",
 				ghost: "border-0 focus-visible:bg-hover",
-				chernobyl: "rounded-3xl border-2 border-chernobyl focus-visible:border-white",
+				chernobyl: "rounded-3xl border border-chernobyl focus-visible:border-white",
 			},
 			inputSize: {
 				default: "h-9 px-3 py-1",

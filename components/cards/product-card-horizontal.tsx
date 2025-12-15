@@ -4,13 +4,13 @@ import Link from "next/link";
 
 export function ProductCardHorizontal(product: IProduct) {
 	return (
-		<div className="group flex min-h-[8.75rem] w-full cursor-pointer rounded-[20px] border-[2px] border-cardborder bg-darkmode transition-colors hover:bg-hover">
-			<div className="relative aspect-square h-[8.75rem] flex-shrink-0 overflow-hidden rounded-[20px] border-[2px] border-darkmode">
+		<div className="group flex min-h-[8.75rem] w-full cursor-pointer rounded-[20px] border border-cardborder bg-darkmode transition-colors hover:bg-hover">
+			<div className="relative aspect-square h-[8.75rem] flex-shrink-0 overflow-hidden">
 				<Image
 					src={product.images?.[0] || "/placeholder.png"}
 					alt={product.name}
 					fill
-					className="object-cover"
+					className="object-cover rounded-[20px] p-1"
 					unoptimized
 				/>
 			</div>

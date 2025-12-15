@@ -53,7 +53,7 @@ export function CardImagesCarousel({ post, product, displayImages }: CardImagesC
 										alt={getAltText(index)}
 										fill
 										sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-										className="object-cover rounded-2xl border-[3px] border-darkmode"
+										className="object-cover rounded-2xl border border-darkmode"
 										unoptimized
 									/>
 								</div>
@@ -65,7 +65,7 @@ export function CardImagesCarousel({ post, product, displayImages }: CardImagesC
 									alt={getAltText(index)}
 									fill
 									sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-									className="object-cover rounded-2xl border-[3px] border-darkmode"
+									className="object-cover rounded-2xl border border-darkmode"
 									unoptimized
 								/>
 							</div>

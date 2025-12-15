@@ -75,7 +75,7 @@ export function FeedPostCard(props: IFeedPostCard) {
 	const showSideBySide = displayImages.length === 2;
 
 	return (
-		<article className={cn("w-full bg-darkmode rounded-3xl border-[2px] border-cardborder p-6", className)}>
+		<article className={cn("w-full bg-darkmode rounded-3xl border border-cardborder p-6", className)}>
 			<div className="flex justify-between items-start mb-4">
 				<div className="flex gap-3 items-center">
 					<Avatar className="h-10 w-10 rounded-full">
@@ -141,7 +141,7 @@ export function FeedPostCard(props: IFeedPostCard) {
 									{displayImages.map((img, idx) => (
 										<div
 											key={idx}
-											className="relative w-1/2 h-full rounded-2xl overflow-hidden border-2 border-cardborder group/image cursor-pointer"
+											className="relative w-1/2 h-full rounded-2xl overflow-hidden group/image cursor-pointer"
 										>
 											<Image
 												src={img}

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { typography } from "./typography";
 
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
-	<div ref={ref} className={cn("rounded-xl border-2 border-cardborder bg-darkmode", className)} {...props} />
+	<div ref={ref} className={cn("rounded-xl border border-cardborder bg-darkmode", className)} {...props} />
 ));
 Card.displayName = "Card";
 

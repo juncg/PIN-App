@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Page() {
 	return (
 		<div className="flex min-h-screen w-full items-center justify-center p-6">
-			<div className="border-[2px] bg-darkmode flex flex-col md:flex-row items-center justify-between gap-6 md:gap-16 rounded-xl p-10 md:p-12 max-w-6xl">
+			<div className="border bg-darkmode flex flex-col md:flex-row items-center justify-between gap-6 md:gap-16 rounded-xl p-10 md:p-12 max-w-6xl">
 				<div className="flex items-center justify-center">
 					<Image
 						src="/dealbuy-logo-dark.svg"

@@ -71,7 +71,7 @@ export function ProfileRightColumn(props: IProfileUserCompanyState) {
 	];
 
 	return (
-		<section className={cn("flex flex-col border-[2px] rounded-[20px] p-10 gap-12 border-cardborder", className)}>
+		<section className={cn("flex flex-col border rounded-[20px] p-10 gap-12 border-cardborder", className)}>
 			<div className="flex flex-col gap-8">
 				<H4 className="font-funnel-sans">{isCurrentUser ? "Mis follows." : "Follows."}</H4>
 
