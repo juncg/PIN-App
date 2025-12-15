@@ -53,6 +53,7 @@ export async function getNotificationsForUser() {
 		filters: [
 			{ method: "eq", column: "user_id", value: userId },
 			{ method: "order", column: "created_at", ascending: false },
+			{ method: "limit", value: 50 },
 		],
 	});
 

@@ -90,7 +90,7 @@ export type IComment = Tables<"Comment"> & {
 export type ITag = Tables<"Tag">;
 
 export type INotification = Tables<"Notification"> & {
-	sender?: Pick<IUser, "id" | "name" | "profile_picture">;
+	sender?: Pick<IUser, "id" | "name" | "profile_picture" | "username">;
 };
 
 export interface IGetFromDatabase {
