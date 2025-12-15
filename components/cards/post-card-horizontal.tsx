@@ -96,7 +96,7 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 						<B1 className="text-lightgrey line-clamp-2">{post.text}</B1>
 					</div>
 
-					{post.type === "Offer" && post.reduced_price && (
+					{post.reduced_price && (
 						<div className="flex flex-col items-end shrink-0">
 							<H3>{post.reduced_price}€</H3>
 

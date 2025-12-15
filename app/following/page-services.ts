@@ -5,9 +5,9 @@ import { IOffer, IPetition } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
 
 const OFFER_SELECT =
-	"*, User!Offer_creator_id_fkey(id, profile_picture, username), User_Offer!left(liked, subscribed, user_id), Offer_Product(Product(*))";
+	"*, User!Offer_creator_id_fkey(id, profile_picture, username), User_Offer!left(liked, subscribed, user_id), products:Offer_Product(Product(*))";
 const PETITION_SELECT =
-	"*, User!Petition_creator_id_fkey(id, profile_picture, username), User_Petition!left(liked, subscribed, user_id), Petition_Product(Product(*))";
+	"*, User!Petition_creator_id_fkey(id, profile_picture, username), User_Petition!left(liked, subscribed, user_id), products:Petition_Product(Product(*))";
 
 type PostWithComments =
 	| (IOffer & { type: "Offer"; comment_count: number })
@@ -194,4 +194,3 @@ export async function FollowingPageServices() {
 		products: productsResult.data || [],
 	};
 }
-

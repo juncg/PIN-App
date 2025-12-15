@@ -120,7 +120,7 @@ export function FeedPostCard(props: IFeedPostCard) {
 						<B1 className="text-lightgrey mb-4 line-clamp-2 leading-relaxed text-sm">{post.text}</B1>
 					</Link>
 
-					{post.type === "Offer" && post.reduced_price && (
+					{post.reduced_price && (
 						<div className="text-right">
 							<span className="text-xl font-bold text-white block">{post.reduced_price}€</span>
 							{originalPrice != post.reduced_price && originalPrice > 0 && (
