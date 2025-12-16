@@ -112,6 +112,7 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 			{ method: "order", column: "offer_id", ascending: false },
 			{ method: "range", from: 0, to: 2 },
 		],
+		skipRLS: true,
 	});
 
 	const subscribedOffers =
@@ -128,6 +129,7 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 			tableName: "User_Offer",
 			select: "*",
 			filters: [{ method: "eq", column: "user_id", value: uuid }],
+			skipRLS: true,
 		});
 		subscribedOffersCount = countData?.length || 0;
 	}
@@ -140,6 +142,7 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 			{ method: "order", column: "petition_id", ascending: false },
 			{ method: "range", from: 0, to: 5 },
 		],
+		skipRLS: true,
 	});
 
 	const subscribedPetitions =
@@ -156,6 +159,7 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 			tableName: "User_Petition",
 			select: "*",
 			filters: [{ method: "eq", column: "user_id", value: uuid }],
+			skipRLS: true,
 		});
 		subscribedPetitionsCount = countData?.length || 0;
 	}
@@ -278,6 +282,7 @@ export async function getLikedPostsCount(userId: string | number): Promise<numbe
 			{ method: "eq", column: "user_id", value: userId },
 			{ method: "eq", column: "liked", value: true },
 		],
+		skipRLS: true,
 	});
 	totalLikes += offersData?.length || 0;
 
@@ -289,6 +294,7 @@ export async function getLikedPostsCount(userId: string | number): Promise<numbe
 			{ method: "eq", column: "user_id", value: userId },
 			{ method: "eq", column: "liked", value: true },
 		],
+		skipRLS: true,
 	});
 	totalLikes += petitionsData?.length || 0;
 
@@ -300,6 +306,7 @@ export async function getLikedPostsCount(userId: string | number): Promise<numbe
 			{ method: "eq", column: "user_id", value: userId },
 			{ method: "eq", column: "liked", value: true },
 		],
+		skipRLS: true,
 	});
 	totalLikes += reviewsData?.length || 0;
 

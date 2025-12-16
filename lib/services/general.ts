@@ -76,12 +76,14 @@ export async function GetFromDatabase<T = unknown>({
 	tableName,
 	select = "*",
 	filters = [],
+	skipRLS = false,
 }: {
 	tableName: string;
 	select?: string;
 	filters?: ISupabaseGenericFilter[];
+	skipRLS?: boolean;
 }): Promise<SupabaseApiResult<T>> {
-	const { supabase } = await GetClient();
+	const { supabase } = await (skipRLS ? GetServiceClient() : GetClient());
 	let query = supabase.from(tableName).select(select);
 
 	filters.forEach((filter) => {
