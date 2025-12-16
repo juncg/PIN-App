@@ -21,13 +21,6 @@ export const SingleSelection = {
 	},
 };
 
-export const RangeSelection = {
-	render: () => {
-		const [range, setRange] = useState<{ from?: Date; to?: Date } | undefined>();
-		return <Calendar mode="range" selected={range} onSelect={setRange} numberOfMonths={2} />;
-	},
-};
-
 export const MultipleMonths = {
 	render: () => <Calendar numberOfMonths={2} />,
 };

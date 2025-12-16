@@ -13,7 +13,7 @@ export interface IForumCard {
 	className?: string;
 	forum: IForum;
 	currentUserId: string | null;
-	clientTranslations: any; //que
+	clientTranslations?: any; //que
 }
 
 export function ForumCard({ className, forum, currentUserId, clientTranslations }: IForumCard) {
@@ -27,7 +27,7 @@ export function ForumCard({ className, forum, currentUserId, clientTranslations 
 	return (
 		<div
 			className={cn(
-				"rounded-xl border border-cardborder bg-darkmode text-white p-6 flex flex-col justify-between h-full transition-colors shadow-sm",
+				"rounded-xl border border-solid border-cardborder bg-darkmode text-white p-6 flex flex-col justify-between h-full transition-colors shadow-sm",
 				className
 			)}
 		>
