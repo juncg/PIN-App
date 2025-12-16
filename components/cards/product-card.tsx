@@ -20,7 +20,7 @@ export function ProductCard({ props }: { props: IProductCard }) {
 	return (
 		<article
 			className={cn(
-				"flex flex-col h-full overflow-hidden rounded-2xl border-[2px] border-cardborder bg-darkmode transition-all group",
+				"flex flex-col h-full overflow-hidden rounded-2xl border border-cardborder bg-darkmode transition-all group",
 				className
 			)}
 		>

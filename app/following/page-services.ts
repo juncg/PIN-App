@@ -1,13 +1,13 @@
 "use server";
 
 import { GetFromDatabase } from "@/lib/services/general";
-import { IOffer, IPetition } from "@/lib/services/types";
+import { IBusiness, IForum, IOffer, IPetition, IProduct } from "@/lib/services/types";
 import { getUserUuid } from "@/lib/services/user";
 
 const OFFER_SELECT =
-	"*, User!Offer_creator_id_fkey(id, profile_picture, username), User_Offer!left(liked, subscribed, user_id), Offer_Product(Product(*))";
+	"*, User!Offer_creator_id_fkey(id, profile_picture, username), User_Offer!left(liked, subscribed, user_id), products:Offer_Product(Product(*))";
 const PETITION_SELECT =
-	"*, User!Petition_creator_id_fkey(id, profile_picture, username), User_Petition!left(liked, subscribed, user_id), Petition_Product(Product(*))";
+	"*, User!Petition_creator_id_fkey(id, profile_picture, username), User_Petition!left(liked, subscribed, user_id), products:Petition_Product(Product(*))";
 
 type PostWithComments =
 	| (IOffer & { type: "Offer"; comment_count: number })
@@ -165,21 +165,21 @@ export async function FollowingPageServices() {
 
 	const [businessesResult, forumsResult, productsResult] = await Promise.all([
 		followedBusinessIds.length > 0
-			? GetFromDatabase({
+			? GetFromDatabase<IBusiness>({
 					tableName: "Business",
 					select: "id, name, username, profile_picture, verification",
 					filters: [{ method: "in", column: "id", value: followedBusinessIds }],
 			  })
 			: Promise.resolve({ data: [] }),
 		followedForumIds.length > 0
-			? GetFromDatabase({
+			? GetFromDatabase<IForum>({
 					tableName: "Forum",
 					select: "id, name, profile_picture, Business(username, verification)",
 					filters: [{ method: "in", column: "id", value: followedForumIds }],
 			  })
 			: Promise.resolve({ data: [] }),
 		followedBusinessIds.length > 0
-			? GetFromDatabase({
+			? GetFromDatabase<IProduct>({
 					tableName: "Product",
 					select: "*, businesses:Product_Business!inner(business:Business(*))",
 					filters: [{ method: "in", column: "Product_Business.business_id", value: followedBusinessIds }],
@@ -194,4 +194,3 @@ export async function FollowingPageServices() {
 		products: productsResult.data || [],
 	};
 }
-

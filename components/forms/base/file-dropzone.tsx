@@ -82,7 +82,7 @@ export default function FileDropzone({
 				{required && <Label className="!text-destructive">*</Label>}
 			</Label>
 			<div
-				className={`relative flex flex-col items-center justify-center gap-3 rounded-lg border-2 p-6 transition-colors ${
+				className={`relative flex flex-col items-center justify-center gap-3 rounded-lg border p-6 transition-colors ${
 					isDragActive ? "border-black bg-black/5" : "border-dashed border-lightgrey/40"
 				}`}
 				onDrop={onDrop}

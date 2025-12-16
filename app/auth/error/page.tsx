@@ -8,7 +8,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
 	return (
 		<div className="flex min-h-screen w-full items-center justify-center p-4 md:p-6">
 			<div className="flex flex-col gap-6 w-full max-w-5xl">
-				<div className="border-[2px] bg-darkmode flex flex-col md:flex-row items-center justify-between gap-6 md:gap-16 rounded-xl p-10 md:p-12">
+				<div className="border bg-darkmode flex flex-col md:flex-row items-center justify-between gap-6 md:gap-16 rounded-xl p-10 md:p-12">
 					<Image
 						src="/dealbuy-logo-dark.svg"
 						alt="Logo Deal&Buy"

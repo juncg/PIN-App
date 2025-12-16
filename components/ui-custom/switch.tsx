@@ -74,10 +74,10 @@ export function Switch({
 			<SwitchPrimitive.Root
 				data-slot="switch"
 				className={cn(
-					"peer bg-black border-[3px] border-white inline-flex h-auto min-h-[2.5rem] shrink-0 items-center rounded-[10px] transition-all disabled:cursor-not-allowed disabled:opacity-50",
+					"peer bg-black border-[2px] border-white inline-flex h-auto min-h-[2.5rem] shrink-0 items-center rounded-[10px] transition-all disabled:cursor-not-allowed disabled:opacity-50",
 					className
 				)}
-				style={{ width: `${maxThumbWidth * 1.2 + 6}px` }} // Expande el switch un 30% + (borde derecho en px + borde izquierdo en px) para que el interior, el thumb, se desplace
+				style={{ width: `${maxThumbWidth * 1.2 + 4}px` }} // Expande el switch un 30% + (borde derecho en px + borde izquierdo en px) para que el interior, el thumb, se desplace
 				checked={checked}
 				onCheckedChange={handleChange}
 				defaultChecked={defaultChecked}
@@ -86,7 +86,7 @@ export function Switch({
 				<SwitchPrimitive.Thumb
 					data-slot="switch-thumb"
 					className={cn(
-						"pointer-events-none flex items-center justify-center h-full min-w-[5rem] px-4 py-1 rounded-[10px] border-[3px] border-black transition-all duration-200 data-[state=checked]:translate-x-[20%] data-[state=unchecked]:translate-x-0 data-[state=checked]:bg-chernobyl data-[state=unchecked]:bg-white"
+						"pointer-events-none flex items-center justify-center h-full min-w-[5rem] px-4 py-1 rounded-[10px] border-[2px] border-black transition-all duration-200 data-[state=checked]:translate-x-[20%] data-[state=unchecked]:translate-x-0 data-[state=checked]:bg-chernobyl data-[state=unchecked]:bg-white"
 					)}
 					style={{
 						width: `${maxThumbWidth}px`,

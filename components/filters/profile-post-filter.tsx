@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui-custom/button";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui-custom/carousel";
-import { cn } from "@/lib/utils";
 import { CheckCircle, Clock, Flame, Hand, Infinity, Tag, XCircle } from "lucide-react";
 import { useState } from "react";
 
@@ -33,14 +32,7 @@ export function ProfilePostFilter({ onFilterChange }: ProfilePostFilterProps) {
 			<CarouselContent className="-ml-2 md:-ml-4">
 				<CarouselItem className="pl-2 md:pl-4 basis-auto">
 					<Button
-						variant="outline"
-						size="sm"
-						className={cn(
-							"rounded-full px-6 border-2",
-							currentStatus === "all"
-								? "bg-chernobyl border-chernobyl text-black hover:bg-chernobyl/90"
-								: "bg-black border-white text-white hover:bg-hover"
-						)}
+						variant={currentStatus === "all" ? "chernobyl" : "outline"}
 						onClick={() => updateStatusFilter("all")}
 					>
 						Todas
@@ -49,14 +41,7 @@ export function ProfilePostFilter({ onFilterChange }: ProfilePostFilterProps) {
 				</CarouselItem>
 				<CarouselItem className="pl-2 md:pl-4 basis-auto">
 					<Button
-						variant="outline"
-						size="sm"
-						className={cn(
-							"rounded-full px-6 border-2",
-							currentStatus === "offer"
-								? "bg-chernobyl border-chernobyl text-black hover:bg-chernobyl/90"
-								: "bg-black border-white text-white hover:bg-hover"
-						)}
+						variant={currentStatus === "offer" ? "chernobyl" : "outline"}
 						onClick={() => updateStatusFilter("offer")}
 					>
 						Ofertas
@@ -65,14 +50,7 @@ export function ProfilePostFilter({ onFilterChange }: ProfilePostFilterProps) {
 				</CarouselItem>
 				<CarouselItem className="pl-2 md:pl-4 basis-auto">
 					<Button
-						variant="outline"
-						size="sm"
-						className={cn(
-							"rounded-full px-6 border-2",
-							currentStatus === "petition"
-								? "bg-chernobyl border-chernobyl text-black hover:bg-chernobyl/90"
-								: "bg-black border-white text-white hover:bg-hover"
-						)}
+						variant={currentStatus === "petition" ? "chernobyl" : "outline"}
 						onClick={() => updateStatusFilter("petition")}
 					>
 						Peticiones
@@ -81,14 +59,7 @@ export function ProfilePostFilter({ onFilterChange }: ProfilePostFilterProps) {
 				</CarouselItem>
 				<CarouselItem className="pl-2 md:pl-4 basis-auto">
 					<Button
-						variant="outline"
-						size="sm"
-						className={cn(
-							"rounded-full px-6 border-2",
-							currentStatus === "on-fire"
-								? "bg-chernobyl border-chernobyl text-black hover:bg-chernobyl/90"
-								: "bg-black border-white text-white hover:bg-hover"
-						)}
+						variant={currentStatus === "on-fire" ? "chernobyl" : "outline"}
 						onClick={() => updateStatusFilter("on-fire")}
 					>
 						On Fire
@@ -97,14 +68,7 @@ export function ProfilePostFilter({ onFilterChange }: ProfilePostFilterProps) {
 				</CarouselItem>
 				<CarouselItem className="pl-2 md:pl-4 basis-auto">
 					<Button
-						variant="outline"
-						size="sm"
-						className={cn(
-							"rounded-full px-6 border-2",
-							currentStatus === "active"
-								? "bg-chernobyl border-chernobyl text-black hover:bg-chernobyl/90"
-								: "bg-black border-white text-white hover:bg-hover"
-						)}
+						variant={currentStatus === "active" ? "chernobyl" : "outline"}
 						onClick={() => updateStatusFilter("active")}
 					>
 						Activas
@@ -113,14 +77,7 @@ export function ProfilePostFilter({ onFilterChange }: ProfilePostFilterProps) {
 				</CarouselItem>
 				<CarouselItem className="pl-2 md:pl-4 basis-auto">
 					<Button
-						variant="outline"
-						size="sm"
-						className={cn(
-							"rounded-full px-6 border-2",
-							currentStatus === "completed"
-								? "bg-chernobyl border-chernobyl text-black hover:bg-chernobyl/90"
-								: "bg-black border-white text-white hover:bg-hover"
-						)}
+						variant={currentStatus === "completed" ? "chernobyl" : "outline"}
 						onClick={() => updateStatusFilter("completed")}
 					>
 						Completadas
@@ -129,14 +86,7 @@ export function ProfilePostFilter({ onFilterChange }: ProfilePostFilterProps) {
 				</CarouselItem>
 				<CarouselItem className="pl-2 md:pl-4 basis-auto">
 					<Button
-						variant="outline"
-						size="sm"
-						className={cn(
-							"rounded-full px-6 border-2",
-							currentStatus === "expired"
-								? "bg-chernobyl border-chernobyl text-black hover:bg-chernobyl/90"
-								: "bg-black border-white text-white hover:bg-hover"
-						)}
+						variant={currentStatus === "expired" ? "chernobyl" : "outline"}
 						onClick={() => updateStatusFilter("expired")}
 					>
 						Caducadas

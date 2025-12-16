@@ -70,7 +70,7 @@ export function SearchGeneral() {
 				<Input
 					type="search"
 					placeholder="Buscar..."
-					className="pl-9 pr-9 w-96 border-2 border-cardborder"
+					className="pl-9 pr-9 w-96 border border-cardborder"
 					onChange={handleChange}
 					value={searchQuery}
 					onFocus={() => searchQuery && setIsOpen(true)}

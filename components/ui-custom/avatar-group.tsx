@@ -16,7 +16,7 @@ export function AvatarGroup({ avatarImages, shape = "Rounded", inclined = false 
 				className={`${shape === "Rounded" && "rounded-full"} ${inclined && "rotate-[30deg] overflow-visible"}`}
 			>
 				<AvatarImage
-					className={`border-[2px] border-darkmode ${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`}
+					className={`border border-darkmode ${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`}
 					src={avatarImages?.[0] || "/placeholder.png"}
 				/>
 			</Avatar>
@@ -25,7 +25,7 @@ export function AvatarGroup({ avatarImages, shape = "Rounded", inclined = false 
 				className={`${shape === "Rounded" && "rounded-full"} ${inclined && "rotate-[30deg] overflow-visible"}`}
 			>
 				<AvatarImage
-					className={`border-[2px] border-darkmode ${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`}
+					className={`border border-darkmode ${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`}
 					src={avatarImages?.[1] || "/placeholder.png"}
 				/>
 			</Avatar>
@@ -34,7 +34,7 @@ export function AvatarGroup({ avatarImages, shape = "Rounded", inclined = false 
 				className={`${shape === "Rounded" && "rounded-full"} ${inclined && "rotate-[30deg] overflow-visible"}`}
 			>
 				<AvatarImage
-					className={`border-[2px] border-darkmode ${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`}
+					className={`border border-darkmode ${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`}
 					src={avatarImages?.[2] || "/placeholder.png"}
 				/>
 			</Avatar>
@@ -44,7 +44,7 @@ export function AvatarGroup({ avatarImages, shape = "Rounded", inclined = false 
 			>
 				<AvatarImage className={`${shape === "Rounded" ? "rounded-full" : "rounded-[5px]"}`} src="" />
 				<AvatarFallback
-					className={`border-[2px] border-white bg-darkmode ${
+					className={`border border-white bg-darkmode ${
 						shape === "Rounded" ? "rounded-full" : "rounded-[5px]"
 					}`}
 				>

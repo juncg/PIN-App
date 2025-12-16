@@ -24,9 +24,10 @@ import Link from "next/link";
 import { Checkbox } from "../ui-custom/checkbox";
 import { Card, CardContent } from "../ui-custom/card";
 import { ShareComponent } from "../share-post/share";
-import { ProductCard } from "../cards/product-card";
+import { ProductCardHorizontal } from "../cards/product-card-horizontal";
 import { OfferWarning } from "./offer-warning";
 import { VerifiedIcon } from "@/components/icons/icons";
+import { ProductCard } from "../cards/product-card";
 
 interface OfferDetailsProps {
 	offer: IOffer;
@@ -161,18 +162,22 @@ export function OfferDetails({
 						<B1 className="text-lightgrey whitespace-pre-wrap break-words">{offer.text}</B1>
 					</div>
 
-					<div className="flex items-start gap-1.5 text-md">
-						<Link href={`/business/${offer.businesses?.[0].business.id}`} className="hover:underline">
-							<span className="text-lightgrey">Ver en la web de la empresa</span>
-						</Link>
-						<ArrowUpRight className="h-4 w-4" />
-					</div>
+					{offer.businesses && offer.businesses.length > 0 && (
+						<div className="flex items-start gap-1.5 text-md">
+							<Link href={`/business/${offer.businesses[0].business.id}`} className="hover:underline">
+								<span className="text-lightgrey">Ver en la web de la empresa</span>
+							</Link>
+							<ArrowUpRight className="h-4 w-4" />
+						</div>
+					)}
 
-					<OfferWarning
-						fee={offer.fee}
-						acceptedConditions={acceptedConditions}
-						setAcceptedConditions={setAcceptedConditions}
-					/>
+					{!isSubscribed && (
+						<OfferWarning
+							fee={offer.fee}
+							acceptedConditions={acceptedConditions}
+							setAcceptedConditions={setAcceptedConditions}
+						/>
+					)}
 
 					<div className="space-y-2">
 						<div className="flex items-center justify-between">
@@ -229,7 +234,18 @@ export function OfferDetails({
 				<div>
 					<AltenatingButtons buttonsContent={slidingButtonsContent} textSize="text-xl" />
 				</div>
-				<div></div>
+				{offer.products && offer.products.length > 0 && (
+					<div>
+						<div className="mb-6">
+							<S1>Productos relacionados.</S1>
+						</div>
+						<div className="space-y-4">
+							{offer.products.map((productRelation) => (
+								<ProductCardHorizontal key={productRelation.Product.id} {...productRelation.Product} />
+							))}
+						</div>
+					</div>
+				)}
 			</div>
 
 			<CommentsSection
@@ -240,8 +256,8 @@ export function OfferDetails({
 				postCreatorId={offer.creator_id || ""}
 			/>
 
-			<div className="py-8">
-				{businessProducts && businessProducts.length > 0 ? (
+			{businessProducts && businessProducts.length > 0 && offer.businesses && offer.businesses.length > 0 && (
+				<div className="py-8">
 					<div>
 						<div className="mb-6">
 							<S1>Más productos de la empresa.</S1>
@@ -265,10 +281,8 @@ export function OfferDetails({
 							<CarouselNext className="right-0" />
 						</Carousel>
 					</div>
-				) : (
-					<B1 className="text-lightgrey">No hay más productos de esta empresa.</B1>
-				)}
-			</div>
+				</div>
+			)}
 		</div>
 	);
 }

@@ -88,8 +88,8 @@ export function FollowButton({
 				<Switch
 					checked={followed}
 					onCheckedChange={handleFollow}
-					innerTextChecked={clientTranslations.followed}
-					innerTextUnchecked={clientTranslations.follow}
+					innerTextChecked={clientTranslations.followed || "Siguiendo."}
+					innerTextUnchecked={clientTranslations.follow || "Seguir"}
 					className="w-full"
 				/>
 			) : (

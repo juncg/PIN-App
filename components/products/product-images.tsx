@@ -1,12 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui-custom/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
-import { useCallback, useEffect, useState } from "react";
 import WheelGestures from "embla-carousel-wheel-gestures";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
+import { useCallback, useEffect, useState } from "react";
 
 interface ProductImagesProps {
 	images: string[];
@@ -19,14 +19,13 @@ export function ProductImages({ images, thumbnailPosition = "bottom" }: ProductI
 	const maxVisibleThumbnails = 5;
 
 	// Embla setup
-	const [emblaRef, embla] = useEmblaCarousel({
-		loop: images.length > 1,
-		watchDrag: images.length > 1, // ✅ disables drag when only 1 image
-	},
+	const [emblaRef, embla] = useEmblaCarousel(
+		{
+			loop: images.length > 1,
+			watchDrag: images.length > 1, // ✅ disables drag when only 1 image
+		},
 		[WheelGestures()]
-
 	);
-
 
 	// When the slide changes (user drags), update state
 	const onSelect = useCallback(() => {
@@ -125,7 +124,6 @@ export function ProductImages({ images, thumbnailPosition = "bottom" }: ProductI
 		</div>
 	);
 
-
 	// ===============================
 	// THUMBNAILS
 	// ===============================
@@ -139,8 +137,10 @@ export function ProductImages({ images, thumbnailPosition = "bottom" }: ProductI
 							key={actualIndex}
 							onClick={() => setSelectedImage(actualIndex)}
 							className={cn(
-								"relative aspect-square rounded-lg overflow-hidden border-2 transition-all",
-								selectedImage === actualIndex ? "border-[#C4FF33]" : "border-border hover:border-muted-foreground"
+								"relative aspect-square rounded-lg overflow-hidden border transition-all",
+								selectedImage === actualIndex
+									? "border-chernobyl"
+									: "border-border hover:border-muted-foreground"
 							)}
 						>
 							<Image
@@ -154,7 +154,7 @@ export function ProductImages({ images, thumbnailPosition = "bottom" }: ProductI
 					);
 				})}
 			</div>
-			
+
 			{/* Flecha derecha para ver más thumbnails */}
 			{images.length > maxVisibleThumbnails && thumbnailStartIndex + maxVisibleThumbnails < images.length && (
 				<Button
@@ -166,7 +166,7 @@ export function ProductImages({ images, thumbnailPosition = "bottom" }: ProductI
 					<ChevronRight className="h-4 w-4" />
 				</Button>
 			)}
-			
+
 			{/* Flecha izquierda para volver atrás en thumbnails */}
 			{thumbnailStartIndex > 0 && (
 				<Button

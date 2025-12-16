@@ -12,7 +12,7 @@ export function BusinessCardHorizontalSmall({ business }: BusinessCardHorizontal
 	return (
 		<Link
 			href={`/business/${business.id}`}
-			className="flex items-center gap-3 rounded-xl border-2 border-cardborder bg-darkmode p-3 hover:bg-hover transition-all"
+			className="flex items-center gap-3 rounded-xl border border-cardborder bg-darkmode p-3 hover:bg-hover transition-all"
 		>
 			<Avatar className={`h-10 w-10 rounded-lg`}>
 				<AvatarImage

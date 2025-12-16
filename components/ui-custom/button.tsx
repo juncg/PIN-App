@@ -19,14 +19,14 @@ export const buttonVariants = cva(
 				default: "bg-white text-black rounded-full transition",
 				defaultSquared: "bg-white text-black rounded-lg transition",
 				outline:
-					"bg-transparent text-white rounded-full transition border-[2px] border-cardborder hover:border-white",
+					"bg-transparent text-white rounded-full transition border border-cardborder hover:border-white",
 				outlineSquared: [
 					"bg-hover text-white rounded-lg hover:border-white",
 					"transition",
-					"border-[2px] border-cardborder",
+					"border border-cardborder",
 				].join(" "),
-				ghost: "hover:bg-hover hover:text-gray-600 rounded-full",
-				ghostSquared: "hover:bg-hover hover:text-gray-600 rounded-lg",
+				ghost: "hover:bg-hover rounded-full",
+				ghostSquared: "hover:bg-hover rounded-lg",
 				chernobyl: ["bg-transparent text-black", "transition", "bg-chernobyl", "rounded-full"].join(" "),
 				chernobylSquared: ["bg-transparent text-black", "transition", "bg-chernobyl", "rounded-lg"].join(" "),
 				chernobylGradient: [
@@ -44,13 +44,13 @@ export const buttonVariants = cva(
 				chernobylOutline: [
 					"bg-transparent text-chernobyl",
 					"transition",
-					"border-[2px] border-chernobyl",
+					"border border-chernobyl",
 					"rounded-full",
 				].join(" "),
 				chernobylOutlineSquared: [
 					"bg-transparent text-chernobyl",
 					"transition",
-					"border-[2px] border-chernobyl",
+					"border border-chernobyl",
 					"rounded-lg",
 				].join(" "),
 				destructive: "bg-destructive text-white transition rounded-full",

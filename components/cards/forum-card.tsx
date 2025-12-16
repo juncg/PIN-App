@@ -4,16 +4,16 @@ import { useUser } from "@/hooks/use-user";
 import { IForum } from "@/lib/services/types";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useState } from "react";
 import { FollowButton } from "../buttons/follow-button";
 import { VerifiedIcon } from "../icons/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
-import React, { useState } from "react";
 
 export interface IForumCard {
 	className?: string;
 	forum: IForum;
 	currentUserId: string | null;
-	clientTranslations: any; //que
+	clientTranslations?: any; //que
 }
 
 export function ForumCard({ className, forum, currentUserId, clientTranslations }: IForumCard) {
@@ -27,7 +27,7 @@ export function ForumCard({ className, forum, currentUserId, clientTranslations 
 	return (
 		<div
 			className={cn(
-				"rounded-xl border-[2px] border-cardborder bg-darkmode text-white p-6 flex flex-col justify-between h-full transition-colors shadow-sm",
+				"rounded-xl border border-solid border-cardborder bg-darkmode text-white p-6 flex flex-col justify-between h-full transition-colors shadow-sm",
 				className
 			)}
 		>
@@ -72,7 +72,7 @@ export function ForumCard({ className, forum, currentUserId, clientTranslations 
 						<span className="font-medium">{activeOffersCount} ofertas activas</span>
 					</div>
 				</div>
-				
+
 				<FollowButton
 					entityId={forum.id}
 					entityType="Forum"

@@ -37,7 +37,7 @@ export function UpdatePasswordForm({ className, ...props }: React.ComponentProps
 	return (
 		<div
 			className={cn(
-				"border-[2px] bg-darkmode flex flex-col md:flex-row items-center justify-between gap-6 md:gap-16 rounded-xl p-10 md:p-12 max-w-5xl",
+				"border bg-darkmode flex flex-col md:flex-row items-center justify-between gap-6 md:gap-16 rounded-xl p-10 md:p-12 max-w-5xl",
 				className
 			)}
 			{...props}

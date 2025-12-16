@@ -13,7 +13,7 @@ export default {
 export const Default = {
 	render: () => {
 		const [checked, setChecked] = useState(false);
-		return <Checkbox checked={checked} onCheckedChange={setChecked} />;
+		return <Checkbox checked={checked} onCheckedChange={(value) => setChecked(value === true)} />;
 	},
 };
 
@@ -34,7 +34,7 @@ export const WithLabel = {
 		const [checked, setChecked] = useState(false);
 		return (
 			<div className="flex items-center space-x-2">
-				<Checkbox id="terms" checked={checked} onCheckedChange={setChecked} />
+				<Checkbox id="terms" checked={checked} onCheckedChange={(value) => setChecked(value === true)} />
 				<label
 					htmlFor="terms"
 					className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

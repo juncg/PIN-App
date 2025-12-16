@@ -1,13 +1,13 @@
 "use client";
 
 import { SearchIcon } from "@/components/icons/icons";
+import { Card } from "@/components/ui-custom/card";
 import { Input } from "@/components/ui-custom/input";
+import { B1 } from "@/components/ui-custom/typography";
 import { IProduct } from "@/lib/services/types";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { SearchProductsService } from "./product-search-services";
-import { Card } from "@/components/ui-custom/card";
-import { B1 } from "@/components/ui-custom/typography";
 
 interface ProductSearchProps {
 	businessIds?: number[];
@@ -86,7 +86,7 @@ export function ProductSearch({ businessIds, onProductSelect, className, globalS
 				<Input
 					type="search"
 					placeholder="Buscar productos..."
-					className="pl-9 w-full border-2 border-cardborder"
+					className="pl-9 w-full border border-cardborder"
 					onChange={handleChange}
 					onFocus={handleFocus}
 					value={searchQuery}

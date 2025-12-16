@@ -74,14 +74,14 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 
 	return (
 		<article className={cn("group relative z-0 rounded-2xl flex justify-between transition-all", className)}>
-			<div className="relative h-full w-full overflow-hidden rounded-2xl p-[2px]">
+			<div className="relative h-full w-full overflow-hidden rounded-2xl p-[1px]">
 				{offerCompletionPercentage >= POST_ON_FIRE_COMPLETION_PERCENTAGE ? (
 					<div className="absolute inset-0 rounded-2xl bg-[linear-gradient(90deg,var(--chernobyl)_0%,var(--lightgrey)_20%,var(--chernobyl)_40%,var(--darkgrey)_60%,var(--white)_80%,var(--chernobyl)_100%)] bg-[length:600%_600%] animate-border-spin -z-10" />
 				) : (
 					<div className="absolute inset-0 rounded-2xl bg-cardborder -z-10" />
 				)}
 				<div className="h-full w-full rounded-2xl bg-darkmode">
-					<div className="relative w-full">
+					<div className="relative w-full p-0.5">
 						<div className="absolute left-3 top-3 z-10">
 							<LikeButton
 								likes={post.likes}

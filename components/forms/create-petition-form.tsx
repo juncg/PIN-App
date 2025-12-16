@@ -53,6 +53,7 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 		setValue,
 		watch,
 		trigger,
+		setError,
 	} = useForm<TCreatePetitionSchema>({
 		resolver: zodResolver(CreatePetitionSchema),
 		mode: "onBlur",
@@ -116,15 +117,9 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 		setIsSubmitting(true);
 		setApiError(null);
 
-		if (selectedProductsList.length > 0) {
-			if (!data.reduced_price) {
-				toast.error("Debes especificar un precio reducido para los productos seleccionados");
-				setIsSubmitting(false);
-				return;
-			}
-
+		if (selectedProductsList.length > 0 && data.reduced_price !== null && data.reduced_price !== undefined) {
 			if (data.reduced_price >= totalMsrp) {
-				toast.error("El precio reducido debe ser menor que el precio total de los productos");
+				setError("reduced_price", { message: "El precio debe ser menor que el precio total de los productos seleccionados" });
 				setIsSubmitting(false);
 				return;
 			}
@@ -235,7 +230,7 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 							<span className="ml-2">Objetivo y Media</span>
 						</TabsTrigger>
 						<TabsTrigger value="step3" disabled>
-							<span className="ml-2">Productos</span>
+							<span className="ml-2">Precio y Productos</span>
 						</TabsTrigger>
 					</TabsList>
 
@@ -322,6 +317,22 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 					</TabsContent>
 
 					<TabsContent value="step3" className="space-y-6 mt-6">
+						<FormField
+							label="Precio de la petición"
+							errorMessage={errors.reduced_price?.message || ""}
+							htmlFor="reduced_price"
+						>
+							<Input
+								id="reduced_price"
+								type="number"
+								step="0.01"
+								min="0"
+								{...register("reduced_price", { valueAsNumber: true })}
+								disabled={isSubmitting}
+								placeholder="Precio opcional"
+							/>
+						</FormField>
+
 						<FormField label="Productos asociados" htmlFor="products">
 							<ProductSelector
 								selectedProducts={selectedProductsList}
@@ -332,36 +343,9 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 							{selectedProductsList.length > 0 && (
 								<Card className="p-4 bg-primary/5 border border-input mt-4">
 									<div className="flex justify-between items-center mb-3">
-										<H3>Precio total:</H3>
+										<H3>Precio total de productos:</H3>
 										<H3 className="text-primary">{totalMsrp.toFixed(2)}€</H3>
 									</div>
-
-									<FormField
-										label="Precio reducido de la petición"
-										errorMessage={errors.reduced_price?.message || ""}
-										htmlFor="reduced_price"
-										required
-									>
-										<Input
-											id="reduced_price"
-											type="number"
-											step="0.01"
-											min="0"
-											max={totalMsrp}
-											{...register("reduced_price", { valueAsNumber: true })}
-											disabled={isSubmitting}
-											placeholder={`Debe ser menor a ${totalMsrp.toFixed(2)}€`}
-										/>
-									</FormField>
-
-									{reducedPrice !== null && reducedPrice !== undefined && totalMsrp > 0 && (
-										<div className="mt-3 text-center">
-											<B1 className="text-primary font-semibold">
-												Descuento: {(((totalMsrp - reducedPrice) / totalMsrp) * 100).toFixed(1)}
-												%
-											</B1>
-										</div>
-									)}
 								</Card>
 							)}
 						</FormField>
