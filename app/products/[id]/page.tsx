@@ -120,14 +120,14 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 						<B1 className="text-lightgrey">{product.description}</B1>
 					</div>
 
-					<div className="flex items-start gap-1.5 text-md">
+					<div className="flex items-start gap-1.5 text-md py-3">
 						<Link href={`/business/${product.businesses?.[0].business.id}`} className="hover:underline">
 							<span className="text-lightgrey">Ver en la web de la empresa</span>
 						</Link>
 						<ArrowUpRight className="h-4 w-4" />
 					</div>
 
-					<Link href={`/petitions/create?productId=${product.id}`}>
+					<Link href={`/petitions/create?productId=${product.id}`} className="pt-4 w-full py-2">
 						<Button className="w-full" size="lg">
 							Crear una petición de este producto
 						</Button>

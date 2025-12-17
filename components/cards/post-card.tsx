@@ -14,7 +14,7 @@ import { CardImagesCarousel } from "../carousel/card-images-carousel";
 import { ClockIcon, PeopleAltIcon } from "../icons/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui-custom/avatar";
 import { Progress } from "../ui-custom/progress";
-import { B1, B3, H4, S1 } from "../ui-custom/typography";
+import { B1, B3, B5, H4, S1 } from "../ui-custom/typography";
 
 export interface IPostCard {
 	className?: string;
@@ -62,10 +62,10 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 
 	const tags = (post as IOffer | IPetition).tags?.map((t) => t.Tag?.name).filter(Boolean) as string[] | undefined;
 
-	const hasValidImages = (post.images ?? []).filter((img) => img && img.trim() !== "").length > 0;
-	const displayImages: string[] = hasValidImages ? (post.images ?? []).filter((img) => img && img.trim() !== "") : [];
+  const hasValidImages = (post.images ?? []).filter((img) => img && img.trim() !== "").length > 0;
+  const displayImages: string[] = hasValidImages ? (post.images ?? []).filter((img) => img && img.trim() !== "") : [];
 
-	const offerCompletionPercentage = parseFloat(((currentProgress * 100) / (post?.target_progress ?? 1)).toFixed(2));
+  const offerCompletionPercentage = parseFloat(((currentProgress * 100) / (post?.target_progress ?? 1)).toFixed(2));
 
 	const postUrl = `${BASE_DOMAIN}${post.type === "Petition" ? `/petitions/${post.id}` : `/offers/${post.id}`}`;
 
@@ -126,6 +126,23 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 									)}
 								</div>
 							</Link>
+
+							{post.reduced_price && (
+								<div className="flex flex-col items-end shrink-0">
+									<B1>{post.reduced_price}€</B1>
+
+									{(() => {
+										const originalPrice = post.products?.reduce((total, product) => total + (product.Product.msrp || 0), 0) || 0;
+										const discountPercentage = originalPrice > 0 ? Math.round(100 - (post.reduced_price! * 100) / originalPrice) : 0;
+										return originalPrice != post.reduced_price && originalPrice > 0 && (
+											<div className="flex gap-2 items-center">
+												<B5 className="text-chernobyl md:line-clamp-1">-{discountPercentage}%</B5>
+												<B1 className="line-through text-lightgrey">{originalPrice}€</B1>
+											</div>
+										);
+									})()}
+								</div>
+							)}
 						</div>
 
 						<div className="space-y-2">

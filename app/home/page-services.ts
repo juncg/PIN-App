@@ -16,7 +16,7 @@ export async function HomeServices(searchParams: Promise<ISearchParams>) {
 
 	const { data: offers } = await GetFromDatabase<IOffer>({
 		tableName: "Offer",
-		select: `*, User_Offer!left(liked, subscribed, user_id), tags:Offer_Tag(Tag(name)), User!Offer_creator_id_fkey(*)`,
+		select: `*, User_Offer!left(liked, subscribed, user_id), tags:Offer_Tag(Tag(name)), User!Offer_creator_id_fkey(*), products:Offer_Product(Product(*))`,
 		filters: [{ method: "order", column: "created_at", ascending: false }],
 	});
 
