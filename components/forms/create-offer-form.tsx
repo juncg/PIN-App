@@ -75,6 +75,8 @@ export default function OfferForm({ forums, tags, businesses }: OfferFormProps) 
 
 	const forumId = watch("forum_id");
 	const businessId = watch("business_id");
+
+	const filteredForums = businessId ? forums.filter((forum) => forum.business_id === businessId) : forums;
 	const allowComments = watch("comment_locked_state") === "Unlocked";
 	const reducedPrice = watch("reduced_price");
 
@@ -262,30 +264,6 @@ export default function OfferForm({ forums, tags, businesses }: OfferFormProps) 
 
 						<div className="flex justify-between gap-6">
 							<FormField
-								label="Foro asociado"
-								htmlFor="forum_id"
-								errorMessage={errors.forum_id?.message}
-								required
-							>
-								<Select
-									value={forumId?.toString() || ""}
-									onValueChange={(value) => setValue("forum_id", Number(value))}
-									disabled={isSubmitting}
-								>
-									<SelectTrigger id="forum_id">
-										<SelectValue placeholder="Selecciona un foro" />
-									</SelectTrigger>
-									<SelectContent>
-										{forums.map((forum) => (
-											<SelectItem key={forum.id} value={forum.id.toString()}>
-												{forum.name}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-							</FormField>
-
-							<FormField
 								label="Empresa asociada"
 								htmlFor="business_id"
 								errorMessage={errors.business_id?.message}
@@ -303,6 +281,34 @@ export default function OfferForm({ forums, tags, businesses }: OfferFormProps) 
 										{businesses.map((business) => (
 											<SelectItem key={business.id} value={business.id.toString()}>
 												{business.name}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</FormField>
+
+							<FormField
+								label="Foro asociado"
+								htmlFor="forum_id"
+								errorMessage={errors.forum_id?.message}
+								required
+							>
+								<Select
+									value={forumId?.toString() || ""}
+									onValueChange={(value) => setValue("forum_id", Number(value))}
+									disabled={isSubmitting || !businessId}
+								>
+									<SelectTrigger id="forum_id">
+										<SelectValue
+											placeholder={
+												businessId ? "Selecciona un foro" : "Primero selecciona una empresa"
+											}
+										/>
+									</SelectTrigger>
+									<SelectContent>
+										{filteredForums.map((forum) => (
+											<SelectItem key={forum.id} value={forum.id.toString()}>
+												{forum.name}
 											</SelectItem>
 										))}
 									</SelectContent>
@@ -411,8 +417,9 @@ export default function OfferForm({ forums, tags, businesses }: OfferFormProps) 
 							<ProductSelector
 								selectedProducts={selectedProductsList}
 								onProductsChange={setSelectedProductsList}
-								restrictToUserBusinesses={true}
+								restrictToUserBusinesses={!businessId}
 								userUuid={userUuid}
+								selectedBusinessId={businessId}
 							/>
 
 							{selectedProductsList.length > 0 && (

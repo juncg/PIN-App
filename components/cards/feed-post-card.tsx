@@ -67,7 +67,10 @@ export function FeedPostCard(props: IFeedPostCard) {
 	const likedByUser = likedByUserProp !== undefined ? likedByUserProp : derivedLikedByUser;
 
 	const offerCompletionPercentage = parseFloat(((currentProgress * 100) / (post?.target_progress ?? 1)).toFixed(2));
-	const hasFinished = post.type === "Offer" ? new Date(post.target_completition_date) <= new Date() : false;
+	const hasFinished = post.type === "Offer" && (
+		(post as IOffer).current_progress >= (post as IOffer).target_progress ||
+		new Date((post as IOffer).target_completition_date) <= new Date()
+	);
 
 	const hasValidImages = (post.images ?? []).filter((img) => img && img.trim() !== "").length > 0;
 	const displayImages: string[] = hasValidImages ? (post.images ?? []).filter((img) => img && img.trim() !== "") : [];

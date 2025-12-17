@@ -1,10 +1,5 @@
 # AGENTS.md - PIN-App Development Guidelines
 
-## Build & Test Commands
-
--   **Build**: `npm run build` (Next.js production build)
--   **Dev Server**: `npm run dev` (Next.js with Turbopack)
-
 ## Code Style Guidelines
 
 ### Architecture

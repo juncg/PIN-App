@@ -60,7 +60,10 @@ export function PostCardHorizontal(props: IPostCardHorizontalProps) {
 
 	const subscribedByUser = subscribedByUserProp !== undefined ? subscribedByUserProp : derivedSubscribedByUser;
 	const likedByUser = likedByUserProp !== undefined ? likedByUserProp : derivedLikedByUser;
-	const hasFinished = post.type === "Offer" ? new Date(post.target_completition_date) <= new Date() : false;
+	const hasFinished = post.type === "Offer" && (
+		(post as IOffer).current_progress >= (post as IOffer).target_progress ||
+		new Date((post as IOffer).target_completition_date) <= new Date()
+	);
 
 	const hasValidImages = (post.images ?? []).filter((img) => img && img.trim() !== "")?.length > 0;
 

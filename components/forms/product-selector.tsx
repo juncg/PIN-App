@@ -16,6 +16,7 @@ interface ProductSelectorProps {
 	onProductsChange: (products: IProduct[]) => void;
 	restrictToUserBusinesses?: boolean;
 	userUuid?: string | null;
+	selectedBusinessId?: number;
 }
 
 export function ProductSelector({
@@ -23,11 +24,19 @@ export function ProductSelector({
 	onProductsChange,
 	restrictToUserBusinesses = false,
 	userUuid,
+	selectedBusinessId,
 }: ProductSelectorProps) {
 	const [businessIds, setBusinessIds] = useState<number[]>([]);
 	const [isLoadingBusinessIds, setIsLoadingBusinessIds] = useState(false);
 
 	useEffect(() => {
+		if (selectedBusinessId !== undefined) {
+			setBusinessIds([selectedBusinessId]);
+			setIsLoadingBusinessIds(false);
+			return;
+		}
+
+		// Otherwise, use the original logic for user businesses
 		if (!restrictToUserBusinesses || !userUuid) return;
 
 		async function loadUserBusinesses() {
@@ -61,7 +70,7 @@ export function ProductSelector({
 		}
 
 		loadUserBusinesses();
-	}, [userUuid, restrictToUserBusinesses]);
+	}, [userUuid, restrictToUserBusinesses, selectedBusinessId]);
 
 	const handleProductSelect = (product: IProduct) => {
 		if (selectedProducts.some((p) => p.id === product.id)) {
@@ -79,11 +88,16 @@ export function ProductSelector({
 		return <B1 className="text-lightgrey">Cargando información de empresas...</B1>;
 	}
 
-	if (restrictToUserBusinesses && businessIds.length === 0) {
+	if (
+		(restrictToUserBusinesses && businessIds.length === 0) ||
+		(selectedBusinessId !== undefined && businessIds.length === 0)
+	) {
 		return (
 			<Card className="p-6">
 				<B1 className="text-lightgrey text-center">
-					No tienes empresas asociadas para buscar productos.
+					{selectedBusinessId !== undefined
+						? "La empresa seleccionada no tiene productos disponibles."
+						: "No tienes empresas asociadas para buscar productos."}
 				</B1>
 			</Card>
 		);
@@ -107,9 +121,7 @@ export function ProductSelector({
 									<div className="flex justify-between items-center">
 										<span>{product.name}</span>
 										<div className="flex items-center gap-3">
-											<span className="font-semibold">
-												{product.msrp?.toFixed(2) || "0.00"}€
-											</span>
+											<span className="font-semibold">{product.msrp?.toFixed(2) || "0.00"}€</span>
 											<Button
 												type="button"
 												variant="ghost"

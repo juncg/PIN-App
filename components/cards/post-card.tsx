@@ -179,6 +179,10 @@ export const PostCard = React.memo(function PostCard(props: IPostCard) {
 									onSubscriptionChange={setCurrentProgress}
 									variant="switch"
 									onSubscribeChangeForParent={onSubscribeChangeForParent}
+									offerHasFinished={post.type === "Offer" && (
+										(post as IOffer).current_progress >= (post as IOffer).target_progress ||
+										new Date((post as IOffer).target_completition_date) <= new Date()
+									)}
 								/>
 							</div>
 						</div>

@@ -225,6 +225,7 @@ export function OfferDetails({
 							onSubscriptionChange={handleSubscriptionChange}
 							variant="switch"
 							disabled={!acceptedConditions && !isSubscribed}
+							offerHasFinished={offer.current_progress >= offer.target_progress || new Date(offer.target_completition_date) <= new Date()}
 						/>
 					</div>
 				</div>
