@@ -1,18 +1,17 @@
 import CreatePetitionForm from "@/components/forms/create-petition-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui-custom/card";
-import { GetFromDatabase } from "@/lib/services/general";
-import { IForum } from "@/lib/services/types";
+import { CreatePetitionServices } from "./page-services";
+import { ISearchParams } from "@/types";
 
-export default async function Page() {
-	const forums = await GetFromDatabase<IForum>({
-		tableName: "Forum",
-		select: "*",
-	});
+interface CreatePetitionPageProps {
+	searchParams: Promise<ISearchParams>;
+}
 
-	const tags = await GetFromDatabase<{ id: number; name: string }>({
-		tableName: "Tag",
-		select: "*",
-	});
+export default async function Page({ searchParams }: CreatePetitionPageProps) {
+	const params = await searchParams;
+	const productId = params.productId;
+
+	const { forums, tags, initialProduct } = await CreatePetitionServices(productId);
 
 	return (
 		<div className="flex flex-col items-center gap-8 py-8">
@@ -23,7 +22,7 @@ export default async function Page() {
 				</CardHeader>
 
 				<CardContent>
-					<CreatePetitionForm forums={forums.data ?? []} tags={tags.data ?? []} />
+					<CreatePetitionForm forums={forums.data ?? []} tags={tags.data ?? []} initialProducts={initialProduct ? [initialProduct] : []} />
 				</CardContent>
 			</Card>
 		</div>

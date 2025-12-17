@@ -127,9 +127,11 @@ export default async function ProductsPage({ params }: ProductPageProps) {
 						<ArrowUpRight className="h-4 w-4" />
 					</div>
 
-					<Button className="w-full" size="lg">
-						Crear una petición de este producto
-					</Button>
+					<Link href={`/petitions/create?productId=${product.id}`}>
+						<Button className="w-full" size="lg">
+							Crear una petición de este producto
+						</Button>
+					</Link>
 				</div>
 			</div>
 

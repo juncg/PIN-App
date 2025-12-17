@@ -3,7 +3,6 @@
 ## Build & Test Commands
 
 -   **Build**: `npm run build` (Next.js production build)
--   **Lint**: `npm run lint` (ESLint with Next.js rules)
 -   **Dev Server**: `npm run dev` (Next.js with Turbopack)
 
 ## Code Style Guidelines

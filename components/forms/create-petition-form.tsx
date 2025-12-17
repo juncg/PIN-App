@@ -32,14 +32,15 @@ import { B1, H3 } from "../ui-custom/typography";
 interface CreatePetitionFormProps {
 	forums: IForum[];
 	tags: { id: number; name: string }[];
+	initialProducts?: IProduct[];
 }
 
-export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormProps) {
+export default function CreatePetitionForm({ forums, tags, initialProducts = [] }: CreatePetitionFormProps) {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [selectedTags, setSelectedTags] = useState<number[]>([]);
 	const [apiError, setApiError] = useState<PostgrestError | null>(null);
 	const [images, setImages] = useState<File[]>([]);
-	const [selectedProductsList, setSelectedProductsList] = useState<IProduct[]>([]);
+	const [selectedProductsList, setSelectedProductsList] = useState<IProduct[]>(initialProducts);
 	const [totalMsrp, setTotalMsrp] = useState<number>(0);
 	const { userUuid } = useUser();
 	const router = useRouter();
@@ -59,7 +60,7 @@ export default function CreatePetitionForm({ forums, tags }: CreatePetitionFormP
 		mode: "onBlur",
 		reValidateMode: "onChange",
 		defaultValues: {
-			title: "",
+			title: initialProducts.length > 0 ? `Petición para ${initialProducts[0].name}` : "",
 			text: "",
 			target_progress: undefined,
 			comment_locked_state: "Unlocked",
