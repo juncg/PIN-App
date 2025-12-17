@@ -109,12 +109,6 @@ export function ProfileSubscriptionsList({
 							))
 						)}
 					</div>
-
-					{filteredPosts.length > 0 && (
-						<div className="mx-auto">
-							<Button>Mostrar más</Button>
-						</div>
-					)}
 				</div>
 			</div>
 		</div>

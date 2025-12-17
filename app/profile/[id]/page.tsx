@@ -79,7 +79,7 @@ export default async function Profile({ params, searchParams }: ProfilePageProps
 	];
 
 	return (
-		<section className="flex flex-col lg:flex-row justify-center items-start gap-6 lg:gap-16 w-full px-2 sm:px-4">
+		<section className="flex flex-col lg:flex-row justify-center items-start gap-6 lg:gap-16 w-full px-2 sm:px-4 pb-12">
 			<div className="flex flex-col gap-6 items-start w-full lg:w-3/5">
 				<div className="relative w-full">
 					<figure className="relative w-full h-[120px] xs:h-[160px] sm:h-[200px] rounded-b-lg overflow-hidden -mt-8">

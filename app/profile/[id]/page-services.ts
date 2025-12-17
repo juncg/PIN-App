@@ -109,8 +109,8 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 		select: "Offer(*, User!Offer_creator_id_fkey(*))",
 		filters: [
 			{ method: "eq", column: "user_id", value: uuid },
+			{ method: "eq", column: "subscribed", value: true },
 			{ method: "order", column: "offer_id", ascending: false },
-			{ method: "range", from: 0, to: 2 },
 		],
 		skipRLS: true,
 	});
@@ -128,7 +128,10 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 		const { data: countData } = await GetFromDatabase<any>({
 			tableName: "User_Offer",
 			select: "*",
-			filters: [{ method: "eq", column: "user_id", value: uuid }],
+			filters: [
+				{ method: "eq", column: "user_id", value: uuid },
+				{ method: "eq", column: "subscribed", value: true },
+			],
 			skipRLS: true,
 		});
 		subscribedOffersCount = countData?.length || 0;
@@ -139,8 +142,8 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 		select: "Petition(*, User!Petition_creator_id_fkey(*))",
 		filters: [
 			{ method: "eq", column: "user_id", value: uuid },
+			{ method: "eq", column: "subscribed", value: true },
 			{ method: "order", column: "petition_id", ascending: false },
-			{ method: "range", from: 0, to: 5 },
 		],
 		skipRLS: true,
 	});
@@ -158,7 +161,10 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 		const { data: countData } = await GetFromDatabase<any>({
 			tableName: "User_Petition",
 			select: "*",
-			filters: [{ method: "eq", column: "user_id", value: uuid }],
+			filters: [
+				{ method: "eq", column: "user_id", value: uuid },
+				{ method: "eq", column: "subscribed", value: true },
+			],
 			skipRLS: true,
 		});
 		subscribedPetitionsCount = countData?.length || 0;
