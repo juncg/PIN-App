@@ -21,6 +21,7 @@ type CarouselProps = {
 	setApi?: (api: CarouselApi) => void;
 	initialSlide?: number;
 	onSlideChange?: (index: number) => void;
+	fadeEdges?: boolean;
 };
 
 type CarouselContextProps = {
@@ -30,6 +31,7 @@ type CarouselContextProps = {
 	scrollNext: () => void;
 	canScrollPrev: boolean;
 	canScrollNext: boolean;
+	fadeEdges?: boolean;
 } & CarouselProps;
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
@@ -52,6 +54,7 @@ function Carousel({
 	className,
 	initialSlide = 0,
 	onSlideChange,
+	fadeEdges = false,
 	children,
 	...props
 }: CarouselProps & React.ComponentProps<"div">) {
@@ -119,6 +122,7 @@ function Carousel({
 				scrollNext,
 				canScrollPrev,
 				canScrollNext,
+				fadeEdges,
 			}}
 		>
 			<div
@@ -136,7 +140,7 @@ function Carousel({
 }
 
 function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
-	const { carouselRef, orientation, canScrollPrev, canScrollNext } = useCarousel();
+	const { carouselRef, orientation, canScrollPrev, canScrollNext, fadeEdges } = useCarousel();
 
 	const getMaskImage = () => {
 		if (orientation === "horizontal") {
@@ -154,10 +158,10 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
 		<div
 			ref={carouselRef}
 			className="overflow-hidden"
-			style={{
+			style={fadeEdges ? {
 				WebkitMaskImage: getMaskImage(),
 				maskImage: getMaskImage(),
-			}}
+			} : undefined}
 			data-slot="carousel-content"
 		>
 			<div

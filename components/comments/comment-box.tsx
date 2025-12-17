@@ -9,26 +9,34 @@ export function CommentBox({
     isSubmitting,
     handleSubmit,
     setNewComment,
+    commentsLocked = false,
 }: {
     currentUser: IUser | null | undefined;
     newComment: string;
     isSubmitting: boolean;
     handleSubmit: () => Promise<void>;
     setNewComment: (value: string) => void;
+    commentsLocked?: boolean;
 }) {
 	return (
 		<div className="flex-1 space-y-2">
 			<Textarea
-				placeholder={currentUser ? "Escribe un comentario..." : "Inicia sesión para comentar"}
+				placeholder={
+					commentsLocked
+						? "Los comentarios están deshabilitados"
+						: currentUser
+						? "Escribe un comentario..."
+						: "Inicia sesión para comentar"
+				}
 				value={newComment}
 				onChange={(e) => setNewComment(e.target.value)}
-				disabled={isSubmitting || !currentUser}
+				disabled={isSubmitting || !currentUser || commentsLocked}
 				className="min-h-[100px] resize-none"
 			/>
 			<div className="flex justify-end">
 				<Button
 					onClick={handleSubmit}
-					disabled={isSubmitting || !newComment.trim() || !currentUser}
+					disabled={isSubmitting || !newComment.trim() || !currentUser || commentsLocked}
 					size="sm"
 				>
 					{isSubmitting ? (

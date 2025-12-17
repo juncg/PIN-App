@@ -255,6 +255,7 @@ export function OfferDetails({
 				currentUser={currentUser}
 				comments={comments}
 				postCreatorId={offer.creator_id || ""}
+				commentsLocked={offer.comment_locked_state === "Locked"}
 			/>
 
 			{businessProducts && businessProducts.length > 0 && offer.businesses && offer.businesses.length > 0 && (

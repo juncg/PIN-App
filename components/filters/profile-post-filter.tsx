@@ -28,6 +28,7 @@ export function ProfilePostFilter({ onFilterChange }: ProfilePostFilterProps) {
 				loop: false,
 			}}
 			className="w-full max-w-full"
+			fadeEdges={true}
 		>
 			<CarouselContent className="-ml-2 md:-ml-4">
 				<CarouselItem className="pl-2 md:pl-4 basis-auto">

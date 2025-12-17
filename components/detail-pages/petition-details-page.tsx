@@ -233,6 +233,7 @@ export function PetitionDetails({
 				currentUser={currentUser}
 				comments={comments}
 				postCreatorId={petition.creator_id || ""}
+				commentsLocked={petition.comment_locked_state === "Locked"}
 			/>
 
 			<div className="py-8">

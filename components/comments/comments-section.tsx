@@ -18,6 +18,7 @@ interface CommentsSectionProps {
 	comments?: IComment[];
 	currentUser?: IUser | null;
 	postCreatorId: string;
+	commentsLocked?: boolean;
 }
 
 export function CommentsSection({
@@ -26,6 +27,7 @@ export function CommentsSection({
 	comments: initialComments = [],
 	currentUser,
 	postCreatorId,
+	commentsLocked = false,
 }: CommentsSectionProps) {
 	const [comments, setComments] = useState<IComment[]>(initialComments);
 	const [newComment, setNewComment] = useState("");
@@ -151,6 +153,14 @@ export function CommentsSection({
 
 			<Separator />
 
+			{commentsLocked && (
+				<div className="bg-chernobyl/5 border border-chernobyl/20 rounded-lg p-4 mb-4">
+					<B1 className="text-chernobyl text-center">
+						Los comentarios están deshabilitados para esta {postType === "Offer" ? "oferta" : "petición"}.
+					</B1>
+				</div>
+			)}
+
 			<div className="flex gap-4">
 				<Avatar className="flex-shrink-0">
 					<AvatarImage
@@ -168,6 +178,7 @@ export function CommentsSection({
 					setNewComment={setNewComment}
 					isSubmitting={isSubmitting}
 					handleSubmit={handleSubmit}
+					commentsLocked={commentsLocked}
 				/>
 			</div>
 
@@ -177,9 +188,11 @@ export function CommentsSection({
 						<CommentCard key={comment.id} comment={comment} currentUser={currentUser} postId={postId} />
 					))
 				) : (
-					<div className="text-center py-12 ">
-						<B1 className="text-lightgrey">No hay comentarios todavía. ¡Sé el primero en comentar!</B1>
-					</div>
+					!commentsLocked && (
+						<div className="text-center py-12 ">
+							<B1 className="text-lightgrey">No hay comentarios todavía. ¡Sé el primero en comentar!</B1>
+						</div>
+					)
 				)}
 			</div>
 
