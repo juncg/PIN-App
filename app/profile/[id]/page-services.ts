@@ -106,7 +106,7 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 
 	const { data: subscribedOffersRaw } = await GetFromDatabase<any>({
 		tableName: "User_Offer",
-		select: "Offer(*, User!Offer_creator_id_fkey(*))",
+		select: "Offer(*, User!Offer_creator_id_fkey(*), User_Offer!left(liked, subscribed, user_id))",
 		filters: [
 			{ method: "eq", column: "user_id", value: uuid },
 			{ method: "eq", column: "subscribed", value: true },
@@ -115,9 +115,9 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 		skipRLS: true,
 	});
 
-	const subscribedOffers =
+	const subscribedOffers: IOffer[] =
 		subscribedOffersRaw?.map((item) => {
-			const offer = item.Offer;
+			const offer = item.Offer as IOffer;
 			offer.type = "Offer";
 			return offer;
 		}) || [];
@@ -139,7 +139,7 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 
 	const { data: subscribedPetitionsRaw } = await GetFromDatabase<any>({
 		tableName: "User_Petition",
-		select: "Petition(*, User!Petition_creator_id_fkey(*))",
+		select: "Petition(*, User!Petition_creator_id_fkey(*), User_Petition!left(liked, subscribed, user_id))",
 		filters: [
 			{ method: "eq", column: "user_id", value: uuid },
 			{ method: "eq", column: "subscribed", value: true },
@@ -148,9 +148,9 @@ export async function ProfileServices(uuid: number, searchParams: Promise<ISearc
 		skipRLS: true,
 	});
 
-	const subscribedPetitions =
+	const subscribedPetitions: IPetition[] =
 		subscribedPetitionsRaw?.map((item) => {
-			const petition = item.Petition;
+			const petition = item.Petition as IPetition;
 			petition.type = "Petition";
 			return petition;
 		}) || [];
